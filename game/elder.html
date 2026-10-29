@@ -16,6 +16,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf}
 .nx{position:absolute;z-index:2;left:50%;bottom:clamp(18px,3vh,30px);transform:translateX(-50%);width:70%;height:54px;border-radius:999px;border:2px solid #f5dca0;background:radial-gradient(ellipse at 50% 30%,#fff1c8,#e2b45e 55%,#9a6a28);color:#2a1606;font:700 24px 'Cormorant Garamond',serif;opacity:0;transition:opacity 1s;cursor:pointer}
 .nx.on{opacity:1}
 .snd{position:absolute;z-index:3;right:12px;top:calc(12px + env(safe-area-inset-top));width:40px;height:40px;border-radius:50%;border:1px solid #c9a46a;background:rgba(0,0,0,.4);color:#f0d9a8;font-size:18px}
+.ztm{position:fixed;inset:0;z-index:65;background:#000;opacity:0;pointer-events:none;transition:opacity 1.6s}.ztm.on{opacity:1}
 </style></head><body data-page="elder">
 <div class="sc">
 <video id="v" src="media/elder.mp4" poster="img/elder.jpg" autoplay muted playsinline></video>
@@ -23,12 +24,13 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf}
 <div class="tx" id="tx"><p>По праву высшей силы.</p><p>По праву рождения, которое дали вам высшие силы.</p><p>Вот ваш мир.</p><p>И все здесь для вас.</p></div>
 <button class="nx" id="nx" type="button">Далее</button>
 </div>
+<div class="ztm" id="ztm"></div>
 <audio id="au" src="media/elder.mp3" preload="auto"></audio>
 <script src="nav.js"></script>
 <script>
 var ps=document.querySelectorAll('#tx p');ps.forEach(function(p,i){setTimeout(function(){p.classList.add('on')},1600+i*2000)});
 setTimeout(function(){document.getElementById('nx').classList.add('on')},1600+ps.length*2000);
-document.getElementById('nx').onclick=function(){var t=document.querySelector('.gtoast');t.textContent='Дальше — испытания';gToast();setTimeout(function(){t.textContent='Скоро откроется'},1700)};
+document.getElementById('nx').onclick=function(){document.getElementById('ztm').classList.add('on');setTimeout(function(){var t=document.querySelector('.gtoast');t.textContent='Дальше — испытания';gToast();setTimeout(function(){t.textContent='Скоро откроется'},1700)},1700)};
 var au=document.getElementById('au');au.play().catch(function(){});
 document.getElementById('snd').onclick=function(){au.currentTime=0;au.play()};
 </script>

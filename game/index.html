@@ -17,7 +17,13 @@
 <p class="es">коснитесь</p></div></section></main>
 <script>
 const c=document.getElementById('core');let AC;
-function chime(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const t=AC.currentTime;
-[[392,0],[587.3,.09],[784,.18]].forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t+d);g.gain.exponentialRampToValueAtTime(.13,t+d+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d+1.4);o.connect(g).connect(AC.destination);o.start(t+d);o.stop(t+d+1.5)})}catch(e){}}
+function chime(){try{const A=new (window.AudioContext||window.webkitAudioContext)(),t=A.currentTime,out=A.createGain();out.gain.value=.5;
+const dl=A.createDelay();dl.delayTime.value=.18;const fb=A.createGain();fb.gain.value=.38;dl.connect(fb);fb.connect(dl);out.connect(A.destination);out.connect(dl);dl.connect(A.destination);
+const tone=(f,st,d,v,type)=>{const o=A.createOscillator(),g=A.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(0,t+st);g.gain.linearRampToValueAtTime(v,t+st+.01);g.gain.exponentialRampToValueAtTime(.0001,t+st+d);o.connect(g);g.connect(out);o.start(t+st);o.stop(t+st+d+.05)};
+tone(110,0,.5,.35,'triangle');
+[523.25,783.99,1046.5,1318.5,1567.98,2093].forEach((f,i)=>tone(f,.12+i*.07,2.2,.16));
+[2637,3136,3951].forEach((f,i)=>tone(f,.5+i*.05,1.4,.05));
+const n=A.createBufferSource(),b=A.createBuffer(1,A.sampleRate*1.2,A.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);
+n.buffer=b;const bp=A.createBiquadFilter();bp.type='bandpass';bp.frequency.setValueAtTime(400,t);bp.frequency.exponentialRampToValueAtTime(6000,t+1);const ng=A.createGain();ng.gain.value=.12;n.connect(bp);bp.connect(ng);ng.connect(out);n.start(t+.1)}catch(e){}}
 c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}chime();c.classList.add('go');setTimeout(()=>location.href='map.html',900)};
 </script></body></html>
