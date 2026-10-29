@@ -1,0 +1,69 @@
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Колесо Фортуны</title><meta name="theme-color" content="#120c07">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nav.css">
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(ellipse at 50% 100%,#5a3a14 0,#24170c 45%,#0d0906 100%);color:#fff;font-family:Manrope,sans-serif}
+.scr{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));overflow:hidden;animation:fi 1.4s ease both}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.top{position:absolute;left:0;right:0;top:0;bottom:var(--wh);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + clamp(10px,2vh,20px)) 14px 8px;box-sizing:border-box;transition:opacity .45s}
+.top.out{opacity:0}
+h1{margin:0;text-align:center;font:700 clamp(26px,4vh,34px) 'Cormorant Garamond',serif;color:#ffe3a0;text-shadow:0 0 14px rgba(255,190,90,.5)}
+.st{text-align:center;font:600 13px Manrope;letter-spacing:.12em;color:#e9cf96;margin:2px 0 6px;text-transform:uppercase}
+.q{text-align:center;font:700 clamp(16px,2.5vh,20px)/1.3 Manrope;color:#fff;text-shadow:0 1px 3px #000;margin:0 4px clamp(8px,1.6vh,14px)}
+.cards{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px}
+.cd{position:relative;border:1.5px solid #d9b46a;border-radius:12px;overflow:hidden;background:#1a110a center/cover no-repeat;box-shadow:0 0 12px rgba(255,190,90,.25);cursor:pointer;padding:0;text-align:left;color:#fff;transition:transform .25s,box-shadow .25s}
+.cd:active,.cd.pick{transform:scale(.97);box-shadow:0 0 26px 6px rgba(255,205,120,.8)}
+.cd span{position:absolute;left:0;right:0;bottom:0;padding:28% 8px 8px;font:600 clamp(12px,1.75vh,14.5px)/1.28 Manrope;background:linear-gradient(rgba(10,6,3,0),rgba(10,6,3,.82) 30%,rgba(10,6,3,.95));text-shadow:0 1px 2px #000}
+.wh{position:absolute;left:50%;bottom:0;width:min(150vw,calc(var(--wh)*2.1));aspect-ratio:1;transform:translate(-50%,50%)}
+.wh .rot{position:absolute;inset:0;transition:transform 1s cubic-bezier(.4,.1,.2,1)}
+.wh img{position:absolute;inset:0;width:100%;height:100%}
+.wh svg{position:absolute;inset:0;width:100%;height:100%}
+.sec{fill:rgba(255,215,120,0);transition:fill .8s}.sec.on{fill:rgba(255,215,120,.45)}
+.wh.all .rot{filter:drop-shadow(0 0 30px #ffd27a) brightness(1.3);transition:filter 1.5s,transform 1s}
+.res{position:absolute;left:0;right:0;top:0;bottom:var(--wh);display:none;flex-direction:column;align-items:center;justify-content:space-evenly;padding:calc(env(safe-area-inset-top) + 12px) 22px 6px;box-sizing:border-box;opacity:0;transition:opacity .9s}
+.res.on{opacity:1}
+.res .big{width:min(58%,calc(var(--rh)*.55));aspect-ratio:3/4;border:2px solid #f0cf86;border-radius:14px;background:center/cover;box-shadow:0 0 34px 8px rgba(255,200,110,.55)}
+.res .t{text-align:center;font:800 clamp(18px,2.7vh,22px)/1.3 Manrope;color:#ffe9b8;text-shadow:0 1px 3px #000}
+.res .s{text-align:center;font:500 clamp(14px,2vh,16px)/1.4 Manrope;color:#fff}
+.bt{width:72%;height:52px;border-radius:999px;border:2px solid #f5dca0;background:radial-gradient(ellipse at 50% 30%,#fff3cc,#ecc06a 55%,#a5732c);color:#2a1606;font:700 24px 'Cormorant Garamond',serif;cursor:pointer;flex:none}
+:root{--wh:clamp(96px,17vh,150px);--rh:calc(100dvh - 78px - var(--wh))}
+</style></head><body data-page="wheel">
+<div class="scr">
+<div class="top" id="top"><h1>Выберите карту</h1><div class="st" id="st"></div><p class="q" id="q"></p><div class="cards" id="cards"></div></div>
+<div class="res" id="res"></div>
+<div class="wh" id="wh"><div class="rot" id="rot"><img src="img/wheel.webp" alt=""><svg viewBox="-100 -100 200 200" id="sv"></svg></div></div>
+</div>
+<script src="nav.js"></script>
+<script>
+var S=[
+["Срочная задача","Появилась новая рабочая или личная задача, дедлайн — сегодня же.",["Бросаюсь делать сразу, разберусь по ходу дела.","Сначала внимательно изучаю вводные, взвешиваю риски и только потом берусь.","Отодвигаю чужие спешные рамки и выстраиваю процесс по своему удобному алгоритму.","Смотрю, кто именно поставил задачу и как принято поступать в этой ситуации в моем окружении."]],
+["Внезапное внимание","Вас неожиданно спросили или вызвали на обсуждение при других людях, когда вы этого не ждали.",["Отвечаю сразу первое, что приходит в голову, чтобы не зависать в паузе.","Беру короткую паузу, наблюдаю за реакцией зала и отвечаю максимально точно.","Перевожу фокус внимания на то, что интересно мне, или предлагаю свою тему.","Подстраиваю ответ под ожидания людей, которые на меня смотрят."]],
+["Рождение идеи","В голове вспыхнула классная идея, но делать ее прямо сейчас еще рано или нет ресурсов.",["Сгораю от нетерпения, пытаюсь сразу сделать хоть какой-то первый шаг на адреналине.","Записываю в стол/блокнот и наблюдаю, будет ли она актуальна через неделю.","Сразу начинаю набрасывать план, концепт или прототип, чтобы зафиксировать форму.","Обсуждаю идею с близкими или коллегами, чтобы понять, нужна ли она вообще кому-то еще."]],
+["Поломка порядка","Что-то неожиданно сломалось в привычном порядке или расписании дня.",["Тут же кидаюсь чинить подручными средствами, действую по ситуации.","Сначала оцениваю масштаб бедствия, жду, пока все устаканится, или ищу готовое решение.","Пользуюсь моментом, чтобы полностью пересобрать этот процесс по-своему.","Смотрю, как реагируют остальные, и подстраиваюсь под общий темп."]],
+["Дефицит данных","Нужно сделать выбор, а надежных данных или гарантий катастрофически мало.",["Рискую и принимаю решение на интуиции здесь и сейчас — была не была.","Выжидаю до последнего, собираю крупицы информации, тяну время.","Опираюсь только на свое видение и правила, которые устанавливаю сам.","Советуюсь с авторитетными людьми и иду за проверенным вариантом."]],
+["Игнорирование отклика","Вас не заметили, не оценили или проигнорировали там, где вы ждали отклика.",["Сразу резко заявляю о себе или эмоционально реагирую на несправедливость.","Тихо отхожу в сторону, делаю выводы и наблюдаю со стороны.","Переключаюсь на свой проект — мне важнее то, что я создаю сам, а не чужие оценки.","Пытаюсь понять, что я сделал не так, и подстроиться под ожидания."]]];
+var K=['s','n','str','z'],NM={s:'Реактивный (Сразу делать)',n:'Наблюдательный (Сначала смотреть)',str:'Созидательный (Строить свое)',z:'Переходный (Зависит от того, кто рядом)'};
+var sc={s:0,n:0,str:0,z:0},cur=0,busy=false,ang=0,AC;
+var sv=document.getElementById('sv');
+for(var i=0;i<6;i++){var a0=(i*60-120)*Math.PI/180,a1=a0+Math.PI/3,r=88;
+sv.insertAdjacentHTML('beforeend','<path class="sec" id="sec'+i+'" d="M0 0L'+(r*Math.cos(a0)).toFixed(1)+' '+(r*Math.sin(a0)).toFixed(1)+'A'+r+' '+r+' 0 0 1 '+(r*Math.cos(a1)).toFixed(1)+' '+(r*Math.sin(a1)).toFixed(1)+'Z"/><line x1="0" y1="0" x2="'+(92*Math.cos(a0)).toFixed(1)+'" y2="'+(92*Math.sin(a0)).toFixed(1)+'" stroke="#ffe3a0" stroke-width="1.2" opacity=".7"/>')}
+function tick(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();var t=AC.currentTime;[1320,1760,2640].forEach(function(f,i){var o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,t+i*.07);g.gain.linearRampToValueAtTime(.12,t+i*.07+.01);g.gain.exponentialRampToValueAtTime(.001,t+i*.07+.6);o.connect(g).connect(AC.destination);o.start(t+i*.07);o.stop(t+i*.07+.7)})}catch(e){}}
+function show(){var s=S[cur];document.getElementById('st').textContent='Ситуация '+(cur+1)+' из 6 · '+s[0];document.getElementById('q').textContent='«'+s[1]+'»';
+document.getElementById('cards').innerHTML=s[2].map(function(t,i){return '<button class="cd" type="button" data-k="'+K[i]+'" style="background-image:url(img/card_'+K[i]+'.jpg)"><span>'+t+'</span></button>'}).join('')}
+document.getElementById('cards').onclick=function(e){var b=e.target.closest('.cd');if(!b||busy)return;busy=true;b.classList.add('pick');sc[b.dataset.k]++;
+document.getElementById('sec'+cur).classList.add('on');ang-=60;document.getElementById('rot').style.transform='rotate('+ang+'deg)';tick();
+var top=document.getElementById('top');setTimeout(function(){top.classList.add('out')},350);
+setTimeout(function(){cur++;if(cur<6){show();top.classList.remove('out');busy=false}else finish()},850)};
+function finish(){document.getElementById('top').style.display='none';document.getElementById('wh').classList.add('all');
+var o=K.slice().sort(function(a,b){return sc[b]-sc[a]}),lead=sc[o[0]]-sc[o[1]]>=2,key=lead?o[0]:'z',
+title=lead?'Основной почерк действия: '+NM[key]:'Переходный (Размазанность / арсенал гибких реакций)',
+sub=lead?'Этот навык закреплен в вашем Паспорте Героя.':'Сильнее всего: '+NM[o[0]].replace(/.*\(|\)/g,'')+' и '+NM[o[1]].replace(/.*\(|\)/g,'')+'.';
+var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
+P.skill={key:key,title:title,scores:sc,top:lead?[o[0]]:[o[0],o[1]]};localStorage.setItem('alch_profile',JSON.stringify(P));
+var r=document.getElementById('res');r.innerHTML='<div class="big" style="background-image:url(img/card_'+key+'.jpg)"></div><div class="t">'+title+'</div><div class="s">'+sub+'</div><button class="bt" id="nx" type="button">Далее</button>';
+r.style.display='flex';setTimeout(function(){r.classList.add('on')},50);
+document.getElementById('nx').onclick=function(){var t=document.querySelector('.gtoast');t.textContent='Дальше — Хранитель Прошлого';gToast();setTimeout(function(){t.textContent='Скоро откроется'},1700)}}
+show();
+</script></body></html>

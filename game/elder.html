@@ -30,7 +30,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf}
 <script>
 var ps=document.querySelectorAll('#tx p');ps.forEach(function(p,i){setTimeout(function(){p.classList.add('on')},1600+i*2000)});
 setTimeout(function(){document.getElementById('nx').classList.add('on')},1600+ps.length*2000);
-document.getElementById('nx').onclick=function(){document.getElementById('ztm').classList.add('on');setTimeout(function(){var t=document.querySelector('.gtoast');t.textContent='Дальше — испытания';gToast();setTimeout(function(){t.textContent='Скоро откроется'},1700)},1700)};
+document.getElementById('nx').onclick=function(){document.getElementById('ztm').classList.add('on');setTimeout(function(){location.href='wheel.html'},1700)};
 var au=document.getElementById('au');au.play().catch(function(){});
 document.getElementById('snd').onclick=function(){au.currentTime=0;au.play()};
 </script>
