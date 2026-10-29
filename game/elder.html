@@ -3,7 +3,7 @@
 <title>Старец</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="nav.css">
+<link rel="stylesheet" href="nav.css?v=3">
 <style>
 html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf}
 .sc{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));overflow:hidden;animation:in 2s ease both}
@@ -30,7 +30,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf}
 </div>
 <div class="ztm" id="ztm"></div>
 <audio id="au" src="media/voice.mp3" preload="auto"></audio>
-<script src="nav.js"></script>
+<script src="nav.js?v=3"></script>
 <script>
 var ps=document.querySelectorAll('#tx p');ps.forEach(function(p,i){setTimeout(function(){p.classList.add('on')},1600+i*2000)});
 setTimeout(function(){document.getElementById('nx').classList.add('on')},1600+ps.length*2000);

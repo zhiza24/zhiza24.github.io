@@ -3,7 +3,7 @@
 <title>Карта пути</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#5a3a14">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="nav.css">
+<link rel="stylesheet" href="nav.css?v=3">
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#2a1c0c}
 .map{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));background:#2a1c0c url(img/map_bg.jpg?v=5) no-repeat;overflow:hidden}
 .o{position:absolute;transform:translate(-50%,-50%);border-radius:50%}
@@ -14,14 +14,14 @@
 .cmp,.inf{position:absolute;bottom:48px;width:70px;height:70px}.cmp{left:12px}.inf{right:12px}
 .cmp img,.inf img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}.cmp img{border-radius:50%}
 .o.nxt{box-shadow:0 0 0 3px #ffd877,0 0 22px 8px rgba(255,200,90,.75);animation:mN 1.6s ease-in-out infinite}@keyframes mN{50%{box-shadow:0 0 0 3px #fff0b8,0 0 34px 14px rgba(255,200,90,.95)}}
-.scl{position:fixed;z-index:76;left:50%;top:calc(env(safe-area-inset-top) + 12px);transform:translateX(-50%);width:min(58vw,240px);height:auto;border:0;padding:0;background:none;cursor:pointer;animation:sclG 2.6s ease-in-out infinite}
+.scl{position:fixed;z-index:76;left:50%;top:calc(env(safe-area-inset-top) + 44px);transform:translateX(-50%);width:min(70vw,280px,34dvh);height:auto;border:0;padding:0;background:none;cursor:pointer;animation:sclG 2.6s ease-in-out infinite}
 .scl img{display:block;width:100%;height:auto}
 .scl.op{filter:drop-shadow(0 0 14px rgba(255,210,120,.95))}
 .xscl i{position:absolute;left:10px;right:10px;top:4px;bottom:4px;border-radius:4px;background:linear-gradient(#fff0c4,#e3b45c 45%,#a8712c);box-shadow:inset 0 0 0 1px #7a4a16}
 .scl i:after{content:"";position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px;border-radius:50%;background:radial-gradient(#d0462c,#7a1a0a)}
 .scl b{position:absolute;top:0;bottom:0;width:14px;border-radius:7px;background:linear-gradient(90deg,#7a4a16,#f3d08a 45%,#8a5420);box-shadow:0 0 0 1px #5a3410}.scl b:first-child{left:0}.scl b:last-child{right:0}
-@keyframes sclG{0%,100%{filter:drop-shadow(0 0 5px rgba(255,200,100,.55))}50%{filter:drop-shadow(0 0 12px rgba(255,210,120,.95))}}
-.sov{position:fixed;inset:0;z-index:75;display:flex;align-items:flex-start;justify-content:center;padding-top:calc(env(safe-area-inset-top) + 40px);background:rgba(20,10,0,0);pointer-events:none;transition:background .4s}
+@keyframes sclG{0%,100%{filter:drop-shadow(0 0 8px rgba(255,210,110,.8)) drop-shadow(0 0 18px rgba(255,180,60,.6))}50%{filter:drop-shadow(0 0 14px rgba(255,225,140,1)) drop-shadow(0 0 30px rgba(255,180,60,.85))}}
+.sov{position:fixed;inset:0;z-index:75;display:flex;align-items:flex-start;justify-content:center;padding-top:calc(env(safe-area-inset-top) + 80px);background:rgba(20,10,0,0);pointer-events:none;transition:background .4s}
 .sov.on{background:rgba(20,10,0,.55);pointer-events:auto}
 .spp{position:relative;width:min(88vw,370px);max-height:0;overflow:hidden;border-radius:6px;background:linear-gradient(#fbf0d2,#ecd39a);color:#3a220a;box-shadow:0 10px 40px rgba(0,0,0,.6);transition:max-height .8s cubic-bezier(.3,.8,.3,1)}
 .sov.on .spp{max-height:calc(100dvh - 140px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
@@ -32,7 +32,7 @@
 .sx{position:absolute;z-index:2;top:40px;right:8px;width:34px;height:34px;border:0;background:none;font:400 28px/1 serif;color:#6a3e10;cursor:pointer}
 .sau{position:absolute;z-index:2;top:44px;left:12px;width:30px;height:30px;border-radius:50%;border:1.5px solid #a8742a;background:radial-gradient(#fff1c8,#d9a54e);color:#3a220a;font:700 15px/1 serif;cursor:pointer;display:none}.sau.on{background:radial-gradient(#ffe08a,#c98a2e);box-shadow:0 0 10px #ffc04a}
 </style></head><body data-page="map">
-<button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll.webp" alt=""></button>
+<button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll.webp?v=3" alt=""></button>
 <div class="sov" id="sov"><div class="spp"><button class="sx" id="sx" type="button" aria-label="Свернуть">×</button><button class="sau" id="sau" type="button" aria-label="Слушать">♪</button><div class="sbd" id="sbd"></div></div></div>
 <div class="map" id="m">
 <a class="o step" href="#soon" data-x="218" data-y="310" data-r="62"></a>
@@ -65,5 +65,5 @@ function cl(){o.classList.remove('on');document.getElementById('scl').classList.
 document.getElementById('scl').onclick=function(){o.classList.contains('on')?cl():(o.classList.add('on'),this.classList.add('op'))};
 document.getElementById('sx').onclick=cl;o.onclick=function(e){if(e.target==o)cl()};})();
 </script>
-<script src="nav.js"></script>
+<script src="nav.js?v=3"></script>
 </body></html>
