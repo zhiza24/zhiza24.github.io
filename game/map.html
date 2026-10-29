@@ -1,3 +1,35 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Карта пути</title><style>body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;background:#f1dcaa;font:24px Georgia;color:#6a3e10;text-align:center}</style></head>
-<body><div>Здесь будет экран «Карта пути»<br><br><a href="./" style="color:#a8641a">← на обложку</a></div></body></html>
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Карта пути</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#5a3a14">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nav.css">
+<style>
+html,body{margin:0;background:#d9b46e;min-height:100%}
+.map{position:relative;width:100%;max-width:480px;margin:0 auto;aspect-ratio:9/16;background:url(img/map_bg.jpg) center/100% 100% no-repeat;filter:brightness(1.06)}
+h1{position:absolute;top:calc(31% - 0px);left:4%;margin:0;font:700 34px 'Cormorant Garamond',serif;color:#5a2e08;text-shadow:0 0 10px #fff1c4,0 0 4px #fff1c4;display:none}
+.ttl{position:absolute;top:calc(2.4% + env(safe-area-inset-top));left:0;right:0;text-align:center}
+.ttl span{display:inline-block;padding:6px 30px;background:linear-gradient(#b3261e,#7d140f);color:#ffe9b8;font:700 30px 'Cormorant Garamond',serif;border-radius:4px;box-shadow:0 3px 8px rgba(60,20,0,.4);border:1px solid #e0b060}
+.st{position:absolute;transform:translate(-50%,-50%);width:11.5%;aspect-ratio:1;border-radius:50%;background:radial-gradient(#ffe7a6,#c48a2e 70%,#7a4a14);border:3px solid #6a3e10;box-shadow:0 0 0 2px #f3d27a,0 3px 8px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;font:700 26px "Cormorant Garamond",serif;color:#4a2508;text-decoration:none}
+.st.now{animation:p 1.8s infinite}
+@keyframes p{0%,100%{box-shadow:0 0 0 2px #f3d27a,0 0 6px 2px #ffd36a}50%{box-shadow:0 0 0 2px #f3d27a,0 0 22px 10px #ffd36a}}
+.lb{position:absolute;text-decoration:none;transform:translateY(-50%);font:700 15px Manrope,sans-serif;color:#4a2508;background:rgba(255,240,200,.85);padding:3px 9px;border-radius:10px;white-space:nowrap}
+.btns{position:absolute;left:6%;right:6%;top:75%;display:flex;flex-direction:column;gap:12px}
+.btn{display:block;text-align:center;padding:15px;border-radius:30px;font:800 18px Manrope,sans-serif;text-decoration:none;letter-spacing:.02em}
+.b1{background:linear-gradient(#fff3cf,#ecd08a);color:#5a2e08;border:2px solid #a8742a}
+.b2{background:linear-gradient(#d23a2a,#8a170f);color:#ffefc4;border:2px solid #e8b860;box-shadow:0 4px 12px rgba(120,20,0,.4)}
+.pad{height:96px}
+</style></head><body data-page="map">
+<div class="map">
+<div class="ttl"><span>Карта пути</span></div>
+<a class="lb" href="#start" style="left:15%;top:57%">Вход</a>
+<a class="st now" href="#soon" style="left:49%;top:63%">1</a><span class="lb" style="left:59%;top:63%">Порог</span>
+<a class="st" href="#soon" style="left:63.4%;top:52.7%">2</a><span class="lb" style="right:42%;top:52.7%">Кривой Мир</span>
+<a class="st" href="#soon" style="left:64.2%;top:41.3%">3</a><span class="lb" style="left:74%;top:41.3%">Колесо</span>
+<a class="st" href="#soon" style="left:51.6%;top:29.8%">4</a><span class="lb" style="right:56%;top:29.8%">Желания</span>
+<a class="st" href="#soon" style="left:56.2%;top:22.6%">5</a><span class="lb" style="left:66%;top:22.6%">Центр</span>
+<div class="btns"><a class="btn b1" href="#start">Начало пути</a><a class="btn b2" href="#soon">Продолжить путь</a></div>
+</div><div class="pad"></div>
+<script src="nav.js"></script>
+<script>document.querySelectorAll('a[href="#start"]').forEach(function(a){a.onclick=function(e){e.preventDefault();var s=document.querySelector('.st.now');s.scrollIntoView({block:'center',behavior:'smooth'})}})</script>
+</body></html>
