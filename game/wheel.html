@@ -2,7 +2,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Колесо Фортуны</title><meta name="theme-color" content="#120c07">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="nav.css?v=5">
+<link rel="stylesheet" href="nav.css?v=6">
 <style>
 html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(ellipse at 50% 100%,#5a3a14 0,#24170c 45%,#0d0906 100%);color:#fff;font-family:Manrope,sans-serif}
 .scr{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));overflow:hidden;animation:fi 1.4s ease both}
@@ -48,7 +48,7 @@ h1{letter-spacing:.08em}
 <div class="fin" id="fin"><p>Колесо запомнило ваш путь</p></div><div class="flash" id="flash"></div>
 <div class="wh" id="wh"><div class="rot" id="rot"><svg viewBox="-100 -100 200 200" id="sv"><defs><radialGradient id="wd"><stop offset="0" stop-color="#3a2410"/><stop offset="1" stop-color="#140c06"/></radialGradient><linearGradient id="sp" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9a6226"/><stop offset=".5" stop-color="#ffe7a6"/><stop offset="1" stop-color="#9a6226"/></linearGradient></defs></defs><defs><radialGradient id="hb" cx=".4" cy=".35"><stop offset="0" stop-color="#fff0b8"/><stop offset=".6" stop-color="#d9a04a"/><stop offset="1" stop-color="#8a5420"/></radialGradient></defs><circle r="60" fill="url(#wd)"/></svg><img src="img/wheel.webp?v=3" alt=""></div></div>
 </div>
-<script src="nav.js?v=5"></script>
+<script src="nav.js?v=6"></script>
 <script>
 var S=[["Срочная задача", "Появилась новая рабочая или личная задача, дедлайн — сегодня же.", ["Карта-вспышка: дорога горит под ногами, путь виден лишь на шаг вперед.", "Карта в тумане: горы проступают постепенно, каждый перевал нужно разглядеть.", "Чистый пергамент: дорогу еще предстоит начертить своей рукой.", "Карта чужих костров: путь виден по тем, кто идет рядом."]], ["Внезапное внимание", "Вас неожиданно спросили или вызвали на обсуждение при других людях, когда вы этого не ждали.", ["Молния: ответ вспыхивает сразу, без пауз и сомнений.", "Дозорная башня: сначала обзор с высоты, потом точное слово.", "Новая звезда: свой ориентир среди чужих созвездий.", "Зеркало: слова отражают взгляды тех, кто смотрит."]], ["Рождение идеи", "В голове вспыхнула классная идея, но делать ее прямо сейчас еще рано или нет ресурсов.", ["Искра: огонь уже бежит по фитилю.", "Луна над садом: замысел зреет в тишине и проявится позже.", "Чертеж: контуры будущего города уже на бумаге.", "Общий стол: замысел, который рассматривают вместе."]], ["Поломка порядка", "Что-то неожиданно сломалось в привычном порядке или расписании дня.", ["Разрушенный мост: переправа из того, что под рукой.", "После бури: дождаться, пока осядет пыль, и найти брод.", "Новые земли: старая дорога рухнула — проложить свою.", "Караван: идти в общем темпе, за ведущим."]], ["Дефицит данных", "Нужно сделать выбор, а надежных данных или гарантий катастрофически мало.", ["Обрыв в туман: шаг в неизвестность на зов сердца.", "Крупицы: каждое зерно знания собрано терпеливо.", "Свой компас: стрелка, настроенная вашими законами.", "Тропа мастеров: проверенный путь, освещенный мудрыми."]], ["Игнорирование отклика", "Вас не заметили, не оценили или проигнорировали там, где вы ждали отклика.", ["Сигнальный огонь: громко заявить о себе с вершины.", "Тихая долина: отойти в тень и смотреть со стороны.", "Мастерская: важно лишь то, что создаете вы.", "Чужие следы: найти, где свернул не туда, и выровнять шаг."]]];
 var K=['s','n','str','z'],NM={s:'Реактивный (Сразу делать)',n:'Наблюдательный (Сначала смотреть)',str:'Созидательный (Строить свое)',z:'Переходный (Зависит от того, кто рядом)'};
@@ -79,6 +79,6 @@ var w=document.getElementById('wh'),r=document.getElementById('rot');w.classList
 setTimeout(function(){document.getElementById('fin').classList.add('on')},300);
 setTimeout(function(){w.classList.add('gone')},1300);
 setTimeout(function(){document.getElementById('flash').classList.add('on')},1700);
-setTimeout(function(){location.href='hero.html?v=5'},2300)}
+setTimeout(function(){location.href='hero.html?v=6'},2300)}
 show();
 </script></body></html>

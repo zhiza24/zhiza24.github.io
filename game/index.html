@@ -18,5 +18,5 @@
 <script>
 const c=document.getElementById('core');let AC;
 const ES=new Audio('snd/entry.mp3?v=2');ES.preload='auto';
-c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}let gone=0;const go=()=>{if(!gone){gone=1;location.href='map.html?v=5'}};ES.currentTime=0;ES.onended=go;const pr=ES.play();if(pr&&pr.catch)pr.catch(()=>setTimeout(go,1500));c.classList.add('go');setTimeout(go,6000)};
+c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}let gone=0;const go=()=>{if(!gone){gone=1;location.href='map.html?v=6'}};ES.currentTime=0;ES.onended=go;const pr=ES.play();if(pr&&pr.catch)pr.catch(()=>setTimeout(go,1500));c.classList.add('go');setTimeout(go,6000)};
 </script></body></html>
