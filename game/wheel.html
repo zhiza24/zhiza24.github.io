@@ -36,14 +36,16 @@ h1{letter-spacing:.08em}
 .num.cur{fill:#fff6d8;opacity:1;font-size:19px;filter:drop-shadow(0 0 3px #ffb347)}
 .sec.cur{fill-opacity:.22}
 .wh{pointer-events:none;z-index:0}.top{z-index:2}
-.wh.gone{transition:transform 2.4s cubic-bezier(.5,0,.8,.4),opacity 2.4s;transform:translate(-50%,110%) scale(.7);opacity:0}
-.wh.gone .rot{transition:transform 2.4s cubic-bezier(.3,0,.6,1)!important}
+.wh.spin .rot{transition:transform 1.7s cubic-bezier(.45,0,.9,.6)!important}
+.wh.gone{transition:transform .8s cubic-bezier(.6,0,.9,.5),opacity .8s,filter .8s;transform:translate(-50%,-10%) scale(.15);opacity:0;filter:brightness(3) blur(4px)}
+.flash{position:fixed;inset:0;z-index:80;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 75%,#fff6d8,#ffc45a 30%,#a8641a 70%,#1c1007);transition:opacity .6s}.flash.on{opacity:1}
+.fin p{font-size:clamp(20px,3vh,26px)!important}
 .fin{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;transition:opacity 1.2s;pointer-events:none}
 .fin.on{opacity:1;pointer-events:auto}.fin p{margin:0 24px;text-align:center;font:600 clamp(24px,3.6vh,30px)/1.25 'Cormorant Garamond',serif;color:#ffe9b8;text-shadow:0 0 14px rgba(255,190,90,.45)}
 </style></head><body data-page="task">
 <div class="scr">
 <div class="top" id="top"><div class="lbl">Первое задание</div><h1>ВЫБЕРИТЕ КАРТУ</h1><div class="st" id="st"></div><p class="q" id="q"></p><div class="cards" id="cards"></div></div>
-<div class="fin" id="fin"><p>Колесо запомнило ваш путь.</p><button class="bt" id="nx" type="button">Далее</button></div>
+<div class="fin" id="fin"><p>Колесо запомнило ваш путь</p></div><div class="flash" id="flash"></div>
 <div class="wh" id="wh"><div class="rot" id="rot"><svg viewBox="-100 -100 200 200" id="sv"><defs><radialGradient id="wd"><stop offset="0" stop-color="#3a2410"/><stop offset="1" stop-color="#140c06"/></radialGradient><linearGradient id="sp" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9a6226"/><stop offset=".5" stop-color="#ffe7a6"/><stop offset="1" stop-color="#9a6226"/></linearGradient></defs></defs><defs><radialGradient id="hb" cx=".4" cy=".35"><stop offset="0" stop-color="#fff0b8"/><stop offset=".6" stop-color="#d9a04a"/><stop offset="1" stop-color="#8a5420"/></radialGradient></defs><circle r="60" fill="url(#wd)"/></svg><img src="img/wheel.webp?v=3" alt=""></div></div>
 </div>
 <script src="nav.js"></script>
@@ -57,13 +59,13 @@ sv.insertAdjacentHTML('beforeend','<path class="sec" id="sec'+i+'" d="M0 0L'+(R*
 for(var i=0;i<6;i++){sv.insertAdjacentHTML('beforeend','<g transform="rotate('+(i*60-120)+')"><rect x="15" y="-2.6" width="45" height="5.2" rx="1.2" fill="url(#sp)" stroke="#6b4012" stroke-width=".4"/></g>')}
 for(var i=0;i<6;i++){sv.insertAdjacentHTML('beforeend','<g transform="rotate('+(i*60)+')"><text class="num" id="num'+i+'" x="0" y="-37" text-anchor="middle" dominant-baseline="central">'+(i+1)+'</text></g>')}
 sv.insertAdjacentHTML('beforeend','<circle r="15" fill="url(#hb)" stroke="#ffe7a6" stroke-width="1.6"/><circle r="10" fill="none" stroke="#7a4a16" stroke-width=".8"/><circle r="4" fill="#fff1c4"/>');
-var TS=new Audio('snd/trans.mp3');TS.preload='auto';function tick(){try{TS.currentTime=0;var p=TS.play();if(p&&p.catch)p.catch(function(){})}catch(e){}}
+var TS=new Audio('snd/trans.mp3?v=2');TS.preload='auto';function tick(){try{TS.currentTime=0;var p=TS.play();if(p&&p.catch)p.catch(function(){})}catch(e){}}
 var HX=[];window.gBack=function(){if(cur>=6)return false;if(busy)return true;if(!HX.length)return false;sc[HX.pop()]--;cur--;document.getElementById('sec'+cur).classList.remove('on');ang+=60;document.getElementById('rot').style.transform='rotate('+ang+'deg)';tick();show();return true};
 var ORD=[[0,1,2,3],[2,0,3,1],[1,3,0,2],[3,2,1,0],[2,3,1,0],[1,0,3,2]];
 function show(){var s=S[cur];document.getElementById('st').textContent='Ситуация '+(cur+1)+' из 6 · '+s[0];document.getElementById('q').textContent='«'+s[1]+'»';
 document.querySelectorAll('.num,.sec').forEach(function(n){n.classList.remove('cur')});document.getElementById('num'+cur).classList.add('cur');document.getElementById('sec'+cur).classList.add('cur');
 document.getElementById('cards').innerHTML=ORD[cur].map(function(i){return '<button class="cd" type="button" data-k="'+K[i]+'" style="background-image:url(img/c'+(cur+1)+'_'+K[i]+'.jpg)"><span>'+s[2][i]+'</span></button>'}).join('')}
-document.getElementById('cards').onclick=function(e){var b=e.target.closest('.cd');if(!b||busy)return;busy=true;b.classList.add('pick');sc[b.dataset.k]++;HX.push(b.dataset.k);
+document.getElementById('cards').onclick=function(e){var b=e.target.closest('.cd');if(!b||busy)return;busy=true;b.classList.add('pick');sc[b.dataset.k]++;HX.push(b.dataset.k);if(cur==5){document.getElementById('sec5').classList.add('on');cur=6;finish();return}
 document.getElementById('sec'+cur).classList.add('on');ang-=60;document.getElementById('rot').style.transform='rotate('+ang+'deg)';tick();
 var top=document.getElementById('top');setTimeout(function(){top.classList.add('out')},350);
 setTimeout(function(){cur++;if(cur<6){show();top.classList.remove('out');busy=false}else finish()},850)};
@@ -72,9 +74,11 @@ var o=K.slice().sort(function(a,b){return sc[b]-sc[a]}),lead=sc[o[0]]-sc[o[1]]>=
 title=lead?'Основной почерк действия: '+NM[key]:'Переходный (Размазанность / арсенал гибких реакций)';
 var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
 P.skill={key:key,title:title,scores:sc,top:lead?[o[0]]:[o[0],o[1]]};localStorage.setItem('alch_profile',JSON.stringify(P));
-var w=document.getElementById('wh'),r=document.getElementById('rot');w.classList.add('all');
-setTimeout(function(){tick();setTimeout(tick,500);r.style.transform='rotate('+(ang-1080)+'deg)';w.classList.add('gone')},700);
-setTimeout(function(){document.getElementById('fin').classList.add('on')},2900);
-document.getElementById('nx').onclick=function(){location.href='map.html'}}
+var D=[];try{D=JSON.parse(localStorage.getItem('alch_diary'))||[]}catch(e){}D.push({date:new Date().toISOString(),title:'Колесо судьбы',result:P.skill});localStorage.setItem('alch_diary',JSON.stringify(D));
+var w=document.getElementById('wh'),r=document.getElementById('rot');w.classList.add('all','spin');ang-=1440;r.style.transform='rotate('+ang+'deg)';tick();
+setTimeout(function(){document.getElementById('fin').classList.add('on')},300);
+setTimeout(function(){w.classList.add('gone')},1300);
+setTimeout(function(){document.getElementById('flash').classList.add('on')},1700);
+setTimeout(function(){location.href='hero.html'},2300)}
 show();
 </script></body></html>

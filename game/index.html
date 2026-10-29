@@ -17,11 +17,6 @@
 <p class="es">коснитесь</p></div></section></main>
 <script>
 const c=document.getElementById('core');let AC;
-function chime(){try{const A=new (window.AudioContext||window.webkitAudioContext)(),t=A.currentTime,out=A.createGain(),lp=A.createBiquadFilter();lp.type='lowpass';lp.frequency.value=900;lp.Q.value=.5;
-out.gain.setValueAtTime(0,t);out.gain.linearRampToValueAtTime(.32,t+.35);out.gain.setValueAtTime(.32,t+1.2);out.gain.linearRampToValueAtTime(0,t+2.35);out.connect(lp);lp.connect(A.destination);
-const tone=(f,st,d,v,type)=>{const o=A.createOscillator(),g=A.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(0,t+st);g.gain.linearRampToValueAtTime(v,t+st+.3);g.gain.exponentialRampToValueAtTime(.0001,t+st+d);o.connect(g);g.connect(out);o.start(t+st);o.stop(t+st+d+.05)};
-tone(98,0,2.3,.32);tone(98.6,0,2.3,.2);tone(146.8,.05,2.2,.14);tone(196,.25,2,.1);tone(270.4,.25,1.8,.05);tone(65.4,0,2.3,.18,'triangle');
-}catch(e){}}
-const ES=new Audio('snd/entry.mp3');ES.preload='auto';
-c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}let gone=0;const go=()=>{if(!gone){gone=1;location.href='map.html'}};try{ES.currentTime=0;const pr=ES.play();ES.onended=go;if(pr&&pr.catch)pr.catch(()=>{chime();setTimeout(go,2400)})}catch(e){chime();setTimeout(go,2400)}c.classList.add('go');setTimeout(go,4300)};
+const ES=new Audio('snd/entry.mp3?v=2');ES.preload='auto';
+c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}let gone=0;const go=()=>{if(!gone){gone=1;location.href='map.html'}};ES.currentTime=0;ES.onended=go;const pr=ES.play();if(pr&&pr.catch)pr.catch(()=>setTimeout(go,1500));c.classList.add('go');setTimeout(go,6000)};
 </script></body></html>

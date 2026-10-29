@@ -13,6 +13,7 @@
 @keyframes p{0%,100%{box-shadow:0 0 6px 2px rgba(255,211,106,.5)}50%{box-shadow:0 0 26px 10px rgba(255,211,106,.85)}}
 .cmp,.inf{position:absolute;bottom:48px;width:70px;height:70px}.cmp{left:12px}.inf{right:12px}
 .cmp img,.inf img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}.cmp img{border-radius:50%}
+.o.nxt{box-shadow:0 0 0 3px #ffd877,0 0 22px 8px rgba(255,200,90,.75);animation:mN 1.6s ease-in-out infinite}@keyframes mN{50%{box-shadow:0 0 0 3px #fff0b8,0 0 34px 14px rgba(255,200,90,.95)}}
 </style></head><body data-page="map">
 <div class="map" id="m">
 <a class="o step" href="#soon" data-x="218" data-y="310" data-r="62"></a>
@@ -30,7 +31,7 @@
 function lay(){var m=document.getElementById('m'),W=m.clientWidth,H=m.clientHeight,s=Math.max(W/576,H/1024),ox=(W-576*s)/2,oy=H-1024*s;
 m.style.backgroundSize=576*s+'px '+1024*s+'px';m.style.backgroundPosition=ox+'px '+oy+'px';
 var c=document.getElementById('cont');c.style.left=Math.min(W-100,ox+400*s)+'px';c.style.top=(oy+519*s)+'px';m.querySelectorAll('.o').forEach(function(e){var d=e.dataset;e.style.left=(ox+d.x*s)+'px';e.style.top=(oy+d.y*s)+'px';e.style.width=e.style.height=(d.r*s)+'px'})}
-addEventListener('resize',lay);lay();
+addEventListener('resize',lay);lay();try{if((JSON.parse(localStorage.getItem('alch_profile'))||{}).skill){var ss=document.querySelectorAll('.o.step');ss[ss.length-1].classList.add('nxt')}}catch(e){}
 </script>
 <script src="nav.js"></script>
 </body></html>
