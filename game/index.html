@@ -45,7 +45,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none}
 .orb.boom .core{animation:none;transform:scale(1.15);transition:transform .35s cubic-bezier(.2,1.6,.4,1)}
 .flash{background:radial-gradient(circle,#fff 0%,#ffe9a8 6%,rgba(255,210,100,0) 14%)!important;transform:scale(.2);transition:opacity .25s,transform .5s ease-out!important}
 .go .flash{transform:scale(1.6);opacity:.9}
-</style></head><body>
+.go .halo,.go .ring{opacity:0;transition:opacity .2s}.flash{left:var(--x);top:var(--y);right:auto;bottom:auto;width:200vmax;height:200vmax;margin:-100vmax 0 0 -100vmax;inset:auto}.shock{left:var(--x)!important;top:var(--y)!important}</style></head><body>
 <div class="cover">
  <div class="author">Автор: Майя Явь</div>
  <button class="orb" id="orb" aria-label="Начать путь"><div class="halo"></div><div class="ring"></div><div class="ring r2"></div><div class="core"><img src="img/sphere.png" alt=""><div class="irid"></div><div class="shine"></div></div></button>
@@ -67,7 +67,7 @@ function sparks(){const r=orb.getBoundingClientRect(),X=(r.left+r.width/2)*devic
 for(let i=0;i<220;i++){const a=Math.random()*6.283,v=(2+Math.random()*9)*devicePixelRatio;P.push({x:X,y:Y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,s:(1+Math.random()*2.5)*devicePixelRatio,h:40+Math.random()*20})}
 (function f(){cx.clearRect(0,0,cv.width,cv.height);let al=0;for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vx*=.96;p.vy=p.vy*.96+.015;p.l-=.009;if(p.l<=0)continue;al=1;
 cx.globalAlpha=p.l;cx.shadowColor='#ffd76a';cx.shadowBlur=8*devicePixelRatio;cx.fillStyle='hsl('+p.h+',100%,'+(60+30*p.l)+'%)';cx.beginPath();const s=p.s*(Math.random()<.2?2:1);cx.moveTo(p.x,p.y-s*2);cx.lineTo(p.x+s*.6,p.y);cx.lineTo(p.x,p.y+s*2);cx.lineTo(p.x-s*.6,p.y);cx.closePath();cx.fill()}if(al)requestAnimationFrame(f)})()}
-let busy=0;orb.onclick=()=>{if(busy)return;busy=1;chime();orb.classList.add('press');
+let busy=0;orb.onclick=()=>{if(busy)return;busy=1;const R=orb.getBoundingClientRect();document.body.style.setProperty('--x',(R.left+R.width/2)+'px');document.body.style.setProperty('--y',(R.top+R.height/2)+'px');chime();orb.classList.add('press');
 setTimeout(()=>{orb.classList.remove('press');orb.classList.add('boom');document.getElementById('shock').classList.add('on');sparks();document.body.classList.add('go')},230);
 setTimeout(()=>{location.href='map.html'},1500)};
 </script>
