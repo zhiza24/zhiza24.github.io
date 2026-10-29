@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Путь Современного Алхимика · Майя Явь</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#211710">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="t/style.css">
+<style>
+.entry .ea{position:absolute;left:0;right:0;top:9%;margin:0;text-align:center;font-family:var(--serif);font-size:19px;letter-spacing:.08em;color:var(--sand)}
+.entry .eh{font-size:28px;line-height:1.18;bottom:auto;top:calc(44% + 66px + 110px)}
+.entry .es{top:calc(44% + 66px + 30px)}
+/* Luxurious core button */
+.core{position:relative;width:120px;height:120px;border-radius:50%;border:none;background:radial-gradient(circle at 35% 30%,#fff5d0 0%,#f0c870 25%,#c98a40 50%,#8a5420 80%,#5a3410 100%);box-shadow:0 0 0 4px #7a4a16,0 0 0 8px rgba(201,138,64,.4),0 12px 30px rgba(0,0,0,.5),inset 0 4px 12px rgba(255,240,180,.6),inset 0 -6px 12px rgba(0,0,0,.4);cursor:pointer;transition:transform .2s,box-shadow .3s}
+.core:before{content:"";position:absolute;inset:8px;border-radius:50%;border:1.5px dashed rgba(255,230,170,.7);pointer-events:none}
+.core:after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,transparent 40%,rgba(255,255,220,.25) 50%,transparent 60%);pointer-events:none}
+.core:hover,.core:active{transform:scale(1.05);box-shadow:0 0 0 4px #a86a28,0 0 0 10px rgba(240,200,100,.6),0 0 40px rgba(255,200,80,.8),0 16px 36px rgba(0,0,0,.6)}
+.core .halo{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle,rgba(255,210,100,.4) 0%,transparent 70%);animation:pulse 2.4s ease-in-out infinite;pointer-events:none}
+@keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+</style>
+</head><body>
+<div class="backdrop" aria-hidden="true"></div>
+<main class="phone" id="app"><section class="scr entry dark"><div class="ent">
+<p class="ea">Автор: Майя Явь</p>
+<p class="eh">ПУТЬ<br>СОВРЕМЕННОГО<br>АЛХИМИКА</p>
+<button class="core" id="core" aria-label="Войти"><span class="halo"></span><span class="ring"></span><span class="ring r2"></span><span class="wave"></span></button>
+<p class="es">коснитесь</p></div></section></main>
+<script>
+const c=document.getElementById('core');let AC;
+const ES=new Audio('snd/entry.mp3?v=2');ES.preload='auto';
+c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}let gone=0;const go=()=>{if(!gone){gone=1;location.href='map.html?v=6'}};ES.currentTime=0;ES.onended=go;const pr=ES.play();if(pr&&pr.catch)pr.catch(()=>setTimeout(go,1500));c.classList.add('go');setTimeout(go,6000)};
+</script></body></html>
