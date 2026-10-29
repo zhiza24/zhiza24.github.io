@@ -17,13 +17,10 @@
 <p class="es">коснитесь</p></div></section></main>
 <script>
 const c=document.getElementById('core');let AC;
-function chime(){try{const A=new (window.AudioContext||window.webkitAudioContext)(),t=A.currentTime,out=A.createGain(),lp=A.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3200;
-out.gain.setValueAtTime(0,t);out.gain.linearRampToValueAtTime(.22,t+.25);out.gain.setValueAtTime(.22,t+1.1);out.gain.linearRampToValueAtTime(0,t+2.3);
-const dl=A.createDelay();dl.delayTime.value=.24;const fb=A.createGain();fb.gain.value=.3;dl.connect(fb);fb.connect(dl);out.connect(lp);lp.connect(A.destination);out.connect(dl);dl.connect(lp);
-const tone=(f,st,d,v)=>{const o=A.createOscillator(),g=A.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,t+st);g.gain.linearRampToValueAtTime(v,t+st+.12);g.gain.exponentialRampToValueAtTime(.0001,t+st+d);o.connect(g);g.connect(out);o.start(t+st);o.stop(t+st+d+.05)};
-tone(220,0,2.2,.10);tone(329.63,0,2.2,.06);
-[440,523.25,659.25,830.61,987.77].forEach((f,i)=>tone(f,.1+i*.13,1.8-i*.1,.09));
-[1760,2093,2489].forEach((f,i)=>tone(f,.6+i*.11,1.1,.025));
+function chime(){try{const A=new (window.AudioContext||window.webkitAudioContext)(),t=A.currentTime,out=A.createGain(),lp=A.createBiquadFilter();lp.type='lowpass';lp.frequency.value=900;lp.Q.value=.5;
+out.gain.setValueAtTime(0,t);out.gain.linearRampToValueAtTime(.32,t+.35);out.gain.setValueAtTime(.32,t+1.2);out.gain.linearRampToValueAtTime(0,t+2.35);out.connect(lp);lp.connect(A.destination);
+const tone=(f,st,d,v,type)=>{const o=A.createOscillator(),g=A.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(0,t+st);g.gain.linearRampToValueAtTime(v,t+st+.3);g.gain.exponentialRampToValueAtTime(.0001,t+st+d);o.connect(g);g.connect(out);o.start(t+st);o.stop(t+st+d+.05)};
+tone(98,0,2.3,.32);tone(98.6,0,2.3,.2);tone(146.8,.05,2.2,.14);tone(196,.25,2,.1);tone(270.4,.25,1.8,.05);tone(65.4,0,2.3,.18,'triangle');
 }catch(e){}}
 c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}chime();c.classList.add('go');setTimeout(()=>location.href='map.html',2400)};
 </script></body></html>

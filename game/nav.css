@@ -12,3 +12,7 @@
 .gdraw .pn a.cur{color:#a8641a}
 .gtoast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:#4a2c0c;color:#ffe3a0;font:600 15px Manrope,sans-serif;padding:10px 18px;border-radius:20px;opacity:0;transition:.3s;z-index:70;pointer-events:none}
 .gtoast.on{opacity:1}
+.gnav a.on:not(.hero){position:relative;color:#fff0b8;font-weight:800;text-shadow:0 0 8px #ffc04a,0 0 16px rgba(255,170,60,.7)}
+.gnav a.on:not(.hero) .i{transform:scale(1.32) translateY(-4px);filter:drop-shadow(0 0 6px #ffd06a) drop-shadow(0 0 14px #ffa83a);animation:gOn 2s ease-in-out infinite}
+.gnav a.on:not(.hero):before{content:"";position:absolute;left:12%;right:12%;top:2px;bottom:4px;border-radius:14px;background:radial-gradient(ellipse at 50% 40%,rgba(255,210,120,.38),rgba(255,180,80,0) 70%);pointer-events:none}
+@keyframes gOn{0%,100%{filter:drop-shadow(0 0 6px #ffd06a) drop-shadow(0 0 12px #ffa83a)}50%{filter:drop-shadow(0 0 10px #ffe08a) drop-shadow(0 0 22px #ffa83a)}}
