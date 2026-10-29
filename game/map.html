@@ -1,9 +1,9 @@
-<!doctype html><html lang="ru"><head>
+<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Карта пути</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#5a3a14">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="nav.css?v=3">
+<link rel="stylesheet" href="nav.css?v=4">
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#2a1c0c}
 .map{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));background:#2a1c0c url(img/map_bg.jpg?v=5) no-repeat;overflow:hidden}
 .o{position:absolute;transform:translate(-50%,-50%);border-radius:50%}
@@ -50,7 +50,7 @@
 function lay(){var m=document.getElementById('m'),W=m.clientWidth,H=m.clientHeight,s=Math.max(W/576,H/1024),ox=(W-576*s)/2,oy=H-1024*s;
 m.style.backgroundSize=576*s+'px '+1024*s+'px';m.style.backgroundPosition=ox+'px '+oy+'px';
 var c=document.getElementById('cont');c.style.left=Math.min(W-100,ox+400*s)+'px';c.style.top=(oy+519*s)+'px';m.querySelectorAll('.o').forEach(function(e){var d=e.dataset;e.style.left=(ox+d.x*s)+'px';e.style.top=(oy+d.y*s)+'px';e.style.width=e.style.height=(d.r*s)+'px'})}
-addEventListener('resize',lay);lay();try{if((JSON.parse(localStorage.getItem('alch_profile'))||{}).skill){var ss=document.querySelectorAll('.o.step');ss[ss.length-1].classList.add('nxt')}}catch(e){}
+addEventListener('resize',lay);lay();try{(function(){var P=JSON.parse(localStorage.getItem('alch_profile'))||{};var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>=d)return;var ss=document.querySelectorAll('.o.step'),c=ss[ss.length-1-t];if(!c)return;c.classList.add('nxt');c.addEventListener('click',function(e){if(!c.classList.contains('nxt'))return;e.stopImmediatePropagation();e.preventDefault();P.progress={d:d,t:t+1};localStorage.setItem('alch_profile',JSON.stringify(P));c.classList.remove('nxt');window.gToast&&gToast('Задание выполнено! Новый тест открыт');setTimeout(function(){location.href='hero.html?v=4'},1400)},true)})()}catch(e){}
 </script>
 <script>
 // Текст свитка: заменить здесь
@@ -65,5 +65,5 @@ function cl(){o.classList.remove('on');document.getElementById('scl').classList.
 document.getElementById('scl').onclick=function(){o.classList.contains('on')?cl():(o.classList.add('on'),this.classList.add('op'))};
 document.getElementById('sx').onclick=cl;o.onclick=function(e){if(e.target==o)cl()};})();
 </script>
-<script src="nav.js?v=3"></script>
+<script src="nav.js?v=4"></script>
 </body></html>

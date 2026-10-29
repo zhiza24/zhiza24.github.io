@@ -1,9 +1,9 @@
-<!doctype html><html lang="ru"><head>
+<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Герой</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="nav.css?v=3">
+<link rel="stylesheet" href="nav.css?v=4">
 <style>
 html,body{margin:0;height:100%;overflow:hidden;background:#2a1606;font-family:Manrope,sans-serif;color:#3a220a}
 .sc{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));padding:calc(env(safe-area-inset-top) + 50px) 10px 8px;box-sizing:border-box;display:flex;flex-direction:column;gap:clamp(5px,1vh,9px);overflow:hidden;
@@ -54,13 +54,16 @@ background:radial-gradient(ellipse at 50% 35%,#fff6dc 0%,#f6e3b4 45%,#e2c07c 100
 <div class="pt" id="pt"><div class="an" id="an"></div></div>
 <div class="col"><div><div class="md" id="p2"></div><div class="l">Вызов</div></div><div><div class="md" id="p3"></div><div class="l">Ключ</div></div></div>
 </div>
-<div class="row"><div class="pn q"><h4>Качества</h4><ul id="ql"></ul></div><div class="ss" id="scr"></div></div>
+<div class="row"><div class="pn q"><h4>Испытания</h4><ul id="ql" hidden></ul><div class="ts" id="ts"></div><div class="tn" id="tn"></div></div><div class="ss" id="scr"></div></div>
+<style>.ts{display:flex;flex-direction:column;gap:2px}.ts button{display:block;width:100%;text-align:left;border:1px solid #c99a3a;border-radius:9px;background:linear-gradient(#fff3cf,#f0d48e);color:#4a2400;font:700 11px/1.15 Manrope,sans-serif;padding:3px 18px 3px 6px;position:relative}.ts button b{color:#8a3a12}.ts .lk{filter:grayscale(.8) brightness(.8);opacity:.6}.ts .dn::after{content:'✓';position:absolute;right:3px;top:50%;margin-top:-7.5px;background:#2e7d32;color:#fff;border-radius:50%;width:15px;height:15px;font-size:10px;line-height:15px}.ts .nx{animation:tg 1.4s ease-in-out infinite}@keyframes tg{50%{box-shadow:0 0 10px 3px rgba(255,190,70,.95)}}.ts .lk::after{content:'🔒';position:absolute;right:3px;font-size:9px}.tn{text-align:center;font:600 11px Manrope,sans-serif;color:#7a3a10;min-height:13px}
+#tk{position:fixed;inset:0;background:rgba(20,8,0,.6);display:none;align-items:center;justify-content:center;z-index:90}#tk.on{display:flex}#tk div{background:#fbefd2;border:2px solid #b8862b;border-radius:16px;padding:20px;text-align:center;width:78%;color:#4a2400;font:600 15px Manrope,sans-serif}#tk h3{font:700 24px 'Cormorant Garamond',serif;color:#8a3a12;margin:0 0 8px}#tk button{margin-top:12px;background:#b8862b;color:#fff;border:0;border-radius:20px;padding:10px 20px;font:800 14px Manrope,sans-serif}@media(max-height:740px){.ts{gap:1px}.ts button{font-size:10px;padding:1px 16px 1px 5px;border-radius:7px}.tn{display:none}.pn.q h4{margin:0}.sl6 span{width:34px!important;height:34px!important}}</style>
 <div class="pn af"><h4 style="text-align:center;font:700 15px 'Cormorant Garamond',serif;color:#8a3a12">Артефакты</h4><div class="sl6"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
 <button class="go" id="go" type="button">ПРИНЯТЬ ПУТЬ</button>
 </div>
 <div class="ov" id="ov"><div class="pp"><button class="x" type="button" id="x" aria-label="Закрыть">×</button><h3 id="ph"></h3><div class="bd" id="pb"></div></div></div>
-<script src="arcana.js"></script>
-<script src="nav.js?v=3"></script>
+<div id="tk"><div><h3>Выполни задание</h3><p id="tkt">Открой карту: светящийся круг ждет тебя.</p><button type="button" id="tkb">Открыть карту</button></div></div>
+<script src="arcana.js?v=4"></script>
+<script src="nav.js?v=4"></script>
 <script>
 var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
 function red(n){while(n>22){n=String(n).split('').reduce(function(a,c){return a+ +c},0)}return n}
@@ -89,4 +92,11 @@ var ov=document.getElementById('ov');
 document.getElementById('scr').onclick=function(e){var b=e.target.closest('.sl');if(!b)return;var s=L[+b.dataset.i];document.getElementById('ph').textContent=s.t;document.getElementById('pb').innerHTML=s.c;ov.classList.add('on')};
 document.getElementById('x').onclick=function(){ov.classList.remove('on')};ov.onclick=function(e){if(e.target==ov)ov.classList.remove('on')};
 document.getElementById('go').onclick=function(){location.href='map.html?v=3'};
+
+(function(){var T=['Колесо судьбы','Точка отсчета','Кривой мир','Колесо жизни','Желания','Ценности','Направления','Свиток Дизайна'];
+var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>d)t=d;P.progress={d:d,t:t};localStorage.setItem('alch_profile',JSON.stringify(P));
+var b=document.getElementById('ts');b.innerHTML=T.map(function(n,i){var c=i<d?'dn':(i==d&&t>=d?'nx':'lk');return '<button type="button" class="'+c+'" data-i="'+i+'" title="'+n+'"><b>Тест '+(i+1)+'</b> · '+n+'</button>'}).join('');
+var tn=document.getElementById('tn');tn.textContent=t<d?'Выполни задание на карте':(d<T.length?'Дальше: '+T[d]:'Все тесты пройдены');
+b.onclick=function(e){var x=e.target.closest('button');if(!x)return;var i=+x.dataset.i;tn.textContent=(i+1)+'. '+T[i];if(i==0&&d>=1){location.href='wheel.html';return}if(t<d&&i==d){document.getElementById('tk').classList.add('on');return}window.gToast?gToast('Скоро'):alert('Скоро')};
+var k=document.getElementById('tk');if(t<d&&d>1)k.classList.add('on');document.getElementById('tkb').onclick=function(){location.href='map.html?v=3'};k.onclick=function(e){if(e.target==k)k.classList.remove('on')};})();
 </script></body></html>
