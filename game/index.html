@@ -33,7 +33,7 @@ body{background:radial-gradient(ellipse at 50% 38%,#5a3816 0%,#2e1c0b 45%,#160d0
 .orb.boom img,.orb.boom .irid{animation:none;transform:scale(1.2);transition:transform .35s cubic-bezier(.2,1.6,.4,1)}
 .shock{position:fixed;left:50%;top:50%;width:10px;height:10px;margin:-5px;border-radius:50%;border:3px solid #fff2c0;box-shadow:0 0 16px #ffd56a,inset 0 0 12px #ffd56a;opacity:0;pointer-events:none}
 .shock.on{animation:shock .9s ease-out forwards}
-@keyframes shock{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(90)}}
+@keyframes shock{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(60)}}.go .orb{filter:brightness(1.6) drop-shadow(0 0 40px #fff0b0);transition:filter .3s}
 .flash{background:radial-gradient(circle,#fffbe8 0%,#ffe08a 18%,rgba(255,200,80,.0) 42%)!important;transform:scale(.3);transition:opacity .35s,transform .6s ease-out!important}
 .go .flash{transform:scale(3)}
 canvas#fx{position:fixed;inset:0;pointer-events:none}
@@ -51,7 +51,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none}
  <button class="orb" id="orb" aria-label="Начать путь"><div class="halo"></div><div class="ring"></div><div class="ring r2"></div><div class="core"><img src="img/sphere.png" alt=""><div class="irid"></div><div class="shine"></div></div></button>
  <div><div class="title">ПУТЬ<br>СОВРЕМЕННОГО<br>АЛХИМИКА</div><div class="hint">Коснись сферы, чтобы начать</div></div>
 </div>
-<div class="flash"></div><div class="shock" id="shock"></div><canvas id="fx"></canvas>
+<div class="shock" id="shock"></div><canvas id="fx"></canvas>
 <script>
 const orb=document.getElementById('orb'),cv=document.getElementById('fx'),cx=cv.getContext('2d');
 function sz(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio}sz();onresize=sz;
