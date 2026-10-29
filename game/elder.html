@@ -1,0 +1,35 @@
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Старец</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nav.css">
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf}
+.sc{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));overflow:hidden;animation:in 2s ease both}
+@keyframes in{from{opacity:0;filter:brightness(3)}to{opacity:1;filter:none}}
+.sc video,.sc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:40% 30%}
+.sc:after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0) 35%,rgba(0,0,0,.55) 58%,rgba(0,0,0,.92))}
+.tx{position:absolute;z-index:2;left:22px;right:22px;bottom:clamp(84px,13vh,120px);text-align:center}
+.tx p{margin:0 0 .35em;font:600 clamp(24px,3.8vh,32px)/1.18 'Cormorant Garamond',serif;color:#fbe6b4;text-shadow:0 2px 10px #000;opacity:0;transform:translateY(10px);transition:opacity 1.2s,transform 1.2s}
+.tx p.on{opacity:1;transform:none}
+.nx{position:absolute;z-index:2;left:50%;bottom:clamp(18px,3vh,30px);transform:translateX(-50%);width:70%;height:54px;border-radius:999px;border:2px solid #f5dca0;background:radial-gradient(ellipse at 50% 30%,#fff1c8,#e2b45e 55%,#9a6a28);color:#2a1606;font:700 24px 'Cormorant Garamond',serif;opacity:0;transition:opacity 1s;cursor:pointer}
+.nx.on{opacity:1}
+.snd{position:absolute;z-index:3;right:12px;top:calc(12px + env(safe-area-inset-top));width:40px;height:40px;border-radius:50%;border:1px solid #c9a46a;background:rgba(0,0,0,.4);color:#f0d9a8;font-size:18px}
+</style></head><body data-page="elder">
+<div class="sc">
+<video id="v" src="media/elder.mp4" poster="img/elder.jpg" autoplay muted playsinline></video>
+<button class="snd" id="snd" type="button" aria-label="Звук">♪</button>
+<div class="tx" id="tx"><p>По праву высшей силы.</p><p>По праву рождения, которое дали вам высшие силы.</p><p>Вот ваш мир.</p><p>И все здесь для вас.</p></div>
+<button class="nx" id="nx" type="button">Далее</button>
+</div>
+<audio id="au" src="media/elder.mp3" preload="auto"></audio>
+<script src="nav.js"></script>
+<script>
+var ps=document.querySelectorAll('#tx p');ps.forEach(function(p,i){setTimeout(function(){p.classList.add('on')},1600+i*2000)});
+setTimeout(function(){document.getElementById('nx').classList.add('on')},1600+ps.length*2000);
+document.getElementById('nx').onclick=function(){var t=document.querySelector('.gtoast');t.textContent='Дальше — испытания';gToast();setTimeout(function(){t.textContent='Скоро откроется'},1700)};
+var au=document.getElementById('au');au.play().catch(function(){});
+document.getElementById('snd').onclick=function(){au.currentTime=0;au.play()};
+</script>
+</body></html>
