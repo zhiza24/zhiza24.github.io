@@ -2,7 +2,7 @@
 .gnav a{flex:1;text-align:center;color:#f3dca8;text-decoration:none;font-size:12px;font-weight:600;padding:8px 0 12px;display:flex;flex-direction:column;align-items:center;gap:3px}
 .gnav a .i{display:block;width:32px;height:32px}.gnav a{font-size:12.5px}
 .gnav a.on{color:#ffd877}.gnav a.on .i{filter:drop-shadow(0 0 5px #ffcf5a)}.gnav a.on{color:#ffe08a}
-.gnav a.hero{position:relative}.gnav a.hero img{width:60px;height:60px;margin-top:-28px;border-radius:50%;box-shadow:0 0 16px #ffcf6a}
+.gnav a.hero{position:relative}.gnav a.hero img{width:60px;height:60px;margin-top:-28px;border-radius:50%;filter:drop-shadow(0 0 8px #ffcf6a)}
 .gdraw{position:fixed;inset:0;z-index:60;pointer-events:none}
 .gdraw .sh{position:absolute;inset:0;background:rgba(30,15,0,.45);opacity:0;transition:.3s}
 .gdraw .pn{position:absolute;top:0;right:0;bottom:0;width:78%;max-width:330px;background:linear-gradient(#f6e6bf,#e9cf92);border-left:3px solid #a8742a;transform:translateX(100%);transition:.3s;padding:calc(24px + env(safe-area-inset-top)) 18px 20px;box-sizing:border-box;overflow:auto}
