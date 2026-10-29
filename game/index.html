@@ -37,10 +37,18 @@ body{background:radial-gradient(ellipse at 50% 38%,#5a3816 0%,#2e1c0b 45%,#160d0
 .flash{background:radial-gradient(circle,#fffbe8 0%,#ffe08a 18%,rgba(255,200,80,.0) 42%)!important;transform:scale(.3);transition:opacity .35s,transform .6s ease-out!important}
 .go .flash{transform:scale(3)}
 canvas#fx{position:fixed;inset:0;pointer-events:none}
+
+.core{position:absolute;inset:0;border-radius:50%;overflow:hidden;animation:pulse 2.6s ease-in-out infinite;box-shadow:0 0 40px rgba(255,190,70,.8);isolation:isolate}
+.core img{animation:none!important;filter:none!important}
+.irid{inset:-20%!important;animation:spin 6s linear infinite!important}
+.orb.press .core{animation:none;transform:scale(.8);transition:transform .22s ease-in}
+.orb.boom .core{animation:none;transform:scale(1.15);transition:transform .35s cubic-bezier(.2,1.6,.4,1)}
+.flash{background:radial-gradient(circle,#fff 0%,#ffe9a8 6%,rgba(255,210,100,0) 14%)!important;transform:scale(.2);transition:opacity .25s,transform .5s ease-out!important}
+.go .flash{transform:scale(1.6);opacity:.9}
 </style></head><body>
 <div class="cover">
  <div class="author">Автор: Майя Явь</div>
- <button class="orb" id="orb" aria-label="Начать путь"><div class="halo"></div><div class="ring"></div><div class="ring r2"></div><img src="img/sphere.png" alt=""><div class="irid"></div><div class="shine"></div></button>
+ <button class="orb" id="orb" aria-label="Начать путь"><div class="halo"></div><div class="ring"></div><div class="ring r2"></div><div class="core"><img src="img/sphere.png" alt=""><div class="irid"></div><div class="shine"></div></div></button>
  <div><div class="title">ПУТЬ<br>СОВРЕМЕННОГО<br>АЛХИМИКА</div><div class="hint">Коснись сферы, чтобы начать</div></div>
 </div>
 <div class="flash"></div><div class="shock" id="shock"></div><canvas id="fx"></canvas>
@@ -56,9 +64,9 @@ tone(110,0,.5,.35,'triangle');
 const n=A.createBufferSource(),b=A.createBuffer(1,A.sampleRate*1.2,A.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);
 n.buffer=b;const bp=A.createBiquadFilter();bp.type='bandpass';bp.frequency.setValueAtTime(400,t);bp.frequency.exponentialRampToValueAtTime(6000,t+1);const ng=A.createGain();ng.gain.value=.12;n.connect(bp);bp.connect(ng);ng.connect(out);n.start(t+.1)}catch(e){}}
 function sparks(){const r=orb.getBoundingClientRect(),X=(r.left+r.width/2)*devicePixelRatio,Y=(r.top+r.height/2)*devicePixelRatio,P=[];
-for(let i=0;i<140;i++){const a=Math.random()*6.283,v=(2+Math.random()*9)*devicePixelRatio;P.push({x:X,y:Y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,s:(1+Math.random()*2.5)*devicePixelRatio,h:40+Math.random()*20})}
-(function f(){cx.clearRect(0,0,cv.width,cv.height);let al=0;for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vx*=.96;p.vy=p.vy*.96+.08;p.l-=.012;if(p.l<=0)continue;al=1;
-cx.globalAlpha=p.l;cx.fillStyle='hsl('+p.h+',100%,'+(60+30*p.l)+'%)';cx.beginPath();const s=p.s*(Math.random()<.2?2:1);cx.moveTo(p.x,p.y-s*2);cx.lineTo(p.x+s*.6,p.y);cx.lineTo(p.x,p.y+s*2);cx.lineTo(p.x-s*.6,p.y);cx.closePath();cx.fill()}if(al)requestAnimationFrame(f)})()}
+for(let i=0;i<220;i++){const a=Math.random()*6.283,v=(2+Math.random()*9)*devicePixelRatio;P.push({x:X,y:Y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,s:(1+Math.random()*2.5)*devicePixelRatio,h:40+Math.random()*20})}
+(function f(){cx.clearRect(0,0,cv.width,cv.height);let al=0;for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vx*=.96;p.vy=p.vy*.96+.015;p.l-=.009;if(p.l<=0)continue;al=1;
+cx.globalAlpha=p.l;cx.shadowColor='#ffd76a';cx.shadowBlur=8*devicePixelRatio;cx.fillStyle='hsl('+p.h+',100%,'+(60+30*p.l)+'%)';cx.beginPath();const s=p.s*(Math.random()<.2?2:1);cx.moveTo(p.x,p.y-s*2);cx.lineTo(p.x+s*.6,p.y);cx.lineTo(p.x,p.y+s*2);cx.lineTo(p.x-s*.6,p.y);cx.closePath();cx.fill()}if(al)requestAnimationFrame(f)})()}
 let busy=0;orb.onclick=()=>{if(busy)return;busy=1;chime();orb.classList.add('press');
 setTimeout(()=>{orb.classList.remove('press');orb.classList.add('boom');document.getElementById('shock').classList.add('on');sparks();document.body.classList.add('go')},230);
 setTimeout(()=>{location.href='map.html'},1500)};
