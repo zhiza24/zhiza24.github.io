@@ -58,11 +58,12 @@ for(var i=0;i<6;i++){sv.insertAdjacentHTML('beforeend','<g transform="rotate('+(
 for(var i=0;i<6;i++){sv.insertAdjacentHTML('beforeend','<g transform="rotate('+(i*60)+')"><text class="num" id="num'+i+'" x="0" y="-37" text-anchor="middle" dominant-baseline="central">'+(i+1)+'</text></g>')}
 sv.insertAdjacentHTML('beforeend','<circle r="15" fill="url(#hb)" stroke="#ffe7a6" stroke-width="1.6"/><circle r="10" fill="none" stroke="#7a4a16" stroke-width=".8"/><circle r="4" fill="#fff1c4"/>');
 function tick(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();var t=AC.currentTime,lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=700;lp.connect(AC.destination);[[110,.22],[164.8,.12],[220.5,.06]].forEach(function(p){var o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=p[0];g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(p[1],t+.06);g.gain.exponentialRampToValueAtTime(.0001,t+1.6);o.connect(g);g.connect(lp);o.start(t);o.stop(t+1.7)})}catch(e){}}
+var HX=[];window.gBack=function(){if(cur>=6)return false;if(busy)return true;if(!HX.length)return false;sc[HX.pop()]--;cur--;document.getElementById('sec'+cur).classList.remove('on');ang+=60;document.getElementById('rot').style.transform='rotate('+ang+'deg)';tick();show();return true};
 var ORD=[[0,1,2,3],[2,0,3,1],[1,3,0,2],[3,2,1,0],[2,3,1,0],[1,0,3,2]];
 function show(){var s=S[cur];document.getElementById('st').textContent='Ситуация '+(cur+1)+' из 6 · '+s[0];document.getElementById('q').textContent='«'+s[1]+'»';
 document.querySelectorAll('.num,.sec').forEach(function(n){n.classList.remove('cur')});document.getElementById('num'+cur).classList.add('cur');document.getElementById('sec'+cur).classList.add('cur');
 document.getElementById('cards').innerHTML=ORD[cur].map(function(i){return '<button class="cd" type="button" data-k="'+K[i]+'" style="background-image:url(img/c'+(cur+1)+'_'+K[i]+'.jpg)"><span>'+s[2][i]+'</span></button>'}).join('')}
-document.getElementById('cards').onclick=function(e){var b=e.target.closest('.cd');if(!b||busy)return;busy=true;b.classList.add('pick');sc[b.dataset.k]++;
+document.getElementById('cards').onclick=function(e){var b=e.target.closest('.cd');if(!b||busy)return;busy=true;b.classList.add('pick');sc[b.dataset.k]++;HX.push(b.dataset.k);
 document.getElementById('sec'+cur).classList.add('on');ang-=60;document.getElementById('rot').style.transform='rotate('+ang+'deg)';tick();
 var top=document.getElementById('top');setTimeout(function(){top.classList.add('out')},350);
 setTimeout(function(){cur++;if(cur<6){show();top.classList.remove('out');busy=false}else finish()},850)};

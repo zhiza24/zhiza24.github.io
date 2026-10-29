@@ -14,3 +14,11 @@ if(a.hasAttribute('data-menu')){e.preventDefault();d.classList.add('open');retur
 if(h=='#soon'){e.preventDefault();d.classList.remove('open');toast()}});
 d.querySelector('.sh').onclick=function(){d.classList.remove('open')};
 window.gToast=toast;})();
+;(function(){var cur=document.body.dataset.page,F=['./','map.html','form.html','elder.html','wheel.html'],K=['cover','map','form','elder','task'],i=K.indexOf(cur);if(i<1)return;
+var A='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
+var b=document.createElement('button'),f=document.createElement('button');b.className='garr gb';f.className='garr gf';b.type=f.type='button';b.setAttribute('aria-label','Назад');f.setAttribute('aria-label','Вперед');b.innerHTML=f.innerHTML=A;document.body.appendChild(b);document.body.appendChild(f);
+function P(){try{return JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){return{}}}
+function ok(){if(i>=4)return null;if(cur=='form'){var p=P();return !!(p.name&&p.birth&&p.birth.length==10&&p.gender&&p.points)}return true}
+function upd(){var o=ok();f.style.display=o===null?'none':'';f.classList.toggle('off',!o)}upd();setInterval(upd,600);
+b.onclick=function(){if(window.gBack&&window.gBack())return;location.href=F[i-1]};
+f.onclick=function(){if(!ok()){if(window.gToast){var t=document.querySelector('.gtoast');if(t){t.textContent='Сначала заполните этот шаг';gToast();setTimeout(function(){t.textContent='Скоро откроется'},1700)}}return}location.href=F[i+1]}})();
