@@ -15,7 +15,7 @@ h1{margin:0;text-align:center;font:700 clamp(26px,4vh,34px) 'Cormorant Garamond'
 .cards{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px}
 .cd{position:relative;border:1.5px solid #d9b46a;border-radius:12px;overflow:hidden;background:#1a110a center/cover no-repeat;box-shadow:0 0 12px rgba(255,190,90,.25);cursor:pointer;padding:0;text-align:left;color:#fff;transition:transform .25s,box-shadow .25s}
 .cd:active,.cd.pick{transform:scale(.97);box-shadow:0 0 26px 6px rgba(255,205,120,.8)}
-.cd span{position:absolute;left:0;right:0;bottom:0;padding:22% 8px 8px;font:600 clamp(12.5px,1.85vh,15px)/1.28 Manrope;background:linear-gradient(rgba(10,6,3,0),rgba(10,6,3,.82) 30%,rgba(10,6,3,.95));text-shadow:0 1px 2px #000}
+.cd{display:flex;flex-direction:column;background:#1a110a!important;animation:deal .6s cubic-bezier(.2,.8,.3,1.2) both}.cd:nth-child(2){animation-delay:.12s}.cd:nth-child(3){animation-delay:.24s}.cd:nth-child(4){animation-delay:.36s}@keyframes deal{from{opacity:0;transform:translateY(40px) rotate(-8deg) scale(.6)}to{opacity:1;transform:none}}.cd i{flex:1;min-height:0;background:center/cover no-repeat;background-image:inherit;display:block}.cd span{flex:none;padding:5px 7px 6px;font:600 clamp(11px,1.55vh,13px)/1.25 Manrope;color:#f3e2bc;background:#140d07;border-top:1px solid #d9b46a;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .wh{position:absolute;left:50%;bottom:0;width:calc(var(--wh)*2);height:calc(var(--wh)*2);transform:translate(-50%,50%);pointer-events:none;z-index:0}
 .wh .rot{position:absolute;inset:0;transition:transform 1s cubic-bezier(.4,.1,.2,1)}
 .wh img{position:absolute;inset:0;width:100%;height:100%}
@@ -97,7 +97,7 @@ var HX=[];window.gBack=function(){if(cur>=6)return false;if(busy)return true;if(
 var ORD=[[0,1,2,3],[2,0,3,1],[1,3,0,2],[3,2,1,0],[2,3,1,0],[1,0,3,2]];
 function show(){var s=S[cur];document.getElementById('st').textContent='Ситуация '+(cur+1)+' из 6 · '+s[0];document.getElementById('q').textContent='«'+s[1]+'»';
 document.querySelectorAll('.num,.sec').forEach(function(n){n.classList.remove('cur')});document.getElementById('num'+cur).classList.add('cur');document.getElementById('sec'+cur).classList.add('cur');
-document.getElementById('cards').innerHTML=ORD[cur].map(function(i){return '<button class="cd" type="button" data-k="'+K[i]+'" style="background-image:url(img/c'+(cur+1)+'_'+K[i]+'.jpg)"><span>'+s[2][i]+'</span></button>'}).join('')}
+document.getElementById('cards').innerHTML=ORD[cur].map(function(i){return '<button class="cd" type="button" data-k="'+K[i]+'" style="background-image:url(img/c'+(cur+1)+'_'+K[i]+'.jpg)"><i></i><span>'+s[2][i]+'</span></button>'}).join('')}
 document.getElementById('cards').onclick=function(e){var b=e.target.closest('.cd');if(!b||busy)return;busy=true;b.classList.add('pick');sc[b.dataset.k]++;HX.push(b.dataset.k);if(cur==5){document.getElementById('sec5').classList.add('on');cur=6;finish();return}
 document.getElementById('sec'+cur).classList.add('on');ang-=60;document.getElementById('rot').style.transform='rotate('+ang+'deg)';tick();
 var top=document.getElementById('top');setTimeout(function(){top.classList.add('out')},350);
