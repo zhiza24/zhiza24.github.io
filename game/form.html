@@ -1,0 +1,67 @@
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Инициация алхимика</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#100e0c">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nav.css">
+<style>
+:root{--bg:#100e0c;--dim:#6e6256;--g2:#e8d0a0;--g:#c4a574;--ink:#f4ecdf;--line:#6a5340;--muted:#a89884;--panel:#241c16;--d:"Cormorant Garamond",serif}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif}
+section{max-width:28rem;margin:0 auto;padding:32px 16px calc(110px + env(safe-area-inset-bottom))}
+.board{width:100%;border-radius:24px;border:1px solid var(--line);margin-bottom:24px;display:block}
+.au{text-align:center;font-size:12px;letter-spacing:.22em;color:var(--g);margin:0}
+h1{margin:8px 0 0;text-align:center;font:500 36px/1.1 var(--d);color:var(--g2)}
+.lead{max-width:24rem;margin:12px auto 0;text-align:center;font-size:14px;line-height:1.65;color:var(--muted)}
+form{margin-top:24px;display:flex;flex-direction:column;gap:16px}
+.lb{display:block;margin-bottom:8px;font-size:12px;letter-spacing:.18em;color:var(--g)}
+input{height:48px;width:100%;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 16px;color:var(--ink);font:16px Manrope,sans-serif;outline:none;color-scheme:dark}
+fieldset{border:0;margin:0;padding:0}legend{padding:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pill{height:48px;border-radius:999px;border:1px solid var(--line);background:none;font:500 20px var(--d);color:var(--g2);cursor:pointer}
+.pill.on{border-color:var(--g);background:rgba(196,165,116,.15)}
+.card{border-radius:16px;border:1px solid var(--line);background:var(--panel);padding:16px}
+.hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.hd p{margin:0}.t1{font:500 24px var(--d);color:var(--g2)}.t2{margin-top:4px!important;font-size:14px;color:var(--muted)}
+.tb{height:44px;flex-shrink:0;border-radius:999px;border:1px solid var(--g);background:none;padding:0 16px;font-size:14px;color:var(--g2)}
+.qs{margin-top:16px;display:flex;flex-direction:column;gap:16px}
+.qs legend{margin-bottom:8px;font-size:14px;color:var(--ink)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.op{min-height:44px;border-radius:12px;border:1px solid var(--line);background:none;padding:8px 12px;text-align:left;font:14px Manrope,sans-serif;color:var(--muted);cursor:pointer}
+.op.on{border-color:var(--g);color:var(--g2);background:rgba(196,165,116,.12)}
+.err{margin:0;text-align:center;font-size:14px;color:#e8a080;min-height:0}
+.go{height:48px;width:100%;border-radius:999px;border:0;background:var(--g);font:600 16px Manrope,sans-serif;color:var(--bg);cursor:pointer}
+.note{margin:0;text-align:center;font-size:12px;line-height:1.6;color:var(--dim)}
+</style></head><body data-page="form">
+<section>
+<img class="board" src="img/init.jpg" alt="Инициация алхимика">
+<p class="au">МАЙЯ ЯВЬ</p>
+<h1>Инициация алхимика</h1>
+<p class="lead">Ваши данные — координаты старта. Число по дате не подменяет ваши ответы.</p>
+<form id="f" novalidate>
+<label><span class="lb">ИМЯ</span><input id="nm" placeholder="Как к вам обращаться" autocomplete="name"></label>
+<label><span class="lb">ДАТА РОЖДЕНИЯ</span><input id="bd" type="date"></label>
+<fieldset><legend class="lb">КЕМ ИДЕТЕ</legend><div class="two" data-k="gender"><button type="button" class="pill" data-v="m">Мужчина</button><button type="button" class="pill" data-v="f">Женщина</button></div></fieldset>
+<div class="card"><div class="hd"><div><p class="t1">Первый отклик</p><p class="t2">Три вопроса, не диагноз. Полный тест встанет отдельно.</p></div><button type="button" class="tb" onclick="gToast()">Тест</button></div>
+<div class="qs">
+<fieldset><legend>Как вы обычно встречаете новое?</legend><div class="opts" data-k="meet"><button type="button" class="op" data-v="act">Сразу действую</button><button type="button" class="op" data-v="watch">Сначала смотрю</button><button type="button" class="op" data-v="create">Начинаю создавать свое</button><button type="button" class="op" data-v="mixed">Бывает по-разному</button></div></fieldset>
+<fieldset><legend>Как сейчас в том, ради чего вы пришли?</legend><div class="opts" data-k="state"><button type="button" class="op" data-v="hard">Здесь трудно</button><button type="button" class="op" data-v="mixed">Смешанно</button><button type="button" class="op" data-v="ok">В целом все в порядке</button></div></fieldset>
+<fieldset><legend>С чего хотите начать путь?</legend><div class="opts" data-k="focus"><button type="button" class="op" data-v="reactions">С привычных реакций</button><button type="button" class="op" data-v="now">С того, как живу сейчас</button><button type="button" class="op" data-v="want">С того, чего хочу</button></div></fieldset>
+</div></div>
+<p class="err" id="er"></p>
+<button type="submit" class="go">Перейти к герою</button>
+<p class="note">Прогресс остается на этом устройстве. Полные тесты блоков добавим следующими шагами.</p>
+</form></section>
+<script src="nav.js"></script>
+<script>
+var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
+var nm=document.getElementById('nm'),bd=document.getElementById('bd'),er=document.getElementById('er');
+nm.value=P.name||'';bd.value=P.birth||'';
+document.querySelectorAll('[data-k]').forEach(function(g){var k=g.dataset.k;g.querySelectorAll('button').forEach(function(b){if(P[k]==b.dataset.v)b.classList.add('on');
+b.onclick=function(){g.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');P[k]=b.dataset.v}})});
+function okDate(v){if(!v)return false;var d=new Date(v),y=d.getFullYear();return !isNaN(d)&&y>1900&&d<new Date()}
+document.getElementById('f').onsubmit=function(e){e.preventDefault();P.name=nm.value.trim();P.birth=bd.value;
+var m=!P.name?'Напишите, как к вам обращаться.':!okDate(P.birth)?'Проверьте дату рождения.':!P.gender?'Выберите, кем вы идете: мужчина или женщина.':(!P.meet||!P.state||!P.focus)?'Осталось три коротких ответа. Это еще не полный тест.':'';
+er.textContent=m;if(m){er.scrollIntoView({block:'center',behavior:'smooth'});return}
+localStorage.setItem('alch_profile',JSON.stringify(P));location.href='map.html'};
+</script>
+</body></html>
