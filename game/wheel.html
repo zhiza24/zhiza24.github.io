@@ -2,25 +2,25 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Колесо Фортуны</title><meta name="theme-color" content="#120c07">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="nav.css?v=6">
+<link rel="stylesheet" href="nav.css?v=7">
 <style>
 html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(ellipse at 50% 100%,#5a3a14 0,#24170c 45%,#0d0906 100%);color:#fff;font-family:Manrope,sans-serif}
 .scr{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));overflow:hidden;animation:fi 1.4s ease both}
 @keyframes fi{from{opacity:0}to{opacity:1}}
 .top{position:absolute;left:0;right:0;top:0;bottom:var(--wh);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + clamp(10px,2vh,20px)) 14px 8px;box-sizing:border-box;transition:opacity .45s}
 .top.out{opacity:0}
-h1{margin:0;text-align:center;font:700 clamp(26px,4vh,34px) 'Cormorant Garamond',serif;color:#ffe3a0;text-shadow:0 0 14px rgba(255,190,90,.5)}
+h1{margin:0;text-align:center;font:700 clamp(26px,4vh,34px) 'Cormorant Garamond',serif;color:#ffe3a0;text-shadow:0 0 14px rgba(255,190,90,.5);letter-spacing:.08em}
 .st{text-align:center;font:600 13px Manrope;letter-spacing:.12em;color:#e9cf96;margin:2px 0 6px;text-transform:uppercase}
 .q{text-align:center;font:700 clamp(16px,2.5vh,20px)/1.3 Manrope;color:#fff;text-shadow:0 1px 3px #000;margin:0 4px clamp(8px,1.6vh,14px)}
 .cards{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px}
 .cd{position:relative;border:1.5px solid #d9b46a;border-radius:12px;overflow:hidden;background:#1a110a center/cover no-repeat;box-shadow:0 0 12px rgba(255,190,90,.25);cursor:pointer;padding:0;text-align:left;color:#fff;transition:transform .25s,box-shadow .25s}
 .cd:active,.cd.pick{transform:scale(.97);box-shadow:0 0 26px 6px rgba(255,205,120,.8)}
-.cd span{position:absolute;left:0;right:0;bottom:0;padding:28% 8px 8px;font:600 clamp(12px,1.75vh,14.5px)/1.28 Manrope;background:linear-gradient(rgba(10,6,3,0),rgba(10,6,3,.82) 30%,rgba(10,6,3,.95));text-shadow:0 1px 2px #000}
-.wh{position:absolute;left:50%;bottom:0;width:calc(var(--wh)*2);height:calc(var(--wh)*2);transform:translate(-50%,50%)}
+.cd span{position:absolute;left:0;right:0;bottom:0;padding:22% 8px 8px;font:600 clamp(12.5px,1.85vh,15px)/1.28 Manrope;background:linear-gradient(rgba(10,6,3,0),rgba(10,6,3,.82) 30%,rgba(10,6,3,.95));text-shadow:0 1px 2px #000}
+.wh{position:absolute;left:50%;bottom:0;width:calc(var(--wh)*2);height:calc(var(--wh)*2);transform:translate(-50%,50%);pointer-events:none;z-index:0}
 .wh .rot{position:absolute;inset:0;transition:transform 1s cubic-bezier(.4,.1,.2,1)}
 .wh img{position:absolute;inset:0;width:100%;height:100%}
 .wh svg{position:absolute;inset:0;width:100%;height:100%}
-.sec{fill:#ffb347;fill-opacity:0;transition:fill-opacity .8s}.sec.on{fill-opacity:.42}
+.sec{fill:#ffb347;fill-opacity:0;transition:fill-opacity .8s}.sec.on{fill-opacity:.48}.sec.cur{fill-opacity:.28}
 .wh.all .rot{filter:drop-shadow(0 0 28px #ffa83a) brightness(1.2) saturate(1.1);transition:filter 1.5s,transform 1s}
 .res{position:absolute;left:0;right:0;top:0;bottom:var(--wh);display:none;flex-direction:column;align-items:center;justify-content:space-evenly;padding:calc(env(safe-area-inset-top) + 12px) 22px 6px;box-sizing:border-box;opacity:0;transition:opacity .9s}
 .res.on{opacity:1}
@@ -30,35 +30,68 @@ h1{margin:0;text-align:center;font:700 clamp(26px,4vh,34px) 'Cormorant Garamond'
 .bt{width:72%;height:52px;border-radius:999px;border:2px solid #f5dca0;background:radial-gradient(ellipse at 50% 30%,#fff3cc,#ecc06a 55%,#a5732c);color:#2a1606;font:700 24px 'Cormorant Garamond',serif;cursor:pointer;flex:none}
 :root{--wh:min(56vw,31dvh);--rh:calc(100dvh - 78px - var(--wh))}
 .lbl{text-align:center;font:700 11px Manrope;letter-spacing:.22em;text-transform:uppercase;color:#2a1606;background:linear-gradient(#ffe3a0,#d9a54e);border-radius:999px;padding:3px 12px;align-self:center;margin-bottom:4px}
-h1{letter-spacing:.08em}
-.cd span{font-size:clamp(12.5px,1.85vh,15px)!important;padding-top:22%!important}
-.num{font:700 15px 'Cormorant Garamond',serif;fill:#e9c98a;opacity:.75;transition:fill .5s,opacity .5s}
-.num.cur{fill:#fff6d8;opacity:1;font-size:19px;filter:drop-shadow(0 0 3px #ffb347)}
-.sec.cur{fill-opacity:.22}
-.wh{pointer-events:none;z-index:0}.top{z-index:2}
+.num{font:700 16px 'Cormorant Garamond',serif;fill:#e9c98a;opacity:.8;transition:fill .5s,opacity .5s}
+.num.cur{fill:#fff6d8;opacity:1;font-size:20px;filter:drop-shadow(0 0 4px #ffb347)}
 .wh.spin .rot{transition:transform 1.7s cubic-bezier(.45,0,.9,.6)!important}
 .wh.gone{transition:transform .8s cubic-bezier(.6,0,.9,.5),opacity .8s,filter .8s;transform:translate(-50%,-10%) scale(.15);opacity:0;filter:brightness(3) blur(4px)}
 .flash{position:fixed;inset:0;z-index:80;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 75%,#fff6d8,#ffc45a 30%,#a8641a 70%,#1c1007);transition:opacity .6s}.flash.on{opacity:1}
-.fin p{font-size:clamp(20px,3vh,26px)!important}
 .fin{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;transition:opacity 1.2s;pointer-events:none}
 .fin.on{opacity:1;pointer-events:auto}.fin p{margin:0 24px;text-align:center;font:600 clamp(24px,3.6vh,30px)/1.25 'Cormorant Garamond',serif;color:#ffe9b8;text-shadow:0 0 14px rgba(255,190,90,.45)}
+.top{z-index:2}
 </style></head><body data-page="task">
 <div class="scr">
 <div class="top" id="top"><div class="lbl">Первое задание</div><h1>ВЫБЕРИТЕ КАРТУ</h1><div class="st" id="st"></div><p class="q" id="q"></p><div class="cards" id="cards"></div></div>
 <div class="fin" id="fin"><p>Колесо запомнило ваш путь</p></div><div class="flash" id="flash"></div>
-<div class="wh" id="wh"><div class="rot" id="rot"><svg viewBox="-100 -100 200 200" id="sv"><defs><radialGradient id="wd"><stop offset="0" stop-color="#3a2410"/><stop offset="1" stop-color="#140c06"/></radialGradient><linearGradient id="sp" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9a6226"/><stop offset=".5" stop-color="#ffe7a6"/><stop offset="1" stop-color="#9a6226"/></linearGradient></defs></defs><defs><radialGradient id="hb" cx=".4" cy=".35"><stop offset="0" stop-color="#fff0b8"/><stop offset=".6" stop-color="#d9a04a"/><stop offset="1" stop-color="#8a5420"/></radialGradient></defs><circle r="60" fill="url(#wd)"/></svg><img src="img/wheel.webp?v=3" alt=""></div></div>
+<div class="wh" id="wh"><div class="rot" id="rot"><svg viewBox="-100 -100 200 200" id="sv"><defs><radialGradient id="wd"><stop offset="0" stop-color="#3a2410"/><stop offset="1" stop-color="#140c06"/></radialGradient><linearGradient id="sp" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9a6226"/><stop offset=".5" stop-color="#ffe7a6"/><stop offset="1" stop-color="#9a6226"/></linearGradient><radialGradient id="hb" cx=".4" cy=".35"><stop offset="0" stop-color="#fff0b8"/><stop offset=".6" stop-color="#d9a04a"/><stop offset="1" stop-color="#8a5420"/></radialGradient></defs><circle r="62" fill="url(#wd)" stroke="#c9a060" stroke-width="1.2"/></svg><img src="img/wheel.webp?v=4" alt=""></div></div>
 </div>
-<script src="nav.js?v=6"></script>
+<script src="nav.js?v=7"></script>
 <script>
-var S=[["Срочная задача", "Появилась новая рабочая или личная задача, дедлайн — сегодня же.", ["Карта-вспышка: дорога горит под ногами, путь виден лишь на шаг вперед.", "Карта в тумане: горы проступают постепенно, каждый перевал нужно разглядеть.", "Чистый пергамент: дорогу еще предстоит начертить своей рукой.", "Карта чужих костров: путь виден по тем, кто идет рядом."]], ["Внезапное внимание", "Вас неожиданно спросили или вызвали на обсуждение при других людях, когда вы этого не ждали.", ["Молния: ответ вспыхивает сразу, без пауз и сомнений.", "Дозорная башня: сначала обзор с высоты, потом точное слово.", "Новая звезда: свой ориентир среди чужих созвездий.", "Зеркало: слова отражают взгляды тех, кто смотрит."]], ["Рождение идеи", "В голове вспыхнула классная идея, но делать ее прямо сейчас еще рано или нет ресурсов.", ["Искра: огонь уже бежит по фитилю.", "Луна над садом: замысел зреет в тишине и проявится позже.", "Чертеж: контуры будущего города уже на бумаге.", "Общий стол: замысел, который рассматривают вместе."]], ["Поломка порядка", "Что-то неожиданно сломалось в привычном порядке или расписании дня.", ["Разрушенный мост: переправа из того, что под рукой.", "После бури: дождаться, пока осядет пыль, и найти брод.", "Новые земли: старая дорога рухнула — проложить свою.", "Караван: идти в общем темпе, за ведущим."]], ["Дефицит данных", "Нужно сделать выбор, а надежных данных или гарантий катастрофически мало.", ["Обрыв в туман: шаг в неизвестность на зов сердца.", "Крупицы: каждое зерно знания собрано терпеливо.", "Свой компас: стрелка, настроенная вашими законами.", "Тропа мастеров: проверенный путь, освещенный мудрыми."]], ["Игнорирование отклика", "Вас не заметили, не оценили или проигнорировали там, где вы ждали отклика.", ["Сигнальный огонь: громко заявить о себе с вершины.", "Тихая долина: отойти в тень и смотреть со стороны.", "Мастерская: важно лишь то, что создаете вы.", "Чужие следы: найти, где свернул не туда, и выровнять шаг."]]];
-var K=['s','n','str','z'],NM={s:'Реактивный (Сразу делать)',n:'Наблюдательный (Сначала смотреть)',str:'Созидательный (Строить свое)',z:'Переходный (Зависит от того, кто рядом)'};
-var sc={s:0,n:0,str:0,z:0},cur=0,busy=false,ang=0,AC;
+var S=[
+["Срочная задача", "Появилась новая задача, дедлайн — сегодня. Дорога горит под ногами.", [
+"Карта-вспышка: путь виден лишь на шаг вперёд, огонь уже бежит.",
+"Карта в тумане: горы проступают постепенно, каждый перевал нужно разглядеть.",
+"Чистый пергамент: дорогу ещё предстоит начертить своей рукой.",
+"Карта чужих костров: путь виден по тем, кто идёт рядом."
+]],
+["Внезапное внимание", "Вас неожиданно спросили при других. Все взгляды обращены на вас.", [
+"Молния: ответ вспыхивает сразу, без пауз и сомнений.",
+"Дозорная башня: сначала обзор с высоты, потом точное слово.",
+"Новая звезда: свой ориентир среди чужих созвездий.",
+"Зеркало: слова отражают взгляды тех, кто смотрит."
+]],
+["Рождение идеи", "В голове вспыхнула идея, но делать её сейчас рано. Замысел ждёт своего часа.", [
+"Искра: огонь уже бежит по фитилю.",
+"Луна над садом: замысел зреет в тишине и проявится позже.",
+"Чертёж: контуры будущего города уже на бумаге.",
+"Общий стол: замысел, который рассматривают вместе."
+]],
+["Поломка порядка", "Что-то сломалось в привычном порядке. Старая дорога рухнула.", [
+"Разрушенный мост: переправа из того, что под рукой.",
+"После бури: дождаться, пока осядет пыль, и найти брод.",
+"Новые земли: старая дорога рухнула — проложить свою.",
+"Караван: идти в общем темпе, за ведущим."
+]],
+["Дефицит данных", "Нужно сделать выбор, а надёжных данных катастрофически мало. Туман густой.", [
+"Обрыв в туман: шаг в неизвестность на зов сердца.",
+"Крупицы: каждое зерно знания собрано терпеливо.",
+"Свой компас: стрелка, настроенная вашими законами.",
+"Тропа мастеров: проверенный путь, освещённый мудрыми."
+]],
+["Игнорирование отклика", "Вас не заметили там, где ждали отклика. Эхо не пришло.", [
+"Сигнальный огонь: громко заявить о себе с вершины.",
+"Тихая долина: отойти в тень и смотреть со стороны.",
+"Мастерская: важно лишь то, что создаёте вы.",
+"Чужие следы: найти, где свернул не туда, и выровнять шаг."
+]]
+];
+var K=['s','n','str','z'],NM={s:'Реактивный (Сразу делать)',n:'Наблюдательный (Сначала смотреть)',str:'Созидательный (Строить своё)',z:'Переходный (Зависит от того, кто рядом)'};
+var sc={s:0,n:0,str:0,z:0},cur=0,busy=false,ang=0;
 var sv=document.getElementById('sv');
 var R=58.6;for(var i=0;i<6;i++){var a0=(i*60-120)*Math.PI/180,a1=a0+Math.PI/3;
 sv.insertAdjacentHTML('beforeend','<path class="sec" id="sec'+i+'" d="M0 0L'+(R*Math.cos(a0)).toFixed(3)+' '+(R*Math.sin(a0)).toFixed(3)+'A'+R+' '+R+' 0 0 1 '+(R*Math.cos(a1)).toFixed(3)+' '+(R*Math.sin(a1)).toFixed(3)+'Z"/>')}
 for(var i=0;i<6;i++){sv.insertAdjacentHTML('beforeend','<g transform="rotate('+(i*60-120)+')"><rect x="15" y="-2.6" width="45" height="5.2" rx="1.2" fill="url(#sp)" stroke="#6b4012" stroke-width=".4"/></g>')}
 for(var i=0;i<6;i++){sv.insertAdjacentHTML('beforeend','<g transform="rotate('+(i*60)+')"><text class="num" id="num'+i+'" x="0" y="-37" text-anchor="middle" dominant-baseline="central">'+(i+1)+'</text></g>')}
-sv.insertAdjacentHTML('beforeend','<circle r="15" fill="url(#hb)" stroke="#ffe7a6" stroke-width="1.6"/><circle r="10" fill="none" stroke="#7a4a16" stroke-width=".8"/><circle r="4" fill="#fff1c4"/>');
+sv.insertAdjacentHTML('beforeend','<circle r="16" fill="url(#hb)" stroke="#ffe7a6" stroke-width="1.8"/><circle r="11" fill="none" stroke="#7a4a16" stroke-width=".8"/><circle r="4.5" fill="#fff1c4"/>');
 var TS=new Audio('snd/trans.mp3?v=2');TS.preload='auto';function tick(){try{TS.currentTime=0;var p=TS.play();if(p&&p.catch)p.catch(function(){})}catch(e){}}
 var HX=[];window.gBack=function(){if(cur>=6)return false;if(busy)return true;if(!HX.length)return false;sc[HX.pop()]--;cur--;document.getElementById('sec'+cur).classList.remove('on');ang+=60;document.getElementById('rot').style.transform='rotate('+ang+'deg)';tick();show();return true};
 var ORD=[[0,1,2,3],[2,0,3,1],[1,3,0,2],[3,2,1,0],[2,3,1,0],[1,0,3,2]];
@@ -79,6 +112,6 @@ var w=document.getElementById('wh'),r=document.getElementById('rot');w.classList
 setTimeout(function(){document.getElementById('fin').classList.add('on')},300);
 setTimeout(function(){w.classList.add('gone')},1300);
 setTimeout(function(){document.getElementById('flash').classList.add('on')},1700);
-setTimeout(function(){location.href='hero.html?v=6'},2300)}
+setTimeout(function(){location.href='hero.html?v=7'},2300)}
 show();
 </script></body></html>
