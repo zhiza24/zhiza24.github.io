@@ -66,14 +66,15 @@ h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-
 .lab{font-family:Manrope,sans-serif!important;font-weight:700!important;letter-spacing:.04em!important;text-transform:none!important;font-size:clamp(17px,2.4vh,20px)!important;margin-bottom:8px!important}
 .lab small{display:block;font-weight:500;font-size:.78em;color:#efe6d4;letter-spacing:.02em;margin-top:2px}
 .note,.hint,.err{font-family:Manrope,sans-serif!important;font-style:normal!important;font-size:clamp(15px,2vh,17px)!important}
+.gen{gap:10px!important}.flr{flex:none;filter:drop-shadow(0 0 4px rgba(255,200,110,.5))}
 </style></head><body data-page="form">
 <div class="scr"><div class="board">
-<h1>ИНИЦИАЦИЯ АЛХИМИКА</h1><div class="orn"></div>
+<h1 style="margin-top:clamp(10px,2.4vh,26px)">ИНИЦИАЦИЯ АЛХИМИКА</h1><div class="orn"></div>
 <div class="grp"><label class="lab" for="nm">Введите ваше имя<small>или как к вам обращаться</small></label>
 <div class="bar"><input id="nm" autocomplete="name" placeholder="Имя"></div></div>
 <div class="grp"><label class="lab" for="bd">Дата рождения</label>
 <div class="bar"><input id="bd" inputmode="numeric" placeholder="ДД.ММ.ГГГГ" maxlength="10"></div></div>
-<div class="gen"><span class="sym">♂</span><button class="md" data-g="m" type="button">М</button><button class="md" data-g="f" type="button">Ж</button><span class="sym">♀</span></div>
+<div class="gen"><span class="sym">♂</span><button class="md" data-g="m" type="button">М</button><svg class="flr" viewBox="0 0 90 30" width="78" height="26" aria-hidden="true"><g fill="none" stroke="#e0b866" stroke-width="1.4" stroke-linecap="round"><path d="M4 15h22M64 15h22"/><path d="M26 15c4-8 12-8 14-2-3 4-9 3-9-1M64 15c-4-8-12-8-14-2 3 4 9 3 9-1"/><path d="M26 15c4 8 12 8 14 2M64 15c-4 8-12 8-14 2"/></g><path d="M45 8l5 7-5 7-5-7z" fill="#f0cf86"/></svg><button class="md" data-g="f" type="button">Ж</button><span class="sym">♀</span></div>
 <p class="note">Ваши данные — это координаты вашего старта в Мире Алхимии.</p>
 
 <div class="go"><button class="born" type="button" id="next">Рождение героя</button><p class="err" id="er"></p></div></div></div>

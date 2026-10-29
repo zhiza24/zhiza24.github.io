@@ -8,10 +8,10 @@
 .map{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));background:#2a1c0c url(img/map_bg.jpg?v=5) no-repeat;overflow:hidden}
 .o{position:absolute;transform:translate(-50%,-50%);border-radius:50%}
 .dock{position:absolute;left:0;right:0;bottom:14px;height:168px}
-.cont{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:262px;height:70px;background:url(img/btn_plate.png) center/100% 100%;display:flex;align-items:center;justify-content:center;font:700 23px 'Cormorant Garamond',serif;color:#ffe6a8;text-shadow:0 2px 3px #3a0a05;text-decoration:none;white-space:nowrap}
-.start{position:absolute;left:50%;bottom:72px;transform:translateX(-50%);width:92px;height:92px;border-radius:50%;background:url(img/start.png) center/100%;display:flex;align-items:center;justify-content:center;font:700 25px 'Cormorant Garamond',serif;color:#ffe6a8;text-shadow:0 2px 3px #000;text-decoration:none;animation:p 2s infinite}
+.cont{position:absolute;transform:translate(-50%,-50%);width:196px;height:56px;font-size:20px!important;animation:p 2.6s infinite;border-radius:14px;background:url(img/btn_plate.png) center/100% 100%;display:flex;align-items:center;justify-content:center;font:700 23px 'Cormorant Garamond',serif;color:#ffe6a8;text-shadow:0 2px 3px #3a0a05;text-decoration:none;white-space:nowrap}
+.start{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);width:92px;height:92px;border-radius:50%;background:url(img/start.png) center/100%;display:flex;align-items:center;justify-content:center;font:700 25px 'Cormorant Garamond',serif;color:#ffe6a8;text-shadow:0 2px 3px #000;text-decoration:none;animation:p 2s infinite}
 @keyframes p{0%,100%{box-shadow:0 0 6px 2px rgba(255,211,106,.5)}50%{box-shadow:0 0 26px 10px rgba(255,211,106,.85)}}
-.cmp,.inf{position:absolute;bottom:84px;width:70px;height:70px}.cmp{left:12px}.inf{right:12px}
+.cmp,.inf{position:absolute;bottom:48px;width:70px;height:70px}.cmp{left:12px}.inf{right:12px}
 .cmp img,.inf img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}.cmp img{border-radius:50%}
 </style></head><body data-page="map">
 <div class="map" id="m">
@@ -23,13 +23,13 @@
 <div class="dock">
 <a class="cmp" href="#soon" aria-label="Компас"><img src="img/compass.png" alt=""></a>
 <a class="start" href="form.html"><span>Старт</span></a>
-<a class="inf" href="#soon" aria-label="Информация"><img src="img/info.png" alt=""></a>
-<a class="cont" href="#soon">Продолжить путь</a>
-</div></div>
+<a class="inf" href="#soon" aria-label="Информация"><svg viewBox="0 0 70 70" width="100%" height="100%"><defs><radialGradient id="ig" cx=".4" cy=".35"><stop offset="0" stop-color="#5a3a18"/><stop offset="1" stop-color="#1e120a"/></radialGradient><linearGradient id="ir" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#e0a940"/><stop offset="1" stop-color="#9a6226"/></linearGradient></defs><circle cx="35" cy="35" r="31" fill="url(#ig)" stroke="url(#ir)" stroke-width="4"/><circle cx="35" cy="35" r="25" fill="none" stroke="url(#ir)" stroke-width="1" stroke-dasharray="2 3"/><text x="35" y="47" text-anchor="middle" font-family="Cormorant Garamond,serif" font-style="italic" font-weight="700" font-size="36" fill="url(#ir)">i</text></svg></a>
+</div>
+<a class="cont" id="cont" href="#soon" data-x="400" data-y="519">Продолжить путь</a></div>
 <script>
 function lay(){var m=document.getElementById('m'),W=m.clientWidth,H=m.clientHeight,s=Math.max(W/576,H/1024),ox=(W-576*s)/2,oy=H-1024*s;
 m.style.backgroundSize=576*s+'px '+1024*s+'px';m.style.backgroundPosition=ox+'px '+oy+'px';
-m.querySelectorAll('.o').forEach(function(e){var d=e.dataset;e.style.left=(ox+d.x*s)+'px';e.style.top=(oy+d.y*s)+'px';e.style.width=e.style.height=(d.r*s)+'px'})}
+var c=document.getElementById('cont');c.style.left=Math.min(W-100,ox+400*s)+'px';c.style.top=(oy+519*s)+'px';m.querySelectorAll('.o').forEach(function(e){var d=e.dataset;e.style.left=(ox+d.x*s)+'px';e.style.top=(oy+d.y*s)+'px';e.style.width=e.style.height=(d.r*s)+'px'})}
 addEventListener('resize',lay);lay();
 </script>
 <script src="nav.js"></script>
