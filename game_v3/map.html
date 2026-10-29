@@ -1,0 +1,73 @@
+<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Карта пути</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#5a3a14">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nav.css?v=8">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#2a1c0c}
+.map{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));background:#2a1c0c url(img/map_bg.jpg?v=8) no-repeat;overflow:hidden}
+.fog{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(20,12,4,.55) 0%, rgba(20,12,4,.15) 35%, transparent 60%);pointer-events:none;z-index:1}
+.o{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:2.5px solid rgba(255,220,140,.85);background:radial-gradient(circle at 40% 35%, rgba(255,240,180,.35), rgba(140,80,20,.4));box-shadow:0 0 0 1px #6a4010, inset 0 0 12px rgba(255,200,80,.4);z-index:2;transition:all .4s}
+.o:before{content:attr(data-n);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 18px 'Cormorant Garamond',serif;color:#fff8e0;text-shadow:0 1px 2px #000}
+.o.done{border-color:#c9a060;background:radial-gradient(circle at 40% 35%, rgba(200,160,80,.5), rgba(80,40,10,.5));opacity:.75}
+.o.nxt{box-shadow:0 0 0 3px #ffd877,0 0 22px 8px rgba(255,200,90,.75);animation:mN 1.6s ease-in-out infinite;border-color:#ffe0a0}
+@keyframes mN{50%{box-shadow:0 0 0 4px #fff0b8,0 0 34px 14px rgba(255,200,90,.95);transform:translate(-50%,-50%) scale(1.06)}}
+.dock{position:absolute;left:0;right:0;bottom:14px;height:168px;z-index:3}
+.cont{position:absolute;transform:translate(-50%,-50%);width:210px;height:58px;font-size:20px!important;animation:p 2.6s infinite;border-radius:16px;background:linear-gradient(145deg,#8a5420 0%,#c98a40 40%,#f0c870 70%,#8a5420 100%);display:flex;align-items:center;justify-content:center;font:700 22px 'Cormorant Garamond',serif;color:#fff8e0;text-shadow:0 2px 4px #3a1a05;text-decoration:none;white-space:nowrap;box-shadow:0 0 0 2px #5a3410,0 8px 20px rgba(0,0,0,.5),inset 0 2px 6px rgba(255,230,170,.6),inset 0 -3px 6px rgba(0,0,0,.3)}
+.cont:before{content:"";position:absolute;inset:4px;border-radius:12px;border:1px dashed rgba(255,230,170,.6);pointer-events:none}
+.start{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff5d0 0%,#f0c870 30%,#c98a40 60%,#8a5420 100%);display:flex;align-items:center;justify-content:center;font:700 24px 'Cormorant Garamond',serif;color:#fff8e0;text-shadow:0 2px 3px #000;text-decoration:none;animation:p 2s infinite;box-shadow:0 0 0 3px #7a4a16,0 0 0 6px rgba(201,138,64,.4),0 10px 24px rgba(0,0,0,.5),inset 0 3px 8px rgba(255,240,180,.5)}
+.start:before{content:"";position:absolute;inset:6px;border-radius:50%;border:1.2px dashed rgba(255,230,170,.65);pointer-events:none}
+@keyframes p{0%,100%{box-shadow:0 0 6px 2px rgba(255,211,106,.5)}50%{box-shadow:0 0 26px 10px rgba(255,211,106,.85)}}
+.cmp,.inf{position:absolute;bottom:48px;width:70px;height:70px}.cmp{left:12px}.inf{right:12px}
+.cmp img,.inf img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}.cmp img{border-radius:50%}
+.scl{position:fixed;z-index:76;left:50%;top:calc(env(safe-area-inset-top) + 44px);transform:translateX(-50%);width:min(70vw,280px,34dvh);height:auto;border:0;padding:0;background:none;cursor:pointer;animation:sclG 2.6s ease-in-out infinite}
+.scl img{display:block;width:100%;height:auto}
+.scl.op{filter:drop-shadow(0 0 14px rgba(255,210,120,.95))}
+@keyframes sclG{0%,100%{filter:drop-shadow(0 0 8px rgba(255,210,110,.8)) drop-shadow(0 0 18px rgba(255,180,60,.6))}50%{filter:drop-shadow(0 0 14px rgba(255,225,140,1)) drop-shadow(0 0 30px rgba(255,180,60,.85))}}
+.sov{position:fixed;inset:0;z-index:75;display:flex;align-items:flex-start;justify-content:center;padding-top:calc(env(safe-area-inset-top) + 80px);background:rgba(20,10,0,0);pointer-events:none;transition:background .4s}
+.sov.on{background:rgba(20,10,0,.55);pointer-events:auto}
+.spp{position:relative;width:min(88vw,370px);max-height:0;overflow:hidden;border-radius:6px;background:linear-gradient(#fbf0d2,#ecd39a);color:#3a220a;box-shadow:0 10px 40px rgba(0,0,0,.6);transition:max-height .8s cubic-bezier(.3,.8,.3,1)}
+.sov.on .spp{max-height:calc(100dvh - 140px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+.spp:before,.spp:after{content:"";position:sticky;display:block;left:0;right:0;height:14px;background:linear-gradient(#e8c47a,#8a5a20,#c99a45);border-radius:7px;z-index:1}
+.spp:before{top:0}.spp:after{bottom:0}
+.sbd{padding:44px 22px 12px;max-height:calc(100dvh - 200px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow:auto;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope}
+.sbd h3{margin:0 0 8px;font:700 26px/1.1 'Cormorant Garamond',serif;color:#6a3e10;text-align:center}.sbd p{margin:0 0 10px}.sbd .ft{font-style:italic;color:#8a5a20}
+.sx{position:absolute;z-index:2;top:40px;right:8px;width:34px;height:34px;border:0;background:none;font:400 28px/1 serif;color:#6a3e10;cursor:pointer}
+.sau{position:absolute;z-index:2;top:44px;left:12px;width:30px;height:30px;border-radius:50%;border:1.5px solid #a8742a;background:radial-gradient(#fff1c8,#d9a54e);color:#3a220a;font:700 15px/1 serif;cursor:pointer;display:none}.sau.on{background:radial-gradient(#ffe08a,#c98a2e);box-shadow:0 0 10px #ffc04a}
+</style></head><body data-page="map">
+<button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll.webp?v=8" alt=""></button>
+<div class="sov" id="sov"><div class="spp"><button class="sx" id="sx" type="button" aria-label="Свернуть">×</button><button class="sau" id="sau" type="button" aria-label="Слушать">♪</button><div class="sbd" id="sbd"></div></div></div>
+<div class="map" id="m">
+<div class="fog"></div>
+<a class="o step" href="#soon" data-x="218" data-y="310" data-r="62" data-n="1"></a>
+<a class="o step" href="#soon" data-x="364" data-y="404" data-r="62" data-n="2"></a>
+<a class="o step" href="#soon" data-x="218" data-y="519" data-r="62" data-n="3"></a>
+<a class="o step" href="#soon" data-x="366" data-y="631" data-r="62" data-n="4"></a>
+<a class="o step" href="#soon" data-x="205" data-y="764" data-r="62" data-n="5"></a>
+<div class="dock">
+<a class="cmp" href="#soon" aria-label="Компас"><img src="img/compass.png" alt=""></a>
+<a class="start" href="form.html"><span>Старт</span></a>
+<a class="inf" href="#soon" aria-label="Информация"><svg viewBox="0 0 70 70" width="100%" height="100%"><defs><radialGradient id="ig" cx=".4" cy=".35"><stop offset="0" stop-color="#5a3a18"/><stop offset="1" stop-color="#1e120a"/></radialGradient><linearGradient id="ir" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#e0a940"/><stop offset="1" stop-color="#9a6226"/></linearGradient></defs><circle cx="35" cy="35" r="31" fill="url(#ig)" stroke="url(#ir)" stroke-width="4"/><circle cx="35" cy="35" r="25" fill="none" stroke="url(#ir)" stroke-width="1" stroke-dasharray="2 3"/><text x="35" y="47" text-anchor="middle" font-family="Cormorant Garamond,serif" font-style="italic" font-weight="700" font-size="36" fill="url(#ir)">i</text></svg></a>
+</div>
+<a class="cont" id="cont" href="#soon" data-x="400" data-y="519">Продолжить путь</a></div>
+<script>
+function lay(){var m=document.getElementById('m'),W=m.clientWidth,H=m.clientHeight,s=Math.max(W/576,H/1024),ox=(W-576*s)/2,oy=H-1024*s;
+m.style.backgroundSize=576*s+'px '+1024*s+'px';m.style.backgroundPosition=ox+'px '+oy+'px';
+var c=document.getElementById('cont');c.style.left=Math.min(W-100,ox+400*s)+'px';c.style.top=(oy+519*s)+'px';m.querySelectorAll('.o').forEach(function(e){var d=e.dataset;e.style.left=(ox+d.x*s)+'px';e.style.top=(oy+d.y*s)+'px';e.style.width=e.style.height=(d.r*s)+'px'})}
+addEventListener('resize',lay);lay();
+try{(function(){var P=JSON.parse(localStorage.getItem('alch_profile'))||{};var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>=d)return;var ss=document.querySelectorAll('.o.step'),c=ss[ss.length-1-t];if(!c)return;c.classList.add('nxt');c.addEventListener('click',function(e){if(!c.classList.contains('nxt'))return;e.stopImmediatePropagation();e.preventDefault();P.progress={d:d,t:t+1};localStorage.setItem('alch_profile',JSON.stringify(P));c.classList.remove('nxt');c.classList.add('done');window.gToast&&gToast('Задание выполнено! Новый тест открыт');setTimeout(function(){location.href='hero.html?v=8'},1400)},true)})()}catch(e){}
+</script>
+<script>
+var SCROLL_TITLE='Послание';
+var SCROLL_HTML='<p>Приветствую вас, господа пробужденные…</p><p class="ft">Скоро здесь появится авторский текст.</p>';
+var SCROLL_AUDIO='snd/author.mp3';
+(function(){var o=document.getElementById('sov'),a=document.getElementById('sau'),au=null;
+document.getElementById('sbd').innerHTML='<h3>'+SCROLL_TITLE+'</h3>'+SCROLL_HTML;
+fetch(SCROLL_AUDIO,{method:'HEAD'}).then(function(r){if(r.ok){au=new Audio(SCROLL_AUDIO);au.onended=function(){a.classList.remove('on')};a.style.display='block'}}).catch(function(){});
+a.onclick=function(){if(!au)return;if(au.paused){au.play();a.classList.add('on')}else{au.pause();a.classList.remove('on')}};
+function cl(){o.classList.remove('on');document.getElementById('scl').classList.remove('op');if(au){au.pause();a.classList.remove('on')}}
+document.getElementById('scl').onclick=function(){o.classList.contains('on')?cl():(o.classList.add('on'),this.classList.add('op'))};
+document.getElementById('sx').onclick=cl;o.onclick=function(e){if(e.target==o)cl()};})();
+</script>
+<script src="nav.js?v=8"></script>
+</body></html>

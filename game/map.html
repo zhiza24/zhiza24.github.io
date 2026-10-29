@@ -3,9 +3,9 @@
 <title>Карта пути</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#5a3a14">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="nav.css?v=7">
+<link rel="stylesheet" href="nav.css?v=8">
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#2a1c0c}
-.map{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));background:#2a1c0c url(img/map_bg.jpg?v=7) no-repeat;overflow:hidden}
+.map{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));background:#2a1c0c url(img/map_bg.jpg?v=8) no-repeat;overflow:hidden}
 .fog{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(20,12,4,.55) 0%, rgba(20,12,4,.15) 35%, transparent 60%);pointer-events:none;z-index:1}
 .o{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:2.5px solid rgba(255,220,140,.85);background:radial-gradient(circle at 40% 35%, rgba(255,240,180,.35), rgba(140,80,20,.4));box-shadow:0 0 0 1px #6a4010, inset 0 0 12px rgba(255,200,80,.4);z-index:2;transition:all .4s}
 .o:before{content:attr(data-n);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 18px 'Cormorant Garamond',serif;color:#fff8e0;text-shadow:0 1px 2px #000}
@@ -35,7 +35,7 @@
 .sx{position:absolute;z-index:2;top:40px;right:8px;width:34px;height:34px;border:0;background:none;font:400 28px/1 serif;color:#6a3e10;cursor:pointer}
 .sau{position:absolute;z-index:2;top:44px;left:12px;width:30px;height:30px;border-radius:50%;border:1.5px solid #a8742a;background:radial-gradient(#fff1c8,#d9a54e);color:#3a220a;font:700 15px/1 serif;cursor:pointer;display:none}.sau.on{background:radial-gradient(#ffe08a,#c98a2e);box-shadow:0 0 10px #ffc04a}
 </style></head><body data-page="map">
-<button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll.webp?v=3" alt=""></button>
+<button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll.webp?v=8" alt=""></button>
 <div class="sov" id="sov"><div class="spp"><button class="sx" id="sx" type="button" aria-label="Свернуть">×</button><button class="sau" id="sau" type="button" aria-label="Слушать">♪</button><div class="sbd" id="sbd"></div></div></div>
 <div class="map" id="m">
 <div class="fog"></div>
@@ -55,7 +55,7 @@ function lay(){var m=document.getElementById('m'),W=m.clientWidth,H=m.clientHeig
 m.style.backgroundSize=576*s+'px '+1024*s+'px';m.style.backgroundPosition=ox+'px '+oy+'px';
 var c=document.getElementById('cont');c.style.left=Math.min(W-100,ox+400*s)+'px';c.style.top=(oy+519*s)+'px';m.querySelectorAll('.o').forEach(function(e){var d=e.dataset;e.style.left=(ox+d.x*s)+'px';e.style.top=(oy+d.y*s)+'px';e.style.width=e.style.height=(d.r*s)+'px'})}
 addEventListener('resize',lay);lay();
-try{(function(){var P=JSON.parse(localStorage.getItem('alch_profile'))||{};var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>=d)return;var ss=document.querySelectorAll('.o.step'),c=ss[ss.length-1-t];if(!c)return;c.classList.add('nxt');c.addEventListener('click',function(e){if(!c.classList.contains('nxt'))return;e.stopImmediatePropagation();e.preventDefault();P.progress={d:d,t:t+1};localStorage.setItem('alch_profile',JSON.stringify(P));c.classList.remove('nxt');c.classList.add('done');window.gToast&&gToast('Задание выполнено! Новый тест открыт');setTimeout(function(){location.href='hero.html?v=7'},1400)},true)})()}catch(e){}
+try{(function(){var P=JSON.parse(localStorage.getItem('alch_profile'))||{};var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>=d)return;var ss=document.querySelectorAll('.o.step'),c=ss[ss.length-1-t];if(!c)return;c.classList.add('nxt');c.addEventListener('click',function(e){if(!c.classList.contains('nxt'))return;e.stopImmediatePropagation();e.preventDefault();P.progress={d:d,t:t+1};localStorage.setItem('alch_profile',JSON.stringify(P));c.classList.remove('nxt');c.classList.add('done');window.gToast&&gToast('Задание выполнено! Новый тест открыт');setTimeout(function(){location.href='hero.html?v=8'},1400)},true)})()}catch(e){}
 </script>
 <script>
 var SCROLL_TITLE='Послание';
@@ -69,5 +69,5 @@ function cl(){o.classList.remove('on');document.getElementById('scl').classList.
 document.getElementById('scl').onclick=function(){o.classList.contains('on')?cl():(o.classList.add('on'),this.classList.add('op'))};
 document.getElementById('sx').onclick=cl;o.onclick=function(e){if(e.target==o)cl()};})();
 </script>
-<script src="nav.js?v=7"></script>
+<script src="nav.js?v=8"></script>
 </body></html>

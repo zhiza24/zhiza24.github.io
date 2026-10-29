@@ -3,12 +3,12 @@
 <title>Герой</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="nav.css?v=6">
+<link rel="stylesheet" href="nav.css?v=8">
 <style>
 html,body{margin:0;height:100%;overflow:hidden;background:#2a1606;font-family:Manrope,sans-serif;color:#3a220a}
 body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 50% 45%,#f6e6bf 0%,#e8cf98 55%,#b98a48 100%);box-shadow:inset 0 0 0 4px #8a5a20,inset 0 0 0 6px #e8c47a,inset 0 0 40px rgba(110,60,10,.5)}
 .wr{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 44px);bottom:calc(78px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center}
-.sh{position:relative;width:min(100vw,calc((100dvh - 122px - env(safe-area-inset-top) - env(safe-area-inset-bottom))*.75));aspect-ratio:3/4;background:url(img/sheet.jpg?v=6) center/100% 100%;container-type:inline-size;box-shadow:0 4px 24px rgba(0,0,0,.6)}
+.sh{position:relative;width:min(100vw,calc((100dvh - 122px - env(safe-area-inset-top) - env(safe-area-inset-bottom))*.75));aspect-ratio:3/4;background:url(img/sheet.jpg?v=8) center/100% 100%;container-type:inline-size;box-shadow:0 4px 24px rgba(0,0,0,.6)}
 .c{position:absolute;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#efdfb9;box-shadow:0 0 3px 2px #efdfb9;border-radius:4px;line-height:1.1;color:#3a220a;overflow:hidden}
 .c.r{background:linear-gradient(#9c2a1c,#6e1610);box-shadow:0 0 2px 1px #7a1a12;color:#ffe9b0;font-family:'Cormorant Garamond',serif;font-weight:700;align-items:flex-start;padding-left:2%;white-space:nowrap}
 .c.hd{align-items:flex-start;padding-left:3%;text-align:left}.c.hd b{font:700 1.4em 'Cormorant Garamond',serif;color:#6a1a10}
@@ -71,8 +71,8 @@ body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
 </div></div>
 <div class="ov" id="ov"><div class="pp"><button class="x" type="button" id="x" aria-label="Закрыть">×</button><h3 id="ph"></h3><div class="bd" id="pb"></div></div></div>
 <div id="tk"><div><h3>Выполни задание</h3><p>Открой карту: светящийся круг ждет тебя.</p><button type="button" id="tkb">Открыть карту</button></div></div>
-<script src="arcana.js?v=6"></script>
-<script src="nav.js?v=6"></script>
+<script src="arcana.js?v=8"></script>
+<script src="nav.js?v=8"></script>
 <script>
 var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
 function red(n){while(n>22){n=String(n).split('').reduce(function(a,c){return a+ +c},0)}return n}
@@ -96,14 +96,14 @@ var L=[{t:'Твоя сила',c:POW[k]?'<p>'+POW[k]+'</p>':'<p>Пройди Ко
 var ov=document.getElementById('ov');
 document.getElementById('scr').onclick=function(e){var b=e.target.closest('.sl[data-i]');if(!b)return;var s=L[+b.dataset.i];document.getElementById('ph').textContent=s.t;document.getElementById('pb').innerHTML=s.c;ov.classList.add('on')};
 document.getElementById('x').onclick=function(){ov.classList.remove('on')};ov.onclick=function(e){if(e.target==ov)ov.classList.remove('on')};
-document.getElementById('go').onclick=function(){location.href='map.html?v=6'};
+document.getElementById('go').onclick=function(){location.href='map.html?v=8'};
 
 (function(){var T=['Колесо судьбы','Точка отсчета','Кривой мир','Колесо жизни','Желания','Ценности','Направления','Свиток Дизайна'];
 var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>d)t=d;P.progress={d:d,t:t};localStorage.setItem('alch_profile',JSON.stringify(P));
 var b=document.getElementById('ts');b.innerHTML=T.map(function(n,i){var c=i<d?'dn':(i==d&&t>=d?'nx':'lk');return '<button type="button" class="'+c+'" data-i="'+i+'" title="'+n+'"><i>'+(i<d?'✓':i+1)+'</i>'+n+'</button>'}).join('');
 document.getElementById('tq').textContent=t;
 b.onclick=function(e){var x=e.target.closest('button');if(!x)return;var i=+x.dataset.i;if(i==0&&d>=1){location.href='wheel.html';return}if(t<d&&i==d){document.getElementById('tk').classList.add('on');return}window.gToast?gToast('Скоро'):alert('Скоро')};
-var k=document.getElementById('tk');if(t<d&&d>1)k.classList.add('on');document.getElementById('tkb').onclick=function(){location.href='map.html?v=6'};k.onclick=function(e){if(e.target==k)k.classList.remove('on')};})();
+var k=document.getElementById('tk');if(t<d&&d>1)k.classList.add('on');document.getElementById('tkb').onclick=function(){location.href='map.html?v=8'};k.onclick=function(e){if(e.target==k)k.classList.remove('on')};})();
 
 (function(){var N=['Точка 0 · Самоценность','Точка 0 · Фоновое состояние','Точка А · Привычный сценарий','Точка А · Реальная точка А','Точка Б · Желания и ценности','Точка Б · Выбор приоритета','Точка Ц · Действие и доказательства'];window.heroStepsDraw=function(){S=Math.max(S,+(P.steps||0));draw()};var O=['td','p3','p2','ar','p0','lv','p1'],S=+(P.steps||0);
 function draw(){O.forEach(function(id,i){var e=document.getElementById(id);if(!e)return;e.className='c m st '+(i<S?'dn':i==S?'nx':'lk');e.textContent=i<S?'✓':i+1;e.title=N[i]})}draw();
