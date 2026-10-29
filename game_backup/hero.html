@@ -1,0 +1,169 @@
+<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Герой</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nav.css?v=6">
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#2a1606;font-family:Manrope,sans-serif;color:#3a220a}
+body:before{content:"";position:fixed;inset:-20px;inset:0;background:radial-gradient(ellipse at 50% 45%,#f6e6bf 0%,#e8cf98 55%,#b98a48 100%);box-shadow:inset 0 0 0 4px #8a5a20,inset 0 0 0 6px #e8c47a,inset 0 0 40px rgba(110,60,10,.5)}
+.wr{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 44px);bottom:calc(78px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center}
+.sh{position:relative;width:min(100vw,calc((100dvh - 122px - env(safe-area-inset-top) - env(safe-area-inset-bottom))*.75));aspect-ratio:3/4;background:url(img/sheet.jpg?v=6) center/100% 100%;container-type:inline-size;box-shadow:0 4px 24px rgba(0,0,0,.6)}
+.c{position:absolute;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#efdfb9;box-shadow:0 0 3px 2px #efdfb9;border-radius:4px;line-height:1.1;color:#3a220a;overflow:hidden}
+.c.r{background:linear-gradient(#9c2a1c,#6e1610);box-shadow:0 0 2px 1px #7a1a12;color:#ffe9b0;font-family:'Cormorant Garamond',serif;font-weight:700;align-items:flex-start;padding-left:2%;white-space:nowrap}
+.c.hd{align-items:flex-start;padding-left:3%;text-align:left}.c.hd b{font:700 1.4em 'Cormorant Garamond',serif;color:#6a1a10}
+.c.m{border-radius:50%;font-family:'Cormorant Garamond',serif;font-weight:700;color:#3a220a;background:radial-gradient(#fbf1d8,#ead6a8);box-shadow:none}
+.c.m.s{background:radial-gradient(#e9cf96,#c9a25a);border:1px solid #8a5a20}.c.m.st{cursor:pointer;color:#7a5a30;opacity:.75}.c.m.st.lk{filter:grayscale(.6)}.c.m.st.dn{color:#2e7d32;opacity:1}.c.m.st.nx{opacity:1;color:#5a2a00;background:radial-gradient(#fff3c4,#f0c860);animation:sp 1.2s ease-in-out infinite}@keyframes sp{50%{box-shadow:0 0 14px 6px rgba(255,200,70,.95);transform:scale(1.08)}}.c.lb{font-weight:700;color:#5a2a0a;background:#ead2a0;box-shadow:0 0 2px 1px #ead2a0;white-space:nowrap}
+.c.ls{justify-content:space-between;align-items:stretch;padding:1% 1.5%}
+#ts{display:flex;flex-direction:column;justify-content:space-between;height:100%}
+#ts button{display:flex;align-items:center;gap:.3em;text-align:left;border:0;border-bottom:1px solid rgba(120,80,30,.25);background:none;color:#3a220a;font:600 1em/1.05 Manrope,sans-serif;padding:0 .2em;flex:1;white-space:nowrap}
+#ts button i{flex:none;width:.9em;height:.9em;border-radius:50%;background:#b8862b;font-style:normal;color:#fff;font-size:.8em;display:flex;align-items:center;justify-content:center}
+#ts .dn i{background:#2e7d32}#ts .nx{background:rgba(255,205,100,.55);border-radius:4px;animation:tg 1.4s ease-in-out infinite}#ts .lk{opacity:.5}#ts .lk i{background:#8a7a6a}
+@keyframes tg{50%{box-shadow:0 0 8px 2px rgba(255,190,70,.95)}}
+.c.cd{background:#efdfb9;color:#3a220a}.c.cd b{font:700 1.15em 'Cormorant Garamond',serif;color:#7a1a10}.c.cd span{font-weight:700}
+.c.ql{text-align:center;font-weight:600}
+.c.go{white-space:nowrap;background:linear-gradient(#a32c1c,#6e1610);color:#ffe9b0;font-family:'Cormorant Garamond',serif;font-weight:700;letter-spacing:.05em;border-radius:8px;box-shadow:0 0 10px 3px rgba(255,190,80,.8);cursor:pointer;animation:tg 1.6s ease-in-out infinite}
+#tk{position:fixed;inset:0;background:rgba(20,8,0,.6);display:none;align-items:center;justify-content:center;z-index:90}#tk.on{display:flex}#tk>div{background:#fbefd2;border:2px solid #b8862b;border-radius:16px;padding:20px;text-align:center;width:78%;color:#4a2400;font:600 15px Manrope,sans-serif}#tk h3{font:700 24px 'Cormorant Garamond',serif;color:#8a3a12;margin:0 0 8px}#tk button{margin-top:12px;background:#b8862b;color:#fff;border:0;border-radius:20px;padding:10px 20px;font:800 14px Manrope,sans-serif}
+.bloom{position:fixed;inset:0;z-index:80;pointer-events:none;background:radial-gradient(circle at 50% 42%,#fffbe8,#ffd27a 35%,#e0a040 75%);animation:bl 1.6s ease-out forwards}
+@keyframes bl{to{opacity:0}}
+.ov{position:fixed;inset:0;z-index:75;display:flex;align-items:center;justify-content:center;background:rgba(40,20,0,.5);opacity:0;pointer-events:none;transition:opacity .3s}
+.ov.on{opacity:1;pointer-events:auto}
+.pp{position:relative;width:min(86vw,360px);max-height:72dvh;display:flex;flex-direction:column;border-radius:14px;padding:26px 22px 22px;box-sizing:border-box;background:linear-gradient(#fdf3d8,#ecd39a);color:#3a220a;border:2px solid #b8843a;box-shadow:0 0 0 6px rgba(120,72,20,.5),0 10px 40px rgba(0,0,0,.5);transform:scaleY(.2);transition:transform .45s cubic-bezier(.2,.9,.3,1.2)}
+.ov.on .pp{transform:none}
+.pp:before,.pp:after{content:"";position:absolute;left:-10px;right:-10px;height:16px;border-radius:8px;background:linear-gradient(#e8c47a,#8a5a20,#c99a45)}
+.pp:before{top:-9px}.pp:after{bottom:-9px}
+.pp h3{margin:0 0 10px;text-align:center;font:700 26px/1.1 'Cormorant Garamond',serif;color:#6a3e10}
+.pp .bd{overflow:auto;font:500 15.5px/1.5 Manrope;-webkit-overflow-scrolling:touch}.pp .bd p{margin:0 0 10px}.pp .bd b{color:#7a4610}
+.pp .x{position:absolute;top:6px;right:8px;width:34px;height:34px;border:0;background:none;font:400 28px/1 serif;color:#6a3e10;cursor:pointer}
+.qb{display:block;margin:12px auto 2px;background:linear-gradient(#ffe39a,#d9a040 60%,#a8692a);color:#3a1a00;border:1px solid #8a5a20;border-radius:22px;padding:10px 22px;font:800 15px Manrope,sans-serif;box-shadow:0 0 12px rgba(255,200,90,.7);cursor:pointer}
+#qz.qe p{font-size:13.5px;line-height:1.35;margin:0 0 5px}#qz.qe .qq{margin:0 0 4px!important;font-size:18px}#qz.qe .qb{margin-top:8px}#qz{transition:opacity .35s}#qz.f{opacity:0}.qp{font:700 12px Manrope;color:#8a5a20;text-align:center;margin-bottom:4px}.qp i{display:block;height:3px;background:#e2c58a;border-radius:2px;margin-top:4px}.qp i b{display:block;height:100%;background:#b8862b;border-radius:2px;transition:width .35s}.qi{font-style:italic;text-align:center;color:#7a4610;margin:0 0 6px!important;font-size:13.5px}.qq{font:700 19px/1.25 'Cormorant Garamond',serif;color:#4a2400;text-align:center;margin:0 0 12px!important}.qa{display:block;width:100%;margin:0 0 7px;padding:9px 10px;border:1px solid #c99a3a;border-radius:12px;background:linear-gradient(#fff6dc,#f0d79c);color:#3a220a;font:600 14.5px Manrope,sans-serif;cursor:pointer}.qa:active{background:#f0c860}
+</style></head><body data-page="hero">
+<div class="bloom"></div><div class="wr"><div class="sh" id="scr">
+<div class="c r" id="role" style="left:4.69%;top:3.91%;width:38.28%;height:4.88%;font-size:5.21cqw"></div>
+<div class="c hd" style="left:58.33%;top:2.93%;width:38.28%;height:6.05%;font-size:2.47cqw"><b id="nm"></b><span id="who"></span></div>
+<div class="c" style="left:12.76%;top:10.74%;width:15.10%;height:1.76%;font-size:1.95cqw">Знаки пути</div>
+<div class="c" style="left:7.55%;top:16.41%;width:26.82%;height:1.76%;"></div>
+<div class="c m st" id="ar" style="left:39.19%;top:12.89%;width:6.77%;height:5.08%;font-size:5.73cqw"></div>
+<div class="c lb" style="left:37.76%;top:17.77%;width:9.77%;height:1.56%;font-size:1.69cqw">Точка А</div>
+<div class="c m st" id="p0" style="left:52.34%;top:14.65%;width:7.81%;height:5.86%;font-size:5.73cqw"></div>
+<div class="c lb" style="left:51.30%;top:20.41%;width:9.90%;height:1.56%;font-size:1.69cqw">Точка Б</div>
+<div class="c m st" id="lv" style="left:66.41%;top:12.21%;width:7.81%;height:5.86%;font-size:5.73cqw"></div>
+<div class="c lb" style="left:65.62%;top:17.97%;width:9.64%;height:1.46%;font-size:1.69cqw">Точка Б</div>
+<div class="c m st" id="p1" style="left:79.69%;top:15.43%;width:7.81%;height:5.86%;font-size:5.73cqw"></div>
+<div class="c lb" style="left:79.43%;top:20.70%;width:8.33%;height:1.56%;font-size:1.69cqw">Точка Ц</div>
+<div class="c m st" id="p2" style="left:41.67%;top:21.29%;width:7.81%;height:5.86%;font-size:5.73cqw"></div>
+<div class="c lb" style="left:41.15%;top:27.05%;width:9.38%;height:1.56%;font-size:1.69cqw">Точка А</div>
+<div class="c m st" id="p3" style="left:37.50%;top:30.76%;width:7.81%;height:5.86%;font-size:5.73cqw"></div>
+<div class="c lb" style="left:37.11%;top:36.62%;width:8.72%;height:1.56%;font-size:1.69cqw">Точка 0</div>
+<div class="c m st" id="td" style="left:39.32%;top:40.82%;width:7.29%;height:5.47%;font-size:5.73cqw"></div>
+<div class="c lb" style="left:38.54%;top:46.68%;width:8.85%;height:1.56%;font-size:1.69cqw">Точка 0</div>
+<div class="c m s" style="left:51.17%;top:13.57%;width:3.39%;height:2.54%;"></div>
+<div class="c m s" style="left:72.53%;top:11.23%;width:3.39%;height:2.54%;"></div>
+<div class="c m s" style="left:85.81%;top:14.06%;width:3.39%;height:2.54%;"></div>
+<div class="c m s" style="left:40.23%;top:20.02%;width:3.39%;height:2.54%;"></div>
+<div class="c m s" style="left:43.36%;top:29.69%;width:3.39%;height:2.54%;"></div>
+<div class="c m s" style="left:36.98%;top:39.75%;width:3.39%;height:2.54%;"></div>
+<div class="c m" style="left:53.78%;top:58.20%;width:6.25%;height:4.69%;font-size:3.91cqw">✦</div>
+<div class="c m" style="left:81.12%;top:58.01%;width:6.25%;height:4.69%;font-size:3.91cqw">✦</div>
+<div class="c lb" style="left:65.76%;top:59.28%;width:12.37%;height:2.44%;font-size:1.82cqw">Задания</div>
+<div class="c m" id="tq" style="left:66.41%;top:62.50%;width:11.46%;height:4.88%;font-size:5.21cqw"></div>
+<div class="c lb" style="left:15.10%;top:20.51%;width:10.68%;height:1.66%;font-size:1.95cqw">Испытания</div>
+<div class="c ls" style="left:6.77%;top:22.66%;width:28.65%;height:28.52%;font-size:2.47cqw"><div id="ts"></div></div>
+<div class="c" style="left:15.10%;top:53.71%;width:21.61%;height:4.10%;font-size:2.21cqw">Наставник<br><b>Старец</b></div>
+<div class="c lb" style="left:18.23%;top:57.91%;width:14.32%;height:1.46%;font-size:1.69cqw">Проводник</div>
+<div class="c lb" style="left:37.50%;top:58.11%;width:9.38%;height:1.56%;font-size:1.56cqw">Знак</div>
+<div class="c cd sl" data-i="0" style="left:6.51%;top:61.72%;width:28.91%;height:7.13%;font-size:3.12cqw;cursor:pointer"><b>Свиток</b><span>Твоя сила</span></div>
+<div class="c cd sl" data-i="1" style="left:6.51%;top:71.00%;width:28.91%;height:7.13%;font-size:3.12cqw;cursor:pointer"><b>Свиток</b><span>Твой аркан</span></div>
+<div class="c cd" style="left:6.51%;top:80.57%;width:28.91%;height:6.84%;font-size:2.34cqw"><span style="opacity:.6">Скоро откроется</span></div>
+<div class="c cd" style="left:6.51%;top:89.84%;width:28.91%;height:6.84%;font-size:2.34cqw"><span style="opacity:.6">Скоро откроется</span></div>
+<div class="c lb" style="left:16.93%;top:97.27%;width:17.97%;height:1.56%;font-size:1.69cqw">Свитки</div>
+<div class="c lb" style="left:52.08%;top:69.63%;width:11.72%;height:2.25%;font-size:1.69cqw">Качества</div>
+<div class="c lb" style="left:77.86%;top:69.63%;width:11.98%;height:2.25%;font-size:1.69cqw">Свет</div>
+<div class="c lb" style="left:64.84%;top:71.48%;width:11.46%;height:1.86%;font-size:1.69cqw">Дар</div>
+<div class="c ql" id="ql" style="left:51.43%;top:73.44%;width:39.97%;height:5.08%;font-size:2.21cqw"></div>
+<div class="c lb" style="left:54.43%;top:83.69%;width:35.68%;height:2.15%;font-size:1.82cqw">Артефакты · пусто</div>
+<div class="c go" id="go" style="left:50.78%;top:93.07%;width:31.51%;height:4.79%;font-size:3.0cqw">ПРИНЯТЬ ПУТЬ</div>
+<div class="c lb" style="left:58.33%;top:97.17%;width:14.84%;height:1.66%;font-size:1.69cqw">Путь</div>
+</div></div>
+<div class="ov" id="ov"><div class="pp"><button class="x" type="button" id="x" aria-label="Закрыть">×</button><h3 id="ph"></h3><div class="bd" id="pb"></div></div></div>
+<div id="tk"><div><h3>Выполни задание</h3><p>Открой карту: светящийся круг ждет тебя.</p><button type="button" id="tkb">Открыть карту</button></div></div>
+<script src="arcana.js?v=6"></script>
+<script src="nav.js?v=6"></script>
+<script>
+var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
+function red(n){while(n>22){n=String(n).split('').reduce(function(a,c){return a+ +c},0)}return n}
+var mm=/^(\d\d)\.(\d\d)\.(\d{4})$/.exec(P.birth||''),pts=P.points||[];
+if(mm){var l=red(+mm[1]),i=+mm[2],v=red(mm[3].split('').reduce(function(a,c){return a+ +c},0));pts=[l,i,v,red(l+i+v)]}
+var n=pts[0]||12,A=ARCANA[n-1],f=P.gender=='f',R=ARCANA_ROLE[n]?ARCANA_ROLE[n][f?1:0]:A.epithet;
+var RN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI','XXII'];
+document.getElementById('role').textContent=R;
+document.getElementById('nm').textContent=P.name||(f?'Героиня':'Герой');document.getElementById('who').textContent='Аркан '+RN[n-1]+' · '+A.name;
+
+var Q=A.light.replace(/\.$/,'').split(/,\s*|\s+и\s+/).filter(Boolean).slice(0,4);
+document.getElementById('ql').innerHTML=Q.map(function(q){return q.charAt(0).toUpperCase()+q.slice(1)}).join(' · ');
+var SK=P.skill||{},mix=SK.top&&SK.top.length>1,k=mix?'mix':SK.key;
+var POW={s:'Твоя сила в том, что ты действуешь сразу. Пока другие сомневаются, ты уже делаешь первый шаг и зажигаешь движение вокруг себя.',
+n:'Твоя сила в том, что ты сначала видишь. Ты замечаешь то, что ускользает от других, и поэтому твой шаг всегда точный.',
+str:'Твоя сила в том, что ты строишь свое. Ты не идешь чужими тропами, а создаешь путь, по которому потом пойдут другие.',
+z:'Твоя сила в том, что ты чувствуешь людей рядом. Ты умеешь идти вместе, держать общий ритм и подхватывать тех, кто рядом.',
+mix:'Твоя сила в гибкости. В тебе живут разные способы действовать, и ты выбираешь тот, который нужен прямо сейчас.'};
+var L=[{t:'Твоя сила',c:POW[k]?'<p>'+POW[k]+'</p>':'<p>Пройди Колесо судьбы, и этот свиток откроется.</p>'},
+{t:'Твой аркан',c:'<p><b>Аркан '+RN[n-1]+' · 1 уровень</b><br>Личность '+(pts[0]||'?')+' · Интуиция '+(pts[1]||'?')+' · Вызов '+(pts[2]||'?')+' · Ключ '+(pts[3]||'?')+'</p><p><b>'+A.name+' — '+R+'</b></p><p>'+A.personality+'</p><p><b>Свет.</b> '+A.light+'</p><p>'+A.other+'</p>'}];
+var I='<svg viewBox="0 0 48 48"><defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0c0"/><stop offset="1" stop-color="#d9a04a"/></linearGradient></defs><rect x="10" y="9" width="28" height="30" rx="2" fill="url(#sg)" stroke="#8a5420" stroke-width="1.2"/><rect x="6" y="6" width="36" height="6" rx="3" fill="#c99a45" stroke="#7a4a16"/><rect x="6" y="36" width="36" height="6" rx="3" fill="#c99a45" stroke="#7a4a16"/><path d="M15 18h18M15 23h18M15 28h12" stroke="#8a5420" stroke-width="1.3" stroke-linecap="round"/><circle cx="34" cy="31" r="4" fill="#a8321e" stroke="#6a1a0a"/></svg>';
+var ov=document.getElementById('ov');
+document.getElementById('scr').onclick=function(e){var b=e.target.closest('.sl[data-i]');if(!b)return;var s=L[+b.dataset.i];document.getElementById('ph').textContent=s.t;document.getElementById('pb').innerHTML=s.c;ov.classList.add('on')};
+document.getElementById('x').onclick=function(){ov.classList.remove('on')};ov.onclick=function(e){if(e.target==ov)ov.classList.remove('on')};
+document.getElementById('go').onclick=function(){location.href='map.html?v=6'};
+
+(function(){var T=['Колесо судьбы','Точка отсчета','Кривой мир','Колесо жизни','Желания','Ценности','Направления','Свиток Дизайна'];
+var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>d)t=d;P.progress={d:d,t:t};localStorage.setItem('alch_profile',JSON.stringify(P));
+var b=document.getElementById('ts');b.innerHTML=T.map(function(n,i){var c=i<d?'dn':(i==d&&t>=d?'nx':'lk');return '<button type="button" class="'+c+'" data-i="'+i+'" title="'+n+'"><i>'+(i<d?'✓':i+1)+'</i>'+n+'</button>'}).join('');
+document.getElementById('tq').textContent=t;
+b.onclick=function(e){var x=e.target.closest('button');if(!x)return;var i=+x.dataset.i;if(i==0&&d>=1){location.href='wheel.html';return}if(t<d&&i==d){document.getElementById('tk').classList.add('on');return}window.gToast?gToast('Скоро'):alert('Скоро')};
+var k=document.getElementById('tk');if(t<d&&d>1)k.classList.add('on');document.getElementById('tkb').onclick=function(){location.href='map.html?v=6'};k.onclick=function(e){if(e.target==k)k.classList.remove('on')};})();
+
+(function(){var N=['Точка 0 · Самоценность','Точка 0 · Фоновое состояние','Точка А · Привычный сценарий','Точка А · Реальная точка А','Точка Б · Желания и ценности','Точка Б · Выбор приоритета','Точка Ц · Действие и доказательства'];window.heroStepsDraw=function(){S=Math.max(S,+(P.steps||0));draw()};var O=['td','p3','p2','ar','p0','lv','p1'],S=+(P.steps||0);
+function draw(){O.forEach(function(id,i){var e=document.getElementById(id);e.className='c m st '+(i<S?'dn':i==S?'nx':'lk');e.textContent=i<S?'✓':i+1;e.title=N[i]})}draw();
+var SP='<p><b>Точка ноль. Ты еще не меняешь себя, ты учишься видеть.</b></p><p><b>Самоценность</b> не награда за достижения и не оценка окружающих. Это исходное право существовать, хотеть, выбирать, занимать место в мире и быть собой. Она просто дана.</p><p><b>Самооценка</b> это представления о себе: умный ли ты, способный ли, достойный ли успеха. Они складываются из опыта, сравнения и обратной связи.</p><p>Можно знать о себе много хорошего и жить так, будто не имеешь права этим пользоваться. Нулевая суперпозиция: перестать воевать с прошлым и просто увидеть его как факт.</p><button class="qb" type="button" id="qgo">Ответить на вопросы</button>',first=false;
+O.forEach(function(id,i){document.getElementById(id).onclick=function(){if(i==0&&S<=0){document.getElementById('ph').textContent='Шаг 1 · Нулевая суперпозиция';document.getElementById('pb').innerHTML=SP;first=true;ov.classList.add('on')}else if(i<S&&i==0){document.getElementById('ph').textContent='Шаг 1 · Нулевая суперпозиция';document.getElementById('pb').innerHTML=SP;ov.classList.add('on')}else window.gToast?gToast('Шаг '+(i+1)+' · '+N[i]+': скоро'):alert('Скоро')}});
+function done(){if(first&&+(P.steps||0)>=1){first=false;S=Math.max(S,1);draw();setTimeout(function(){window.gToast&&gToast('Дальше: тест «Точка отсчета» в списке Испытаний')},400)}}
+document.getElementById('x').addEventListener('click',done);ov.addEventListener('click',function(e){if(e.target==ov)done()});})();
+
+(function(){var f=P.gender=='f',st=f?'старалась':'старался',pv=f?'первой':'первым';
+var A3=['Да, легко','Иногда, с усилием','Почти нет'],IA='Отвечайте первым откликом';
+var QS=[{q:'Вы видите что-то новое и незнакомое. Вам хочется узнать, что это?',a:A3,i:IA},{q:'Вы можете позволить себе дурачиться и играть просто ради удовольствия?',a:A3,i:IA},{q:'Когда кто-то искренне рад вам, вы это тепло чувствуете?',a:A3,i:IA},
+{q:'Вы сделали что-то хорошо, а вас не похвалили. Что звучит внутри?',a:['Меня опять не заметили','Значит, я мало '+st,'Ну и не надо','Нормально, я и так знаю']},
+{q:'Можно отдохнуть. Что мешает?',a:['Сначала надо заслужить','Если расслаблюсь, все рухнет','Мне не до этого','Ничего, отдыхаю']},
+{q:'Вы ошиблись при других. Что вы делаете?',a:['Замираю','Оправдываюсь','Ухожу в себя','Спокойно поправляю']},
+{q:'Близкий человек долго не отвечает. Вы...',a:['Тревожусь и пишу снова','Спокойно жду','Отстраняюсь '+pv,'И тревожусь, и отталкиваю']},
+{q:'Кто-то хочет стать вам ближе. Вы...',a:['Радуюсь','Настораживаюсь','Держу дистанцию','Тянусь и тут же боюсь']},
+{q:'В ссоре вы чаще...',a:['Догоняю','Обсуждаю','Ухожу','Мечусь между этим']},
+{q:'Появилась новая задача, срок сегодня.',i:'Как вы поступаете?',d:[['Сразу берусь и делаю','s'],['Сначала разбираюсь, что именно нужно','n'],['Делаю по-своему, как считаю правильным','str'],['Смотрю, кто рядом, и подстраиваюсь','z']]},
+{q:'Вас внезапно спросили при других.',i:'Как вы поступаете?',d:[['Отвечаю сразу, как есть','s'],['Беру паузу и оглядываюсь','n'],['Говорю свое, даже если необычно','str'],['Отвечаю так, как ждут вокруг','z']]},
+{q:'Идея пришла, делать ее еще рано.',i:'Как вы поступаете?',d:[['Все равно начинаю сразу','s'],['Записываю и наблюдаю, когда будет время','n'],['Потихоньку строю ее под себя','str'],['Делюсь с кем-то и смотрю на реакцию','z']]},
+{q:'Что-то сломалось в привычном порядке.',i:'Как вы поступаете?',d:[['Сразу чиню, что могу','s'],['Сначала смотрю, что случилось','n'],['Пересобираю порядок по-своему','str'],['Ищу, кто поможет, и действую вместе','z']]},
+{q:'Надо выбрать, а данных мало.',i:'Как вы поступаете?',d:[['Выбираю сразу и проверяю в деле','s'],['Собираю еще информацию','n'],['Выбираю то, что ближе '+(f?'мне самой':'мне самому'),'str'],['Спрашиваю, как выбрали бы другие','z']]},
+{q:'Вас не заметили там, где вы ждали отклика.',i:'Как вы поступаете?',d:[['Сразу напоминаю о себе','s'],['Наблюдаю, почему так вышло','n'],['Продолжаю делать свое','str'],['Смотрю, как себя ведут другие, и подстраиваюсь','z']]}];
+var SH=[[1,3,0,2],[2,0,3,1],[3,1,2,0],[0,2,1,3],[1,0,3,2],[2,3,0,1]];QS.slice(9).forEach(function(Q,j){Q.d=SH[j].map(function(x){return Q.d[x]});Q.a=Q.d.map(function(x){return x[0]})});
+var SB=[[['незамеченность','уязвимый ребенок'],['заслуживание','требовательный'],['отстраненность','отстраненный защитник'],[0,'здоровый взрослый']],
+[['заслуживание','требовательный'],['контроль/катастрофа','уязвимый ребенок'],['отстраненность','отстраненный защитник'],[0,'здоровый взрослый']],
+[['контроль/катастрофа','уязвимый ребенок'],['заслуживание','требовательный'],['отстраненность','отстраненный защитник'],[0,'здоровый взрослый']]];
+var AV=[[1,0],[0,0],[0,1],[1,1]];
+var snd;function tick(){try{snd=snd||new Audio('snd/trans.mp3?v=2');snd.volume=.12;snd.currentTime=0;snd.play();setTimeout(function(){snd.pause()},500)}catch(e){}}
+var R,k,pb=document.getElementById('pb');
+function score(){var lv=['живо','сжато','почти нет'],a={curiosity:lv[R[0]],play:lv[R[1]],contact:lv[R[2]]},sc={},md={};
+for(var j=0;j<3;j++){var x=SB[j][R[3+j]];if(x[0])sc[x[0]]=(sc[x[0]]||0)+1;md[x[1]]=(md[x[1]]||0)+1}
+function top(o){var b=null;for(var t in o)if(b==null||o[t]>o[b])b=t;return b}
+var an=0,avd=0;for(j=6;j<9;j++){an+=AV[R[j]][0];avd+=AV[R[j]][1]}var hA=an>=2,hV=avd>=2;
+var sd={s:0,n:0,str:0,z:0};for(j=9;j<15;j++)sd[QS[j].d[R[j]][1]]++;var K=['s','n','str','z'],NM={s:'Реактивный (Сразу делать)',n:'Наблюдательный (Сначала смотреть)',str:'Созидательный (Строить свое)',z:'Переходный (Зависит от того, кто рядом)'},o=K.slice().sort(function(x,y){return sd[y]-sd[x]}),lead=sd[o[0]]-sd[o[1]]>=2,key=lead?o[0]:'z';
+P.skill={key:key,title:lead?'Основной почерк действия: '+NM[key]:'Переходный (Размазанность / арсенал гибких реакций)',scores:sd,top:lead?[o[0]]:[o[0],o[1]],src:'step1'};try{L[0].c='<p>'+POW[P.skill.top.length>1?'mix':key]+'</p>'}catch(e){}
+return {answers:R.slice(),D:{scores:sd,key:key,top:P.skill.top},A:a,B:{schema:top(sc)||'нет выраженной',mode:top(md)},C:{anxiety:an,avoidance:avd,style:hA&&hV?'Тревожно-избегающий':hA?'Тревожный':hV?'Избегающий':'Надежный'}}}
+function show(){var z=document.getElementById('qz');z.className='f';setTimeout(function(){
+if(k>=QS.length){var res=score(),d=new Date().toLocaleDateString('ru-RU');P.step1=Object.assign({date:d},res);P.steps=Math.max(+(P.steps||0),1);localStorage.setItem('alch_profile',JSON.stringify(P));
+var D=[];try{D=JSON.parse(localStorage.getItem('alch_diary'))||[]}catch(e){}D.push({date:d,title:'Точка 0 · Самоценность',result:res});localStorage.setItem('alch_diary',JSON.stringify(D));
+z.className='qe';z.innerHTML='<p class="qq">Шаг пройден</p><p style="text-align:center;margin-bottom:8px!important">Ваши ответы записаны в Дневник.</p><p>В детстве каждый из нас собрал свой мир и записал на чистый лист свои запреты.</p><p>Ребенок нашел единственно верный способ выжить: замереть, спрятаться, заслужить одобрение или броситься в бой.</p><p>Выводы стали правилами: «Нужно заслужить любовь», «Нельзя ошибаться».</p><p>Правила стали фоном. Даже в безопасной ситуации мы подчиняемся тому, что когда-то имело смысл.</p><p>Вы выросли, а программа осталась прежней. Но это старая стратегия выживания, а не ваша сущность. Мир можно исследовать заново.</p><button class="qb" type="button" id="qend">Дальше по пути</button>';document.getElementById('qend').onclick=function(){document.getElementById('x').click();window.heroStepsDraw&&heroStepsDraw()}}
+else{var Q=QS[k];z.innerHTML='<div class="qp">'+(k+1)+'/'+QS.length+'<i><b style="width:'+((k+1)/QS.length*100)+'%"></b></i></div>'+(Q.i?'<p class="qi">'+Q.i+'</p>':'')+'<p class="qq">'+Q.q+'</p>'+Q.a.map(function(t,i){return '<button type="button" class="qa" data-a="'+i+'">'+t+'</button>'}).join('')}
+z.classList.remove('f')},280)}
+window.heroStartQuiz=function(){R=[];k=0;pb.innerHTML='<div id="qz"></div>';show()};
+pb.addEventListener('click',function(e){var b=e.target.closest('.qa');if(b){tick();R.push(+b.dataset.a);k++;show();return}if(e.target.id=='qgo')heroStartQuiz()});})();
+</script></body></html>

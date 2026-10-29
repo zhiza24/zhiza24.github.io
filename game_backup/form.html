@@ -1,0 +1,110 @@
+<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Инициация алхимика</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#100e0c">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nav.css?v=6">
+<style>
+:root{--g:#c9a46a;--g2:#f0d9a8;--line:#7a5a3a;--ink:#f4ecdf;--d:"Cormorant Garamond",serif}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#100e0c;color:var(--ink);font-family:Manrope,sans-serif}
+.scr{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));padding:calc(10px + env(safe-area-inset-top)) 10px 10px;display:flex}
+.board{flex:1;display:flex;flex-direction:column;border-radius:22px;padding:12px 14px 12px;background:radial-gradient(ellipse at 50% 40%,#2c2119,#15100c 75%);border:2px solid #8a6438;box-shadow:inset 0 0 0 5px #1a130d,inset 0 0 0 6px #6b4c2c,0 0 0 1px #3a2a1a,inset 0 0 40px rgba(0,0,0,.7);min-height:0}
+h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-spacing:.06em;color:var(--g2);text-shadow:0 0 12px rgba(230,180,100,.35)}
+.orn{height:10px;margin:4px auto 0;width:70%;background:linear-gradient(90deg,transparent,#8a6438,transparent) center/100% 1px no-repeat;position:relative}
+.orn:after{content:"";position:absolute;left:50%;top:1px;width:8px;height:8px;background:#c9a46a;transform:translateX(-50%) rotate(45deg)}
+.lab{display:block;text-align:center;font:600 clamp(13px,1.9vh,16px) var(--d);letter-spacing:.1em;color:var(--g);margin:clamp(6px,1.2vh,12px) 0 4px;text-transform:uppercase}
+.bar{position:relative;margin:0 14px}
+.bar:before,.bar:after{content:"";position:absolute;top:50%;width:14px;height:14px;border:2px solid #9a7444;background:#1a130d;transform:translateY(-50%) rotate(45deg)}
+.bar:before{left:-9px}.bar:after{right:-9px}
+.bar input{width:100%;height:clamp(40px,5.6vh,48px);border:2px solid #8a6438;border-radius:6px;background:linear-gradient(#0e0a07,#1c150f);color:var(--ink);font:600 19px Manrope,sans-serif;text-align:center;outline:none;box-shadow:inset 0 0 0 1px #3a2a1a}
+.bar input::placeholder{color:#6e6256;font-weight:500;font-size:16px}
+.gen{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:clamp(8px,1.4vh,14px)}
+.sym{font:28px var(--d);color:var(--g)}
+.md{width:clamp(50px,7vh,60px);height:clamp(50px,7vh,60px);border-radius:50%;border:2px solid #9a7444;background:radial-gradient(#4a3420,#1e150d);color:var(--g2);font:700 26px var(--d);box-shadow:inset 0 0 0 3px #1a130d,inset 0 0 0 4px #6b4c2c;cursor:pointer}
+.md.on{background:radial-gradient(#f0d090,#a87430);color:#2a1606;box-shadow:0 0 16px rgba(255,200,110,.7),inset 0 0 0 3px #7a5020}
+.note{text-align:center;font:italic 500 clamp(14px,2vh,17px)/1.3 var(--d);color:#d8c7a4;margin:clamp(6px,1.2vh,12px) 6px 0}
+.sph{display:flex;justify-content:center;margin:clamp(4px,1vh,10px) 0 -6px;position:relative}
+.sph img{height:clamp(44px,7vh,66px);filter:drop-shadow(0 0 14px rgba(255,190,90,.7))}
+.ped{height:8px;width:120px;margin:0 auto;border-radius:50%;background:radial-gradient(#8a6438,#2a1c10)}
+.test{flex:1;min-height:0;margin-top:6px;border:2px solid #7a5a3a;border-radius:10px;background:rgba(10,7,5,.55);box-shadow:inset 0 0 0 4px #15100c,inset 0 0 0 5px #4a3420;padding:8px 10px 10px;display:flex;flex-direction:column}
+.test h2{margin:0;text-align:center;font:700 clamp(20px,3vh,26px) var(--d);letter-spacing:.12em;color:var(--g2)}
+.pts{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0;min-height:0}
+.pt{border:1px solid #6b4c2c;border-radius:10px;background:linear-gradient(#2a1f16,#17110c);display:flex;align-items:center;gap:8px;padding:4px 8px;color:var(--ink);text-align:left;cursor:pointer;min-height:0}
+.pt b{flex:none;width:clamp(34px,5vh,44px);height:clamp(34px,5vh,44px);border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(#f0d090,#a87430);color:#2a1606;font:700 clamp(18px,2.6vh,22px) var(--d)}
+.pt small{display:block;font:600 11px Manrope;letter-spacing:.08em;color:var(--g);text-transform:uppercase}
+.pt span{display:block;font:700 clamp(14px,2vh,17px)/1.1 var(--d);color:var(--g2)}
+.hint{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;font:500 15px/1.4 Manrope;color:#8a7a66;padding:0 10px}
+.btns{display:flex;gap:8px}
+.b{flex:1;height:clamp(42px,5.8vh,50px);border-radius:999px;font:700 15px Manrope;cursor:pointer}
+.b1{border:2px solid var(--g);background:none;color:var(--g2)}
+.b2{border:0;background:linear-gradient(#e9c98a,#b88a48);color:#1a0f05}
+.err{color:#f0a080;text-align:center;font-size:13px;min-height:0;margin:4px 0 0}
+.go{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0}
+.born{width:88%;height:clamp(56px,8vh,68px);border-radius:999px;border:2px solid #f5dca0;background:radial-gradient(ellipse at 50% 30%,#fff1c8,#e2b45e 55%,#9a6a28);color:#2a1606;font:700 clamp(22px,3.2vh,27px) var(--d);letter-spacing:.04em;cursor:pointer;animation:glow 2.2s infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 10px 2px rgba(255,205,120,.45)}50%{box-shadow:0 0 34px 12px rgba(255,205,120,.85)}}
+.flash{position:fixed;inset:0;z-index:90;pointer-events:none;background:radial-gradient(circle at 50% 60%,#fffbe8 0,#ffe7a8 25%,rgba(255,200,110,.9) 50%,rgba(255,180,80,0) 75%);opacity:0;transform:scale(.2);transition:opacity 1s ease,transform 1.3s ease}
+.flash.on{opacity:1;transform:scale(3)}
+.sph img{height:clamp(60px,11vh,110px)}
+.sheet{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.6);display:none;align-items:flex-end}
+.sheet.on{display:flex}
+.sh{width:100%;max-height:75dvh;overflow:auto;background:linear-gradient(#2a1f16,#15100c);border-top:2px solid #9a7444;border-radius:20px 20px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom))}
+.sh h3{margin:0;font:700 28px var(--d);color:var(--g2)}.sh .k{font:600 12px Manrope;letter-spacing:.1em;color:var(--g);text-transform:uppercase}
+.sh p{font:16px/1.55 Manrope;color:#e8dcc6}.sh .x{float:right;background:none;border:0;color:var(--g2);font-size:28px}
+.lab{color:#fffaf0!important;font-size:clamp(16px,2.3vh,19px)!important;text-shadow:0 1px 3px #000,0 0 8px rgba(0,0,0,.6)}
+.bar input{color:#fff!important;text-shadow:0 1px 2px #000}
+.bar input::placeholder{color:#e8ddc8!important;opacity:.85;font-size:17px!important}
+.note{color:#fffaf0!important;font-size:clamp(16px,2.3vh,19px)!important;text-shadow:0 1px 3px #000}
+.hint,.err{color:#fff3d6!important;text-shadow:0 1px 3px #000}
+.g,[data-g],[data-g] *{color:#fffaf0!important;text-shadow:0 1px 3px #000}
+.board,.panel,.card,.wrap{filter:brightness(1.35)}
+.born{filter:brightness(1.12)}
+[data-g].on,[data-g].on *,[data-g].sel,[data-g].sel *{color:#2a1606!important;text-shadow:none}
+.board{display:flex!important;flex-direction:column!important;justify-content:space-between!important}
+.board>h1,.board>.orn{flex:none}
+.grp,.gen,.note{flex:none;margin-top:0!important;margin-bottom:0!important}
+.go{flex:none!important;margin-bottom:clamp(6px,2vh,22px)}
+.lab{font-family:Manrope,sans-serif!important;font-weight:700!important;letter-spacing:.04em!important;text-transform:none!important;font-size:clamp(17px,2.4vh,20px)!important;margin-bottom:8px!important}
+.lab small{display:block;font-weight:500;font-size:.78em;color:#efe6d4;letter-spacing:.02em;margin-top:2px}
+.note,.hint,.err{font-family:Manrope,sans-serif!important;font-style:normal!important;font-size:clamp(15px,2vh,17px)!important}
+.gen{gap:10px!important}.flr{flex:none;filter:drop-shadow(0 0 4px rgba(255,200,110,.5))}
+.born{letter-spacing:.08em!important}
+</style></head><body data-page="form">
+<div class="scr"><div class="board">
+<h1 style="margin-top:clamp(10px,2.4vh,26px)">ИНИЦИАЦИЯ АЛХИМИКА</h1><div class="orn"></div>
+<div class="grp"><label class="lab" for="nm">Введите ваше имя<small>или как к вам обращаться</small></label>
+<div class="bar"><input id="nm" autocomplete="name" placeholder="Имя"></div></div>
+<div class="grp"><label class="lab" for="bd">Дата рождения</label>
+<div class="bar"><input id="bd" inputmode="numeric" placeholder="ДД.ММ.ГГГГ" maxlength="10"></div></div>
+<div class="gen"><span class="sym">♂</span><button class="md" data-g="m" type="button">М</button><svg class="flr" viewBox="0 0 90 30" width="78" height="26" aria-hidden="true"><g fill="none" stroke="#e0b866" stroke-width="1.4" stroke-linecap="round"><path d="M4 15h22M64 15h22"/><path d="M26 15c4-8 12-8 14-2-3 4-9 3-9-1M64 15c-4-8-12-8-14-2 3 4 9 3 9-1"/><path d="M26 15c4 8 12 8 14 2M64 15c-4 8-12 8-14 2"/></g><path d="M45 8l5 7-5 7-5-7z" fill="#f0cf86"/></svg><button class="md" data-g="f" type="button">Ж</button><span class="sym">♀</span></div>
+<p class="note">Ваши данные — это координаты вашего старта в Мире Алхимии.</p>
+
+<div class="go"><button class="born" type="button" id="next">РОЖДЕНИЕ ГЕРОЯ</button><p class="err" id="er"></p></div></div></div>
+<div class="flash" id="flash"></div>
+<div class="sheet" id="sheet"><div class="sh" id="shc"></div></div>
+<script src="arcana.js?v=6"></script>
+<script src="nav.js?v=6"></script>
+<script>
+var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
+var nm=document.getElementById('nm'),bd=document.getElementById('bd'),er=document.getElementById('er');
+nm.value=P.name||'';bd.value=P.birth||'';
+function save(){localStorage.setItem('alch_profile',JSON.stringify(P))}
+document.querySelectorAll('.md').forEach(function(b){if(P.gender==b.dataset.g)b.classList.add('on');b.onclick=function(){document.querySelectorAll('.md').forEach(function(x){x.classList.remove('on')});b.classList.add('on');P.gender=b.dataset.g;save();calc()}});
+nm.oninput=function(){P.name=nm.value.trim();save()};
+function red(n){while(n>22){n=String(n).split('').reduce(function(a,c){return a+ +c},0)}return n}
+function parse(v){var m=/^(\d\d)\.(\d\d)\.(\d{4})$/.exec(v);if(!m)return null;var d=+m[1],mo=+m[2],y=+m[3],dt=new Date(y,mo-1,d);
+if(y<1920||y>new Date().getFullYear()||dt.getMonth()!=mo-1||dt.getDate()!=d||dt>new Date())return null;return{d:d,m:mo,y:y}}
+bd.oninput=function(){var v=bd.value.replace(/\D/g,'').slice(0,8),o=v.slice(0,2);if(v.length>2)o+='.'+v.slice(2,4);if(v.length>4)o+='.'+v.slice(4);bd.value=o;P.birth=o;save();calc()};
+var NAMES=['Личность','Интуиция','Вызов','Ключ'],cur=[];
+function role(n){var r=ARCANA_ROLE[n];return r?(P.gender=='f'?r[1]:r[0]):ARCANA[n-1].epithet}
+function calc(){var p=parse(bd.value),pts=document.getElementById('pts'),h=document.getElementById('hint');if(p){var l=red(p.d),i=p.m,v=red(String(p.y).split('').reduce(function(a,c){return a+ +c},0));P.points=[l,i,v,red(l+i+v)];save()}if(!pts)return;
+if(!p){pts.style.display='none';h.style.display='flex';h.textContent=bd.value.length==10?'Проверьте дату рождения.':'Введите дату рождения — здесь откроются четыре точки вашего пути.';return}
+var l=red(p.d),i=p.m,v=red(String(p.y).split('').reduce(function(a,c){return a+ +c},0)),k=red(l+i+v);cur=[l,i,v,k];P.points=cur;save();
+pts.innerHTML=cur.map(function(n,j){var a=ARCANA[n-1];return '<button class="pt" type="button" data-j="'+j+'"><b>'+n+'</b><div><small>'+NAMES[j]+'</small><span>'+a.name+'<br>'+role(n)+'</span></div></button>'}).join('');
+pts.style.display='grid';h.style.display='none';
+pts.querySelectorAll('.pt').forEach(function(b){b.onclick=function(){open(+b.dataset.j)}})}
+function open(j){var n=cur[j],a=ARCANA[n-1];document.getElementById('shc').innerHTML='<button class="x" onclick="sheet.classList.remove(\'on\')">×</button><div class="k">'+NAMES[j]+' · аркан '+n+'</div><h3>'+a.name+' — '+role(n)+'</h3><p>'+(j==0?a.personality:a.other)+'</p><p><span class="k">Свет</span><br>'+a.light+'</p>';sheet.classList.add('on')}
+var sheet=document.getElementById('sheet');sheet.onclick=function(e){if(e.target==sheet)sheet.classList.remove('on')};
+document.getElementById('next').onclick=function(){P.name=nm.value.trim();var m=!P.name?'Напишите, как к вам обращаться.':!parse(bd.value)?'Проверьте дату рождения.':!P.gender?'Выберите: М или Ж.':'';er.textContent=m;if(m)return;save();document.getElementById('flash').classList.add('on');setTimeout(function(){location.href='elder.html'},1300)};
+calc();
+</script>
+</body></html>
