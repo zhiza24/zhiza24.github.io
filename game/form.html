@@ -50,6 +50,15 @@ h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-
 .sh{width:100%;max-height:75dvh;overflow:auto;background:linear-gradient(#2a1f16,#15100c);border-top:2px solid #9a7444;border-radius:20px 20px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom))}
 .sh h3{margin:0;font:700 28px var(--d);color:var(--g2)}.sh .k{font:600 12px Manrope;letter-spacing:.1em;color:var(--g);text-transform:uppercase}
 .sh p{font:16px/1.55 Manrope;color:#e8dcc6}.sh .x{float:right;background:none;border:0;color:var(--g2);font-size:28px}
+.lab{color:#fffaf0!important;font-size:clamp(16px,2.3vh,19px)!important;text-shadow:0 1px 3px #000,0 0 8px rgba(0,0,0,.6)}
+.bar input{color:#fff!important;text-shadow:0 1px 2px #000}
+.bar input::placeholder{color:#e8ddc8!important;opacity:.85;font-size:17px!important}
+.note{color:#fffaf0!important;font-size:clamp(16px,2.3vh,19px)!important;text-shadow:0 1px 3px #000}
+.hint,.err{color:#fff3d6!important;text-shadow:0 1px 3px #000}
+.g,[data-g],[data-g] *{color:#fffaf0!important;text-shadow:0 1px 3px #000}
+.board,.panel,.card,.wrap{filter:brightness(1.35)}
+.born{filter:brightness(1.12)}
+[data-g].on,[data-g].on *,[data-g].sel,[data-g].sel *{color:#2a1606!important;text-shadow:none}
 </style></head><body data-page="form">
 <div class="scr"><div class="board">
 <h1>ИНИЦИАЦИЯ АЛХИМИКА</h1><div class="orn"></div>
@@ -59,7 +68,7 @@ h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-
 <div class="bar"><input id="bd" inputmode="numeric" placeholder="ДД.ММ.ГГГГ" maxlength="10"></div>
 <div class="gen"><span class="sym">♀</span><button class="md" data-g="m" type="button">М</button><button class="md" data-g="f" type="button">Ж</button><span class="sym">♂</span></div>
 <p class="note">Ваши данные — это координаты вашего старта в Мире Алхимии.</p>
-<div class="sph"><img src="img/sphere.png" alt=""></div><div class="ped"></div>
+
 <div class="go"><button class="born" type="button" id="next">Рождение героя</button><p class="err" id="er"></p></div></div></div>
 <div class="flash" id="flash"></div>
 <div class="sheet" id="sheet"><div class="sh" id="shc"></div></div>
