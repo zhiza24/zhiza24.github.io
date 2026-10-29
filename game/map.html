@@ -4,33 +4,32 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#5a3a14">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="nav.css">
-<style>
-html,body{margin:0;height:100%;overflow:hidden;background:#3a240c}
-.map{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));background:url(img/map_bg.jpg?v=4) center/cover no-repeat;overflow:hidden}
-.o{position:absolute;transform:translate(-50%,-50%);text-decoration:none}
-.ttl{font:700 30px 'Cormorant Garamond',serif;color:#ffe6a8;text-shadow:0 2px 3px #3a0a05;white-space:nowrap}
-.step{border-radius:50%;cursor:pointer}
-.start{border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 26px 'Cormorant Garamond',serif;color:#ffe6a8;text-shadow:0 2px 3px #000;animation:p 2s infinite}
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#2a1c0c}
+.map{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));background:#2a1c0c url(img/map_bg.jpg?v=5) no-repeat;overflow:hidden}
+.o{position:absolute;transform:translate(-50%,-50%);border-radius:50%}
+.dock{position:absolute;left:0;right:0;bottom:14px;height:168px}
+.cont{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:262px;height:70px;background:url(img/btn_plate.png) center/100% 100%;display:flex;align-items:center;justify-content:center;font:700 23px 'Cormorant Garamond',serif;color:#ffe6a8;text-shadow:0 2px 3px #3a0a05;text-decoration:none;white-space:nowrap}
+.start{position:absolute;left:50%;bottom:72px;transform:translateX(-50%);width:92px;height:92px;border-radius:50%;background:url(img/start.png) center/100%;display:flex;align-items:center;justify-content:center;font:700 25px 'Cormorant Garamond',serif;color:#ffe6a8;text-shadow:0 2px 3px #000;text-decoration:none;animation:p 2s infinite}
 @keyframes p{0%,100%{box-shadow:0 0 6px 2px rgba(255,211,106,.5)}50%{box-shadow:0 0 26px 10px rgba(255,211,106,.85)}}
-.cont{display:flex;align-items:center;justify-content:center;font:700 23px 'Cormorant Garamond',serif;color:#ffe6a8;text-shadow:0 2px 3px #3a0a05;white-space:nowrap}
-.info{display:flex;align-items:center;justify-content:center;font:700 30px 'Cormorant Garamond',serif;color:#ffe6a8;border-radius:50%}
+.cmp,.inf{position:absolute;bottom:84px;width:70px;height:70px}.cmp{left:12px}.inf{right:12px}
+.cmp img,.inf img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}.cmp img{border-radius:50%}
 </style></head><body data-page="map">
 <div class="map" id="m">
-<div class="o ttl" data-x="160" data-y="64">Карта пути</div>
-<a class="o step" href="#soon" data-x="226" data-y="327" data-r="60"></a>
-<a class="o step" href="#soon" data-x="350" data-y="410" data-r="60"></a>
-<a class="o step" href="#soon" data-x="226" data-y="506" data-r="60"></a>
-<a class="o step" href="#soon" data-x="352" data-y="604" data-r="60"></a>
-<a class="o step" href="#soon" data-x="213" data-y="716" data-r="60"></a>
-<a class="o start" href="form.html" data-x="287" data-y="850" data-r="94">Старт</a>
-<a class="o cont" href="#soon" data-x="282" data-y="950" data-w="240" data-h="52">Продолжить путь</a>
-<a class="o info" href="#soon" data-x="458" data-y="950" data-r="56">i</a>
-</div>
+<a class="o step" href="#soon" data-x="218" data-y="310" data-r="62"></a>
+<a class="o step" href="#soon" data-x="364" data-y="404" data-r="62"></a>
+<a class="o step" href="#soon" data-x="218" data-y="519" data-r="62"></a>
+<a class="o step" href="#soon" data-x="366" data-y="631" data-r="62"></a>
+<a class="o step" href="#soon" data-x="205" data-y="764" data-r="62"></a>
+<div class="dock">
+<a class="cmp" href="#soon" aria-label="Компас"><img src="img/compass.png" alt=""></a>
+<a class="start" href="form.html"><span>Старт</span></a>
+<a class="inf" href="#soon" aria-label="Информация"><img src="img/info.png" alt=""></a>
+<a class="cont" href="#soon">Продолжить путь</a>
+</div></div>
 <script>
-function lay(){var m=document.getElementById('m'),W=m.clientWidth,H=m.clientHeight,s=Math.max(W/576,H/1024),ox=(W-576*s)/2,oy=(H-1024*s)/2;
-m.querySelectorAll('.o').forEach(function(e){var d=e.dataset;e.style.left=(ox+d.x*s)+'px';e.style.top=(oy+d.y*s)+'px';
-if(d.r){e.style.width=e.style.height=(d.r*s)+'px'}if(d.w){e.style.width=d.w*s+'px';e.style.height=d.h*s+'px'}});
-var t=m.querySelector('.ttl');t.style.fontSize=Math.min(26,22*s/0.68)+'px'}
+function lay(){var m=document.getElementById('m'),W=m.clientWidth,H=m.clientHeight,s=Math.max(W/576,H/1024),ox=(W-576*s)/2,oy=H-1024*s;
+m.style.backgroundSize=576*s+'px '+1024*s+'px';m.style.backgroundPosition=ox+'px '+oy+'px';
+m.querySelectorAll('.o').forEach(function(e){var d=e.dataset;e.style.left=(ox+d.x*s)+'px';e.style.top=(oy+d.y*s)+'px';e.style.width=e.style.height=(d.r*s)+'px'})}
 addEventListener('resize',lay);lay();
 </script>
 <script src="nav.js"></script>
