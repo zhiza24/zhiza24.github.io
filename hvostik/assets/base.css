@@ -34,8 +34,9 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 input{font:inherit}
 :focus-visible{outline:3px solid rgba(242,115,63,.55);outline-offset:3px;border-radius:8px}
 
-.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 20px}
-@media (min-width:760px){.wrap{padding:0 32px}}
+.wrap{width:100%;max-width:1240px;margin:0 auto;padding:0 24px}
+@media (min-width:760px){.wrap{padding:0 40px}}
+@media (min-width:1180px){.wrap{padding:0 48px}}
 
 .sec{padding:56px 0}
 @media (min-width:900px){.sec{padding:84px 0}}

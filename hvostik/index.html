@@ -1,319 +1,485 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Хвостик в беде — благотворительный фонд помощи животным, Москва</title>
-<meta name="description" content="Фонд «Хвостик в беде»: спасаем, лечим, держим до пристройства и кормим тем, что уже произведено. Опека, дневник подобранца, вторая миска.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хвостик в беде — благотворительный фонд помощи животным</title>
+<meta name="description" content="Забираем животных в беде, лечим, держим на передержке и находим им дом. Каждый случай ведем открыто: диагноз, сумма, результат.">
 <meta name="theme-color" content="#0E4F58">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" href="assets/landing.css">
 </head>
 <body>
+<a class="skip" href="#main">К содержанию</a>
 
 <header class="hdr">
   <div class="wrap hdr__in">
-    <a href="./" class="brand" aria-label="Хвостик в беде, на главную">
-      <span class="brand__mark">ХВ</span>
+    <a class="brand" href="index.html" aria-label="Хвостик в беде — на главную">
+      <span class="brand__mark" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9Z"/></svg>
+      </span>
       <span class="brand__txt">Хвостик в беде<small>Благотворительный фонд</small></span>
     </a>
+
     <nav class="nav" aria-label="Основная навигация">
-      <a href="#fund">Фонд</a>
-      <a href="#how">Как это работает</a>
-      <a href="#opeka">Опека</a>
+      <a href="#stories">Истории</a>
+      <a href="#how">Как мы работаем</a>
       <a href="#miska">Вторая миска</a>
-      <a href="#transparency">Отчеты</a>
-      <a href="app/" class="is-app">Приложение</a>
-      <a href="app/#sbory" class="is-cta">Помочь</a>
+      <a href="#opeka">Опека</a>
+      <a href="#reqs">Отчетность</a>
+      <a href="app/index.html" class="nav__app">Кабинет</a>
     </nav>
-    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mnav">
-      <span></span><span></span><span></span>
-    </button>
+
+    <div class="hdr__right">
+      <a class="btn btn--accent btn--sm hdr__cta" href="#help">Помочь</a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mnav" id="mnav">
+    <a href="#stories">Истории</a>
+    <a href="#how">Как мы работаем</a>
+    <a href="#miska">Вторая миска</a>
+    <a href="#opeka">Опека</a>
+    <a href="#reqs">Отчетность</a>
+    <a href="app/index.html">Кабинет фонда</a>
   </div>
 </header>
 
-<div class="mnav" id="mnav">
-  <a href="#fund">Фонд <span aria-hidden="true">→</span></a>
-  <a href="#how">Как это работает <span aria-hidden="true">→</span></a>
-  <a href="#opeka">Опека <span aria-hidden="true">→</span></a>
-  <a href="#miska">Вторая миска <span aria-hidden="true">→</span></a>
-  <a href="#transparency">Отчеты <span aria-hidden="true">→</span></a>
-  <a href="app/#sbory" class="is-cta">Помочь</a>
-</div>
+<main id="main">
 
-<main>
-
-<!-- HERO -->
-<section class="hero" id="fund">
-  <div class="hero__bg" aria-hidden="true">
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero__rings" aria-hidden="true">
     <svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" fill="none">
-      <circle cx="1010" cy="120" r="300" stroke="#F2733F" stroke-width="1.2" opacity=".55"/>
-      <circle cx="1010" cy="120" r="210" stroke="#FFFFFF" stroke-width="1" opacity=".18"/>
-      <circle cx="120" cy="620" r="260" stroke="#FFFFFF" stroke-width="1" opacity=".12"/>
-      <circle cx="120" cy="620" r="170" stroke="#F2733F" stroke-width="1.2" opacity=".3"/>
+      <circle cx="1050" cy="90" r="340" stroke="#F2733F" stroke-width="1.2" opacity=".34"/>
+      <circle cx="1050" cy="90" r="230" stroke="#FFFFFF" stroke-width="1" opacity=".13"/>
+      <circle cx="60" cy="680" r="300" stroke="#FFFFFF" stroke-width="1" opacity=".09"/>
+      <circle cx="60" cy="680" r="190" stroke="#F2733F" stroke-width="1.2" opacity=".2"/>
     </svg>
   </div>
+
   <div class="wrap hero__in">
-    <div class="hero__grid">
-      <div>
-        <span class="kicker">Благотворительный фонд · Москва</span>
-        <h1>Штаб спасения, а не просящая рука</h1>
-        <p class="hero__sub">Мы не собираем на корм. Мы организуем спасение: находим, лечим, держим до пристройства и кормим тем, что уже произведено.</p>
-        <div class="hero__btns">
-          <a href="app/#sbory" class="btn btn--accent">Помочь сейчас</a>
-          <a href="#how" class="btn btn--outline-light">Как устроен фонд</a>
-        </div>
-        <p class="hero__note"><span class="dot"></span><span><b>700 рублей</b> — это неделя тепла и еды для питомца в приюте</span></p>
+    <div class="hero__copy">
+      <span class="kicker kicker--light">Фонд помощи животным · с 2024 года</span>
+      <h1>Хвостик<br>в беде</h1>
+      <p class="hero__lead">Забираем животных с улицы, лечим, держим на передержке и находим им дом. Каждый случай ведем открыто: диагноз, сумма, результат.</p>
+
+      <div class="hero__actions">
+        <a class="btn btn--accent" href="#help">Помочь сейчас</a>
+        <a class="btn btn--outline-light" href="#stories">Смотреть истории</a>
       </div>
 
-      <aside class="donate" aria-label="Реквизиты для перевода">
-        <div class="donate__top">
-          <h3>Перевести напрямую</h3>
-          <span class="tag tag--soft">Альфа-Банк</span>
-        </div>
-        <div class="donate__lbl">Карта фонда</div>
-        <div class="cardnum">
-          <span id="cardnum">2200 1520 5952 1024</span>
-          <button type="button" id="copyCard" aria-label="Скопировать номер карты">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5.5A2.5 2.5 0 0 1 7.5 3H17"/></svg>
+      <div class="plate">
+        <div class="plate__txt">
+          <span class="plate__cap">Карта Альфа-Банк для перевода денег для фонда</span>
+          <span class="plate__num" id="cardnum">2200 1520 5952 1024</span>
+          <button class="plate__copy" type="button" data-copy="2200152059521024">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5.5A2.5 2.5 0 0 1 7.5 3H17"/></svg>
+            <span>Скопировать номер</span>
           </button>
         </div>
-        <div class="donate__qr">
-          <img class="qr" src="assets/qr.svg" width="104" height="104" alt="QR-код с номером карты фонда">
-          <p><b>Наведите камеру</b>Номер карты откроется в приложении банка. Комментарий к переводу не нужен.</p>
-        </div>
-        <p class="donate__foot">Перевод идет напрямую на счет фонда. Чек и отчет по сбору публикуем на странице животного.</p>
-      </aside>
+        <a class="plate__qr" href="#help" aria-label="Перейти к переводу по QR-коду">
+          <img src="assets/qr.svg" width="216" height="216" alt="QR-код с номером карты фонда" decoding="async">
+          <span>Наведите камеру</span>
+        </a>
+      </div>
+    </div>
+
+    <figure class="hero__photo">
+      <img src="assets/img/hero.jpg" width="1200" height="900" alt="Волонтер фонда держит на руках щенка, на плече у нее сидит котенок" fetchpriority="high" decoding="async">
+      <figcaption>Первый день в фонде: щенок из подвала и котенок с передержки</figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap">
+    <ul class="hstrip">
+      <li>
+        <span class="hstrip__ico" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><path d="M4 13v3a2 2 0 0 0 2 2h1v-5H6a2 2 0 0 0-2 2Z"/><path d="M20 13v3a2 2 0 0 1-2 2h-1v-5h1a2 2 0 0 1 2 2Z"/><path d="M10 6l1-2 1 2 2 .5-1.5 1.5.3 2-1.8-1-1.8 1 .3-2L8 6.5 10 6Z"/></svg></span>
+        <b>Спасение</b><span>Забираем с улицы и из подвалов</span>
+      </li>
+      <li>
+        <span class="hstrip__ico" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M12 11v6M9 14h6"/></svg></span>
+        <b>Лечение</b><span>Диагностика, операции, реабилитация</span>
+      </li>
+      <li>
+        <span class="hstrip__ico" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9H4z"/><path d="M9 20v-6h6v6"/></svg></span>
+        <b>Передержка</b><span>Живет у куратора, пока ищем дом</span>
+      </li>
+      <li>
+        <span class="hstrip__ico" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9Z"/></svg></span>
+        <b>Новая семья</b><span>Знакомство, договор, поддержка</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slogan">
+    <div class="wrap">
+      <p>Ваши 700 рублей — это 7 дней тепла и еды для питомца в приюте</p>
+      <small>Перевод идет на корм, лечение и передержку животных</small>
     </div>
   </div>
 </section>
 
-<div class="slogan">
-  <div class="wrap">
-    <p>Ваши 700 рублей — это 7 дней тепла и еды для питомца в приюте</p>
-    <small>Перевод идет на корм, лечение и передержку животных</small>
-  </div>
-</div>
+<!-- ============ DONATE ============ -->
+<section class="sec sec--donate" id="help">
+  <div class="wrap donate">
+    <div class="donate__head">
+      <span class="kicker">Помочь прямо сейчас</span>
+      <h2>Выберите сумму — она уйдет на конкретное животное</h2>
+      <p class="lead">700 рублей закрывают неделю корма и обработок для одного питомца. Все, что сверху, идет на лечение.</p>
+    </div>
 
-<!-- FOUR STEPS -->
-<section class="sec">
+    <div class="donate__panel">
+      <div class="switch" role="group" aria-label="Периодичность перевода">
+        <button class="switch__btn is-on" type="button" aria-pressed="true">Разово</button>
+        <button class="switch__btn" type="button" aria-pressed="false" disabled>Ежемесячно <span class="tag tag--soft">скоро</span></button>
+      </div>
+
+      <div class="amounts" role="group" aria-label="Сумма перевода">
+        <button class="amount" type="button" data-amount="500" aria-pressed="false">500 ₽</button>
+        <button class="amount is-on" type="button" data-amount="1000" aria-pressed="true">1 000 ₽</button>
+        <button class="amount" type="button" data-amount="2000" aria-pressed="false">2 000 ₽</button>
+        <button class="amount amount--own" type="button" data-amount="own" aria-pressed="false">Своя сумма</button>
+      </div>
+
+      <p class="impact" id="impact"><b>1 000 ₽</b> — это 10 дней корма и обработок для одного питомца.</p>
+
+      <a class="btn btn--accent btn--block donate__cta" href="#card" id="donateCta">Перевести 1 000 ₽</a>
+      <p class="donate__note">Перевод идет напрямую на счет фонда. Комментарий к переводу не нужен.</p>
+
+      <div class="cardbox" id="card">
+        <div class="cardbox__txt">
+          <span class="cardbox__cap">Карта Альфа-Банк для перевода денег для фонда</span>
+          <span class="cardbox__num">2200 1520 5952 1024</span>
+          <button class="cardbox__copy" type="button" data-copy="2200152059521024">Скопировать номер карты</button>
+        </div>
+        <img class="cardbox__qr" src="assets/qr.svg" width="216" height="216" alt="QR-код с номером карты фонда" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NUMBERS ============ -->
+<section class="sec numbers">
   <div class="wrap">
-    <div class="sec__head">
-      <span class="kicker">Путь одного животного</span>
+    <div class="numbers__head">
+      <span class="kicker">Фонд в цифрах</span>
+      <h2>Небольшой фонд, где каждого животного знают по имени</h2>
+    </div>
+    <ul class="numbers__grid">
+      <li><b>34</b><span>животных под опекой фонда</span></li>
+      <li><b>21</b><span>уже живут в новых семьях</span></li>
+      <li><b>18</b><span>на лечении и передержке</span></li>
+      <li><b>214 000 ₽</b><span>собрано за 2024 год</span></li>
+    </ul>
+    <p class="numbers__note">Данные демонстрационные, до подключения учета фонда.</p>
+  </div>
+</section>
+
+<!-- ============ ONE BIG STORY ============ -->
+<section class="sec story">
+  <div class="wrap story__grid">
+    <figure class="story__photo">
+      <img src="assets/img/vet.jpg" width="1200" height="900" alt="Ветеринар слушает сердце маленькой собаки в клинике" loading="lazy" decoding="async">
+      <figcaption>Плановый осмотр после операции. Таких приемов у фонда 6–8 в неделю.</figcaption>
+    </figure>
+
+    <div class="story__body">
+      <span class="kicker">История недели</span>
+      <h2>Тошу нашли у гаражей — он не мог встать на заднюю лапу</h2>
+      <p>Мальчик сидел под колесом и скулил на каждую попытку встать. Лапа была вывернута, шерсть на боку свалялась. Первые сутки он не пил и не ел — только смотрел и ждал, что его снова оставят.</p>
+      <p>В клинике выяснилось: старый перелом бедра, который сросся неправильно. Нужна была операция и восемь недель восстановления. Стоимость лечения — 46 000 рублей. На приеме он весил 6,2 кг при норме 11.</p>
+      <p>Сейчас Тоша ест сам, лапа разрабатывается, швы сняли. Он уже делает несколько шагов и тянется к руке, когда открывают вольер. Это хороший знак: значит, доверие возвращается.</p>
+      <p>После реабилитации ищем дом без маленьких детей и без других собак — ему нужно спокойное место, где можно не делить территорию. Куратор фонда продолжит навещать его первые месяцы.</p>
+
+      <div class="progress progress--big">
+        <div class="progress__top"><b>28 400 ₽</b><span>из 46 000 ₽</span></div>
+        <div class="progress__bar" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 62 процента"><span style="width:62%"></span></div>
+        <div class="progress__foot"><span>62% собрано</span><span>осталось 17 600 ₽</span></div>
+      </div>
+
+      <a class="btn btn--accent" href="#help">Помочь Тоше</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOUR STORY CARDS ============ -->
+<section class="sec stories" id="stories-list">
+  <div class="wrap">
+    <div class="stories__head">
+      <div>
+        <span class="kicker">Кому помочь сегодня</span>
+        <h2>Четыре истории, четыре суммы</h2>
+      </div>
+      <p class="stories__sub">Откройте карточку, чтобы прочитать историю целиком. Помочь можно сразу — кнопка на карточке работает без перехода.</p>
+    </div>
+
+    <div class="cards">
+      <article class="card" data-story="dog1">
+        <button class="card__media" type="button" aria-label="Открыть историю: Рекс">
+          <img src="assets/img/t-dog1.jpg" width="600" height="450" alt="Пес Рекс лежит в вольере и смотрит в камеру" loading="lazy" decoding="async">
+          <span class="card__badge">На лечении</span>
+        </button>
+        <div class="card__body">
+          <h3><button type="button" class="card__title">Рекс</button></h3>
+          <p>Найден в промзоне, истощен. Нужны капельницы и курс антибиотиков.</p>
+          <div class="progress">
+            <div class="progress__bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 45 процентов"><span style="width:45%"></span></div>
+            <div class="progress__foot"><span><i class="sm-hide">собрано </i>6 800 из 15 000 ₽</span><b>45%</b></div>
+          </div>
+          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь Рексу</a>
+        </div>
+      </article>
+
+      <article class="card" data-story="cat1">
+        <button class="card__media" type="button" aria-label="Открыть историю: Марта">
+          <img src="assets/img/t-cat1.jpg" width="600" height="450" alt="Кошка Марта сидит на пледе у окна" loading="lazy" decoding="async">
+          <span class="card__badge card__badge--home">Ищет дом</span>
+        </button>
+        <div class="card__body">
+          <h3><button type="button" class="card__title">Марта</button></h3>
+          <p>Здорова, стерилизована, лоток знает. Осталось привить и найти семью.</p>
+          <div class="progress">
+            <div class="progress__bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 80 процентов"><span style="width:80%"></span></div>
+            <div class="progress__foot"><span><i class="sm-hide">собрано </i>4 000 из 5 000 ₽</span><b>80%</b></div>
+          </div>
+          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь Марте</a>
+        </div>
+      </article>
+
+      <article class="card" data-story="dog2">
+        <button class="card__media" type="button" aria-label="Открыть историю: Булат">
+          <img src="assets/img/t-dog2.jpg" width="600" height="450" alt="Пес Булат лежит на пледе и смотрит в камеру" loading="lazy" decoding="async">
+          <span class="card__badge">Передержка</span>
+        </button>
+        <div class="card__body">
+          <h3><button type="button" class="card__title">Булат</button></h3>
+          <p>Спасен из приюта, где его держали на цепи. Учится ходить на поводке.</p>
+          <div class="progress">
+            <div class="progress__bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 30 процентов"><span style="width:30%"></span></div>
+            <div class="progress__foot"><span><i class="sm-hide">собрано </i>3 600 из 12 000 ₽</span><b>30%</b></div>
+          </div>
+          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь Булату</a>
+        </div>
+      </article>
+
+      <article class="card" data-story="cat2">
+        <button class="card__media" type="button" aria-label="Открыть историю: Уголек">
+          <img src="assets/img/t-cat2.jpg" width="600" height="450" alt="Черный котенок Уголек сидит в переноске на оранжевом пледе" loading="lazy" decoding="async">
+          <span class="card__badge card__badge--new">Новый</span>
+        </button>
+        <div class="card__body">
+          <h3><button type="button" class="card__title">Уголек</button></h3>
+          <p>Котенку 4 месяца. Найден в переноске у мусорных контейнеров.</p>
+          <div class="progress">
+            <div class="progress__bar" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 15 процентов"><span style="width:15%"></span></div>
+            <div class="progress__foot"><span><i class="sm-hide">собрано </i>1 500 из 10 000 ₽</span><b>15%</b></div>
+          </div>
+          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь Угольку</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW / FOUR STEPS ============ -->
+<section class="sec how" id="how">
+  <div class="wrap">
+    <div class="how__head">
+      <span class="kicker">Как мы работаем</span>
       <h2>Четыре шага, и каждый можно проверить</h2>
       <p class="lead">Не абстрактная помощь, а маршрут: от звонка о найденном животном до новой семьи. На каждом шаге есть тот, кто отвечает за результат.</p>
     </div>
-    <div class="icons4">
-      <div class="ico-card">
-        <div class="ico-card__sq"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><path d="M4 13v3a2 2 0 0 0 2 2h1v-5H6a2 2 0 0 0-2 2Z"/><path d="M20 13v3a2 2 0 0 1-2 2h-1v-5h1a2 2 0 0 1 2 2Z"/><path d="M10 6l1-2 1 2 2 .5-1.5 1.5.3 2-1.8-1-1.8 1 .3-2L8 6.5 10 6Z"/></svg></div>
-        <h4>Спасение</h4>
-        <p>Забираем с улицы, из подвала, оттуда, где животное в опасности</p>
-      </div>
-      <div class="ico-card">
-        <div class="ico-card__sq"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M12 11v6M9 14h6"/></svg></div>
-        <h4>Лечение</h4>
-        <p>Диагностика, операции, лекарства, реабилитация в клинике-партнере</p>
-      </div>
-      <div class="ico-card">
-        <div class="ico-card__sq"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9H4z"/><path d="M9 20v-6h6v6"/></svg></div>
-        <h4>Передержка</h4>
-        <p>Живет у куратора или на передержке, пока не найдется дом</p>
-      </div>
-      <div class="ico-card">
-        <div class="ico-card__sq"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9Z"/></svg></div>
-        <h4>Новая семья</h4>
-        <p>Знакомство, договор, сопровождение после пристройства</p>
-      </div>
-    </div>
+
+    <ol class="steps">
+      <li>
+        <span class="steps__n">01</span>
+        <h3>Звонок</h3>
+        <p>Берем заявку от человека, который нашел животное. Фиксируем адрес, состояние и срочность.</p>
+      </li>
+      <li>
+        <span class="steps__n">02</span>
+        <h3>Врач</h3>
+        <p>Осмотр, анализы, план лечения и смета. Сумму публикуем до того, как начать сбор.</p>
+      </li>
+      <li>
+        <span class="steps__n">03</span>
+        <h3>Дом</h3>
+        <p>Передержка у куратора, социализация, поиск семьи и знакомство под присмотром.</p>
+      </li>
+      <li>
+        <span class="steps__n">04</span>
+        <h3>Отчет</h3>
+        <p>Публикуем чеки, фото и итог по каждому животному — даже если собрать удалось не все.</p>
+      </li>
+    </ol>
   </div>
 </section>
 
-<!-- THREE LAYERS -->
-<section class="sec" id="how" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
-  <div class="wrap">
-    <div class="sec__head">
-      <span class="kicker">Три слоя системы</span>
-      <h2>Фонд держится на трех вещах, и они кормят друг друга</h2>
-      <p class="lead">Спасение дает истории. Истории приводят людей в опеку. Опека оплачивает спасение. Корм приходит не деньгами, а логистикой.</p>
-    </div>
-    <div class="layers">
-      <article class="layer">
-        <span class="layer__n">Слой 1</span>
-        <h3>Спасаем сейчас</h3>
-        <p>Берем животное в беде и ведем его случай открыто: диагноз, клиника, сумма, каждый шаг. Человек видит не призыв, а конкретную историю с продолжением.</p>
-        <p class="layer__tag">Дает повод зайти сегодня</p>
-      </article>
-      <article class="layer">
-        <span class="layer__n">Слой 2</span>
-        <h3>Содержим</h3>
-        <p>Опека и клуб друзей: ежемесячная сумма на конкретное животное. Деньги приходят ровно тогда, когда нужны, а человек получает фото, новости и имя на странице.</p>
-        <p class="layer__tag">Дает предсказуемые деньги</p>
-      </article>
-      <article class="layer">
-        <span class="layer__n">Слой 3</span>
-        <h3>Кормим без денег</h3>
-        <p>«Вторая миска» — забираем корм и товары, которые торговые сети и производители списывают. Приюты получают еду, фонд не тратит на нее сборы.</p>
-        <p class="layer__tag">Снимает главную статью расходов</p>
-      </article>
+<!-- ============ MISKA ============ -->
+<section class="sec miska" id="miska">
+  <div class="wrap miska__grid">
+    <div class="miska__body">
+      <span class="kicker">Проект «Вторая миска»</span>
+      <h2>Корм, который магазины списывают, — приютам</h2>
+      <p>Торговые сети и производители каждый день снимают с полок корм с подходящим сроком годности. Мы забираем его и развозим по приютам и передержкам — без денег и без логистических посредников.</p>
+      <p>Так закрывается главная статья расходов: приют тратит на еду до половины бюджета. Одна машина корма — это месяц спокойной жизни для 40 животных.</p>
+      <ul class="miska__list">
+        <li><b>Забираем</b> партии корма и товаров у партнеров</li>
+        <li><b>Развозим</b> по приютам и кураторам фонда</li>
+        <li><b>Отчитываемся</b> фото и накладными по каждой партии</li>
+      </ul>
+      <a class="btn btn--accent" href="vtoraya-miska.html">Как работает «Вторая миска»</a>
     </div>
 
-    <div style="margin-top:26px">
-      <a href="app/" class="btn btn--accent btn--block" style="max-width:420px;margin:0 auto">Открыть приложение фонда</a>
-      <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:12px">Сборы, истории, карта помощи и схема «Второй миски» — в одном месте</p>
-    </div>
+    <figure class="miska__photo">
+      <img src="assets/img/food.jpg" width="1200" height="900" alt="Волонтер пересыпает корм из пакета в металлическую миску на складе" loading="lazy" decoding="async">
+      <figcaption>Разгрузка партии корма на складе партнера</figcaption>
+    </figure>
   </div>
 </section>
 
-<!-- OPEKA -->
-<section class="sec" id="opeka">
-  <div class="wrap">
-    <div class="sec__head">
-      <span class="kicker">Опека и клуб друзей</span>
-      <h2>Регулярная сумма вместо разовой просьбы</h2>
-      <p class="lead">Опека — это не подписка на жалость. Это понятная договоренность: вы даете сумму в месяц, фонд показывает, на что она ушла.</p>
-    </div>
-    <div class="trans">
-      <div class="trans__i">
-        <span>01</span>
-        <p><b>От 500 рублей в месяц.</b> Сумму можно изменить или остановить в любой момент, без объяснений.</p>
+<!-- ============ OPEKA ============ -->
+<section class="sec opeka" id="opeka">
+  <div class="wrap opeka__grid">
+    <div class="opeka__body">
+      <span class="kicker kicker--light">Опека</span>
+      <h2>Возьмите одного питомца на содержание</h2>
+      <p>Опека — это фиксированная сумма раз в месяц на конкретное животное. Не «фонд вообще», а Рекс, Марта или Булат: вы видите, куда уходят деньги, и получаете новости с фото.</p>
+      <div class="opeka__price">
+        <b>от 500 ₽</b>
+        <span>в месяц — корм и базовые обработки для одного питомца</span>
       </div>
-      <div class="trans__i">
-        <span>02</span>
-        <p><b>Фото и короткие новости</b> о подопечном: как ест, что с лечением, когда ищет дом.</p>
-      </div>
-      <div class="trans__i">
-        <span>03</span>
-        <p><b>Имя на странице животного</b> — если вы не против, что вас видно. Можно остаться анонимным.</p>
-      </div>
+      <a class="btn btn--light" href="#help">Стать опекуном</a>
+      <p class="opeka__note">Оплата ежемесячно появится чуть позже. Пока можно перевести сумму за несколько месяцев вперед.</p>
     </div>
-    <div style="margin-top:24px;display:flex;flex-wrap:wrap;gap:12px">
-      <a href="app/#opeka" class="btn btn--accent">Взять под опеку</a>
-      <a href="app/#sbory" class="btn btn--ghost">Посмотреть сборы</a>
-    </div>
-    <p style="margin-top:14px;font-size:13.5px;color:var(--muted)">Оплата подключится здесь же, когда мы запустим прием платежей. Сейчас перевод можно сделать на карту фонда.</p>
+
+    <figure class="opeka__photo">
+      <img src="assets/img/home.jpg" width="1200" height="900" alt="Собака дома сидит на деревянном полу, рука человека гладит ее по голове" loading="lazy" decoding="async">
+      <figcaption>Булат в новой семье. Через месяц после пристройства</figcaption>
+    </figure>
   </div>
 </section>
 
-<!-- TRANSPARENCY -->
-<section class="sec" id="transparency" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<!-- ============ REQUISITES ============ -->
+<section class="sec reqs" id="reqs">
   <div class="wrap">
-    <div class="sec__head">
+    <div class="reqs__head">
       <span class="kicker">Прозрачность</span>
-      <h2>Куда уходят деньги</h2>
-      <p class="lead">Никаких процентов «на развитие» из каждого перевода. Мы не делим сбор на части, которых вы не видите.</p>
+      <h2>Кто мы и как нас проверить</h2>
+      <p class="lead">Фонд молодой, поэтому мы держим открытыми не только сборы, но и документы. Любую цифру можно сверить в реестре.</p>
     </div>
-    <div class="trans">
-      <div class="trans__i">
-        <span>Сбор</span>
-        <p>Каждый сбор — отдельная страница с суммой, назначением и чеками.</p>
-      </div>
-      <div class="trans__i">
-        <span>Отчет</span>
-        <p>По каждому животному после закрытия сбора: сколько собрали и на что потратили.</p>
-      </div>
-      <div class="trans__i">
-        <span>Год</span>
-        <p>Годовой отчет фонда — по запросу на почту.</p>
-      </div>
-    </div>
-    <div class="reqs">
-      <div><b>ОГРН</b>1247700677916</div>
-      <div><b>ИНН</b>9727089022</div>
-      <div><b>Дата регистрации</b>14 октября 2024</div>
-    </div>
-  </div>
-</section>
 
-<!-- MISKA -->
-<section class="sec" id="miska">
-  <div class="wrap">
-    <div class="miska">
-      <div>
-        <span class="kicker kicker--light">Новое направление</span>
-        <h2 style="margin-top:12px">Вторая миска</h2>
-        <p>Мы не просим больше корма. Мы спасаем тот, который уже произвели, но собираются выбросить.</p>
-        <a href="vtoraya-miska.html" class="btn btn--accent miska__btn">Смотреть схему</a>
+    <div class="reqs__grid">
+      <div class="reqs__card">
+        <span class="reqs__cap">Регистрационные данные</span>
+        <dl class="reqs__dl">
+          <div><dt>ОГРН</dt><dd>1247700677916</dd></div>
+          <div><dt>ИНН</dt><dd>9727089022</dd></div>
+          <div><dt>В реестре с</dt><dd>14.10.2024</dd></div>
+          <div><dt>Почта</dt><dd><a href="mailto:hvost2024@yandex.ru">hvost2024@yandex.ru</a></dd></div>
+        </dl>
       </div>
-      <div class="miska__art" aria-hidden="true">
-        <svg viewBox="0 0 200 200" fill="none">
-          <ellipse cx="100" cy="120" rx="74" ry="26" stroke="#fff" stroke-width="2"/>
-          <path d="M26 120c0 26 33 44 74 44s74-18 74-44" stroke="#fff" stroke-width="2"/>
-          <path d="M60 92c0-18 18-30 40-30s40 12 40 30" stroke="#F2733F" stroke-width="2"/>
-          <circle cx="78" cy="74" r="7" fill="#F2733F"/><circle cx="100" cy="66" r="7" fill="#F2733F"/><circle cx="122" cy="74" r="7" fill="#F2733F"/>
-          <path d="M132 40l14-14M146 40l-14-14" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-        </svg>
+
+      <div class="reqs__card reqs__card--accent">
+        <span class="reqs__cap">Куда идут деньги</span>
+        <ul class="reqs__list">
+          <li>Лечение и операции — по счетам клиник</li>
+          <li>Корм и наполнитель — по накладным</li>
+          <li>Передержка — по договорам с кураторами</li>
+          <li>Никаких зарплат и офиса: только животные</li>
+        </ul>
+      </div>
+
+      <div class="reqs__card">
+        <span class="reqs__cap">Реквизиты для перевода</span>
+        <p class="reqs__num">2200 1520 5952 1024</p>
+        <p class="reqs__small">Карта Альфа-Банк для перевода денег для фонда. Получатель — фонд «Хвостик в беде».</p>
+        <button class="cardbox__copy" type="button" data-copy="2200152059521024">Скопировать номер карты</button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
-<section class="sec sec--tight" style="padding-bottom:72px">
-  <div class="wrap">
-    <div class="cta-band">
-      <div>
-        <h3>Посмотреть, как это работает внутри</h3>
-        <p>Приложение фонда: сборы с прогрессом, дневник подобранца, карта помощи по районам и схема «Второй миски» для партнеров.</p>
-      </div>
-      <a href="app/" class="btn btn--accent">Открыть приложение фонда</a>
+<!-- ============ FINAL CTA ============ -->
+<section class="final">
+  <div class="final__bg" aria-hidden="true">
+    <img src="assets/img/dog2.jpg" width="1200" height="900" alt="" loading="lazy" decoding="async">
+  </div>
+  <div class="wrap final__in">
+    <span class="kicker kicker--light">Один перевод — одна спасенная жизнь</span>
+    <h2>700 рублей. Неделя тепла и еды для питомца в приюте</h2>
+    <p>Не нужно ждать, пока соберется вся сумма. Каждый перевод закрывает конкретный день жизни конкретного животного — и это уже результат, который видно.</p>
+    <div class="final__actions">
+      <a class="btn btn--accent" href="#help">Помочь сейчас</a>
+      <a class="btn btn--outline-light" href="#stories-list">Выбрать животное</a>
     </div>
+    <p class="final__small">Карта Альфа-Банк · 2200 1520 5952 1024 · hvost2024@yandex.ru</p>
   </div>
 </section>
 
 </main>
 
-<footer class="ftr">
-  <div class="wrap">
-    <div class="ftr__grid">
-      <div>
-        <div class="ftr__brand">
-          <span class="brand__mark">ХВ</span>
-          <span class="brand__txt">Хвостик в беде<small>Помощь животным</small></span>
-        </div>
-        <p>Благотворительный фонд «Хвостик в беде», Москва</p>
-        <p style="margin-top:10px">ОГРН 1247700677916 · ИНН 9727089022</p>
-      </div>
-      <div>
-        <h4>Связаться</h4>
-        <p><a href="mailto:hvost2024@yandex.ru">hvost2024@yandex.ru</a></p>
-        <p style="margin-top:8px;font-size:13.5px;color:rgba(255,255,255,.55)">Почта для вопросов, отчетов и предложений о сотрудничестве</p>
-      </div>
-      <div>
-        <h4>Разделы</h4>
-        <p><a href="#how">Как устроен фонд</a></p>
-        <p style="margin-top:8px"><a href="app/">Приложение фонда</a></p>
-        <p style="margin-top:8px"><a href="vtoraya-miska.html">Вторая миска</a></p>
-      </div>
+<footer class="foot">
+  <div class="wrap foot__in">
+    <div class="foot__brand">
+      <span class="brand__txt">Хвостик в беде<small>Благотворительный фонд</small></span>
+      <p>Помогаем животным в беде с 2024 года: спасаем, лечим, держим на передержке и находим дом.</p>
+      <a class="foot__mail" href="mailto:hvost2024@yandex.ru">hvost2024@yandex.ru</a>
     </div>
-    <p class="ftr__note">Сайт-концепция. Не является публичной офертой.</p>
+
+    <nav class="foot__nav" aria-label="Разделы сайта">
+      <div>
+        <b>Фонд</b>
+        <a href="#stories-list">Истории</a>
+        <a href="#how">Как мы работаем</a>
+        <a href="#reqs">Отчетность</a>
+      </div>
+      <div>
+        <b>Помочь</b>
+        <a href="#help">Перевести деньги</a>
+        <a href="#opeka">Опека</a>
+        <a href="#miska">Вторая миска</a>
+        <a href="app/index.html">Кабинет фонда</a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="wrap foot__bottom">
+    <p>ОГРН 1247700677916 · ИНН 9727089022 · в реестре с 14.10.2024</p>
+    <p>Данные демонстрационные, до подключения учета фонда. Сайт-концепция, не является публичной офертой.</p>
   </div>
 </footer>
 
-<script defer>
-document.addEventListener('DOMContentLoaded',function(){
-  var b=document.getElementById('burger'),m=document.getElementById('mnav');
-  if(!b||!m)return;
-  function close(){b.setAttribute('aria-expanded','false');m.classList.remove('open');document.body.style.overflow='';}
-  b.addEventListener('click',function(){
-    var open=b.getAttribute('aria-expanded')==='true';
-    if(open){close();}else{b.setAttribute('aria-expanded','true');m.classList.add('open');document.body.style.overflow='hidden';}
-  });
-  m.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
-  var c=document.getElementById('copyCard');
-  if(c){c.addEventListener('click',function(){
-    var t=document.getElementById('cardnum').textContent.trim();
-    var html=c.innerHTML;
-    var done=function(){
-      c.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg>';
-      c.classList.add('is-done');c.setAttribute('aria-label','Номер скопирован');
-      var t2=document.getElementById('cardnum');t2.classList.add('is-done');
-      setTimeout(function(){c.innerHTML=html;c.classList.remove('is-done');c.setAttribute('aria-label','Скопировать номер карты');t2.classList.remove('is-done');},1600);
-    };
-    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(done);}else{done();}
-  });}
-});
-</script>
+<div class="stickybar">
+  <div class="stickybar__txt"><b>700 ₽</b> = 7 дней еды</div>
+  <a class="btn btn--accent btn--sm" href="#help">Помочь</a>
+</div>
+
+<!-- ============ MODAL ============ -->
+<dialog class="modal" id="storyModal" aria-labelledby="modalTitle">
+  <button class="modal__x" type="button" aria-label="Закрыть" data-close>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="modal__in">
+    <img class="modal__img" id="modalImg" src="assets/img/dog1.jpg" width="1200" height="900" alt="">
+    <div class="modal__body">
+      <span class="kicker" id="modalKicker">История</span>
+      <h2 id="modalTitle">Рекс</h2>
+      <div id="modalStory"></div>
+      <div class="progress">
+        <div class="progress__bar" role="progressbar" id="modalBar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span id="modalBarFill" style="width:0%"></span></div>
+        <div class="progress__foot"><span id="modalSum">—</span><b id="modalPct">—</b></div>
+      </div>
+      <a class="btn btn--accent btn--block" href="#help" data-close>Помочь</a>
+      <p class="modal__note">Перевод идет напрямую на счет фонда. Комментарий к переводу не нужен.</p>
+    </div>
+  </div>
+</dialog>
+
+<script src="assets/landing.js" defer></script>
 </body>
 </html>
