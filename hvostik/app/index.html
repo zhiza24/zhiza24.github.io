@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Приложение фонда — Хвостик в беде</title>
+<meta name="description" content="Штаб фонда «Хвостик в беде»: сборы, дневник подобранца, карта помощи, схема «Второй миски» и ответы про чипы.">
+<meta name="theme-color" content="#0E4F58">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/app.css">
+</head>
+<body class="app">
+
+<header class="apphdr">
+  <div class="wrap apphdr__in">
+    <a href="../" class="brand" aria-label="Хвостик в беде, на главную">
+      <span class="brand__mark">ХВ</span>
+      <span class="brand__txt">Хвостик в беде<small>Штаб фонда</small></span>
+    </a>
+    <nav class="apptabs" role="tablist" aria-label="Разделы приложения" id="desktoptabs"></nav>
+    <a href="../" class="backlink">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      На сайт фонда
+    </a>
+  </div>
+</header>
+
+<main class="appmain">
+<section class="panel is-active" id="tab-shtab" role="tabpanel" aria-labelledby="t-shtab" tabindex="0">
+
+  <div class="wrap pad">
+    <span class="kicker">Благотворительный фонд · Москва</span>
+    <h1 style="margin-top:14px;max-width:15ch">Штаб спасения, а не просящая рука</h1>
+    <p class="lead" style="margin-top:14px;max-width:44ch">Мы организуем спасение целиком: находим, лечим, держим до пристройства и кормим тем, что уже произведено.</p>
+    <p class="hero__note" style="color:var(--teal)"><span class="dot"></span><span style="color:var(--muted)"><b style="color:var(--ink)">700 рублей</b> — это неделя тепла и еды для питомца в приюте</span></p>
+
+    <div class="counters" style="margin-top:22px">
+      <div class="counters__top">
+        <h3>Сейчас в работе</h3>
+        <span class="tag tag--example">пример данных</span>
+      </div>
+      <div class="counters__grid">
+        <div class="cnt"><b>—</b><span>Спасено</span></div>
+        <div class="cnt"><b>—</b><span>Собрано</span></div>
+        <div class="cnt"><b>—</b><span>В приютах сейчас</span></div>
+        <div class="cnt"><b>—</b><span>Опекают</span></div>
+      </div>
+      <p class="counters__note">Цифры появятся здесь, когда фонд подключит учет. Мы не показываем округленные числа «для красоты».</p>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:18px">
+      <a href="#sbory" class="btn btn--accent" data-goto="sbory">Смотреть сборы</a>
+      <a href="#opeka" class="btn btn--ghost" data-goto="opeka">Взять под опеку</a>
+    </div>
+  </div>
+
+  <div class="wrap pad">
+    <div class="phead" style="margin-bottom:16px">
+      <span class="kicker">Три слоя</span>
+      <h2 style="margin-top:12px;font-size:clamp(25px,5.4vw,34px)">Одна система, три опоры</h2>
+      <p>Спасение дает истории. Истории приводят людей в опеку. Опека оплачивает спасение. Корм приходит не деньгами, а логистикой.</p>
+    </div>
+    <div class="layers">
+      <article class="layer">
+        <span class="layer__n">Слой 1</span>
+        <h3>Спасаем сейчас</h3>
+        <p>Берем животное в беде и ведем случай открыто: диагноз, клиника, сумма, каждый шаг.</p>
+        <p class="layer__tag">Дает повод зайти сегодня</p>
+      </article>
+      <article class="layer">
+        <span class="layer__n">Слой 2</span>
+        <h3>Содержим</h3>
+        <p>Опека: ежемесячная сумма на конкретное животное, фото, новости и имя на странице.</p>
+        <p class="layer__tag">Дает предсказуемые деньги</p>
+      </article>
+      <article class="layer">
+        <span class="layer__n">Слой 3</span>
+        <h3>Кормим без денег</h3>
+        <p>«Вторая миска»: забираем корм, который списывают сети и производители.</p>
+        <p class="layer__tag">Снимает главную статью расходов</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="wrap pad" id="opeka">
+    <div class="phead" style="margin-bottom:16px">
+      <span class="kicker">Опека и клуб друзей</span>
+      <h2 style="margin-top:12px;font-size:clamp(25px,5.4vw,34px)">Регулярная сумма вместо разовой просьбы</h2>
+      <p>Вы даете сумму в месяц, фонд показывает, на что она ушла. Отменить можно в любой момент.</p>
+    </div>
+    <div class="trans">
+      <div class="trans__i"><span>Сумма</span><p>Ежемесячно от 500 рублей, меняется или останавливается без объяснений.</p></div>
+      <div class="trans__i"><span>Новости</span><p>Фото и короткие сообщения о подопечном: как ест, что с лечением.</p></div>
+      <div class="trans__i"><span>Имя</span><p>Имя на странице животного — по желанию. Можно остаться анонимным.</p></div>
+    </div>
+    <div class="amounts" style="margin-top:18px" data-amounts>
+      <button type="button" class="chip" data-sum="500" aria-pressed="true">500 ₽</button>
+      <button type="button" class="chip" data-sum="1000" aria-pressed="false">1000 ₽</button>
+      <button type="button" class="chip" data-sum="2000" aria-pressed="false">2000 ₽</button>
+      <button type="button" class="chip" data-sum="custom" aria-pressed="false">Другая сумма</button>
+    </div>
+    <p class="hint" data-picked style="margin-top:10px">500 ₽ в месяц — это базовый вариант опеки.</p>
+    <button type="button" class="btn btn--accent btn--block" style="margin-top:14px;opacity:.55;cursor:not-allowed" aria-disabled="true">Оформить опеку</button>
+    <p class="hint">Оплата подключится здесь же, когда мы запустим прием платежей.</p>
+  </div>
+
+  <div class="wrap pad" id="transparency" style="padding-bottom:20px">
+    <div class="phead" style="margin-bottom:16px">
+      <span class="kicker">Прозрачность</span>
+      <h2 style="margin-top:12px;font-size:clamp(25px,5.4vw,34px)">Куда уходят деньги</h2>
+    </div>
+    <div class="trans">
+      <div class="trans__i"><span>Сбор</span><p>Отдельная страница с суммой, назначением и чеками.</p></div>
+      <div class="trans__i"><span>Отчет</span><p>По каждому животному после закрытия сбора.</p></div>
+      <div class="trans__i"><span>Год</span><p>Годовой отчет фонда — по запросу на почту.</p></div>
+    </div>
+    <div class="reqs">
+      <div><b>ОГРН</b>1247700677916</div>
+      <div><b>ИНН</b>9727089022</div>
+      <div><b>Дата регистрации</b>14 октября 2024</div>
+    </div>
+    <p style="margin-top:14px;font-size:13.5px;color:var(--muted)">Почта для вопросов и отчетов: <a href="mailto:hvost2024@yandex.ru" style="color:var(--teal);border-bottom:1px solid var(--line-strong)">hvost2024@yandex.ru</a></p>
+  </div>
+</section>
+<section class="panel" id="tab-sbory" role="tabpanel" aria-labelledby="t-sbory" tabindex="0">
+  <div class="wrap pad">
+    <div class="phead">
+      <span class="kicker">Сборы</span>
+      <h1>Каждый сбор — отдельная страница</h1>
+      <p>У каждого подопечного свой счет: сколько нужно, сколько собрано и на что ушло. Ниже — шаблон карточки с примером данных: цифры здесь условные, пока сбор не открыт.</p>
+    </div>
+
+    <div class="demo-note" style="margin-bottom:18px">
+      <b>Демонстрация.</b> Суммы, проценты и сроки на этой странице — пример верстки, а не реальный сбор. Карточки заполняются настоящими данными, когда открывается сбор.
+    </div>
+
+    <div class="coll">
+
+      <article class="ccard">
+        <div class="ccard__pic">
+          <span class="tag tag--example">пример карточки</span>
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 28c0-7 6-13 14-13s14 6 14 13"/><path d="M12 30c0 10 9 18 20 18s20-8 20-18"/><circle cx="24" cy="22" r="2.4" fill="currentColor" stroke="none"/><circle cx="32" cy="19" r="2.4" fill="currentColor" stroke="none"/><circle cx="40" cy="22" r="2.4" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <div class="ccard__body">
+          <div class="ccard__title">
+            <h3>Подопечный №1</h3>
+            <span class="status status--treat">Лечится</span>
+          </div>
+          <p class="desc">Собран на операцию и послеоперационный уход. Каждый этап фиксируется счетом из клиники.</p>
+          <dl class="fields">
+            <div><span>Нужно</span><b>сумма сбора — пример</b></div>
+            <div><span>Собрано</span><b>сумма собрана — пример</b></div>
+            <div><span>Закрытие</span><b>дата — пример</b></div>
+          </dl>
+          <div>
+            <div class="bar" data-bar><i style="width:0%"></i></div>
+            <div class="sums" style="margin-top:9px">
+              <span data-raised>собрано — пример</span><span>цель — пример</span>
+            </div>
+          </div>
+          <div class="ccard__foot">
+            <div class="amounts" data-amounts>
+              <button type="button" class="chip" data-sum="500" aria-pressed="false">500 ₽</button>
+              <button type="button" class="chip" data-sum="1000" aria-pressed="false">1000 ₽</button>
+              <button type="button" class="chip" data-sum="2000" aria-pressed="false">2000 ₽</button>
+              <button type="button" class="chip" data-sum="custom" aria-pressed="false">Другая сумма</button>
+            </div>
+            <div class="hint" data-picked>Выберите сумму — прогресс ниже покажет, как это выглядит на реальном сборе.</div>
+            <div>
+              <div class="bar bar--teal" data-demo-bar><i style="width:0%"></i></div>
+              <div class="sums" style="margin-top:9px"><span data-demo-sum>0 ₽</span><span>демонстрация</span></div>
+            </div>
+            <button type="button" class="btn btn--accent btn--block" style="opacity:.55;cursor:not-allowed" aria-disabled="true">Помочь этому сбору</button>
+            <p class="hint">Оплата подключится, когда мы запустим прием платежей.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="ccard">
+        <div class="ccard__pic">
+          <span class="tag tag--example">пример карточки</span>
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 28c0-7 6-13 14-13s14 6 14 13"/><path d="M12 30c0 10 9 18 20 18s20-8 20-18"/><circle cx="24" cy="22" r="2.4" fill="currentColor" stroke="none"/><circle cx="32" cy="19" r="2.4" fill="currentColor" stroke="none"/><circle cx="40" cy="22" r="2.4" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <div class="ccard__body">
+          <div class="ccard__title">
+            <h3>Подопечный №2</h3>
+            <span class="status status--found">Ищет дом</span>
+          </div>
+          <p class="desc">Лечение закончено, сбор закрыт. Сейчас нужны только знакомства с семьей и перевозка.</p>
+          <dl class="fields">
+            <div><span>Нужно</span><b>сумма сбора — пример</b></div>
+            <div><span>Собрано</span><b>сбор закрыт — пример</b></div>
+            <div><span>Закрытие</span><b>сбор закрыт</b></div>
+          </dl>
+          <div>
+            <div class="bar bar--teal" data-bar><i style="width:100%"></i></div>
+            <div class="sums" style="margin-top:9px"><span>сбор закрыт</span><span>цель была — пример</span></div>
+          </div>
+          <div class="ccard__foot">
+            <div class="amounts" data-amounts>
+              <button type="button" class="chip" data-sum="500" aria-pressed="false">500 ₽</button>
+              <button type="button" class="chip" data-sum="1000" aria-pressed="false">1000 ₽</button>
+              <button type="button" class="chip" data-sum="2000" aria-pressed="false">2000 ₽</button>
+              <button type="button" class="chip" data-sum="custom" aria-pressed="false">Другая сумма</button>
+            </div>
+            <div class="hint" data-picked>Выберите сумму — прогресс ниже покажет, как это выглядит на реальном сборе.</div>
+            <div>
+              <div class="bar bar--teal" data-demo-bar><i style="width:0%"></i></div>
+              <div class="sums" style="margin-top:9px"><span data-demo-sum>0 ₽</span><span>демонстрация</span></div>
+            </div>
+            <button type="button" class="btn btn--accent btn--block" style="opacity:.55;cursor:not-allowed" aria-disabled="true">Помочь этому сбору</button>
+            <p class="hint">Оплата подключится, когда мы запустим прием платежей.</p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="ccard" style="margin-top:18px">
+      <div class="ccard__body">
+        <div class="ccard__title">
+          <h3>Как выглядит реальный сбор</h3>
+          <span class="tag tag--demo">демо прогресса</span>
+        </div>
+        <p class="desc">Потяните ползунок, чтобы увидеть, как ведет себя индикатор на настоящем сборе. Сумма примера — условная.</p>
+        <input type="range" id="demoRange" min="0" max="100" value="18" step="1" aria-label="Демонстрация прогресса сбора" style="width:100%;accent-color:#F2733F;height:32px;margin:6px 0">
+        <div class="bar"><i id="demoRangeBar" style="width:18%"></i></div>
+        <div class="sums" style="margin-top:9px"><span id="demoRangeVal">18%</span><span>демонстрация</span></div>
+        <p class="hint">На реальной странице здесь будут сумма, цель и документы по каждому платежу.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="panel" id="tab-istorii" role="tabpanel" aria-labelledby="t-istorii" tabindex="0">
+  <div class="wrap pad">
+    <div class="phead">
+      <span class="kicker">Дневник подобранца</span>
+      <h1>У каждого животного своя страница</h1>
+      <p>Нашли, лечим, ищем дом. История идет по шагам, как сериал: человек возвращается, чтобы узнать, что дальше.</p>
+    </div>
+
+    <div class="demo-note" style="margin-bottom:16px">
+      <b>Примеры верстки.</b> Карточки ниже показывают формат дневника. Имена, диагнозы и даты — условные, до появления реальных подопечных.
+    </div>
+
+    <div class="filters" role="group" aria-label="Фильтр историй">
+      <button type="button" class="chip is-on" data-filter="all" aria-pressed="true">Все</button>
+      <button type="button" class="chip" data-filter="treat" aria-pressed="false">Лечится</button>
+      <button type="button" class="chip" data-filter="home" aria-pressed="false">Ищет дом</button>
+      <button type="button" class="chip" data-filter="done" aria-pressed="false">Дома</button>
+    </div>
+
+    <div class="stories" id="storyList">
+
+      <article class="story" data-status="treat">
+        <div class="story__top">
+          <span class="story__ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11c0-3 2.2-5 5-5s5 2 5 5"/><path d="M4 12c0 4.4 3.6 8 8 8s8-3.6 8-8"/><circle cx="9" cy="9" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="8" r=".9" fill="currentColor" stroke="none"/><circle cx="15" cy="9" r=".9" fill="currentColor" stroke="none"/></svg></span>
+          <div>
+            <h4>Подопечный №1</h4>
+            <small>Найден · пример даты</small>
+          </div>
+          <span class="status status--treat" style="margin-left:auto">Лечится</span>
+        </div>
+        <p style="font-size:13.5px;line-height:1.5;color:var(--muted)">Поступил с травмой лапы. Сейчас — обследование и подготовка к операции.</p>
+        <ul class="tl">
+          <li class="done">Найден и осмотрен в клинике-партнере</li>
+          <li class="now">Идет лечение, сбор открыт</li>
+          <li>Поиск семьи после восстановления</li>
+        </ul>
+      </article>
+
+      <article class="story" data-status="home">
+        <div class="story__top">
+          <span class="story__ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11c0-3 2.2-5 5-5s5 2 5 5"/><path d="M4 12c0 4.4 3.6 8 8 8s8-3.6 8-8"/><circle cx="9" cy="9" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="8" r=".9" fill="currentColor" stroke="none"/><circle cx="15" cy="9" r=".9" fill="currentColor" stroke="none"/></svg></span>
+          <div>
+            <h4>Подопечный №2</h4>
+            <small>Найден · пример даты</small>
+          </div>
+          <span class="status status--found" style="margin-left:auto">Ищет дом</span>
+        </div>
+        <p style="font-size:13.5px;line-height:1.5;color:var(--muted)">Лечение закончено, чувствует себя хорошо. Знакомится с потенциальными хозяевами.</p>
+        <ul class="tl">
+          <li class="done">Найден и осмотрен</li>
+          <li class="done">Лечение завершено, сбор закрыт</li>
+          <li class="now">Ищет дом: знакомства и перевозка</li>
+        </ul>
+      </article>
+
+      <article class="story" data-status="done">
+        <div class="story__top">
+          <span class="story__ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11c0-3 2.2-5 5-5s5 2 5 5"/><path d="M4 12c0 4.4 3.6 8 8 8s8-3.6 8-8"/><circle cx="9" cy="9" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="8" r=".9" fill="currentColor" stroke="none"/><circle cx="15" cy="9" r=".9" fill="currentColor" stroke="none"/></svg></span>
+          <div>
+            <h4>Подопечный №3</h4>
+            <small>Найден · пример даты</small>
+          </div>
+          <span class="status status--done" style="margin-left:auto">Дома</span>
+        </div>
+        <p style="font-size:13.5px;line-height:1.5;color:var(--muted)">Переехал в семью. Остался на связи: присылает новости и фото.</p>
+        <ul class="tl">
+          <li class="done">Найден и осмотрен</li>
+          <li class="done">Лечение и передержка</li>
+          <li class="done">Дома, сопровождение после пристройства</li>
+        </ul>
+      </article>
+
+      <article class="story" data-status="treat">
+        <div class="story__top">
+          <span class="story__ava"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11c0-3 2.2-5 5-5s5 2 5 5"/><path d="M4 12c0 4.4 3.6 8 8 8s8-3.6 8-8"/><circle cx="9" cy="9" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="8" r=".9" fill="currentColor" stroke="none"/><circle cx="15" cy="9" r=".9" fill="currentColor" stroke="none"/></svg></span>
+          <div>
+            <h4>Подопечный №4</h4>
+            <small>Найден · пример даты</small>
+          </div>
+          <span class="status status--treat" style="margin-left:auto">Лечится</span>
+        </div>
+        <p style="font-size:13.5px;line-height:1.5;color:var(--muted)">Истощен, нужен курс восстановления и наблюдение. Живет на передержке.</p>
+        <ul class="tl">
+          <li class="done">Найден и осмотрен</li>
+          <li class="now">Курс лечения и восстановления</li>
+          <li>Поиск семьи</li>
+        </ul>
+      </article>
+
+    </div>
+    <p class="empty" id="storyEmpty" hidden>В этой категории пока нет историй.</p>
+
+        <div class="insight" style="margin-top:22px">
+      <h3>Почему дневник, а не разовый пост</h3>
+      <p>Разовый пост просьбы живет один день. История с продолжением возвращает человека сама: он ждет следующую запись так же, как новую серию.</p>
+      <p class="insight__closing">Подписка на историю <span>сильнее</span>, чем подписка на фонд.</p>
+    </div>
+  </div>
+</section>
+<section class="panel" id="tab-karta" role="tabpanel" aria-labelledby="t-karta" tabindex="0">
+  <div class="wrap pad">
+    <div class="phead">
+      <span class="kicker">Карта помощи</span>
+      <h1>Кто рядом, когда нужно срочно</h1>
+      <p>Не справочник всего города, а точки, с которыми фонд реально работал: клиники, передержки, кураторы по районам.</p>
+    </div>
+
+    <div class="demo-note" style="margin-bottom:16px">
+      <b>Демонстрация интерфейса.</b> Названия клиник, адреса и районы на карте — условные примеры. Настоящие точки появятся, когда фонд подключит партнеров.
+    </div>
+
+    <div class="maplayout">
+      <div class="mapcard">
+        <div class="mapfilters" role="group" aria-label="Фильтр по району">
+          <button type="button" class="chip is-on" data-district="all" aria-pressed="true">Все районы</button>
+          <button type="button" class="chip" data-district="center" aria-pressed="false">Центр</button>
+          <button type="button" class="chip" data-district="north" aria-pressed="false">Север</button>
+          <button type="button" class="chip" data-district="south" aria-pressed="false">Юг</button>
+          <button type="button" class="chip" data-district="west" aria-pressed="false">Запад</button>
+        </div>
+        <div class="mapfilters" style="margin-bottom:10px">
+          <label class="switch">
+            <input type="checkbox" id="onlyHomeless">
+            Принимает бездомных
+          </label>
+        </div>
+
+        <div class="mapbox" id="mapbox">
+          <svg class="base" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <rect width="400" height="400" fill="#EDF2F0"/>
+            <g stroke="#D9E5E1" stroke-width="1">
+              <path d="M0 60h400M0 120h400M0 180h400M0 240h400M0 300h400M0 360h400"/>
+              <path d="M60 0v400M120 0v400M180 0v400M240 0v400M300 0v400M360 0v400"/>
+            </g>
+            <path d="M-20 250c70-10 120 20 180 6s110-46 160-30 70 14 100 8" stroke="#BFD9D6" stroke-width="26" fill="none" stroke-linecap="round" opacity=".85"/>
+            <path d="M-20 250c70-10 120 20 180 6s110-46 160-30 70 14 100 8" stroke="#EDF2F0" stroke-width="14" fill="none" stroke-linecap="round" opacity=".5"/>
+            <circle cx="200" cy="200" r="120" fill="none" stroke="#CBDDD8" stroke-width="7" opacity=".9"/>
+            <circle cx="200" cy="200" r="62" fill="none" stroke="#CBDDD8" stroke-width="5" opacity=".8"/>
+            <path d="M200 80v240M80 200h240" stroke="#CBDDD8" stroke-width="5" opacity=".8"/>
+            <g fill="#E1EDE9">
+              <rect x="96" y="96" width="44" height="30" rx="4"/><rect x="150" y="104" width="30" height="22" rx="4"/>
+              <rect x="236" y="90" width="52" height="34" rx="4"/><rect x="300" y="140" width="34" height="40" rx="4"/>
+              <rect x="70" y="288" width="48" height="32" rx="4"/><rect x="140" y="300" width="36" height="26" rx="4"/>
+              <rect x="250" y="298" width="54" height="28" rx="4"/><rect x="318" y="250" width="28" height="34" rx="4"/>
+            </g>
+            <g fill="#8FA8A3" font-family="-apple-system,Segoe UI,Arial" font-size="8" font-weight="700" letter-spacing="1.2" opacity=".8">
+              <text x="22" y="44">СЕВЕР</text>
+              <text x="22" y="378">ЮГ</text>
+              <text x="326" y="44">ВОСТОК</text>
+              <text x="20" y="204">ЗАПАД</text>
+            </g>
+          </svg>
+
+          <button type="button" class="pin" style="left:49%;top:47%" data-id="c1" data-district="center" data-homeless="1" aria-pressed="false" aria-label="Пример клиники 1, Центр"><span>1</span></button>
+          <button type="button" class="pin" style="left:34%;top:22%" data-id="c2" data-district="north" data-homeless="1" aria-pressed="false" aria-label="Пример клиники 2, Север"><span>2</span></button>
+          <button type="button" class="pin" style="left:63%;top:76%" data-id="c3" data-district="south" data-homeless="0" aria-pressed="false" aria-label="Пример клиники 3, Юг"><span>3</span></button>
+          <button type="button" class="pin" style="left:20%;top:60%" data-id="c4" data-district="west" data-homeless="0" aria-pressed="false" aria-label="Пример передержки 4, Запад"><span>4</span></button>
+          <button type="button" class="pin" style="left:73%;top:34%" data-id="c5" data-district="center" data-homeless="1" aria-pressed="false" aria-label="Пример клиники 5, Центр"><span>5</span></button>
+        </div>
+        <div class="maplegend">
+          <span><b>5 точек</b> · пример данных</span>
+          <span>Нажмите на точку</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="clinics" id="clinicList">
+
+          <button type="button" class="clinic" data-id="c1" data-district="center" data-homeless="1">
+            <div class="clinic__top">
+              <span class="clinic__num">1</span>
+              <h4>Клиника-пример, Центр</h4>
+              <span class="tag tag--example" style="margin-left:auto">пример</span>
+            </div>
+            <p>Круглосуточный прием, хирургия. Работает с фондом: приняла животных по направлению.</p>
+            <div class="clinic__meta">
+              <span class="pill">Центр</span>
+              <span class="pill pill--yes">Принимает бездомных</span>
+              <span class="pill">Дежурит сегодня</span>
+            </div>
+          </button>
+
+          <button type="button" class="clinic" data-id="c2" data-district="north" data-homeless="1">
+            <div class="clinic__top">
+              <span class="clinic__num">2</span>
+              <h4>Клиника-пример, Север</h4>
+              <span class="tag tag--example" style="margin-left:auto">пример</span>
+            </div>
+            <p>Терапия и диагностика, есть стационар. Принимает подобранных животных по согласованию.</p>
+            <div class="clinic__meta">
+              <span class="pill">Север</span>
+              <span class="pill pill--yes">Принимает бездомных</span>
+            </div>
+          </button>
+
+          <button type="button" class="clinic" data-id="c3" data-district="south" data-homeless="0">
+            <div class="clinic__top">
+              <span class="clinic__num">3</span>
+              <h4>Клиника-пример, Юг</h4>
+              <span class="tag tag--example" style="margin-left:auto">пример</span>
+            </div>
+            <p>Плановый прием и вакцинация. Бездомных принимает только по платным слотам.</p>
+            <div class="clinic__meta">
+              <span class="pill">Юг</span>
+              <span class="pill pill--no">По записи</span>
+            </div>
+          </button>
+
+          <button type="button" class="clinic" data-id="c4" data-district="west" data-homeless="0">
+            <div class="clinic__top">
+              <span class="clinic__num">4</span>
+              <h4>Передержка-пример, Запад</h4>
+              <span class="tag tag--example" style="margin-left:auto">пример</span>
+            </div>
+            <p>Домашняя передержка на время лечения. Не клиника: медпомощь не оказывает.</p>
+            <div class="clinic__meta">
+              <span class="pill">Запад</span>
+              <span class="pill">Передержка</span>
+            </div>
+          </button>
+
+          <button type="button" class="clinic" data-id="c5" data-district="center" data-homeless="1">
+            <div class="clinic__top">
+              <span class="clinic__num">5</span>
+              <h4>Клиника-пример, Центр-2</h4>
+              <span class="tag tag--example" style="margin-left:auto">пример</span>
+            </div>
+            <p>Стоматология и травматология. Есть договор с фондом на срочные случаи.</p>
+            <div class="clinic__meta">
+              <span class="pill">Центр</span>
+              <span class="pill pill--yes">Принимает бездомных</span>
+            </div>
+          </button>
+
+        </div>
+
+        <p class="empty" id="clinicEmpty" hidden>Под эти фильтры пока нет точек.</p>
+
+        <div class="legend-note">
+          <b>Как это работает.</b> Карточка в каталоге бесплатна: клиника сама заполняет данные. Платно — только приоритет в выдаче и заявки на запись. Никаких рекламных мест «за деньги без проверки»: точка попадает на карту, только если фонд реально привозил туда животное.
+        </div>
+        <div class="legend-note" style="margin-top:10px;background:rgba(242,115,63,.08)">
+          <b>Почему не Яндекс.Карты.</b> Там есть адрес и отзывы случайных людей. Здесь — то, чего там нет: работает ли клиника с бездомными, дает ли скидку фонду и когда последний раз принимала животное по направлению.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="panel" id="tab-miska" role="tabpanel" aria-labelledby="t-miska" tabindex="0">
+  <div class="wrap pad">
+    <div class="phead">
+      <span class="kicker">Проект для фонда</span>
+      <h1>Вторая миска</h1>
+      <p>Система спасения товарных запасов для животных: корм и зоотовары, которые сети и производители списывают, уходят в приюты вместо утилизации.</p>
+      <p style="margin-top:8px"><a href="../vtoraya-miska.html" style="color:var(--teal);font-weight:700;border-bottom:1.5px solid rgba(14,79,88,.3)">Открыть отдельной страницей</a> — чтобы отправить одним файлом.</p>
+    </div>
+<div class="miska-scheme">
+  <div class="scheme-head">
+    <span class="kicker">Схема работы</span>
+    <h2>Пять шагов от склада до миски</h2>
+    <p class="lead">Партия не попадает в утилизацию, а находит приют, которому она нужна. Каждый шаг фиксируется документами.</p>
+  </div>
+
+  <ol class="pipe">
+    <li>
+      <span class="pipe__n">1</span>
+      <div class="pipe__card">
+        <span class="tag tag--example">пример шага</span>
+        <h4>Магазин или производитель сообщает о партии</h4>
+        <p>Пишет фонду: товар, объем, срок годности, причина списания.</p>
+      </div>
+    </li>
+    <li>
+      <span class="pipe__n">2</span>
+      <div class="pipe__card">
+        <span class="tag tag--example">пример шага</span>
+        <h4>Фонд проверяет товар</h4>
+        <p>Сроки, состояние упаковки, условия хранения и документы на продукцию.</p>
+      </div>
+    </li>
+    <li>
+      <span class="pipe__n">3</span>
+      <div class="pipe__card">
+        <span class="tag tag--example">пример шага</span>
+        <h4>Фонд подбирает приюты</h4>
+        <p>Тем, кому нужен именно этот товар и кто может его принять и хранить.</p>
+      </div>
+    </li>
+    <li>
+      <span class="pipe__n">4</span>
+      <div class="pipe__card">
+        <span class="tag tag--example">пример шага</span>
+        <h4>Вывоз и доставка</h4>
+        <p>Своей или партнерской логистикой, по согласованному графику.</p>
+      </div>
+    </li>
+    <li>
+      <span class="pipe__n">5</span>
+      <div class="pipe__card">
+        <span class="tag tag--example">пример шага</span>
+        <h4>Прием и отчет</h4>
+        <p>Получатель подтверждает прием, донор получает отчет о партии.</p>
+      </div>
+    </li>
+  </ol>
+
+  <div class="facts" style="margin-top:34px">
+    <div class="fact">
+      <div class="fact__ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18M6 9V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"/><path d="M5 9h14v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M9 13h6"/></svg></div>
+      <h4>Торговые сети и производители</h4>
+      <ul>
+        <li>Организованное решение по остаткам</li>
+        <li>Меньше расходов на утилизацию</li>
+        <li>Передача оформляется как пожертвование</li>
+      </ul>
+    </div>
+    <div class="fact">
+      <div class="fact__ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9H4z"/><path d="M9 20v-6h6v6"/></svg></div>
+      <h4>Приюты</h4>
+      <ul>
+        <li>Бесплатные корма и товары</li>
+        <li>С действующим сроком годности</li>
+        <li>Без закупок и без ожидания сбора</li>
+      </ul>
+    </div>
+    <div class="fact">
+      <div class="fact__ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9Z"/></svg></div>
+      <h4>Фонд</h4>
+      <ul>
+        <li>Новый канал корпоративных партнеров</li>
+        <li>Измеримый результат по каждой партии</li>
+        <li>Меньше денег на закупку корма</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="split2">
+    <div>
+      <span class="kicker">Запуск</span>
+      <h3 style="margin-top:12px;margin-bottom:14px">Что нужно, чтобы начать</h3>
+      <div class="checklist">
+        <div class="check"><span class="check__box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Юридическая проверка схемы передачи и налоговых условий</p></div>
+        <div class="check"><span class="check__box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Типовой договор пожертвования и пакет документов на партию</p></div>
+        <div class="check"><span class="check__box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>База проверенных приютов с потребностями и условиями хранения</p></div>
+        <div class="check"><span class="check__box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>2-3 торговых партнера для пилота</p></div>
+        <div class="check"><span class="check__box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Один логистический партнер или договоренности о транспорте</p></div>
+        <div class="check"><span class="check__box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg></span><p>Координатор заявок, распределения и отчетности</p></div>
+      </div>
+    </div>
+    <div class="split2__side">
+      <div class="pilot">
+        <span class="tag tag--soft" style="margin-bottom:10px">Пилот</span>
+        <p><b>Москва, 3-5 торговых точек и несколько приютов.</b> Первый месяц: объемы доступной продукции, стоимость логистики, скорость распределения, экономическая эффективность.</p>
+        <p style="margin-top:12px;font-size:13.5px;color:var(--muted)">По результатам — предложение крупным сетям и производителям кормов.</p>
+      </div>
+      <div class="scope">
+        <h4>Перспектива</h4>
+        <p>Региональная система перераспределения избыточных запасов зоотоваров: производители, сети, логистика и приюты в одной цепочке.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight" style="margin-top:26px">
+    <h3>Фонд не закупает корм, не строит склады и не содержит автопарк. Его функция — организовать и контролировать цепочку, а склад и транспорт привлекать у партнеров.</h3>
+    <p>Поэтому пилот проверяется почти без вложений: сначала договоренности и один координатор, а не недвижимость и машины.</p>
+    <p class="insight__closing">Не просить больше корма — спасать тот, <span>который уже произведен</span>, но может быть выброшен.</p>
+  </div>
+</div>
+
+  </div>
+</section>
+<section class="panel" id="tab-chipy" role="tabpanel" aria-labelledby="t-chipy" tabindex="0">
+  <div class="wrap pad">
+    <div class="phead">
+      <span class="kicker">Чипы и поиск</span>
+      <h1>Что умеет чип, а что нет</h1>
+      <p>Коротко и без обещаний, которых техника не выполняет. Это важно знать до того, как вы решите чипировать питомца.</p>
+    </div>
+
+    <div class="chipdiag">
+      <div class="chipdiag__row">
+        <div class="chipdiag__item">
+          <h4>Микрочип</h4>
+          <p>Пассивная метка размером с рисовое зерно. Питания нет, координат нет. Работает как номерной знак: считали сканером — узнали, чей питомец.</p>
+        </div>
+        <div class="chipdiag__item">
+          <h4>GPS-ошейник</h4>
+          <p>Активное устройство со связью и батареей. Показывает точку на карте, пока заряжен и пока есть сигнал.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq">
+      <details class="qa" open>
+        <summary>Чип показывает, где находится животное?</summary>
+        <div class="qa__body">Нет. В микрочипе нет батарейки и нет GPS. Он не передает сигнал и не появляется на карте. Его читают сканером на расстоянии нескольких сантиметров.</div>
+      </details>
+      <details class="qa">
+        <summary>Тогда зачем он нужен?</summary>
+        <div class="qa__body">Если питомца нашли и принесли в клинику или приют, <b>сканирование дает номер и владельца</b>. Это самый быстрый путь домой для потерявшегося животного. Поэтому так важно, чтобы контакты в реестре были актуальными.</div>
+      </details>
+      <details class="qa">
+        <summary>А если нужна точка на карте?</summary>
+        <div class="qa__body">Это <b>отдельное устройство — GPS-ошейник</b>. Он крепится на шею, работает от батареи и передает координаты, пока есть заряд и связь. Микрочип и ошейник не заменяют, а дополняют друг друга.</div>
+      </details>
+      <details class="qa">
+        <summary>Что делать, если нашли животное с чипом?</summary>
+        <div class="qa__body">Отнести в ветеринарную клинику или приют и попросить считать чип. Номер сверяют с реестром, дальше связываются с владельцем. Самостоятельно номер ничего не расскажет.</div>
+      </details>
+      <details class="qa">
+        <summary>Фонд продает чипы или ошейники?</summary>
+        <div class="qa__body">Нет. Мы объясняем разницу, чтобы не было ложных ожиданий, и подсказываем, куда обратиться. Если появится партнерская программа, мы скажем об этом прямо.</div>
+      </details>
+    </div>
+
+    <div class="legend-note" style="margin-top:18px">
+      <b>Почему мы об этом вообще пишем.</b> Люди часто думают, что чип — это tracker. Из-за этого теряется время, когда животное пропало. Честное объяснение экономит часы поиска.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap appfoot">
+  <p>Благотворительный фонд «Хвостик в беде», Москва · ОГРН 1247700677916 · ИНН 9727089022</p>
+  <p style="margin-top:6px"><a href="mailto:hvost2024@yandex.ru">hvost2024@yandex.ru</a> · <a href="../">На сайт фонда</a></p>
+  <p style="margin-top:10px">Сайт-концепция. Не является публичной офертой. Данные в разделах отмечены как пример, пока фонд не подключил учет.</p>
+</footer>
+
+<nav class="tabbar" aria-label="Разделы приложения">
+  <div class="tabbar__in" id="tabbar" role="tablist"></div>
+</nav>
+
+<script src="../assets/app.js" defer></script>
+</body>
+</html>
