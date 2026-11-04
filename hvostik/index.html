@@ -52,48 +52,54 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <div class="hero__rings" aria-hidden="true">
-    <svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" fill="none">
-      <circle cx="1050" cy="90" r="340" stroke="#F2733F" stroke-width="1.2" opacity=".34"/>
-      <circle cx="1050" cy="90" r="230" stroke="#FFFFFF" stroke-width="1" opacity=".13"/>
-      <circle cx="60" cy="680" r="300" stroke="#FFFFFF" stroke-width="1" opacity=".09"/>
-      <circle cx="60" cy="680" r="190" stroke="#F2733F" stroke-width="1.2" opacity=".2"/>
-    </svg>
-  </div>
+  <div class="wrap">
+    <figure class="banner">
+      <img class="banner__img" src="assets/img/hero.jpg" width="1600" height="900" alt="Волонтер фонда держит на руках щенка и котенка" fetchpriority="high" decoding="async">
+      <div class="banner__shade" aria-hidden="true"></div>
 
-  <div class="wrap hero__in">
-    <div class="hero__copy">
-      <span class="kicker kicker--light">Фонд помощи животным · с 2024 года</span>
-      <h1>Хвостик<br>в беде</h1>
-      <p class="hero__lead">Забираем животных с улицы, лечим, держим на передержке и находим им дом. Каждый случай ведем открыто: диагноз, сумма, результат.</p>
-
-      <div class="hero__actions">
-        <a class="btn btn--accent" href="#help">Помочь сейчас</a>
-        <a class="btn btn--outline-light" href="#stories">Смотреть истории</a>
+      <div class="banner__in">
+        <span class="kicker kicker--light">Фонд помощи животным · с 2024 года</span>
+        <h1>Хвостик в беде</h1>
+        <p class="banner__lead">Забираем животных с улицы, лечим, держим на передержке и находим им дом. Каждый случай ведем открыто: диагноз, сумма, результат.</p>
+        <div class="banner__actions">
+          <a class="btn btn--accent" href="#help">Помочь сейчас</a>
+          <a class="btn btn--outline-light" href="#stories-list">Кому помочь</a>
+        </div>
       </div>
 
-      <div class="plate">
+      <div class="banner__plate">
         <div class="plate__txt">
-          <span class="plate__cap">Карта Альфа-Банк для перевода денег для фонда</span>
-          <span class="plate__num" id="cardnum">2200 1520 5952 1024</span>
-          <button class="plate__copy" type="button" data-copy="2200152059521024">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5.5A2.5 2.5 0 0 1 7.5 3H17"/></svg>
-            <span>Скопировать номер</span>
-          </button>
+        <span class="plate__cap">Карта Альфа-Банк для перевода денег для фонда</span>
+        <span class="plate__num" id="cardnum">2200 1520 5952 1024</span>
+        <button class="plate__copy" type="button" data-copy="2200152059521024">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5.5A2.5 2.5 0 0 1 7.5 3H17"/></svg>
+        <span>Скопировать номер</span>
+        </button>
         </div>
         <a class="plate__qr" href="#help" aria-label="Перейти к переводу по QR-коду">
-          <img src="assets/qr.svg" width="216" height="216" alt="QR-код с номером карты фонда" decoding="async">
-          <span>Наведите камеру</span>
+        <img src="assets/qr.svg" width="216" height="216" alt="QR-код с номером карты фонда" decoding="async">
+        <span>Наведите камеру</span>
         </a>
       </div>
-    </div>
-
-    <figure class="hero__photo">
-      <img src="assets/img/hero.jpg" width="1200" height="900" alt="Волонтер фонда держит на руках щенка, на плече у нее сидит котенок" fetchpriority="high" decoding="async">
-      <figcaption>Первый день в фонде: щенок из подвала и котенок с передержки</figcaption>
     </figure>
   </div>
+</section>
 
+<!-- ============ COUNTERS ============ -->
+<section class="sec numbers" id="numbers">
+  <div class="wrap">
+    <ul class="numbers__grid">
+      <li><b>34</b><span>животных под опекой фонда</span></li>
+      <li><b>21</b><span>уже живут в новых семьях</span></li>
+      <li><b>4</b><span>сбора открыты прямо сейчас</span></li>
+      <li><b>214 000 ₽</b><span>собрано за год на лечение и корм</span></li>
+    </ul>
+    <p class="numbers__note">Данные демонстрационные, до подключения учета фонда.</p>
+  </div>
+</section>
+
+<!-- ============ FOUR ICONS + SLOGAN ============ -->
+<section class="sec sec--strip">
   <div class="wrap">
     <ul class="hstrip">
       <li>
@@ -114,7 +120,6 @@
       </li>
     </ul>
   </div>
-
   <div class="slogan">
     <div class="wrap">
       <p>Ваши 700 рублей — это 7 дней тепла и еды для питомца в приюте</p>
@@ -162,50 +167,6 @@
   </div>
 </section>
 
-<!-- ============ NUMBERS ============ -->
-<section class="sec numbers">
-  <div class="wrap">
-    <div class="numbers__head">
-      <span class="kicker">Фонд в цифрах</span>
-      <h2>Небольшой фонд, где каждого животного знают по имени</h2>
-    </div>
-    <ul class="numbers__grid">
-      <li><b>34</b><span>животных под опекой фонда</span></li>
-      <li><b>21</b><span>уже живут в новых семьях</span></li>
-      <li><b>18</b><span>на лечении и передержке</span></li>
-      <li><b>214 000 ₽</b><span>собрано за 2024 год</span></li>
-    </ul>
-    <p class="numbers__note">Данные демонстрационные, до подключения учета фонда.</p>
-  </div>
-</section>
-
-<!-- ============ ONE BIG STORY ============ -->
-<section class="sec story">
-  <div class="wrap story__grid">
-    <figure class="story__photo">
-      <img src="assets/img/vet.jpg" width="1200" height="900" alt="Ветеринар слушает сердце маленькой собаки в клинике" loading="lazy" decoding="async">
-      <figcaption>Плановый осмотр после операции. Таких приемов у фонда 6–8 в неделю.</figcaption>
-    </figure>
-
-    <div class="story__body">
-      <span class="kicker">История недели</span>
-      <h2>Тошу нашли у гаражей — он не мог встать на заднюю лапу</h2>
-      <p>Мальчик сидел под колесом и скулил на каждую попытку встать. Лапа была вывернута, шерсть на боку свалялась. Первые сутки он не пил и не ел — только смотрел и ждал, что его снова оставят.</p>
-      <p>В клинике выяснилось: старый перелом бедра, который сросся неправильно. Нужна была операция и восемь недель восстановления. Стоимость лечения — 46 000 рублей. На приеме он весил 6,2 кг при норме 11.</p>
-      <p>Сейчас Тоша ест сам, лапа разрабатывается, швы сняли. Он уже делает несколько шагов и тянется к руке, когда открывают вольер. Это хороший знак: значит, доверие возвращается.</p>
-      <p>После реабилитации ищем дом без маленьких детей и без других собак — ему нужно спокойное место, где можно не делить территорию. Куратор фонда продолжит навещать его первые месяцы.</p>
-
-      <div class="progress progress--big">
-        <div class="progress__top"><b>28 400 ₽</b><span>из 46 000 ₽</span></div>
-        <div class="progress__bar" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 62 процента"><span style="width:62%"></span></div>
-        <div class="progress__foot"><span>62% собрано</span><span>осталось 17 600 ₽</span></div>
-      </div>
-
-      <a class="btn btn--accent" href="#help">Помочь Тоше</a>
-    </div>
-  </div>
-</section>
-
 <!-- ============ FOUR STORY CARDS ============ -->
 <section class="sec stories" id="stories-list">
   <div class="wrap">
@@ -214,7 +175,7 @@
         <span class="kicker">Кому помочь сегодня</span>
         <h2>Четыре истории, четыре суммы</h2>
       </div>
-      <p class="stories__sub">Откройте карточку, чтобы прочитать историю целиком. Помочь можно сразу — кнопка на карточке работает без перехода.</p>
+      <p class="stories__sub">Нажмите на фото, чтобы прочитать историю целиком: что случилось, сколько нужно и сколько уже собрано. Помочь можно сразу, кнопкой.</p>
     </div>
 
     <div class="cards">
@@ -225,12 +186,11 @@
         </button>
         <div class="card__body">
           <h3><button type="button" class="card__title">Рекс</button></h3>
-          <p>Найден в промзоне, истощен. Нужны капельницы и курс антибиотиков.</p>
-          <div class="progress">
+          <p>Найден в промзоне, истощен. Нужны капельницы.</p>
+          <div class="progress progress--thin">
             <div class="progress__bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 45 процентов"><span style="width:45%"></span></div>
-            <div class="progress__foot"><span><i class="sm-hide">собрано </i>6 800 из 15 000 ₽</span><b>45%</b></div>
           </div>
-          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь Рексу</a>
+          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь</a>
         </div>
       </article>
 
@@ -241,12 +201,11 @@
         </button>
         <div class="card__body">
           <h3><button type="button" class="card__title">Марта</button></h3>
-          <p>Здорова, стерилизована, лоток знает. Осталось привить и найти семью.</p>
-          <div class="progress">
+          <p>Здорова, стерилизована. Осталось привить.</p>
+          <div class="progress progress--thin">
             <div class="progress__bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 80 процентов"><span style="width:80%"></span></div>
-            <div class="progress__foot"><span><i class="sm-hide">собрано </i>4 000 из 5 000 ₽</span><b>80%</b></div>
           </div>
-          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь Марте</a>
+          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь</a>
         </div>
       </article>
 
@@ -257,12 +216,11 @@
         </button>
         <div class="card__body">
           <h3><button type="button" class="card__title">Булат</button></h3>
-          <p>Спасен из приюта, где его держали на цепи. Учится ходить на поводке.</p>
-          <div class="progress">
+          <p>Спасен с цепи. Учится ходить на поводке.</p>
+          <div class="progress progress--thin">
             <div class="progress__bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 30 процентов"><span style="width:30%"></span></div>
-            <div class="progress__foot"><span><i class="sm-hide">собрано </i>3 600 из 12 000 ₽</span><b>30%</b></div>
           </div>
-          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь Булату</a>
+          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь</a>
         </div>
       </article>
 
@@ -273,12 +231,11 @@
         </button>
         <div class="card__body">
           <h3><button type="button" class="card__title">Уголек</button></h3>
-          <p>Котенку 4 месяца. Найден в переноске у мусорных контейнеров.</p>
-          <div class="progress">
+          <p>Котенку 4 месяца. Найден у контейнеров.</p>
+          <div class="progress progress--thin">
             <div class="progress__bar" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 15 процентов"><span style="width:15%"></span></div>
-            <div class="progress__foot"><span><i class="sm-hide">собрано </i>1 500 из 10 000 ₽</span><b>15%</b></div>
           </div>
-          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь Угольку</a>
+          <a class="btn btn--accent btn--sm btn--block" href="#help">Помочь</a>
         </div>
       </article>
     </div>

@@ -304,3 +304,51 @@ html:has(dialog[open]){overflow:hidden}
 /* card progress: keep numbers on one line on narrow screens */
 .sm-hide{font-style:normal}
 @media (max-width:400px){.sm-hide{display:none}.card__body .progress__foot{font-size:12.5px}}
+
+/* ===== NEW: banner first, text after ===== */
+.hero{background:var(--bg);padding:16px 0 0;overflow:visible;color:inherit}
+@media (min-width:760px){.hero{padding:24px 0 0}}
+.banner{position:relative;margin:0;border-radius:26px;overflow:hidden;background:#0B3F47;isolation:isolate;box-shadow:0 24px 60px rgba(11,63,71,.18)}
+.banner__img{display:block;width:100%;height:clamp(380px,58vh,620px);object-fit:cover;object-position:62% center}
+.banner__shade{position:absolute;inset:0;background:linear-gradient(100deg,rgba(8,48,55,.94) 0%,rgba(8,48,55,.82) 34%,rgba(8,48,55,.35) 58%,rgba(8,48,55,0) 78%)}
+.banner__in{position:absolute;left:0;top:0;height:100%;width:min(560px,64%);display:flex;flex-direction:column;justify-content:center;padding:clamp(24px,4vw,56px);color:#fff;pointer-events:none}
+.banner__in a{pointer-events:auto}
+.banner h1{font-size:clamp(34px,4.6vw,64px);line-height:.98;letter-spacing:-.04em;margin:14px 0 0;color:#fff}
+.banner__lead{margin-top:18px;font-size:clamp(15px,1.4vw,18px);line-height:1.62;color:rgba(255,255,255,.88);max-width:42ch}
+.banner__actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.banner__plate{position:absolute;right:clamp(16px,2.6vw,32px);bottom:clamp(16px,2.6vw,32px);width:min(430px,44%);background:var(--orange);border-radius:20px;padding:18px 20px;box-shadow:0 18px 44px rgba(0,0,0,.3);margin:0}
+.banner__plate .plate__qr img{width:96px;height:96px}
+.banner__plate .plate__num{font-size:clamp(17px,1.7vw,23px)}
+@media (max-width:899px){
+  .banner__img{height:520px;object-position:68% center}
+  .banner__shade{background:linear-gradient(to top,rgba(8,48,55,.96) 42%,rgba(8,48,55,.55) 70%,rgba(8,48,55,.15) 100%)}
+  .banner__in{position:relative;height:auto;width:100%;padding:22px 22px 0;order:2}
+  .banner{display:flex;flex-direction:column}
+  .banner__img{position:absolute;inset:0;height:100%}
+  .banner__plate{position:relative;right:auto;bottom:auto;width:auto;margin:20px 22px 24px;order:3}
+  .banner__in{position:relative;justify-content:flex-end;padding-top:230px}
+}
+
+/* counters: first thing under the banner, big and quiet */
+.numbers{background:var(--bg);padding:40px 0 56px}
+@media (min-width:760px){.numbers{padding:56px 0 72px}}
+.numbers__grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:0;background:var(--line);border-radius:22px;overflow:hidden}
+@media (min-width:860px){.numbers__grid{grid-template-columns:repeat(4,1fr)}}
+.numbers__grid li{background:#fff;padding:28px 22px}
+@media (min-width:860px){.numbers__grid li{padding:38px 30px}}
+.numbers__grid b{font-size:clamp(40px,6.4vw,62px)}
+.numbers__note{margin-top:16px;text-align:center}
+
+/* strip section: four icons + slogan on light background */
+.sec--strip{background:#fff;padding:56px 0 0}
+@media (min-width:760px){.sec--strip{padding:72px 0 0}}
+.sec--strip .hstrip{background:var(--line);margin-top:0;border-radius:22px}
+.sec--strip .hstrip li{background:#fff;padding:24px 22px}
+.sec--strip .hstrip b{color:var(--teal)}
+.sec--strip .hstrip span:last-child{color:var(--muted)}
+.sec--strip .slogan{margin-top:40px;border-radius:22px 22px 0 0}
+.banner__plate{display:grid;gap:14px;align-items:center}
+@media (min-width:560px){.banner__plate{grid-template-columns:1fr auto;gap:18px}}
+.progress--thin{margin-top:14px}
+.progress--thin .progress__bar{height:6px}
+.card__body p{min-height:0}
