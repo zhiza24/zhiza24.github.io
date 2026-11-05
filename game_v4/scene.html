@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Путь</title><script src="upd.js?v=1793897780"></script>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Путь</title><script src="upd.js?v=1793897923"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 <style>html,body{margin:0;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;overflow:hidden}
 .bg{position:fixed;inset:0;background-size:cover;background-position:center 25%;animation:zm 14s ease-out forwards,sw 6s ease-in-out infinite alternate}
@@ -15,9 +15,10 @@
 <div class="sc"><h2 id="h"></h2><p id="t"></p><button class="go" id="go"></button></div>
 <script src="stages.js?v=3"></script><script>
 var S={start:{img:'elder.jpg',h:'Старец',t:'Твой путь начинается. Перед тобой пять дорог, и у каждой свой дар и своя трудность. Выбери свою карту.',b:'Выбрать карту',bs:'Каждая карта имеет в себе сильные и слабые моменты',u:'choose.html'},
-road:{img:'map_bg.jpg',h:'Путь начался',t:'Ты ступила на свою тропу. Перед тобой туман, и дороги не видно. Проведи пальцем по экрану и сотри его, чтобы открылась тропа к пропасти и мосту.',b:'К мосту',u:'bridge.html',scr:1},
+road:{img:'map_bg.jpg',h:'Путь начался',t:'Ты ступила на свою тропу. Перед тобой туман, и дороги не видно. Проведи пальцем по экрану и сотри его.',b:'Идти на ощупь',u:'bridge.html?k=fog',scr:1},
 fog:{img:'map_bg.jpg',h:'Туман',t:'Ты перешла пропасть. Но впереди стеной поднимается густой туман, и дорогу не видно.',b:'Войти в туман',u:'bridge.html?k=fog'},
-fire:{img:'map_bg.jpg',h:'Поле',t:'Туман рассеялся. Ты вышла в поле, а вдалеке горит костер, и возле него люди.',b:'Подойти к костру',u:'bridge.html?k=fire'},
+gap:{img:'map_bg.jpg',h:'Пропасть',t:'Туман рассеялся, и прямо перед тобой открылась пропасть. Чтобы идти дальше, нужно построить мост.',b:'К мосту',u:'bridge.html'},
+fire:{img:'map_bg.jpg',h:'Поле',t:'Ты перешла пропасть. Ты вышла в поле, а вдалеке горит костер, и возле него люди.',b:'Подойти к костру',u:'bridge.html?k=fire'},
 lvl:{img:'elder.jpg',h:'Старец',t:'Ты прошла первый уровень: выбрала свою дорогу, перешла пропасть, прошла туман, согрелась у огня и собрала кристалл. А теперь награда: зажги свой путь, и получишь бонус.',b:'Зажечь фонари',u:'lanterns.html'},
 pa:{img:'map_bg.jpg',h:'Зодчий',t:'Здравствуй, путник. Я Зодчий восьми башен. Каждая башня это сфера твоей жизни. Покажи мне, насколько каждая из них сейчас наполнена, от 1 до 10. Это твоя Точка А.',b:'Заполнить колесо',u:'wheel8.html'},
 ego:{img:'elder.jpg',h:'Маг',t:'Ты отдохнула у огня. Теперь мы выявим твое ведущее фоновое состояние: то, что звучит в тебе с детства. Отвечай честно, здесь никто не судит.',b:'Пройти тест',u:'ego.html'}};
