@@ -399,3 +399,11 @@ html:has(dialog[open]){overflow:hidden}
 .banner__plate{width:min(340px,34%);grid-template-columns:1fr !important}
 .plate__txt{display:flex;flex-direction:column;gap:8px}
 @media (max-width:759px){.banner__plate{width:auto}}
+
+/* 05.11 c */
+.ribbon__it{flex:0 0 140px;scroll-snap-align:start;display:flex;flex-direction:column;gap:6px}
+.ribbon__ph{border:0;padding:0;background:none;cursor:pointer;text-align:left}
+.ribbon__help{border:0;background:var(--orange);color:#fff;border-radius:999px;padding:7px 10px;font-weight:750;cursor:pointer}
+.opeka__big{display:block;font-size:clamp(34px,5vw,54px);font-weight:800;letter-spacing:-.03em;line-height:1;margin-bottom:12px;color:#fff}
+.modal__story{margin-top:18px}
+.sec--strip .slogan{margin-bottom:28px}
