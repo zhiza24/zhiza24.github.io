@@ -1,0 +1,41 @@
+<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Старец</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nav.css?v=8">
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf}
+.sc{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));overflow:hidden;animation:in 2s ease both}
+@keyframes in{from{opacity:0;filter:brightness(3)}to{opacity:1;filter:none}}
+.sc video,.sc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:40% 30%}
+.sc:after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,0) 35%,rgba(0,0,0,.55) 58%,rgba(0,0,0,.92))}
+.tx{position:absolute;z-index:2;left:22px;right:22px;bottom:clamp(170px,25vh,210px);text-align:center}
+.tx p{margin:0 0 .35em;font:600 clamp(24px,3.8vh,32px)/1.18 'Cormorant Garamond',serif;color:#fbe6b4;text-shadow:0 2px 10px #000;opacity:0;transform:translateY(10px);transition:opacity 1.2s,transform 1.2s}
+.tx p.on{opacity:1;transform:none}
+.nx{position:absolute;z-index:2;left:50%;bottom:calc(clamp(30px,5vh,48px) + 66px);transform:translateX(-50%);width:70%;height:54px;border-radius:999px;border:2px solid #f5dca0;background:radial-gradient(ellipse at 50% 30%,#fff1c8,#e2b45e 55%,#9a6a28);color:#2a1606;font:700 24px 'Cormorant Garamond',serif;opacity:0;transition:opacity 1s;cursor:pointer}
+.nx.on{opacity:1}
+.snd{position:absolute;z-index:3;right:calc(16% + 58px);bottom:clamp(30px,5vh,48px);width:46px;height:46px;border-radius:50%;border:2px solid #d9b46a;background:rgba(20,12,6,.65);color:#cbb68e;font-size:20px;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;transition:.3s}
+.snd.on{background:radial-gradient(#fff1c8,#d9a54e);color:#2a1606;box-shadow:0 0 16px rgba(255,205,120,.8)}
+.arr{position:absolute;z-index:3;right:16%;bottom:clamp(30px,5vh,48px);width:46px;height:46px;border-radius:50%;border:2px solid #d9b46a;background:radial-gradient(#fff1c8,#d9a54e);color:#2a1606;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;box-shadow:0 0 12px rgba(255,205,120,.6)}
+.arr svg,.snd svg{width:24px;height:24px}
+.ztm{position:fixed;inset:0;z-index:65;background:#000;opacity:0;pointer-events:none;transition:opacity 1.6s}.ztm.on{opacity:1}
+</style></head><body data-page="elder">
+<div class="sc">
+<video id="v" src="media/elder.mp4" poster="img/elder.jpg" autoplay muted playsinline></video>
+<button class="snd" id="snd" type="button" aria-label="Озвучка" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path id="sw" d="M17 9l4 6M21 9l-4 6"/></svg></button>
+<div class="tx" id="tx"><p>Вот ваш мир.</p><p>По праву рождения, которое дали вам высшие силы,</p><p>и все здесь для вас.</p></div>
+<button class="arr" id="arr" type="button" aria-label="Следующий шаг"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+<button class="nx" id="nx" type="button">Далее</button>
+</div>
+<div class="ztm" id="ztm"></div>
+<audio id="au" src="media/voice.mp3" preload="auto"></audio>
+<script src="nav.js?v=8"></script>
+<script>
+var ps=document.querySelectorAll('#tx p');ps.forEach(function(p,i){setTimeout(function(){p.classList.add('on')},1600+i*2000)});
+setTimeout(function(){document.getElementById('nx').classList.add('on')},1600+ps.length*2000);
+document.getElementById('nx').onclick=document.getElementById('arr').onclick=function(){document.getElementById('ztm').classList.add('on');setTimeout(function(){location.href='wheel.html'},1700)};
+var au=document.getElementById('au');
+document.getElementById('snd').onclick=function(){var b=this,on=!b.classList.contains('on');b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);document.getElementById('sw').setAttribute('d',on?'M16 9a4 4 0 010 6M18.5 6.5a7.5 7.5 0 010 11':'M17 9l4 6M21 9l-4 6');if(on){au.currentTime=0;au.play().catch(function(){})}else au.pause()};
+</script>
+</body></html>

@@ -1,0 +1,74 @@
+<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Путь Алхимика">
+<link rel="apple-touch-icon" href="img/sphere.png">
+<title>Путь Современного Алхимика</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:radial-gradient(ellipse at 50% 38%,#5a3816 0%,#2e1c0b 45%,#160d05 100%);color:#f6d79a;font-family:'Cormorant Garamond',Georgia,serif;overflow:hidden}
+.cover{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 7vh) 20px calc(env(safe-area-inset-bottom) + 6vh);text-align:center}
+.author{font-size:clamp(24px,6.5vw,34px);font-weight:600;letter-spacing:1px;color:#f3cf8a;text-shadow:0 0 12px rgba(255,190,90,.5)}
+.orb{position:relative;width:min(50vw,30vh);aspect-ratio:1;cursor:pointer;border:0;background:none;padding:0}
+.orb img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;animation:pulse 2.6s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(255,190,70,.75))}
+.ring{position:absolute;inset:-6%;border-radius:50%;border:3px solid rgba(255,200,100,.55);box-shadow:0 0 30px rgba(255,180,60,.6),inset 0 0 30px rgba(255,180,60,.4);animation:wave 2.6s ease-out infinite}
+.ring.r2{animation-delay:1.3s}
+.halo{position:absolute;inset:-25%;border-radius:50%;background:radial-gradient(rgba(255,200,90,.45),rgba(255,160,40,0) 62%);animation:glow 2.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes wave{0%{transform:scale(.95);opacity:.9}100%{transform:scale(1.35);opacity:0}}
+@keyframes glow{0%,100%{opacity:.6}50%{opacity:1}}
+.title{font-size:clamp(36px,10.5vw,56px);font-weight:700;line-height:1.08;letter-spacing:2px;color:#ffe3a3;text-shadow:0 0 18px rgba(255,190,80,.65),0 2px 2px rgba(0,0,0,.6)}
+.hint{margin-top:14px;font-size:clamp(19px,5vw,24px);color:#ffe9be;letter-spacing:1px;animation:glow 2.6s ease-in-out infinite}
+.flash{position:fixed;inset:0;background:radial-gradient(#fff6d0,#ffcc5c 40%,rgba(255,180,60,0) 75%);opacity:0;pointer-events:none;transition:opacity .5s}
+.go .flash{opacity:1}
+
+.irid{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(255,120,200,.35),rgba(120,180,255,.3),rgba(140,255,210,.25),rgba(255,230,120,.4),rgba(255,120,200,.35));mix-blend-mode:color-dodge;animation:spin 6s linear infinite,pulse 2.6s ease-in-out infinite;opacity:.75}
+.shine{position:absolute;inset:0;border-radius:50%;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.65) 48%,transparent 60%);background-size:250% 250%;animation:sweep 3.2s ease-in-out infinite;mix-blend-mode:overlay}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes sweep{0%{background-position:120% 120%}60%,100%{background-position:-60% -60%}}
+.orb.press img,.orb.press .irid{animation:none;transform:scale(.8);transition:transform .22s ease-in}
+.orb.boom img,.orb.boom .irid{animation:none;transform:scale(1.2);transition:transform .35s cubic-bezier(.2,1.6,.4,1)}
+.shock{position:fixed;left:50%;top:50%;width:10px;height:10px;margin:-5px;border-radius:50%;border:3px solid #fff2c0;box-shadow:0 0 16px #ffd56a,inset 0 0 12px #ffd56a;opacity:0;pointer-events:none}
+.shock.on{animation:shock .9s ease-out forwards}
+@keyframes shock{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(60)}}.go .orb{filter:brightness(1.6) drop-shadow(0 0 40px #fff0b0);transition:filter .3s}
+.flash{background:radial-gradient(circle,#fffbe8 0%,#ffe08a 18%,rgba(255,200,80,.0) 42%)!important;transform:scale(.3);transition:opacity .35s,transform .6s ease-out!important}
+.go .flash{transform:scale(3)}
+canvas#fx{position:fixed;inset:0;pointer-events:none}
+
+.core{position:absolute;inset:0;border-radius:50%;overflow:hidden;animation:pulse 2.6s ease-in-out infinite;box-shadow:0 0 40px rgba(255,190,70,.8);isolation:isolate}
+.core img{animation:none!important;filter:none!important}
+.irid{inset:-20%!important;animation:spin 6s linear infinite!important}
+.orb.press .core{animation:none;transform:scale(.8);transition:transform .22s ease-in}
+.orb.boom .core{animation:none;transform:scale(1.15);transition:transform .35s cubic-bezier(.2,1.6,.4,1)}
+.flash{background:radial-gradient(circle,#fff 0%,#ffe9a8 6%,rgba(255,210,100,0) 14%)!important;transform:scale(.2);transition:opacity .25s,transform .5s ease-out!important}
+.go .flash{transform:scale(1.6);opacity:.9}
+.go .halo,.go .ring{opacity:0;transition:opacity .2s}.flash{left:var(--x);top:var(--y);right:auto;bottom:auto;width:200vmax;height:200vmax;margin:-100vmax 0 0 -100vmax;inset:auto}.shock{left:var(--x)!important;top:var(--y)!important}</style></head><body>
+<div class="cover">
+ <div class="author">Автор: Майя Явь</div>
+ <button class="orb" id="orb" aria-label="Начать путь"><div class="halo"></div><div class="ring"></div><div class="ring r2"></div><div class="core"><img src="img/sphere.png" alt=""><div class="irid"></div><div class="shine"></div></div></button>
+ <div><div class="title">ПУТЬ<br>СОВРЕМЕННОГО<br>АЛХИМИКА</div><div class="hint">Коснись сферы, чтобы начать</div></div>
+</div>
+<div class="shock" id="shock"></div><canvas id="fx"></canvas>
+<script>
+const orb=document.getElementById('orb'),cv=document.getElementById('fx'),cx=cv.getContext('2d');
+function sz(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio}sz();onresize=sz;
+function chime(){try{const A=new (window.AudioContext||window.webkitAudioContext)(),t=A.currentTime,out=A.createGain();out.gain.value=.5;
+const dl=A.createDelay();dl.delayTime.value=.18;const fb=A.createGain();fb.gain.value=.38;dl.connect(fb);fb.connect(dl);out.connect(A.destination);out.connect(dl);dl.connect(A.destination);
+const tone=(f,st,d,v,type)=>{const o=A.createOscillator(),g=A.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(0,t+st);g.gain.linearRampToValueAtTime(v,t+st+.01);g.gain.exponentialRampToValueAtTime(.0001,t+st+d);o.connect(g);g.connect(out);o.start(t+st);o.stop(t+st+d+.05)};
+tone(110,0,.5,.35,'triangle');
+[523.25,783.99,1046.5,1318.5,1567.98,2093].forEach((f,i)=>tone(f,.12+i*.07,2.2,.16));
+[2637,3136,3951].forEach((f,i)=>tone(f,.5+i*.05,1.4,.05));
+const n=A.createBufferSource(),b=A.createBuffer(1,A.sampleRate*1.2,A.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);
+n.buffer=b;const bp=A.createBiquadFilter();bp.type='bandpass';bp.frequency.setValueAtTime(400,t);bp.frequency.exponentialRampToValueAtTime(6000,t+1);const ng=A.createGain();ng.gain.value=.12;n.connect(bp);bp.connect(ng);ng.connect(out);n.start(t+.1)}catch(e){}}
+function sparks(){const r=orb.getBoundingClientRect(),X=(r.left+r.width/2)*devicePixelRatio,Y=(r.top+r.height/2)*devicePixelRatio,P=[];
+for(let i=0;i<220;i++){const a=Math.random()*6.283,v=(2+Math.random()*9)*devicePixelRatio;P.push({x:X,y:Y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,s:(1+Math.random()*2.5)*devicePixelRatio,h:40+Math.random()*20})}
+(function f(){cx.clearRect(0,0,cv.width,cv.height);let al=0;for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vx*=.96;p.vy=p.vy*.96+.015;p.l-=.009;if(p.l<=0)continue;al=1;
+cx.globalAlpha=p.l;cx.shadowColor='#ffd76a';cx.shadowBlur=8*devicePixelRatio;cx.fillStyle='hsl('+p.h+',100%,'+(60+30*p.l)+'%)';cx.beginPath();const s=p.s*(Math.random()<.2?2:1);cx.moveTo(p.x,p.y-s*2);cx.lineTo(p.x+s*.6,p.y);cx.lineTo(p.x,p.y+s*2);cx.lineTo(p.x-s*.6,p.y);cx.closePath();cx.fill()}if(al)requestAnimationFrame(f)})()}
+let busy=0;orb.onclick=()=>{if(busy)return;busy=1;const R=orb.getBoundingClientRect();document.body.style.setProperty('--x',(R.left+R.width/2)+'px');document.body.style.setProperty('--y',(R.top+R.height/2)+'px');chime();orb.classList.add('press');
+setTimeout(()=>{orb.classList.remove('press');orb.classList.add('boom');document.getElementById('shock').classList.add('on');sparks();document.body.classList.add('go')},230);
+setTimeout(()=>{location.href='map.html'},1500)};
+</script>
+</body></html>

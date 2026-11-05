@@ -1,0 +1,35 @@
+html,body{margin:0;min-height:100%;background:#1c120a;color:#f4ecdf;font-family:Manrope,sans-serif}
+.pg{padding:calc(16px + env(safe-area-inset-top)) 18px calc(100px + env(safe-area-inset-bottom));max-width:560px;margin:0 auto;box-sizing:border-box}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;color:#f0d9a8;margin:0}
+h1{font-size:34px;text-align:center}
+.sub{text-align:center;color:#c9a46a;font-size:14px;margin:6px 0 18px}
+.ch{margin:26px 0 8px;text-align:center;font:700 15px Manrope;letter-spacing:.12em;text-transform:uppercase;color:#c9a46a}
+.trail{position:relative}
+.nd{display:flex;align-items:center;gap:14px;margin:14px 0;text-decoration:none;color:inherit}
+.nd:nth-child(4n+2){margin-left:22%}.nd:nth-child(4n+3){margin-left:40%}.nd:nth-child(4n){margin-left:18%}
+.nd .b{flex:none;width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;background:radial-gradient(circle at 35% 30%,#5a3a18,#24160a);border:3px solid #6b4c2c;box-shadow:0 6px 0 #0e0905}
+.nd.ok .b{border-color:#e0a940;background:radial-gradient(circle at 35% 30%,#f0c870,#8a5420)}
+.nd.nx .b{border-color:#ffd877;animation:pu 1.6s infinite}
+@keyframes pu{50%{box-shadow:0 6px 0 #0e0905,0 0 0 10px rgba(255,216,119,.25)}}
+.nd .t b{display:block;font-size:15px}.nd .t span{font-size:12.5px;color:#c9a46a}
+.card{background:radial-gradient(ellipse at 50% 30%,#2c2119,#15100c 80%);border:2px solid #8a6438;border-radius:22px;padding:18px}
+.kp{display:flex;gap:12px;align-items:center;margin-bottom:14px}.kp .av{width:64px;height:64px;border-radius:50%;font-size:32px;display:flex;align-items:center;justify-content:center;background:#3a2a1a;border:2px solid #c9a46a;flex:none}
+.kp small{color:#c9a46a;display:block}.kp b{font:700 22px 'Cormorant Garamond',serif;color:#f0d9a8}
+.task{font-size:17px;line-height:1.5;margin:4px 0 16px}
+.tag{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(224,169,64,.15);color:#e0a940;border:1px dashed #e0a940;margin:0 6px 8px 0}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:14px 16px;border-radius:14px;border:1.5px solid #6b4c2c;background:#24160c;color:#f4ecdf;font:600 15.5px Manrope;cursor:pointer}
+.opt.on{border-color:#ffd877;background:#4a3010}
+.btn{display:block;width:100%;margin-top:16px;padding:15px;border:0;border-radius:999px;background:linear-gradient(#f0c870,#c98a40);color:#2a1606;font:800 16px Manrope;cursor:pointer;text-align:center;text-decoration:none}
+.btn.gh{background:none;border:1.5px solid #c9a46a;color:#f0d9a8}
+.note{margin-top:14px;font-size:13px;color:#c9a46a;line-height:1.45;border-top:1px dashed #6b4c2c;padding-top:10px}
+.hold{width:150px;height:150px;border-radius:50%;margin:20px auto;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#fff5d0,#c98a40 55%,#5a3410);color:#2a1606;font-weight:800;user-select:none;-webkit-user-select:none;touch-action:none}
+.hold.go{animation:br 4s ease-in-out infinite}@keyframes br{50%{transform:scale(1.15)}}
+.bar{height:8px;border-radius:9px;background:#3a2a1a;overflow:hidden;margin:10px 0}.bar i{display:block;height:100%;width:0;background:#e0a940;transition:width .2s}
+input[type=range]{width:100%;accent-color:#e0a940}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.flipc{padding:18px;border-radius:16px;background:#0b0806;border:1.5px solid #555;margin:8px 0;cursor:pointer;min-height:60px}
+.body{width:160px;margin:10px auto;display:block}
+.dl{list-style:none;padding:0}.dl li{border-bottom:1px dashed #6b4c2c;padding:10px 0;font-size:14.5px}.dl b{color:#f0d9a8}
+.day{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:12px 0}.day span{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#24160c;border:1px solid #6b4c2c;font-size:13px}.day span.ok{background:#c98a40;color:#2a1606;font-weight:800}
+.chk{display:flex;gap:10px;align-items:center;padding:12px;border-radius:12px;background:#24160c;margin:8px 0;cursor:pointer}.chk i{width:22px;height:22px;border-radius:6px;border:2px solid #c9a46a;flex:none}.chk.on i{background:#e0a940}
+.sos{background:linear-gradient(#c0392b,#7a1d12);color:#fff}
