@@ -1,0 +1,32 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Мост</title><script src="upd.js?v=1793889565"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
+<style>html,body{margin:0;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif}
+.w{max-width:520px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(110px + env(safe-area-inset-bottom))}
+.cap{display:table;margin:0 auto 10px;padding:8px 20px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 14px Manrope;letter-spacing:.08em;text-transform:uppercase}
+.gap{position:relative;height:170px;border-radius:16px;overflow:hidden;background:url(img/map_bg.jpg) center/cover}
+.gap:after{content:'';position:absolute;left:18%;right:18%;top:0;bottom:0;background:linear-gradient(#000,#120a05);box-shadow:inset 0 0 30px #000}
+.br{position:absolute;left:16%;right:16%;top:62px;height:30px;display:flex;gap:3px;z-index:2}
+.pl{flex:1;border-radius:3px;background:#3a2818;opacity:.25;border:1px dashed #6a4a28;transition:.5s}
+.pl.on{opacity:1;border:0;background:linear-gradient(#c9934f,#7a4a1e);box-shadow:0 0 12px #ffcf5a;animation:dp .5s}
+@keyframes dp{from{transform:translateY(-60px)}}
+.hr{position:absolute;left:4%;top:44px;font-size:34px;z-index:3;transition:left .6s}
+.q{margin:14px 0 8px;font:700 22px 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center}
+.a{display:block;width:100%;margin:8px 0;padding:13px;border:1.5px solid #c9a46a;border-radius:14px;background:#24160c;color:#f4ecdf;font:600 15px Manrope;text-align:left}
+.fb{min-height:22px;text-align:center;color:#c9a46a;font-style:italic;font-size:14px}
+.go{display:block;width:100%;margin-top:14px;padding:14px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope}</style></head>
+<body data-page="task"><div class="w"><div class="cap">Мост над пропастью</div>
+<div class="gap"><div class="br" id="br"></div><div class="hr" id="hr">🧙</div></div>
+<div class="fb" id="fb">Каждый честный ответ кладет доску</div><div id="box"></div></div>
+<script src="stages.js?v=3"></script><script>
+var Q=[['Что ты чувствуешь, стоя у края?',['Страх','Любопытство','Спокойствие','Желание повернуть назад']],
+['Что ты возьмешь с собой на мост?',['Опыт прошлого','Надежду','Близкого человека','Ничего, иду налегке']],
+['Что чаще всего останавливает тебя в жизни?',['Сомнения','Чужое мнение','Усталость','Страх ошибки']],
+['Что ждет тебя на том берегу?',['Новая я','Покой','Ответы','Пока не знаю']]];
+var F=['Страх тоже ведет, если его признать.','Хорошо, возьми это с собой.','Ты назвала это, и оно уже меньше.','Вот и берег.'];
+var q=0,R=[];br.innerHTML=Q.map(function(){return '<div class="pl"></div>'}).join('');
+function sh(){if(q>=Q.length){done();return}var f=Q[q];box.innerHTML='<div class="q">'+f[0]+'</div>'+f[1].map(function(a){return '<button class="a">'+a+'</button>'}).join('');
+box.querySelectorAll('.a').forEach(function(b){b.onclick=function(){R.push(b.textContent);br.children[q].classList.add('on');try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}fb.textContent=F[q];q++;hr.style.left=(4+q*80/Q.length)+'%';setTimeout(sh,700)}})}
+function done(){var p=GP();p.done[3]=1;p.log.push({s:3,t:'Мост над пропастью',r:R.join('; '),d:new Date().toLocaleDateString('ru')});SP(p);
+box.innerHTML='<div class="q">Мост построен. Ты на том берегу.</div><div class="fb">Награда: символ «Мост» и запись в Дневнике</div><button class="go" onclick="location.href=stepUrl(3)">Дальше</button>'}
+sh();
+</script><script src="nav.js?v=1793877093"></script></body></html>

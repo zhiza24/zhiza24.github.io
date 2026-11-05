@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Путь</title><script src="upd.js?v=1793885895"></script>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Путь</title><script src="upd.js?v=1793889565"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 <style>html,body{margin:0;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;overflow:hidden}
 .bg{position:fixed;inset:0;background-size:cover;background-position:center 25%;animation:zm 14s ease-out forwards,sw 6s ease-in-out infinite alternate}
@@ -15,7 +15,7 @@
 <div class="sc"><h2 id="h"></h2><p id="t"></p><button class="go" id="go"></button></div>
 <script src="stages.js?v=3"></script><script>
 var S={start:{img:'elder.jpg',h:'Старец',t:'Твой путь начинается. Перед тобой пять дорог, и у каждой свой дар и своя трудность. Выбери свою карту.',b:'Выбрать карту',u:'choose.html'},
-road:{img:'map_bg.jpg',h:'Путь начался',t:'Ты ступила на свою тропу. Туман редеет, дорога ведет вперед, к пропасти, через которую нужно перейти по мосту.',b:'Идти дальше',u:null}};
+road:{img:'map_bg.jpg',h:'Путь начался',t:'Ты ступила на свою тропу. Туман редеет, дорога ведет вперед, к пропасти, через которую нужно перейти по мосту.',b:'К мосту',u:'bridge.html'}};
 var k=new URLSearchParams(location.search).get('k')||'start',s=S[k]||S.start;
 bg.style.backgroundImage='url(img/'+s.img+')';h.textContent=s.h;go.textContent=s.b;
 var n=0,tm;function ty(){t.textContent=s.t.slice(0,++n);if(n<s.t.length)tm=setTimeout(ty,35);else go.classList.add('on')}
