@@ -2,27 +2,27 @@
 <style>html,body{margin:0;background:#120c07;color:#f4ecdf;font-family:Manrope,sans-serif}
 .w{max-width:520px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(110px + env(safe-area-inset-bottom))}
 .cap{display:table;margin:0 auto;padding:9px 22px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 15px Manrope;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 18px rgba(255,200,90,.4)}
-.sb{text-align:center;color:#c9a46a;font-size:13.5px;margin:8px 0 14px}
+.sb{text-align:center;color:#c9a46a;font-size:13px;margin:6px 0 8px}
 .big{position:relative;border-radius:22px;overflow:hidden;border:2px solid #c9a46a;box-shadow:0 10px 30px rgba(0,0,0,.6);animation:in .45s ease}
 @keyframes in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
-.big img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
-.ov{position:absolute;left:0;right:0;bottom:0;padding:60px 16px 16px;background:linear-gradient(transparent,rgba(10,6,3,.95) 45%)}
-.ov h2{margin:0 0 8px;font:700 30px 'Cormorant Garamond',serif;color:#ffe9a8}
+.big img{display:block;width:100%;height:calc(100vh - 330px);min-height:240px;object-fit:cover}
+.ov{position:absolute;left:0;right:0;bottom:0;padding:40px 12px 12px;background:linear-gradient(transparent,rgba(10,6,3,.95) 45%)}
+.ov h2{margin:0 0 6px;font:700 24px 'Cormorant Garamond',serif;color:#ffe9a8}
 .pm{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;line-height:1.4}
 .pm div{padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.06)}.pm b{display:block;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
 .p b{color:#9fe0a0}.m b{color:#f0a090}
-.th{display:flex;gap:8px;margin:14px 0 4px;justify-content:center}
-.th button{flex:1;max-width:90px;padding:0;border:2px solid #5a4028;border-radius:12px;overflow:hidden;background:none;cursor:pointer;opacity:.6;transition:.2s}
-.th button img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}.th button.on{border-color:#ffd877;opacity:1;transform:translateY(-4px);box-shadow:0 0 14px #ffcf5a}
-.go{display:block;width:100%;margin-top:14px;padding:16px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope;cursor:pointer}
-.eld{position:fixed;left:12px;bottom:calc(92px + env(safe-area-inset-bottom));display:flex;align-items:flex-end;gap:8px;z-index:40;pointer-events:none;animation:in .6s .3s both}
+.th{display:flex;gap:6px;margin:8px 0 0;justify-content:center}
+.th button{flex:1;max-width:70px;padding:0;border:2px solid #5a4028;border-radius:12px;overflow:hidden;background:none;cursor:pointer;opacity:.6;transition:.2s}
+.th button img{display:block;width:100%;height:64px;object-fit:cover}.th button.on{border-color:#ffd877;opacity:1;transform:translateY(-4px);box-shadow:0 0 14px #ffcf5a}
+.go{display:block;width:100%;margin-top:10px;padding:13px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope;cursor:pointer}
+.eld{display:none;position:fixed;left:12px;bottom:calc(92px + env(safe-area-inset-bottom));display:flex;align-items:flex-end;gap:8px;z-index:40;pointer-events:none;animation:in .6s .3s both}
 .eld img{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid #c9a46a}
 .eld span{background:#f6e6bf;color:#3a2410;padding:9px 12px;border-radius:14px 14px 14px 2px;font-size:13.5px;max-width:230px}
-.fx{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:rgba(10,6,3,.85);font:700 26px 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;padding:30px}</style></head>
-<body data-page="task"><div class="w"><div class="cap">Выбери карту</div><div class="sb">У каждой карты свои трудности и свои дары. Плохих карт нет.</div>
-<div id="big"></div><div class="th" id="th"></div><button class="go" id="go">Выбрать эту карту</button></div>
+.fx{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:rgba(10,6,3,.85);font:700 26px 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;padding:30px}.bn{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;background:rgba(10,6,3,.8);animation:bo .5s 1.6s forwards;pointer-events:none}.bn div{padding:18px 34px;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 24px Manrope;text-transform:uppercase;box-shadow:0 0 40px #ffcf5a;animation:bu .7s ease-out both,bf .6s 1.5s forwards}@keyframes bu{from{transform:translateY(60vh) scale(.6);opacity:0}to{transform:none;opacity:1}}@keyframes bf{to{transform:translateY(-60vh) scale(.6);opacity:0}}@keyframes bo{to{opacity:0;visibility:hidden}}</style></head>
+<body data-page="task"><div class="w"><div class="cap">Выбери карту</div><div class="sb">У каждой карты свои плюсы и минусы. Выбери ту, что тебе откликается.</div>
+<div id="big"></div><div class="th" id="th"></div></div>
 <div class="eld" id="eld"><img src="img/elder.jpg" alt=""><span>Каждая дорога ведет к цели. Выбери ту, что откликается сердцу.</span></div>
-<div class="fx" id="fx"></div><div class="fx" id="fq" style="font:600 16px Manrope;flex-direction:column"></div>
+<div class="bn" id="bn"><div>Выбери карту</div></div><div class="fx" id="fx"></div><div class="fx" id="fq" style="font:600 16px Manrope;flex-direction:column"></div>
 <script src="stages.js?v=3"></script><script>
 var C=[
 {k:'s',img:'card_s.jpg',n:'Тропа молний',p:'Быстрые решения, смелость, энергия старта',m:'Риск сорваться, не рассмотрев препятствия'},
@@ -30,13 +30,13 @@ var C=[
 {k:'str',img:'card_str.jpg',n:'Горный перевал',p:'Свой путь, сверху видно всю картину',m:'Подъем тяжелый, строить приходится самой'},
 {k:'z',img:'card_z.jpg',n:'Река попутчиков',p:'Поддержка, течение несет вместе с другими',m:'Направление зависит от тех, кто рядом'},
 {k:'f',img:'wheel.webp',n:'Пусть выберет судьба',p:'Доверие миру, открытость любому пути',m:'Выбор отдан случаю, а не себе'}];
-var i=0;function dr(){var c=C[i];big.innerHTML='<div class="big"><img src="img/'+c.img+'" alt=""><div class="ov"><h2>'+c.n+'</h2><div class="pm"><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div></div></div></div>';
+var i=0;function dr(){var c=C[i];big.innerHTML='<div class="big"><img src="img/'+c.img+'" alt=""><div class="ov"><h2>'+c.n+'</h2><div class="pm"><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div></div><button class="go" id="go">Выбрать эту карту</button></div></div>';document.getElementById('go').onclick=pick;
 th.innerHTML=C.map(function(x,j){return '<button class="'+(j==i?'on':'')+'" onclick="i='+j+';dr()"><img src="img/'+x.img+'" alt=""></button>'}).join('')}dr();
 var sx=0;big.addEventListener('touchstart',function(e){sx=e.touches[0].clientX});big.addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>40){i=(i+(d<0?1:C.length-1))%C.length;dr()}});
 var FQ=[['Почему ты не выбрала сама?',[['Боюсь ошибиться','n'],['Все пути кажутся интересными','s'],['Пусть решит кто-то другой','z'],['Хочу проверить, что выпадет, а потом решу свое','str']]],['Если выпадет трудная карта, что сделаешь?',[['Пойду сразу, разберусь по дороге','s'],['Сначала изучу ее','n'],['Перестрою под себя','str'],['Найду, кто поможет','z']]],['Как ты чаще принимаешь решения в жизни?',[['Быстро, на импульсе','s'],['Долго взвешиваю','n'],['Делаю по-своему','str'],['Советуюсь с близкими','z']]]];
 function fate(){var sc={s:0,n:0,str:0,z:0},q=0;function sh(){if(q>=FQ.length){fq.style.display='none';var r=Math.floor(Math.random()*4);i=r;var top=Object.keys(sc).sort(function(a,b){return sc[b]-sc[a]})[0];fin(C[r],top,'выбор судьбы, ближе к типу '+top);return}var f=FQ[q];fq.style.display='flex';fq.innerHTML='<div style="max-width:420px;width:100%"><div style="font:700 24px Cormorant Garamond,serif;color:#ffe9a8;margin-bottom:14px">'+f[0]+'</div>'+f[1].map(function(a){return '<button class="go" style="background:#24160c;color:#f4ecdf;border:1.5px solid #c9a46a" data-k="'+a[1]+'">'+a[0]+'</button>'}).join('')+'</div>';fq.querySelectorAll('button').forEach(function(b){b.onclick=function(){sc[b.dataset.k]++;q++;sh()}})}sh()}
 function fin(c,k,r){var p=GP();p.done[2]=1;p.log.push({s:2,t:'Выбор карты пути',r:r||c.n,d:new Date().toLocaleDateString('ru')});SP(p);try{var P=JSON.parse(localStorage.getItem('alch_profile'))||{};P.mapStyle=k;localStorage.setItem('alch_profile',JSON.stringify(P))}catch(e){}fx.style.display='flex';fx.innerHTML='Твоя карта: «'+c.n+'»<br><small style="font:600 14px Manrope;color:#c9a46a">Запись улетела в Дневник</small>';setTimeout(function(){location.href=stepUrl(2)},2000)}
-go.onclick=function(){var c=C[i];if(c.k=='f'){fate();return}fin(c,c.k);return;,p=GP();p.done[2]=1;p.log.push({s:2,t:'Выбор карты пути',r:c.n,d:new Date().toLocaleDateString('ru')});SP(p);
+function pick(){var c=C[i];if(c.k=='f'){fate();return}fin(c,c.k);return;,p=GP();p.done[2]=1;p.log.push({s:2,t:'Выбор карты пути',r:c.n,d:new Date().toLocaleDateString('ru')});SP(p);
 try{var P=JSON.parse(localStorage.getItem('alch_profile'))||{};P.mapStyle=c.k;localStorage.setItem('alch_profile',JSON.stringify(P))}catch(e){}
 fx.style.display='flex';fx.innerHTML='Карта «'+c.n+'» твоя.<br><small style="font:600 14px Manrope;color:#c9a46a">Запись улетела в Дневник</small>';setTimeout(function(){location.href=stepUrl(2)},1800)};
 </script><script src="nav.js"></script></body></html>
