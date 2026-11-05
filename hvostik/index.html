@@ -10,9 +10,9 @@
 <meta name="description" content="Забираем животных в беде, лечим, держим на передержке и находим им дом. Каждый случай ведем открыто: диагноз, сумма, результат.">
 <meta name="theme-color" content="#0E4F58">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/base.css?v=1793864327">
-<link rel="stylesheet" href="assets/landing.css?v=1793864327">
-<script>(function(){var V="1793864327";fetch(location.pathname+"?nc="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){var m=t.match(/\?v=(\d+)/);if(m&&m[1]!==V&&!sessionStorage.getItem("hv"+m[1])){sessionStorage.setItem("hv"+m[1],1);location.replace(location.pathname+"?v="+m[1]+location.hash)}}).catch(function(){})})();</script>
+<link rel="stylesheet" href="assets/base.css?v=1793864762">
+<link rel="stylesheet" href="assets/landing.css?v=1793864762">
+<script>(function(){var V="1793864762";fetch(location.pathname+"?nc="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){var m=t.match(/\?v=(\d+)/);if(m&&m[1]!==V&&!sessionStorage.getItem("hv"+m[1])){sessionStorage.setItem("hv"+m[1],1);location.replace(location.pathname+"?v="+m[1]+location.hash)}}).catch(function(){})})();</script>
 </head>
 <body>
 <a class="skip" href="#main">К содержанию</a>
@@ -58,16 +58,19 @@
 <section class="hero">
   <div class="wrap">
     <figure class="banner">
-      <img class="banner__img" src="assets/img/hero.jpg?v=1793864327" width="1600" height="900" alt="Волонтер фонда держит на руках щенка и котенка" fetchpriority="high" decoding="async">
+      <img class="banner__img" src="assets/img/hero.jpg?v=1793864762" width="1600" height="900" alt="Волонтер фонда держит на руках щенка и котенка" fetchpriority="high" decoding="async">
       <div class="banner__shade" aria-hidden="true"></div>
-      <span class="banner__kick">Фонд помощи животным · с 2024 года</span>
 
       <div class="banner__in">
+        <span class="banner__kick">Фонд помощи животным · с 2024 года</span>
         <h1>Хвостик в беде</h1>
         <p class="banner__lead">Забираем животных с улицы, лечим, держим на передержке и находим им дом. Каждый случай ведем открыто: диагноз, сумма, результат.</p>
         <div class="banner__actions">
-          <a class="btn btn--accent" href="#help">Помочь сейчас</a>
-          <a class="btn btn--outline-light" href="#stories-list">Кому помочь</a>
+          <a class="banner__qr" href="#help" aria-label="QR-код для перевода"><img src="assets/qr.svg" width="216" height="216" alt="QR-код с номером карты фонда"><span>Наведите камеру</span></a>
+          <div class="banner__btns">
+            <a class="btn btn--accent" href="#help">Помочь сейчас</a>
+            <a class="btn btn--outline-light" href="#stories-list">Кому помочь</a>
+          </div>
         </div>
       </div>
 
@@ -80,10 +83,6 @@
         <span>Скопировать номер</span>
         </button>
         </div>
-        <a class="plate__qr" href="#help" aria-label="Перейти к переводу по QR-коду">
-        <img src="assets/qr.svg" width="216" height="216" alt="QR-код с номером карты фонда" decoding="async">
-        <span>Наведите камеру</span>
-        </a>
       </div>
     </figure>
   </div>
@@ -199,7 +198,7 @@
     <div class="cards">
       <article class="card" data-story="dog1">
         <button class="card__media" type="button" aria-label="Открыть историю: Рекс">
-          <img src="assets/img/t-dog1.jpg?v=1793864327" width="600" height="450" alt="Пес Рекс лежит в вольере и смотрит в камеру" loading="lazy" decoding="async">
+          <img src="assets/img/t-dog1.jpg?v=1793864762" width="600" height="450" alt="Пес Рекс лежит в вольере и смотрит в камеру" loading="lazy" decoding="async">
           <span class="card__badge">На лечении</span>
         </button>
         <div class="card__body">
@@ -215,7 +214,7 @@
 
       <article class="card" data-story="cat1">
         <button class="card__media" type="button" aria-label="Открыть историю: Марта">
-          <img src="assets/img/t-cat1.jpg?v=1793864327" width="600" height="450" alt="Кошка Марта сидит на пледе у окна" loading="lazy" decoding="async">
+          <img src="assets/img/t-cat1.jpg?v=1793864762" width="600" height="450" alt="Кошка Марта сидит на пледе у окна" loading="lazy" decoding="async">
           <span class="card__badge card__badge--home">Ищет дом</span>
         </button>
         <div class="card__body">
@@ -231,7 +230,7 @@
 
       <article class="card" data-story="dog2">
         <button class="card__media" type="button" aria-label="Открыть историю: Булат">
-          <img src="assets/img/t-dog2.jpg?v=1793864327" width="600" height="450" alt="Пес Булат лежит на пледе и смотрит в камеру" loading="lazy" decoding="async">
+          <img src="assets/img/t-dog2.jpg?v=1793864762" width="600" height="450" alt="Пес Булат лежит на пледе и смотрит в камеру" loading="lazy" decoding="async">
           <span class="card__badge">Передержка</span>
         </button>
         <div class="card__body">
@@ -247,7 +246,7 @@
 
       <article class="card" data-story="cat2">
         <button class="card__media" type="button" aria-label="Открыть историю: Уголек">
-          <img src="assets/img/t-cat2.jpg?v=1793864327" width="600" height="450" alt="Черный котенок Уголек сидит в переноске на оранжевом пледе" loading="lazy" decoding="async">
+          <img src="assets/img/t-cat2.jpg?v=1793864762" width="600" height="450" alt="Черный котенок Уголек сидит в переноске на оранжевом пледе" loading="lazy" decoding="async">
           <span class="card__badge card__badge--new">Новый</span>
         </button>
         <div class="card__body">
@@ -285,7 +284,7 @@
     </div>
 
     <figure class="opeka__photo">
-      <img src="assets/img/home.jpg?v=1793864327" width="1200" height="900" alt="Собака дома сидит на деревянном полу, рука человека гладит ее по голове" loading="lazy" decoding="async">
+      <img src="assets/img/home.jpg?v=1793864762" width="1200" height="900" alt="Собака дома сидит на деревянном полу, рука человека гладит ее по голове" loading="lazy" decoding="async">
       <figcaption>Булат в новой семье. Через месяц после пристройства</figcaption>
     </figure>
   </div>
@@ -382,7 +381,7 @@
     </div>
 
     <figure class="miska__photo">
-      <img src="assets/img/food.jpg?v=1793864327" width="1200" height="900" alt="Волонтер пересыпает корм из пакета в металлическую миску на складе" loading="lazy" decoding="async">
+      <img src="assets/img/food.jpg?v=1793864762" width="1200" height="900" alt="Волонтер пересыпает корм из пакета в металлическую миску на складе" loading="lazy" decoding="async">
       <figcaption>Разгрузка партии корма на складе партнера</figcaption>
     </figure>
   </div>
@@ -391,7 +390,7 @@
 <!-- ============ FINAL CTA ============ -->
 <section class="final">
   <div class="final__bg" aria-hidden="true">
-    <img src="assets/img/dog2.jpg?v=1793864327" width="1200" height="900" alt="" loading="lazy" decoding="async">
+    <img src="assets/img/dog2.jpg?v=1793864762" width="1200" height="900" alt="" loading="lazy" decoding="async">
   </div>
   <div class="wrap final__in">
     <span class="kicker kicker--light">Один перевод — одна спасенная жизнь</span>
@@ -449,7 +448,7 @@
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
   <div class="modal__in">
-    <img class="modal__img" id="modalImg" src="assets/img/dog1.jpg?v=1793864327" width="1200" height="900" alt="">
+    <img class="modal__img" id="modalImg" src="assets/img/dog1.jpg?v=1793864762" width="1200" height="900" alt="">
     <div class="modal__body">
       <span class="kicker" id="modalKicker">История</span>
       <h2 id="modalTitle">Рекс</h2>
@@ -464,6 +463,6 @@
   </div>
 </dialog>
 
-<script src="assets/landing.js?v=1793864327" defer></script>
+<script src="assets/landing.js?v=1793864762" defer></script>
 </body>
 </html>

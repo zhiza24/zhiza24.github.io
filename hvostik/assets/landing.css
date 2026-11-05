@@ -388,3 +388,14 @@ html:has(dialog[open]){overflow:hidden}
 .opet b{display:block;font-size:17px}
 .opet span{display:block;font-size:14.5px;line-height:1.45;opacity:.9}
 .opet__btn{margin-top:6px;border:0;background:var(--orange);color:#fff;border-radius:999px;padding:7px 14px;font-weight:750;cursor:pointer}
+
+/* 05.11 b */
+.banner__kick{position:static;display:inline-block;align-self:flex-start;white-space:nowrap;background:none;padding:0;font-size:clamp(11px,1.2vw,13px)}
+.banner__actions{display:flex;flex-wrap:nowrap;align-items:center;gap:16px}
+.banner__qr{flex:none;background:#fff;border-radius:16px;padding:8px;display:flex;flex-direction:column;align-items:center;color:var(--ink);font-size:11px;font-weight:700}
+.banner__qr img{width:104px;height:104px;display:block}
+.banner__btns{display:flex;flex-direction:column;gap:10px;flex:1;max-width:240px}
+.banner__btns .btn{width:100%;white-space:nowrap}
+.banner__plate{width:min(340px,34%);grid-template-columns:1fr !important}
+.plate__txt{display:flex;flex-direction:column;gap:8px}
+@media (max-width:759px){.banner__plate{width:auto}}
