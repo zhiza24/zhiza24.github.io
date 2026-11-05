@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Мост</title><script src="upd.js?v=1793896122"></script>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Мост</title><script src="upd.js?v=1793896884"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 <style>html,body{margin:0;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif}
 .w{max-width:520px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(110px + env(safe-area-inset-bottom))}
@@ -13,7 +13,7 @@
 .q{margin:14px 0 8px;font:700 22px 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center}
 .a{display:block;width:100%;margin:8px 0;padding:13px;border:1.5px solid #c9a46a;border-radius:14px;background:#24160c;color:#f4ecdf;font:600 15px Manrope;text-align:left}
 .fb{min-height:22px;text-align:center;color:#c9a46a;font-style:italic;font-size:14px}
-.go{display:block;width:100%;margin-top:14px;padding:14px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope}</style></head>
+.go{display:block;width:100%;margin-top:14px;padding:14px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope}</style><link rel="stylesheet" href="nav.css?v=2"></head>
 <body class='' data-page="task"><div class="w"><div class="cap">Мост над пропастью</div>
 <div class="gap"><div class="br" id="br"></div><div class="hr" id="hr">🧙</div></div>
 <div class="fb" id="fb">Каждый честный ответ кладет доску</div><div id="box"></div></div>
@@ -42,6 +42,6 @@ function done(){var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))|
 var top=Object.keys(sc).sort(function(a,b){return sc[b]-sc[a]})[0];P.handTop=top;localStorage.setItem('alch_profile',JSON.stringify(P));
 var p=GP();p.log.push({s:3,t:X.cap,r:'почерк сейчас: '+NM[top],d:new Date().toLocaleDateString('ru')});SP(p);
 box.innerHTML='<div class="q">'+(X.next?'Пройдено.':'Твой почерк действия: '+NM[top])+'</div><div class="fb">Награда: символ «'+X.sym+'», запись в Дневнике</div><button class="go" id="nx">Дальше</button>';
-nx.onclick=function(){location.href=X.next||'breath.html?n=crystal.html'}}
+nx.onclick=function(){location.href=X.next||'breath.html?n=sum.html'}}
 sh();
-</script><script src="nav.js?v=1793877093"></script></body></html>
+</script><script src="nav.js?v=5"></script></body></html>

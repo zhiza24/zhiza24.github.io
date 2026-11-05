@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><script src="upd.js?v=1793896122"></script><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet"><title>Хорошее</title><style>html,body{margin:0;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;overflow-x:hidden}
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><script src="upd.js?v=1793896884"></script><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet"><title>Хорошее</title><style>html,body{margin:0;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;overflow-x:hidden}
 .w{max-width:480px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(110px + env(safe-area-inset-bottom));text-align:center}
 .cap{display:table;margin:0 auto 6px;padding:8px 20px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 14px Manrope;letter-spacing:.08em;text-transform:uppercase}
 .sb{color:#e8cf9a;font-size:14px;margin-bottom:14px}.st{position:relative;height:300px}
@@ -6,7 +6,7 @@
 .bt{display:flex;gap:10px;margin-top:16px}.bt button{flex:1;padding:14px;border-radius:999px;font:800 15px Manrope;border:0}
 .no{background:#3a2418;color:#f0a090}.ye{background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606}
 .vo{min-height:24px;margin-top:12px;color:#f0a090;font-style:italic}.res{text-align:left;padding:18px;border-radius:16px;background:linear-gradient(#f6e6bf,#e2c78e);color:#3a2410;line-height:1.5}
-.res .q{font:700 22px 'Cormorant Garamond',serif;color:#6a3a12}.go{display:block;width:100%;margin-top:14px;padding:14px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope}</style></head>
+.res .q{font:700 22px 'Cormorant Garamond',serif;color:#6a3a12}.go{display:block;width:100%;margin-top:14px;padding:14px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope}</style><link rel="stylesheet" href="nav.css?v=2"></head>
 <body data-page="task"><div class="w"><div class="cap">Твое хорошее</div><div class="sb">Вправо: «беру, это мое». Влево: «не считается»</div>
 <div id="z"><div class="st" id="st"></div><div class="bt"><button class="no" id="bn">← Не считается</button><button class="ye" id="by">Беру →</button></div><div class="vo" id="vo"></div></div></div>
 <script src="stages.js?v=3"></script><script>
@@ -20,5 +20,5 @@ bn.onclick=function(){go(0)};by.onclick=function(){go(1)};
 function done(){var pc=Math.round(ok*100/E.length),no=E.length-ok,vs=Object.keys(V);
 var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}P.dq={accepted:pc,voices:vs};P.arts=P.arts||[];if(P.arts.indexOf('Зеркало')<0)P.arts.push('Зеркало');localStorage.setItem('alch_profile',JSON.stringify(P));
 var p=GP();p.log.push({s:3,t:'Твое хорошее',r:'принято '+pc+'%'+(vs.length?', голоса: '+vs.join(', '):''),d:new Date().toLocaleDateString('ru')});SP(p);
-z.innerHTML='<div class="res"><div class="q">Ты приняла '+pc+'% своего хорошего</div>'+(no?'<p>Ты смахнула '+no+' из '+E.length+'. Голоса, которые обесценивают:<br><b>'+vs.map(function(v){return '«'+v+'»'}).join('<br>')+'</b></p><p>Это дисквалификация позитивного: мозг не дает хорошему стать твоим. Здесь будет твое пояснение.</p>':'<p>Ты умеешь принимать хорошее. Это редкая сила.</p>')+'<p><small>Артефакт «Зеркало» у Героя · запись в Дневнике</small></p></div><button class="go" onclick="location.href=stepUrl(3)">Дальше</button>'}
-dr();</script><script src='nav.js?v=1'></script></body></html>
+z.innerHTML='<div class="res"><div class="q">Ты приняла '+pc+'% своего хорошего</div>'+(no?'<p>Ты смахнула '+no+' из '+E.length+'. Голоса, которые обесценивают:<br><b>'+vs.map(function(v){return '«'+v+'»'}).join('<br>')+'</b></p><p>Это дисквалификация позитивного: мозг не дает хорошему стать твоим. Здесь будет твое пояснение.</p>':'<p>Ты умеешь принимать хорошее. Это редкая сила.</p>')+'<p><small>Артефакт «Зеркало» у Героя · запись в Дневнике</small></p></div><button class="go" onclick="location.href='res.html'">Дальше</button>'}
+dr();</script><script src='nav.js?v=5'></script></body></html>
