@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Путь</title><script src="upd.js?v=1793897489"></script>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Путь</title><script src="upd.js?v=1793897621"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 <style>html,body{margin:0;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;overflow:hidden}
 .bg{position:fixed;inset:0;background-size:cover;background-position:center 25%;animation:zm 14s ease-out forwards,sw 6s ease-in-out infinite alternate}
@@ -15,7 +15,7 @@
 <div class="sc"><h2 id="h"></h2><p id="t"></p><button class="go" id="go"></button></div>
 <script src="stages.js?v=3"></script><script>
 var S={start:{img:'elder.jpg',h:'Старец',t:'Твой путь начинается. Перед тобой пять дорог, и у каждой свой дар и своя трудность. Выбери свою карту.',b:'Выбрать карту',bs:'Каждая карта имеет в себе сильные и слабые моменты',u:'choose.html'},
-road:{img:'map_bg.jpg',h:'Путь начался',t:'Ты ступила на свою тропу. Туман редеет, дорога ведет вперед, к пропасти, через которую нужно перейти по мосту.',b:'К мосту',u:'bridge.html',scr:1},
+road:{img:'map_bg.jpg',h:'Путь начался',t:'Ты ступила на свою тропу. Перед тобой туман. Рассей его, и откроется дорога к пропасти, через которую нужно перейти по мосту.',b:'К мосту',u:'bridge.html',scr:1},
 fog:{img:'map_bg.jpg',h:'Туман',t:'Ты перешла пропасть. Но впереди стеной поднимается густой туман, и дорогу не видно.',b:'Войти в туман',u:'bridge.html?k=fog'},
 fire:{img:'map_bg.jpg',h:'Поле',t:'Туман рассеялся. Ты вышла в поле, а вдалеке горит костер, и возле него люди.',b:'Подойти к костру',u:'bridge.html?k=fire'},
 lvl:{img:'elder.jpg',h:'Старец',t:'Ты прошла первый уровень: выбрала свою дорогу, перешла пропасть, прошла туман, согрелась у огня и собрала кристалл. А теперь награда: зажги свой путь, и получишь бонус.',b:'Зажечь фонари',u:'lanterns.html'},
@@ -23,10 +23,16 @@ pa:{img:'map_bg.jpg',h:'Зодчий',t:'Здравствуй, путник. Я 
 ego:{img:'elder.jpg',h:'Маг',t:'Ты отдохнула у огня. Теперь мы выявим твое ведущее фоновое состояние: то, что звучит в тебе с детства. Отвечай честно, здесь никто не судит.',b:'Пройти тест',u:'ego.html'}};
 var k0=0;var k=new URLSearchParams(location.search).get('k')||'start',s=S[k]||S.start;
 window.gNext=s.u;bg.style.backgroundImage='url(img/'+s.img+')';h.textContent=s.h;go.innerHTML=s.b+(s.bs?'<small style="display:block;font:600 13px Manrope;margin-top:3px">'+s.bs+'</small>':'');
-var n=0,tm;function ty(){t.textContent=s.t.slice(0,++n);if(n<s.t.length)tm=setTimeout(ty,35);else go.classList.add('on')}
-if(s.scr){var sc=document.querySelector('.sc');sc.style.animationPlayState='paused';cv.style.display=ch.style.display='block';var W=cv.width=innerWidth,Hh=cv.height=innerHeight,x=cv.getContext('2d');x.fillStyle='rgba(205,200,190,.55)';x.fillRect(0,0,W,Hh);for(var q=0;q<40;q++){var gx=Math.random()*W,gy=Math.random()*Hh,gr=80+Math.random()*160,G=x.createRadialGradient(gx,gy,0,gx,gy,gr);G.addColorStop(0,'rgba(235,232,225,.55)');G.addColorStop(1,'rgba(235,232,225,0)');x.fillStyle=G;x.fillRect(gx-gr,gy-gr,gr*2,gr*2)}x.globalCompositeOperation='destination-out';var cnt=0,dn=0;
-function er(e){if(dn)return;x.beginPath();x.arc(e.clientX,e.clientY,40,0,7);x.fill();ch.style.display='none';if(++cnt%15==0){var d=x.getImageData(0,0,W,Hh).data,c=0;for(var i=3;i<d.length;i+=400)if(d[i]<10)c++;if(c/(d.length/400)>.55){dn=1;cv.style.transition='opacity 1s';cv.style.opacity=0;setTimeout(function(){cv.remove()},1000);sc.style.animationPlayState='running';sc.style.animationDelay='0s';vb2();setTimeout(ty,900)}}}
-cv.addEventListener('pointerdown',function(e){er(e);cv.onpointermove=er});cv.addEventListener('pointerup',function(){cv.onpointermove=null})}else setTimeout(ty,2300);function vb2(){try{navigator.vibrate&&navigator.vibrate(50)}catch(e){}}try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}
+var n=0,tm;function ty(){t.textContent=s.t.slice(0,++n);if(n<s.t.length)tm=setTimeout(ty,35);else if(!s.scr||cl)go.classList.add('on')}
+if(s.scr){var cl=0,cnt=0;cv.style.display=ch.style.display='block';var W=cv.width=innerWidth,Hh=cv.height=innerHeight,x=cv.getContext('2d');x.fillStyle='rgba(205,200,190,.6)';x.fillRect(0,0,W,Hh);for(var q=0;q<40;q++){var gx=Math.random()*W,gy=Math.random()*Hh,gr=80+Math.random()*160,G=x.createRadialGradient(gx,gy,0,gx,gy,gr);G.addColorStop(0,'rgba(240,238,232,.6)');G.addColorStop(1,'rgba(240,238,232,0)');x.fillStyle=G;x.fillRect(gx-gr,gy-gr,gr*2,gr*2)}x.globalCompositeOperation='destination-out';
+var sk=document.createElement('button');sk.textContent='Дальше';sk.style.cssText='position:fixed;z-index:7;left:50%;transform:translateX(-50%);top:calc(60px + env(safe-area-inset-top));padding:10px 22px;border:1.5px solid #c99a45;border-radius:999px;background:rgba(58,36,12,.85);color:#f0c870;font:800 15px Manrope;display:none';document.body.appendChild(sk);setTimeout(function(){sk.style.display='block'},4000);
+function clr(){if(cl)return;cl=1;cv.style.transition='opacity 1s';cv.style.opacity=0;ch.style.display='none';sk.remove();setTimeout(function(){cv.remove()},1000);vb2();clearTimeout(tm);n=s.t.length-1;ty()}
+sk.onclick=function(e){e.stopPropagation();clr()};
+function er(px,py){if(cl)return;x.beginPath();x.arc(px,py,45,0,7);x.fill();ch.style.display='none';if(++cnt>70)clr()}
+cv.addEventListener('touchstart',function(e){e.preventDefault();var t0=e.touches[0];er(t0.clientX,t0.clientY)},{passive:false});
+cv.addEventListener('touchmove',function(e){e.preventDefault();for(var i=0;i<e.touches.length;i++)er(e.touches[i].clientX,e.touches[i].clientY)},{passive:false});
+var md=0;cv.addEventListener('mousedown',function(e){md=1;er(e.clientX,e.clientY)});cv.addEventListener('mousemove',function(e){if(md)er(e.clientX,e.clientY)});addEventListener('mouseup',function(){md=0});
+setTimeout(ty,600)}else setTimeout(ty,2300);function vb2(){try{navigator.vibrate&&navigator.vibrate(50)}catch(e){}}try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}
 document.body.addEventListener('click',function(e){if(e.target==go)return;clearTimeout(tm);n=s.t.length-1;ty()});
 go.onclick=function(){try{navigator.vibrate&&navigator.vibrate(20)}catch(e){}location.href=s.u||stepUrl(2)};
 </script><script src='nav.js?v=5'></script></body></html>
