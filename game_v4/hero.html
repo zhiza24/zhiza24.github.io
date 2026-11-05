@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1793877026"></script><meta http-equiv="Cache-Control" content="no-cache">
+<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1793877093"></script><meta http-equiv="Cache-Control" content="no-cache">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Герой</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000">
@@ -72,7 +72,7 @@ body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
 <div class="ov" id="ov"><div class="pp"><button class="x" type="button" id="x" aria-label="Закрыть">×</button><h3 id="ph"></h3><div class="bd" id="pb"></div></div></div>
 <div id="tk"><div><h3>Выполни задание</h3><p>Открой карту: светящийся круг ждет тебя.</p><button type="button" id="tkb">Открыть карту</button></div></div>
 <script src="arcana.js?v=8"></script>
-<script src="nav.js?v=8"></script>
+<script src="nav.js?v=1793877093"></script>
 <script>
 var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
 function red(n){while(n>22){n=String(n).split('').reduce(function(a,c){return a+ +c},0)}return n}
@@ -102,7 +102,7 @@ document.getElementById('go').onclick=function(){location.href='map.html?v=9'};
 var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>d)t=d;P.progress={d:d,t:t};localStorage.setItem('alch_profile',JSON.stringify(P));
 var b=document.getElementById('ts');b.innerHTML=T.map(function(n,i){var c=i<d?'dn':(i==d&&t>=d?'nx':'lk');return '<button type="button" class="'+c+'" data-i="'+i+'" title="'+n+'"><i>'+(i<d?'✓':i+1)+'</i>'+n+'</button>'}).join('');
 document.getElementById('tq').textContent=t;
-b.onclick=function(e){var x=e.target.closest('button');if(!x)return;var i=+x.dataset.i;if(i==0&&d>=1){location.href='wheel.html';return}if(t<d&&i==d){document.getElementById('tk').classList.add('on');return}window.gToast?gToast('Скоро'):alert('Скоро')};
+b.onclick=function(e){var x=e.target.closest('button');if(!x)return;var i=+x.dataset.i;if(i==0&&d>=1){location.href='choose.html';return}if(t<d&&i==d){document.getElementById('tk').classList.add('on');return}window.gToast?gToast('Скоро'):alert('Скоро')};
 var k=document.getElementById('tk');if(t<d&&d>1)k.classList.add('on');document.getElementById('tkb').onclick=function(){location.href='map.html?v=9'};k.onclick=function(e){if(e.target==k)k.classList.remove('on')};})();
 
 (function(){var N=['Точка 0 · Самоценность','Точка 0 · Фоновое состояние','Точка А · Привычный сценарий','Точка А · Реальная точка А','Точка Б · Желания и ценности','Точка Б · Выбор приоритета','Точка Ц · Действие и доказательства'];window.heroStepsDraw=function(){S=Math.max(S,+(P.steps||0));draw()};var O=['td','p3','p2','ar','p0','lv','p1'],S=+(P.steps||0);
