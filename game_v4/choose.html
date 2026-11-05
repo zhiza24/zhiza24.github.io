@@ -1,0 +1,38 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css"><title>Выбери карту</title>
+<style>html,body{margin:0;background:#120c07;color:#f4ecdf;font-family:Manrope,sans-serif}
+.w{max-width:520px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(110px + env(safe-area-inset-bottom))}
+.cap{display:table;margin:0 auto;padding:9px 22px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 15px Manrope;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 18px rgba(255,200,90,.4)}
+.sb{text-align:center;color:#c9a46a;font-size:13.5px;margin:8px 0 14px}
+.big{position:relative;border-radius:22px;overflow:hidden;border:2px solid #c9a46a;box-shadow:0 10px 30px rgba(0,0,0,.6);animation:in .45s ease}
+@keyframes in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.big img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
+.ov{position:absolute;left:0;right:0;bottom:0;padding:60px 16px 16px;background:linear-gradient(transparent,rgba(10,6,3,.95) 45%)}
+.ov h2{margin:0 0 8px;font:700 30px 'Cormorant Garamond',serif;color:#ffe9a8}
+.pm{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;line-height:1.4}
+.pm div{padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.06)}.pm b{display:block;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.p b{color:#9fe0a0}.m b{color:#f0a090}
+.th{display:flex;gap:8px;margin:14px 0 4px;justify-content:center}
+.th button{flex:1;max-width:90px;padding:0;border:2px solid #5a4028;border-radius:12px;overflow:hidden;background:none;cursor:pointer;opacity:.6;transition:.2s}
+.th button img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}.th button.on{border-color:#ffd877;opacity:1;transform:translateY(-4px);box-shadow:0 0 14px #ffcf5a}
+.go{display:block;width:100%;margin-top:14px;padding:16px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope;cursor:pointer}
+.eld{position:fixed;left:12px;bottom:calc(92px + env(safe-area-inset-bottom));display:flex;align-items:flex-end;gap:8px;z-index:40;pointer-events:none;animation:in .6s .3s both}
+.eld img{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid #c9a46a}
+.eld span{background:#f6e6bf;color:#3a2410;padding:9px 12px;border-radius:14px 14px 14px 2px;font-size:13.5px;max-width:230px}
+.fx{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:rgba(10,6,3,.85);font:700 26px 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;padding:30px}</style></head>
+<body data-page="task"><div class="w"><div class="cap">Выбери карту</div><div class="sb">У каждой карты свои трудности и свои дары. Плохих карт нет.</div>
+<div id="big"></div><div class="th" id="th"></div><button class="go" id="go">Выбрать эту карту</button></div>
+<div class="eld" id="eld"><img src="img/elder.jpg" alt=""><span>Каждая дорога ведет к цели. Выбери ту, что откликается сердцу.</span></div>
+<div class="fx" id="fx"></div>
+<script src="stages.js?v=3"></script><script>
+var C=[
+{k:'s',img:'card_s.jpg',n:'Тропа молний',p:'Быстрые решения, смелость, энергия старта',m:'Риск сорваться, не рассмотрев препятствия'},
+{k:'n',img:'card_n.jpg',n:'Туманная долина',p:'Тонкое чутье, ясность после наблюдения',m:'Путь не виден сразу, легко задержаться'},
+{k:'str',img:'card_str.jpg',n:'Горный перевал',p:'Свой путь, сверху видно всю картину',m:'Подъем тяжелый, строить приходится самой'},
+{k:'z',img:'card_z.jpg',n:'Река попутчиков',p:'Поддержка, течение несет вместе с другими',m:'Направление зависит от тех, кто рядом'}];
+var i=0;function dr(){var c=C[i];big.innerHTML='<div class="big"><img src="img/'+c.img+'" alt=""><div class="ov"><h2>'+c.n+'</h2><div class="pm"><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div></div></div></div>';
+th.innerHTML=C.map(function(x,j){return '<button class="'+(j==i?'on':'')+'" onclick="i='+j+';dr()"><img src="img/'+x.img+'" alt=""></button>'}).join('')}dr();
+var sx=0;big.addEventListener('touchstart',function(e){sx=e.touches[0].clientX});big.addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>40){i=(i+(d<0?1:C.length-1))%C.length;dr()}});
+go.onclick=function(){var c=C[i],p=GP();p.done[2]=1;p.log.push({s:2,t:'Выбор карты пути',r:c.n,d:new Date().toLocaleDateString('ru')});SP(p);
+try{var P=JSON.parse(localStorage.getItem('alch_profile'))||{};P.mapStyle=c.k;localStorage.setItem('alch_profile',JSON.stringify(P))}catch(e){}
+fx.style.display='flex';fx.innerHTML='Карта «'+c.n+'» твоя.<br><small style="font:600 14px Manrope;color:#c9a46a">Запись улетела в Дневник</small>';setTimeout(function(){location.href=stepUrl(2)},1800)};
+</script><script src="nav.js"></script></body></html>
