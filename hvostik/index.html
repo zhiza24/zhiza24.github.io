@@ -10,9 +10,9 @@
 <meta name="description" content="Забираем животных в беде, лечим, держим на передержке и находим им дом. Каждый случай ведем открыто: диагноз, сумма, результат.">
 <meta name="theme-color" content="#0E4F58">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/base.css?v=1793865020">
-<link rel="stylesheet" href="assets/landing.css?v=1793865020">
-<script>(function(){var V="1793865020";fetch(location.pathname+"?nc="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){var m=t.match(/\?v=(\d+)/);if(m&&m[1]!==V&&!sessionStorage.getItem("hv"+m[1])){sessionStorage.setItem("hv"+m[1],1);location.replace(location.pathname+"?v="+m[1]+location.hash)}}).catch(function(){})})();</script>
+<link rel="stylesheet" href="assets/base.css?v=1793865212">
+<link rel="stylesheet" href="assets/landing.css?v=1793865212">
+<script>(function(){var V="1793865212";fetch(location.pathname+"?nc="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){var m=t.match(/\?v=(\d+)/);if(m&&m[1]!==V&&!sessionStorage.getItem("hv"+m[1])){sessionStorage.setItem("hv"+m[1],1);location.replace(location.pathname+"?v="+m[1]+location.hash)}}).catch(function(){})})();</script>
 </head>
 <body>
 <a class="skip" href="#main">К содержанию</a>
@@ -58,7 +58,7 @@
 <section class="hero">
   <div class="wrap">
     <figure class="banner">
-      <img class="banner__img" src="assets/img/hero.jpg?v=1793865020" width="1600" height="900" alt="Волонтер фонда держит на руках щенка и котенка" fetchpriority="high" decoding="async">
+      <img class="banner__img" src="assets/img/hero.jpg?v=1793865212" width="1600" height="900" alt="Волонтер фонда держит на руках щенка и котенка" fetchpriority="high" decoding="async">
       <div class="banner__shade" aria-hidden="true"></div>
 
       <div class="banner__in">
@@ -154,6 +154,7 @@
 
     <div class="donate__panel">
       <p class="donate__ask">Сколько перевести?</p>
+      <p class="donate__gen">Можно перевести и просто в поддержку фонда, а мы направим деньги туда, где сейчас срочнее и важнее всего.</p>
       <div class="switch" role="group" aria-label="Периодичность перевода">
         <button class="switch__btn is-on" type="button" aria-pressed="true">Разово</button>
         <button class="switch__btn" type="button" aria-pressed="false" disabled>Ежемесячно <span class="tag tag--soft">скоро</span></button>
@@ -204,7 +205,7 @@
     </div>
 
     <figure class="opeka__photo">
-      <img src="assets/img/vetbox.jpg?v=1793865020" width="1200" height="900" alt="Пес на лечении в боксе ветклиники под капельницей" loading="lazy" decoding="async">
+      <img src="assets/img/vetbox.jpg?v=1793865212" width="1200" height="900" alt="Пес на лечении в боксе ветклиники под капельницей" loading="lazy" decoding="async">
       <figcaption>Рекс в стационаре ветклиники, курс капельниц</figcaption>
     </figure>
   </div>
@@ -224,7 +225,7 @@
     <div class="cards">
       <article class="card" data-story="dog1">
         <button class="card__media" type="button" aria-label="Открыть историю: Рекс">
-          <img src="assets/img/t-dog1.jpg?v=1793865020" width="600" height="450" alt="Пес Рекс лежит в вольере и смотрит в камеру" loading="lazy" decoding="async">
+          <img src="assets/img/t-dog1.jpg?v=1793865212" width="600" height="450" alt="Пес Рекс лежит в вольере и смотрит в камеру" loading="lazy" decoding="async">
           <span class="card__badge">На лечении</span>
         </button>
         <div class="card__body">
@@ -233,14 +234,13 @@
           <div class="progress progress--thin">
             <div class="progress__bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 45 процентов"><span style="width:45%"></span></div>
           </div>
-          <button class="btn btn--accent btn--sm btn--block card__help" type="button">Помочь</button>
-          <div class="card__pay" hidden></div>
+          <button class="btn btn--accent btn--sm btn--block" type="button" data-open="dog1">Помочь</button>
         </div>
       </article>
 
       <article class="card" data-story="cat1">
         <button class="card__media" type="button" aria-label="Открыть историю: Марта">
-          <img src="assets/img/t-cat1.jpg?v=1793865020" width="600" height="450" alt="Кошка Марта сидит на пледе у окна" loading="lazy" decoding="async">
+          <img src="assets/img/t-cat1.jpg?v=1793865212" width="600" height="450" alt="Кошка Марта сидит на пледе у окна" loading="lazy" decoding="async">
           <span class="card__badge card__badge--home">Ищет дом</span>
         </button>
         <div class="card__body">
@@ -249,14 +249,13 @@
           <div class="progress progress--thin">
             <div class="progress__bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 80 процентов"><span style="width:80%"></span></div>
           </div>
-          <button class="btn btn--accent btn--sm btn--block card__help" type="button">Помочь</button>
-          <div class="card__pay" hidden></div>
+          <button class="btn btn--accent btn--sm btn--block" type="button" data-open="cat1">Помочь</button>
         </div>
       </article>
 
       <article class="card" data-story="dog2">
         <button class="card__media" type="button" aria-label="Открыть историю: Булат">
-          <img src="assets/img/t-dog2.jpg?v=1793865020" width="600" height="450" alt="Пес Булат лежит на пледе и смотрит в камеру" loading="lazy" decoding="async">
+          <img src="assets/img/t-dog2.jpg?v=1793865212" width="600" height="450" alt="Пес Булат лежит на пледе и смотрит в камеру" loading="lazy" decoding="async">
           <span class="card__badge">Передержка</span>
         </button>
         <div class="card__body">
@@ -265,14 +264,13 @@
           <div class="progress progress--thin">
             <div class="progress__bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 30 процентов"><span style="width:30%"></span></div>
           </div>
-          <button class="btn btn--accent btn--sm btn--block card__help" type="button">Помочь</button>
-          <div class="card__pay" hidden></div>
+          <button class="btn btn--accent btn--sm btn--block" type="button" data-open="dog2">Помочь</button>
         </div>
       </article>
 
       <article class="card" data-story="cat2">
         <button class="card__media" type="button" aria-label="Открыть историю: Уголек">
-          <img src="assets/img/t-cat2.jpg?v=1793865020" width="600" height="450" alt="Черный котенок Уголек сидит в переноске на оранжевом пледе" loading="lazy" decoding="async">
+          <img src="assets/img/t-cat2.jpg?v=1793865212" width="600" height="450" alt="Черный котенок Уголек сидит в переноске на оранжевом пледе" loading="lazy" decoding="async">
           <span class="card__badge card__badge--new">Новый</span>
         </button>
         <div class="card__body">
@@ -281,8 +279,7 @@
           <div class="progress progress--thin">
             <div class="progress__bar" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" aria-label="Собрано 15 процентов"><span style="width:15%"></span></div>
           </div>
-          <button class="btn btn--accent btn--sm btn--block card__help" type="button">Помочь</button>
-          <div class="card__pay" hidden></div>
+          <button class="btn btn--accent btn--sm btn--block" type="button" data-open="cat2">Помочь</button>
         </div>
       </article>
     </div>
@@ -292,7 +289,7 @@
 <!-- ============ FINAL CTA ============ -->
 <section class="final">
   <div class="final__bg" aria-hidden="true">
-    <img src="assets/img/dog2.jpg?v=1793865020" width="1200" height="900" alt="" loading="lazy" decoding="async">
+    <img src="assets/img/dog2.jpg?v=1793865212" width="1200" height="900" alt="" loading="lazy" decoding="async">
   </div>
   <div class="wrap final__in">
     <span class="kicker kicker--light">Один перевод — одна спасенная жизнь</span>
@@ -397,7 +394,7 @@
     </div>
 
     <figure class="miska__photo">
-      <img src="assets/img/food.jpg?v=1793865020" width="1200" height="900" alt="Волонтер пересыпает корм из пакета в металлическую миску на складе" loading="lazy" decoding="async">
+      <img src="assets/img/food.jpg?v=1793865212" width="1200" height="900" alt="Волонтер пересыпает корм из пакета в металлическую миску на складе" loading="lazy" decoding="async">
       <figcaption>Разгрузка партии корма на складе партнера</figcaption>
     </figure>
   </div>
@@ -447,7 +444,7 @@
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
   <div class="modal__in">
-    <img class="modal__img" id="modalImg" src="assets/img/dog1.jpg?v=1793865020" width="1200" height="900" alt="">
+    <img class="modal__img" id="modalImg" src="assets/img/dog1.jpg?v=1793865212" width="1200" height="900" alt="">
     <div class="modal__body">
       <span class="kicker" id="modalKicker">История</span>
       <h2 id="modalTitle">Рекс</h2>
@@ -462,6 +459,6 @@
   </div>
 </dialog>
 
-<script src="assets/landing.js?v=1793865020" defer></script>
+<script src="assets/landing.js?v=1793865212" defer></script>
 </body>
 </html>
