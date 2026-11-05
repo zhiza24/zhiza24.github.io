@@ -1,2 +1,26 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="g.css?v=1"><link rel="stylesheet" href="nav.css"><title>Дневник</title></head><body data-page="diary"><div class="pg"><h1>Дневник игрока</h1><div class="sub">Сюда сами записываются результаты каждого испытания с простым разбором.</div><div class="card"><ul class="dl" id="l"></ul></div><a class="btn" href="path.html">К пути</a></div>
-<script src="stages.js?v=1"></script><script>var p=GP();document.getElementById('l').innerHTML=p.log.length?p.log.map(function(x){return '<li><b>'+x.t+'</b> · '+x.d+'<br>Ваш ответ: '+x.r+'<br><i style="color:#c9a46a">Здесь будет разбор простыми словами.</i></li>'}).join(''):'<li>Пока пусто. Пройдите первое испытание.</li>'</script><script src="nav.js"></script></body></html>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:wght@700&family=Manrope:wght@600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css"><title>Дневник</title>
+<style>html,body{margin:0;min-height:100%;background:#2a1a0c;font-family:Manrope,sans-serif}
+.bk{position:relative;margin:calc(18px + env(safe-area-inset-top)) 44px 110px 14px;min-height:calc(100vh - 150px);background:#2c1a0c;border-radius:10px 18px 18px 10px;padding:10px 10px 10px 18px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.pgp{position:relative;min-height:calc(100vh - 170px);background:repeating-linear-gradient(#f6ead0 0 29px,#d9c49a 29px 30px);border-radius:4px 12px 12px 4px;padding:22px 18px 22px 34px;box-sizing:border-box;color:#3a2410;font:500 21px/30px Caveat,cursive;box-shadow:inset 8px 0 14px -8px rgba(80,40,0,.5)}
+.pgp:before{content:'';position:absolute;left:22px;top:0;bottom:0;width:1.5px;background:#d58a7a}
+.pgp h2{font:700 30px/30px 'Cormorant Garamond',serif;margin:0 0 30px;color:#5a2e08}
+.pgp b{color:#7a3e0a}.e{margin-bottom:30px}.dt{font-size:16px;color:#8a6a40}
+.tabs{position:absolute;right:-40px;top:30px;display:flex;flex-direction:column;gap:8px}
+.tabs button{writing-mode:vertical-rl;border:0;padding:14px 8px;border-radius:0 10px 10px 0;font:800 12.5px Manrope;color:#3a2410;cursor:pointer;box-shadow:2px 2px 4px rgba(0,0,0,.4)}
+.tabs button.on{transform:translateX(5px);filter:brightness(1.1)}
+.lk{text-align:center;margin-top:60px}.lk div{font-size:70px}
+.nv{display:flex;justify-content:space-between;margin-top:10px}.nv button{border:0;background:none;font:700 22px Caveat;color:#7a3e0a;cursor:pointer}</style></head>
+<body data-page="diary"><div class="bk"><div class="tabs" id="tb"></div><div class="pgp" id="pg"></div></div>
+<script src="stages.js?v=2"></script><script>
+var T=[['Записи','#e9c46a'],['Инсайты','#e8a0a0'],['Вопросы','#9ec5d8'],['🔒 Тайная','#8a7a60']],cur=0,pi=0;
+var p=GP(),P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
+function pages(){var L=[];
+if(cur==0){var a='<h2>Паспорт игрока</h2>';var k=Object.keys(P).filter(function(x){return typeof P[x]!='object'});a+=k.length?k.map(function(x){return '<div><b>'+x+':</b> '+P[x]+'</div>'}).join(''):'<div>Пока пусто. Пройдите Ворота у Старца.</div>';if(P.skill)a+='<div class="e"><b>Колесо Фортуны:</b> '+P.skill.title+'</div>';L.push(a);
+p.log.forEach(function(x){L.push('<h2>'+x.t+'</h2><div class="dt">'+x.d+'</div><div class="e">Мой ответ: '+x.r+'</div>')})}
+else if(cur==1)L.push('<h2>Инсайты</h2>'+(p.log.length?p.log.map(function(x){return '<div class="e"><b>'+x.t+'.</b> Здесь будет вывод простыми словами.</div>'}).join(''):'<div>Инсайты появятся после первых испытаний.</div>'));
+else if(cur==2)L.push('<h2>Вопросы себе</h2><div class="e">Здесь будут вопросы на подумать после каждого шага.</div>');
+else L.push('<div class="lk"><div>🔒</div><h2>Тайная страница</h2>Здесь собирается вся ваша картина.<br>Откроется в Новом мире.</div>');return L}
+function dr(){var L=pages();if(pi>=L.length)pi=L.length-1;document.getElementById('pg').innerHTML=L[pi]+'<div class="nv"><button onclick="go(-1)">'+(pi>0?'← назад':'')+'</button><span class="dt">'+(pi+1)+' / '+L.length+'</span><button onclick="go(1)">'+(pi<L.length-1?'дальше →':'')+'</button></div>';
+document.getElementById('tb').innerHTML=T.map(function(t,i){return '<button style="background:'+t[1]+'" class="'+(i==cur?'on':'')+'" onclick="cur='+i+';pi=0;dr()">'+t[0]+'</button>'}).join('')}
+function go(d){pi+=d;if(pi<0)pi=0;dr()}dr();
+</script><script src="nav.js"></script></body></html>

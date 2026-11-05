@@ -39,11 +39,18 @@
 <div class="sov" id="sov"><div class="spp"><button class="sx" id="sx" type="button" aria-label="Свернуть">×</button><button class="sau" id="sau" type="button" aria-label="Слушать">♪</button><div class="sbd" id="sbd"></div></div></div>
 <div class="map" id="m">
 <div class="fog"></div>
-<a class="o step" href="#soon" data-x="218" data-y="310" data-r="62" data-n="1"></a>
-<a class="o step" href="#soon" data-x="364" data-y="404" data-r="62" data-n="2"></a>
-<a class="o step" href="#soon" data-x="218" data-y="519" data-r="62" data-n="3"></a>
-<a class="o step" href="#soon" data-x="366" data-y="631" data-r="62" data-n="4"></a>
-<a class="o step" href="#soon" data-x="205" data-y="764" data-r="62" data-n="5"></a>
+<a class="o step" href="#" data-x="205" data-y="764" data-r="44" data-k="0"></a>
+<a class="o step" href="#" data-x="257" data-y="720" data-r="44" data-k="1"></a>
+<a class="o step" href="#" data-x="310" data-y="676" data-r="44" data-k="2"></a>
+<a class="o step" href="#" data-x="363" data-y="633" data-r="44" data-k="3"></a>
+<a class="o step" href="#" data-x="313" data-y="591" data-r="44" data-k="4"></a>
+<a class="o step" href="#" data-x="259" data-y="550" data-r="44" data-k="5"></a>
+<a class="o step" href="#" data-x="231" data-y="508" data-r="44" data-k="6"></a>
+<a class="o step" href="#" data-x="285" data-y="466" data-r="44" data-k="7"></a>
+<a class="o step" href="#" data-x="338" data-y="423" data-r="44" data-k="8"></a>
+<a class="o step" href="#" data-x="333" data-y="384" data-r="44" data-k="9"></a>
+<a class="o step" href="#" data-x="275" data-y="347" data-r="44" data-k="10"></a>
+<a class="o step" href="#" data-x="218" data-y="310" data-r="44" data-k="11"></a>
 <div class="dock">
 <a class="cmp" href="#soon" aria-label="Компас"><img src="img/compass.png" alt=""></a>
 <a class="start" href="form.html"><span>Старт</span></a>
@@ -55,7 +62,7 @@ function lay(){var m=document.getElementById('m'),W=m.clientWidth,H=m.clientHeig
 m.style.backgroundSize=576*s+'px '+1024*s+'px';m.style.backgroundPosition=ox+'px '+oy+'px';
 var c=document.getElementById('cont');c.style.left=Math.min(W-100,ox+400*s)+'px';c.style.top=(oy+519*s)+'px';m.querySelectorAll('.o').forEach(function(e){var d=e.dataset;e.style.left=(ox+d.x*s)+'px';e.style.top=(oy+d.y*s)+'px';e.style.width=e.style.height=(d.r*s)+'px'})}
 addEventListener('resize',lay);lay();
-try{(function(){var P=JSON.parse(localStorage.getItem('alch_profile'))||{};var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>=d)return;var ss=document.querySelectorAll('.o.step'),c=ss[ss.length-1-t];if(!c)return;c.classList.add('nxt');c.addEventListener('click',function(e){if(!c.classList.contains('nxt'))return;e.stopImmediatePropagation();e.preventDefault();P.progress={d:d,t:t+1};localStorage.setItem('alch_profile',JSON.stringify(P));c.classList.remove('nxt');c.classList.add('done');window.gToast&&gToast('Задание выполнено! Новый тест открыт');setTimeout(function(){location.href='hero.html?v=8'},1400)},true)})()}catch(e){}
+try{(function(){return;var P=JSON.parse(localStorage.getItem('alch_profile'))||{};var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>=d)return;var ss=document.querySelectorAll('.o.step'),c=ss[ss.length-1-t];if(!c)return;c.classList.add('nxt');c.addEventListener('click',function(e){if(!c.classList.contains('nxt'))return;e.stopImmediatePropagation();e.preventDefault();P.progress={d:d,t:t+1};localStorage.setItem('alch_profile',JSON.stringify(P));c.classList.remove('nxt');c.classList.add('done');window.gToast&&gToast('Задание выполнено! Новый тест открыт');setTimeout(function(){location.href='hero.html?v=8'},1400)},true)})()}catch(e){}
 </script>
 <script>
 var SCROLL_TITLE='Послание';
@@ -70,4 +77,8 @@ document.getElementById('scl').onclick=function(){o.classList.contains('on')?cl(
 document.getElementById('sx').onclick=cl;o.onclick=function(e){if(e.target==o)cl()};})();
 </script>
 <script src="nav.js?v=8"></script>
-</body></html>
+<style>.o.step{border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,240,190,.55),rgba(255,200,90,.15) 60%,transparent 70%);box-shadow:0 0 14px rgba(255,210,110,.45)}.o.step.dn{background:radial-gradient(circle,#ffe9a8,#e0a940 55%,transparent 72%);box-shadow:0 0 20px #ffcf5a}.o.step.cur{animation:gl 1.4s infinite}@keyframes gl{50%{box-shadow:0 0 34px 10px #ffd877}}.o.step.lk{opacity:.35;filter:grayscale(1)}</style>
+<script src="stages.js?v=2"></script><script>(function(){var p=GP();try{var P=JSON.parse(localStorage.getItem('alch_profile'))||{};if(P.skill&&!p.done[0]){p.done[0]=1;SP(p)}}catch(e){}
+var cur=0;while(cur<12&&p.done[ORD[cur]])cur++;
+document.querySelectorAll('.o.step').forEach(function(e){var k=+e.dataset.k;e.href=stepUrl(k);e.classList.add(k<cur?'dn':(k==cur?'cur':'lk'));e.title=STEP_NAMES[k]});
+var c=document.getElementById('cont');c.href=cur<12?stepUrl(cur):'reactor.html'})()</script></body></html>

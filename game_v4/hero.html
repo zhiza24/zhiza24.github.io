@@ -96,14 +96,14 @@ var L=[{t:'Твоя сила',c:POW[k]?'<p>'+POW[k]+'</p>':'<p>Пройди Ко
 var ov=document.getElementById('ov');
 document.getElementById('scr').onclick=function(e){var b=e.target.closest('.sl[data-i]');if(!b)return;var s=L[+b.dataset.i];document.getElementById('ph').textContent=s.t;document.getElementById('pb').innerHTML=s.c;ov.classList.add('on')};
 document.getElementById('x').onclick=function(){ov.classList.remove('on')};ov.onclick=function(e){if(e.target==ov)ov.classList.remove('on')};
-document.getElementById('go').onclick=function(){location.href='path.html'};
+document.getElementById('go').onclick=function(){location.href='map.html?v=9'};
 
 (function(){var T=['Колесо судьбы','Точка отсчета','Кривой мир','Колесо жизни','Желания','Ценности','Направления','Свиток Дизайна'];
 var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>d)t=d;P.progress={d:d,t:t};localStorage.setItem('alch_profile',JSON.stringify(P));
 var b=document.getElementById('ts');b.innerHTML=T.map(function(n,i){var c=i<d?'dn':(i==d&&t>=d?'nx':'lk');return '<button type="button" class="'+c+'" data-i="'+i+'" title="'+n+'"><i>'+(i<d?'✓':i+1)+'</i>'+n+'</button>'}).join('');
 document.getElementById('tq').textContent=t;
 b.onclick=function(e){var x=e.target.closest('button');if(!x)return;var i=+x.dataset.i;if(i==0&&d>=1){location.href='wheel.html';return}if(t<d&&i==d){document.getElementById('tk').classList.add('on');return}window.gToast?gToast('Скоро'):alert('Скоро')};
-var k=document.getElementById('tk');if(t<d&&d>1)k.classList.add('on');document.getElementById('tkb').onclick=function(){location.href='path.html'};k.onclick=function(e){if(e.target==k)k.classList.remove('on')};})();
+var k=document.getElementById('tk');if(t<d&&d>1)k.classList.add('on');document.getElementById('tkb').onclick=function(){location.href='map.html?v=9'};k.onclick=function(e){if(e.target==k)k.classList.remove('on')};})();
 
 (function(){var N=['Точка 0 · Самоценность','Точка 0 · Фоновое состояние','Точка А · Привычный сценарий','Точка А · Реальная точка А','Точка Б · Желания и ценности','Точка Б · Выбор приоритета','Точка Ц · Действие и доказательства'];window.heroStepsDraw=function(){S=Math.max(S,+(P.steps||0));draw()};var O=['td','p3','p2','ar','p0','lv','p1'],S=+(P.steps||0);
 function draw(){O.forEach(function(id,i){var e=document.getElementById(id);if(!e)return;e.className='c m st '+(i<S?'dn':i==S?'nx':'lk');e.textContent=i<S?'✓':i+1;e.title=N[i]})}draw();

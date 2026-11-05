@@ -18,3 +18,7 @@ var ST=[
 ];
 function GP(){try{return JSON.parse(localStorage.getItem('alch_path'))||{done:{},log:[]}}catch(e){return{done:{},log:[]}}}
 function SP(p){localStorage.setItem('alch_path',JSON.stringify(p))}
+// 12 шагов пути героя: номер на карте -> испытание
+var ORD=[0,2,3,1,4,5,7,8,12,10,14,15];
+var STEP_NAMES=['Обычный мир','Зов','Отказ','Наставник','Порог','Испытания','Пещера','Главное испытание','Награда','Обратный путь','Воскрешение','Новый мир'];
+function stepUrl(i){var id=ORD[i];return id==0?'form.html':(id==15?'reactor.html':'stage.html?s='+id)}
