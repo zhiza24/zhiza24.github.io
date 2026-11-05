@@ -1,0 +1,25 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Путь</title><script src="upd.js?v=1793885895"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
+<style>html,body{margin:0;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;overflow:hidden}
+.bg{position:fixed;inset:0;background-size:cover;background-position:center 25%;animation:zm 14s ease-out forwards,sw 6s ease-in-out infinite alternate}
+@keyframes zm{from{transform:scale(1.15);filter:blur(8px) brightness(.3)}to{transform:scale(1);filter:none}}
+@keyframes sw{to{background-position:center 30%}}
+.fog{position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(12,8,4,.9) 85%),linear-gradient(transparent 45%,#0c0804 92%);pointer-events:none}
+.fg{position:fixed;inset:0;background:#d8cbb0;animation:fo 2.2s ease forwards;pointer-events:none}@keyframes fo{to{opacity:0}}
+.sc{position:fixed;left:14px;right:14px;bottom:calc(24px + env(safe-area-inset-bottom));max-width:480px;margin:0 auto;padding:20px 18px 18px;border-radius:16px;background:linear-gradient(#f6e6bf,#e2c78e);color:#3a2410;box-shadow:0 0 40px rgba(255,200,90,.35);transform:translateY(130%);animation:up .8s 1.6s cubic-bezier(.2,1.3,.4,1) forwards}
+@keyframes up{to{transform:none}}
+.sc h2{margin:0 0 8px;font:700 25px 'Cormorant Garamond',serif;color:#6a3a12}.sc p{margin:0 0 14px;font-size:16px;line-height:1.45;min-height:3em}
+.go{display:block;width:100%;padding:14px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope;opacity:0;transition:.4s;box-shadow:0 0 18px #ffcf5a}.go.on{opacity:1}
+.sk{position:fixed;top:calc(12px + env(safe-area-inset-top));right:14px;color:#c9a46a;font-size:13px;opacity:.7}</style></head><body>
+<div class="bg" id="bg"></div><div class="fog"></div><div class="fg"></div><div class="sk">тап, чтобы ускорить</div>
+<div class="sc"><h2 id="h"></h2><p id="t"></p><button class="go" id="go"></button></div>
+<script src="stages.js?v=3"></script><script>
+var S={start:{img:'elder.jpg',h:'Старец',t:'Твой путь начинается. Перед тобой пять дорог, и у каждой свой дар и своя трудность. Выбери свою карту.',b:'Выбрать карту',u:'choose.html'},
+road:{img:'map_bg.jpg',h:'Путь начался',t:'Ты ступила на свою тропу. Туман редеет, дорога ведет вперед, к пропасти, через которую нужно перейти по мосту.',b:'Идти дальше',u:null}};
+var k=new URLSearchParams(location.search).get('k')||'start',s=S[k]||S.start;
+bg.style.backgroundImage='url(img/'+s.img+')';h.textContent=s.h;go.textContent=s.b;
+var n=0,tm;function ty(){t.textContent=s.t.slice(0,++n);if(n<s.t.length)tm=setTimeout(ty,35);else go.classList.add('on')}
+setTimeout(ty,2300);try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}
+document.body.addEventListener('click',function(e){if(e.target==go)return;clearTimeout(tm);n=s.t.length-1;ty()});
+go.onclick=function(){try{navigator.vibrate&&navigator.vibrate(20)}catch(e){}location.href=s.u||stepUrl(2)};
+</script></body></html>
