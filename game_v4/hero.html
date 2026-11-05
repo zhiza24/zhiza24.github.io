@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1793877093"></script><meta http-equiv="Cache-Control" content="no-cache">
+<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1793877468"></script><meta http-equiv="Cache-Control" content="no-cache">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Герой</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000">
@@ -67,7 +67,7 @@ body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
 <div class="c cd sl" data-i="1" style="left:6.51%;top:71.00%;width:28.91%;height:7.13%;font-size:3.12cqw;cursor:pointer"><b>Свиток</b><span>Твой аркан</span></div>
 <div class="c lb" style="left:52.08%;top:69.63%;width:11.72%;height:2.25%;font-size:1.69cqw">Качества</div>
 <div class="c ql" id="ql" style="left:51.43%;top:73.44%;width:39.97%;height:5.08%;font-size:2.21cqw"></div>
-<div class="c go" id="go" style="left:50.78%;top:93.07%;width:31.51%;height:4.79%;font-size:3.0cqw">ПРИНЯТЬ ПУТЬ</div>
+<div class="c go" id="go" style="left:50.78%;top:93.07%;width:31.51%;height:4.79%;font-size:3.0cqw">НАЧАТЬ ПУТЬ</div>
 </div></div>
 <div class="ov" id="ov"><div class="pp"><button class="x" type="button" id="x" aria-label="Закрыть">×</button><h3 id="ph"></h3><div class="bd" id="pb"></div></div></div>
 <div id="tk"><div><h3>Выполни задание</h3><p>Открой карту: светящийся круг ждет тебя.</p><button type="button" id="tkb">Открыть карту</button></div></div>
@@ -96,7 +96,7 @@ var L=[{t:'Твоя сила',c:POW[k]?'<p>'+POW[k]+'</p>':'<p>Пройди Ко
 var ov=document.getElementById('ov');
 document.getElementById('scr').onclick=function(e){var b=e.target.closest('.sl[data-i]');if(!b)return;var s=L[+b.dataset.i];document.getElementById('ph').textContent=s.t;document.getElementById('pb').innerHTML=s.c;ov.classList.add('on')};
 document.getElementById('x').onclick=function(){ov.classList.remove('on')};ov.onclick=function(e){if(e.target==ov)ov.classList.remove('on')};
-document.getElementById('go').onclick=function(){location.href='map.html?v=9'};
+document.getElementById('go').onclick=function(){location.href='choose.html'};
 
 (function(){var T=['Колесо судьбы','Точка отсчета','Кривой мир','Колесо жизни','Желания','Ценности','Направления','Свиток Дизайна'];
 var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>d)t=d;P.progress={d:d,t:t};localStorage.setItem('alch_profile',JSON.stringify(P));
@@ -112,4 +112,4 @@ function draw(){O.forEach(function(id,i){var e=document.getElementById(id);if(!e
 <style>.nxs{position:fixed;left:16px;right:16px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:55;display:block;text-align:center;padding:16px;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope,sans-serif;text-decoration:none;box-shadow:0 0 0 3px #ffd877,0 8px 24px rgba(255,200,90,.6);animation:nxu .6s ease-out both,nxp 1.8s 1s infinite;opacity:0}
 .nxs small{display:block;font-size:12px;font-weight:600;opacity:.8}
 @keyframes nxu{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}@keyframes nxp{50%{box-shadow:0 0 0 3px #ffd877,0 0 34px 10px rgba(255,210,110,.8)}}</style>
-<script src="stages.js?v=3"></script><script>setTimeout(function(){try{var p=GP(),P=JSON.parse(localStorage.getItem('alch_profile'))||{};if(!p.done[0]){p.done[0]=1;SP(p)}var c=0;while(c<12&&p.done[ORD[c]])c++;if(c>=12)return;var a=document.createElement('a');a.className='nxs';a.href=stepUrl(c);a.innerHTML=(c==1?'Начать путь →':'Дальше: шаг '+(c+1)+' →')+'<small>'+(c==1?'Выбери свою карту':STEP_NAMES[c])+'</small>';a.style.opacity=1;document.body.appendChild(a)}catch(e){}},1200)</script></body></html>
+<script src="stages.js?v=3"></script><script>try{var p=GP();if(!p.done[0]){p.done[0]=1;SP(p)}}catch(e){}</script></body></html>
