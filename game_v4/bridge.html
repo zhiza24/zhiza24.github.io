@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Мост</title><script src="upd.js?v=1793897991"></script>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Мост</title><script src="upd.js?v=1793898138"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 <style>html,body{margin:0;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif}
 .w{max-width:520px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(110px + env(safe-area-inset-bottom))}
@@ -29,13 +29,13 @@ fog:{cap:'Густой туман',fb:'Каждый ответ рассеива�
 ['Данных катастрофически мало.',[['Решаю по первому чувству','s'],['Собираю каждую мелочь','n'],['Додумываю сама','str'],['Спрашиваю тех, кто прошел','z']]],
 ['Из тумана проступили горы.',[['Сразу к вершине','s'],['Разглядываю каждый перевал','n'],['Прокладываю свою тропу','str'],['Ищу чужие следы','z']]]]},
 fire:{cap:'Костер в поле',fb:'Каждый ответ разжигает огонь',sym:'Огонь',next:null,Q:[
-['Впереди горит костер, у него люди. Ты:',[['Иду прямо к ним','s'],['Смотрю издалека, кто там','n'],['Развожу свой костер рядом','str'],['Подсаживаюсь и спрашиваю дорогу','z']]],
-['Тебя неожиданно спросили при всех.',[['Отвечаю сразу','s'],['Беру паузу подумать','n'],['Говорю по-своему','str'],['Смотрю, что скажут другие','z']]],
-['У костра тебя не заметили.',[['Заявляю о себе','s'],['Наблюдаю дальше','n'],['Ухожу делать свое','str'],['Подстраиваюсь под общий тон','z']]]]}};
+['У костра сидит Старец. Ты:',[['Подхожу и сразу спрашиваю','s'],['Наблюдаю, что он делает и кто он','n'],['Иду своим путем','str'],['Подсаживаюсь и жду, что он скажет','z']]],
+['Старец вдруг поднял глаза и спросил тебя о чем-то.',[['Отвечаю сразу','s'],['Беру паузу подумать','n'],['Говорю по-своему','str'],['Смотрю, что скажут другие','z']]],
+['Старец тебя будто не замечает.',[['Заявляю о себе','s'],['Наблюдаю дальше','n'],['Ухожу делать свое','str'],['Подстраиваюсь под общий тон','z']]]]}};
 var NM={s:'Реактивный',n:'Наблюдательный',str:'Созидательный',z:'Переходный'};
 var kk=new URLSearchParams(location.search).get('k')||'bridge',X=T[kk]||T.bridge,Q=X.Q;
 document.querySelector('.cap').textContent=X.cap;fb.textContent=X.fb;
-var q=0,R=[];br.innerHTML=Q.map(function(){return '<div class="pl"></div>'}).join('');
+var q=0,R=[];br.innerHTML=Q.map(function(){return '<div class="pl"></div>'}).join('');try{var f0=sessionStorage.getItem('fire0');if(kk=='fire'&&f0){sessionStorage.removeItem('fire0');R.push(f0);br.children[0].classList.add('on');q=1;setTimeout(function(){hr.style.left=(4+80/Q.length)+'%'},100)}}catch(e){}
 function sh(){if(q>=Q.length){done();return}var f=Q[q];box.innerHTML='<div class="q">'+f[0]+'</div>'+f[1].map(function(a){return '<button class="a" data-k="'+a[1]+'">'+a[0]+'</button>'}).join('');
 box.querySelectorAll('.a').forEach(function(b){b.onclick=function(){R.push(b.dataset.k);br.children[q].classList.add('on');try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}fb.textContent='Принято';q++;hr.style.left=(4+q*80/Q.length)+'%';setTimeout(sh,600)}})}
 function done(){var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}var sc=P.hand||{s:0,n:0,str:0,z:0};R.forEach(function(k){sc[k]++});P.hand=sc;P.arts=P.arts||[];if(P.arts.indexOf(X.sym)<0)P.arts.push(X.sym);
