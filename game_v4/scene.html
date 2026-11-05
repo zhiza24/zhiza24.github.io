@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Путь</title><script src="upd.js?v=1793896884"></script>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Путь</title><script src="upd.js?v=1793897236"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 <style>html,body{margin:0;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;overflow:hidden}
 .bg{position:fixed;inset:0;background-size:cover;background-position:center 25%;animation:zm 14s ease-out forwards,sw 6s ease-in-out infinite alternate}
@@ -11,13 +11,13 @@
 .sc h2{margin:0 0 8px;font:700 25px 'Cormorant Garamond',serif;color:#6a3a12}.sc p{margin:0 0 14px;font-size:16px;line-height:1.45;min-height:3em}
 .go{display:block;width:100%;padding:14px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope;opacity:0;transition:.4s;box-shadow:0 0 18px #ffcf5a}.go.on{opacity:1}
 .sk{position:fixed;top:calc(56px + env(safe-area-inset-top));right:14px;color:#c9a46a;font-size:13px;opacity:.7}</style><link rel="stylesheet" href="nav.css?v=2"></head><body data-page="task">
-<div class="bg" id="bg"></div><div class="fog"></div><div class="fg"></div><canvas id="cv" style="position:fixed;inset:0;z-index:5;touch-action:none;display:none"></canvas><div id="ch" style="position:fixed;top:40%;left:0;right:0;z-index:6;font:700 26px Cormorant Garamond,serif;color:#fff;text-shadow:0 0 12px #000;display:none;pointer-events:none">Сотри туман пальцем</div><div class="sk">тап, чтобы ускорить</div>
+<div class="bg" id="bg"></div><div class="fog"></div><div class="fg"></div><canvas id="cv" style="position:fixed;inset:0;z-index:5;touch-action:none;display:none"></canvas><div id="ch" style="position:fixed;top:40%;left:0;right:0;z-index:6;font:700 26px Cormorant Garamond,serif;color:#fff;text-shadow:0 0 12px #000;display:none;pointer-events:none"><div style="font-size:54px;animation:fg 1.4s ease-in-out infinite alternate">👆</div>Проведи пальцем по экрану</div><style>@keyframes fg{from{transform:translateX(-70px) rotate(-12deg)}to{transform:translateX(70px) rotate(12deg)}}</style><div class="sk">тап, чтобы ускорить</div>
 <div class="sc"><h2 id="h"></h2><p id="t"></p><button class="go" id="go"></button></div>
 <script src="stages.js?v=3"></script><script>
 var S={start:{img:'elder.jpg',h:'Старец',t:'Твой путь начинается. Перед тобой пять дорог, и у каждой свой дар и своя трудность. Выбери свою карту.',b:'Выбрать карту',u:'choose.html'},
-road:{img:'map_bg.jpg',h:'Путь начался',t:'Ты ступила на свою тропу. Туман редеет, дорога ведет вперед, к пропасти, через которую нужно перейти по мосту.',b:'К мосту',u:'bridge.html'},
+road:{img:'map_bg.jpg',h:'Путь начался',t:'Ты ступила на свою тропу. Туман редеет, дорога ведет вперед, к пропасти, через которую нужно перейти по мосту.',b:'К мосту',u:'bridge.html',scr:1},
 fog:{img:'map_bg.jpg',h:'Туман',t:'Ты перешла пропасть. Но впереди стеной поднимается густой туман, и дорогу не видно.',b:'Войти в туман',u:'bridge.html?k=fog'},
-fire:{img:'map_bg.jpg',h:'Поле',t:'Туман рассеялся. Ты вышла в поле, а вдалеке горит костер, и возле него люди.',b:'Подойти к костру',u:'bridge.html?k=fire',scr:1},
+fire:{img:'map_bg.jpg',h:'Поле',t:'Туман рассеялся. Ты вышла в поле, а вдалеке горит костер, и возле него люди.',b:'Подойти к костру',u:'bridge.html?k=fire'},
 lvl:{img:'elder.jpg',h:'Старец',t:'Ты прошла первый уровень: выбрала свою дорогу, перешла пропасть, прошла туман, согрелась у огня и собрала кристалл. А теперь награда: зажги свой путь, и получишь бонус.',b:'Зажечь фонари',u:'lanterns.html'},
 pa:{img:'map_bg.jpg',h:'Зодчий',t:'Здравствуй, путник. Я Зодчий восьми башен. Каждая башня это сфера твоей жизни. Покажи мне, насколько каждая из них сейчас наполнена, от 1 до 10. Это твоя Точка А.',b:'Заполнить колесо',u:'wheel8.html'},
 ego:{img:'elder.jpg',h:'Маг',t:'Ты отдохнула у огня. Теперь мы выявим твое ведущее фоновое состояние: то, что звучит в тебе с детства. Отвечай честно, здесь никто не судит.',b:'Пройти тест',u:'ego.html'}};
