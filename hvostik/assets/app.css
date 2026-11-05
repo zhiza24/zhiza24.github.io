@@ -204,3 +204,7 @@ details.qa .qa__body b{color:var(--ink)}
 /* app footer */
 .appfoot{padding:26px 0 8px;font-size:12.5px;line-height:1.5;color:var(--muted)}
 .appfoot a{color:var(--teal);border-bottom:1px solid var(--line-strong)}
+
+/* air on sides */
+body.app .wrap{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right));box-sizing:border-box}
+@media (min-width:760px){body.app .wrap{padding-left:32px;padding-right:32px}}
