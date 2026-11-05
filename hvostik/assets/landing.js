@@ -140,6 +140,7 @@
         mBar=document.getElementById('modalBar'), mFill=document.getElementById('modalBarFill'),
         mSum=document.getElementById('modalSum'), mPct=document.getElementById('modalPct');
 
+    window.__openCard=function(k){openCard(k);};
     function openCard(key){
       var d=data[key]; if(!d)return;
       mImg.src=d.img; mImg.alt=d.alt;
@@ -148,6 +149,7 @@
       mFill.style.width=d.pct+'%';
       mBar.setAttribute('aria-valuenow',String(d.pct));
       mSum.textContent=d.sum; mPct.textContent=d.pct+'%';
+      buildPay(document.getElementById('modalPay'),d.title);
       dlg.showModal();
     }
 
@@ -163,6 +165,33 @@
     });
     dlg.addEventListener('keydown',function(e){if(e.key==='Escape'){dlg.close();}});
   }
+
+
+  /* per-pet pay */
+  function buildPay(box,name){
+    if(!box)return;
+    box.innerHTML='<div class="pay__amts"><button type="button" data-a="300">300 ₽</button><button type="button" data-a="700" class="is-on">700 ₽</button><button type="button" data-a="1500">1 500 ₽</button><button type="button" data-a="own">Любая сумма</button></div>'+
+      '<div class="pay__card">Переведите <span class="pay__sum">700 ₽</span> для: '+name+'<b>2200 1520 5952 1024</b>Карта Альфа-Банк фонда</div>'+
+      '<button class="btn btn--accent btn--sm btn--block pay__copy" type="button">Скопировать номер карты</button>';
+    var sum=box.querySelector('.pay__sum');
+    box.querySelectorAll('.pay__amts button').forEach(function(b){b.addEventListener('click',function(){
+      box.querySelectorAll('.pay__amts button').forEach(function(x){x.classList.remove('is-on');});
+      b.classList.add('is-on'); var a=b.getAttribute('data-a');
+      if(a==='own'){var n=parseInt(String(window.prompt('Сумма в рублях','1000')||'').replace(/[^0-9]/g,''),10)||1000;b.textContent=n.toLocaleString('ru-RU')+' ₽';sum.textContent=b.textContent;}
+      else sum.textContent=b.textContent;
+    });});
+    var cp=box.querySelector('.pay__copy');
+    cp.addEventListener('click',function(){copyText('2200152059521024').then(function(){cp.textContent='Номер скопирован';});});
+  }
+  document.querySelectorAll('.card').forEach(function(card){
+    var btn=card.querySelector('.card__help'),box=card.querySelector('.card__pay');
+    if(!btn||!box)return;
+    btn.addEventListener('click',function(){
+      if(box.hidden){buildPay(box,card.querySelector('.card__title').textContent);box.hidden=false;btn.textContent='Скрыть';}
+      else{box.hidden=true;btn.textContent='Помочь';}
+    });
+  });
+  document.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){if(window.__openCard)window.__openCard(b.getAttribute('data-open'));});});
 
   /* reveal on scroll */
   if('IntersectionObserver' in window){
