@@ -1,0 +1,1 @@
+(function(){fetch('ver.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(v){v=v.trim();var o=localStorage.getItem('alch_ver');if(o!==v){localStorage.setItem('alch_ver',v);var u=new URL(location.href);if(u.searchParams.get('u')!==v){u.searchParams.set('u',v);location.replace(u.toString())}}}).catch(function(){})})();
