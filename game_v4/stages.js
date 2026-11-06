@@ -16,9 +16,12 @@ var ST=[
 {id:14,ch:'Глава V · Цель',place:'Врата замка',keeper:'Страж Эго (босс)',ico:'🛡',ref:'Бой с боссом',mech:'boss',test:'Финальное испытание',task:'Страж Эго говорит голосом вашего узора. Ответьте ему из позиции Наблюдателя.',note:'Собираем все результаты. Страж становится помощником.'},
 {id:15,ch:'Реактор · 21 день',place:'Реактор',keeper:'Архитектор (вы)',ico:'☀',ref:'Duolingo: серия дней',mech:'reactor',test:'Пересборка за 21 день',task:'Ежедневный ритуал, кнопка «Меня накрыло» и повторный замер на 21-й день.',note:'Отдельный экран-трекер.'}
 ];
-function GP(){try{return JSON.parse(localStorage.getItem('alch_path'))||{done:{},log:[]}}catch(e){return{done:{},log:[]}}}
-function SP(p){localStorage.setItem('alch_path',JSON.stringify(p))}
+function GP(){var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}if(!P.path){try{P.path=JSON.parse(localStorage.getItem('alch_path'))}catch(e){}}var p=P.path||{done:{},log:[]};p.done=p.done||{};p.log=p.log||[];
+ // карта считает пройденные вехи по единой линии GFLOW
+ var mx=(P.flow&&P.flow.max)||0;if(window.GFLOW)MSU.forEach(function(u,k){var i=GFLOW.findIndex(function(s){return s.u===u});p.done['m'+k]=i>=0&&mx>=i?1:0});return p}
+function SP(p){var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}P.path=p;localStorage.setItem('alch_profile',JSON.stringify(P));localStorage.removeItem('alch_path')}
 // 12 шагов пути героя: номер на карте -> испытание
-var ORD=[0,2,3,1,4,5,7,8,12,10,14,15];
+var MSU=['form.html','choose.html','bridge.html','scene.html?k=ego','ego.html','swipe.html','wheel-test.html','values.html','slot.html?id=sort','slot.html?id=eraser','reactor.html','slot.html?id=compare'];
+var ORD=MSU.map(function(_,k){return 'm'+k});
 var STEP_NAMES=['Обычный мир','Зов','Отказ','Наставник','Порог','Испытания','Пещера','Главное испытание','Награда','Обратный путь','Воскрешение','Новый мир'];
-function stepUrl(i){var id=ORD[i];return id==2?'choose.html':id==0?'form.html':(id==15?'reactor.html':'stage.html?s='+id)}
+function stepUrl(i){return MSU[i]}

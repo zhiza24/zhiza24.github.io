@@ -13,7 +13,7 @@
 .sk{position:fixed;top:calc(56px + env(safe-area-inset-top));right:14px;color:#c9a46a;font-size:13px;opacity:.7}</style><link rel="stylesheet" href="nav.css?v=2"></head><body data-page="task">
 <div class="bg" id="bg"></div><div class="fog"></div><div class="fg"></div><canvas id="cv" style="position:fixed;inset:0;z-index:5;touch-action:none;display:none"></canvas><div id="ch" style="position:fixed;top:25%;left:0;right:0;z-index:6;font:700 26px Cormorant Garamond,serif;color:#fff;text-shadow:0 0 12px #000;display:none;pointer-events:none"><div style="font-size:54px;animation:fg 1.4s ease-in-out infinite alternate">👆</div>Проведи пальцем по экрану</div><style>@keyframes fg{from{transform:translateX(-70px) rotate(-12deg)}to{transform:translateX(70px) rotate(12deg)}}</style><div class="sk">тап, чтобы ускорить</div>
 <div class="sc"><h2 id="h"></h2><p id="t"></p><button class="go" id="go"></button></div>
-<script src="stages.js?v=3"></script><script>
+<script src="stages.js?v=4"></script><script>
 var S={start:{img:'elder.jpg',h:'Старец',t:'Твой путь начинается. Перед тобой пять дорог, и у каждой свой дар и своя трудность. Выбери свою карту.',b:'Выбрать карту',bs:'Каждая карта имеет в себе сильные и слабые моменты',u:'choose.html'},
 road:{img:'map_bg.jpg',h:'Путь начался',t:'Ты ступила на свою тропу. Перед тобой туман, и дороги не видно. Проведи пальцем по экрану и сотри его.',b:'Идти на ощупь',u:'bridge.html?k=fog',scr:1},
 fog:{img:'map_bg.jpg',h:'Туман',t:'Ты перешла пропасть. Но впереди стеной поднимается густой туман, и дорогу не видно.',b:'Войти в туман',u:'bridge.html?k=fog'},
@@ -37,4 +37,4 @@ var md=0;cv.addEventListener('mousedown',function(e){md=1;er(e.clientX,e.clientY
 ty()}else setTimeout(ty,2300);function vb2(){try{navigator.vibrate&&navigator.vibrate(50)}catch(e){}}try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}
 document.body.addEventListener('click',function(e){if(e.target==go)return;clearTimeout(tm);n=s.t.length-1;ty()});
 go.onclick=function(){try{navigator.vibrate&&navigator.vibrate(20)}catch(e){}location.href=s.u||stepUrl(2)};
-</script><script src='nav.js?v=6'></script></body></html>
+</script><script src='nav.js?v=7'></script></body></html>
