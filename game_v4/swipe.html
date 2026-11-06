@@ -21,4 +21,4 @@ function done(){var pc=Math.round(ok*100/E.length),no=E.length-ok,vs=Object.keys
 var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}P.dq={accepted:pc,voices:vs};P.arts=P.arts||[];if(P.arts.indexOf('Зеркало')<0)P.arts.push('Зеркало');localStorage.setItem('alch_profile',JSON.stringify(P));
 var p=GP();p.log.push({s:3,t:'Твое хорошее',r:'принято '+pc+'%'+(vs.length?', голоса: '+vs.join(', '):''),d:new Date().toLocaleDateString('ru')});SP(p);
 z.innerHTML='<div class="res"><div class="q">Ты приняла '+pc+'% своего хорошего</div>'+(no?'<p>Ты смахнула '+no+' из '+E.length+'. Голоса, которые обесценивают:<br><b>'+vs.map(function(v){return '«'+v+'»'}).join('<br>')+'</b></p><p>Это дисквалификация позитивного: мозг не дает хорошему стать твоим. Здесь будет твое пояснение.</p>':'<p>Ты умеешь принимать хорошее. Это редкая сила.</p>')+'<p><small>Артефакт «Зеркало» у Героя · запись в Дневнике</small></p></div><button class="go" onclick="location.href=\'res.html\'">Дальше</button>'}
-dr();</script><script src='nav.js?v=9'></script></body></html>
+dr();</script><script src='nav.js?v=10'></script></body></html>
