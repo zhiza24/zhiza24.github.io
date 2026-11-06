@@ -1,4 +1,4 @@
-document.write('<script src="engine.js?v=1"><\/script>');
+document.write('<script src="engine.js?v=n2"><\/script><script src="texts.js?v=1"><\/script>');
 var _cur=(function(){try{return (JSON.parse(localStorage.getItem('alch_profile'))||{}).flow.last||'form.html'}catch(e){return 'form.html'}})();
 (function(){var cur=document.body.dataset.page||'';var _f=location.pathname.split('/').pop()||'index.html';if(_f==='index.html'||_f==='cover_v1.html'||cur==='tracker')return;
 var built={'index.html':1,'map.html':1};
