@@ -12,4 +12,4 @@ function pos(t){var a=0;for(var i=0;i<3;i++){if(t<=a+D[i]||i==2){var f=Math.min(
 function tick(){var n=performance.now();t+=(n-last)/1000;last=n;if(t>=T){t=T;clearInterval(ti);dt.setAttribute('cx',130);dt.setAttribute('cy',20);ph.textContent='Я есмь';hl.textContent='✓';try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}setTimeout(function(){location.href=nx},1200);return}
 var p=pos(t);dt.setAttribute('cx',p[0]);dt.setAttribute('cy',p[1]);ph.textContent=['Вдох','Пауза','Выдох'][p[2]]+' · '+p[3]}
 hl.onpointerdown=function(e){e.preventDefault();if(t>=T)return;hl.classList.add('go');last=performance.now();ti=setInterval(tick,50)};
-hl.onpointerup=hl.onpointerleave=hl.onpointercancel=function(){clearInterval(ti);hl.classList.remove('go');if(t<T)ph.textContent='Держи кнопку'};</script><script src='nav.js?v=8'></script></body></html>
+hl.onpointerup=hl.onpointerleave=hl.onpointercancel=function(){clearInterval(ti);hl.classList.remove('go');if(t<T)ph.textContent='Держи кнопку'};</script><script src='nav.js?v=9'></script></body></html>
