@@ -1,4 +1,4 @@
-document.write('<script src="engine.js?v=n5"><\/script><script src="texts.js?v=3"><\/script>');
+document.write('<script src="engine.js?v=n5"><\/script><script src="texts.js?v=3"></scr'+'ipt><script src="texts_fr.js?v=1"><\/script>');
 var _cur=(function(){try{return (JSON.parse(localStorage.getItem('alch_profile'))||{}).flow.last||'form.html'}catch(e){return 'form.html'}})();
 (function(){var cur=document.body.dataset.page||'';var _f=location.pathname.split('/').pop()||'index.html';if(_f==='index.html'||_f==='cover_v1.html'||cur==='tracker')return;
 var built={'index.html':1,'map.html':1};
@@ -49,7 +49,7 @@ window.GFLOW=[
 {u:'slot.html?id=eraser',pt:'Б',t:'Стирание установки пальцем'},
 {u:'slot.html?id=mirage',pt:'Б',t:'Пустыня миражей'},
 {u:'slot.html?id=pb_end',pt:'Б',t:'Итог Точки Б'},
-{u:'slot.html?id=found',pt:'Б',t:'Основание установки'},
+{u:'slot.html?id=found',pt:'Б',t:'Основание установки'},{u:'slot.html?id=evidence',pt:'Б',t:'Где повторяется схема'},{u:'slot.html?id=fractal',pt:'Б',t:'Фрактальная карта'},{u:'slot.html?id=leverage',pt:'Б',t:'Точка влияния'},
 {u:'slot.html?id=pc_intro',pt:'С',t:'Заставка Точки С: три действия'},
 {u:'reactor.html',pt:'С',t:'Трекер 21 день'},
 {u:'slot.html?id=guard',pt:'Финал',t:'Встреча со Стражем'},
