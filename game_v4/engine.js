@@ -35,21 +35,25 @@ avoid:{n:'Избегание действий',br:'Малые шаги',art:'К�
 window.GPAT=PAT;
 
 // Расчет: ведущая установка и очередь
-function calc(P){P=P||load();var s={resp:0,err:0,appr:0,deval:0,others:0,avoid:0},why={};
- function add(k,v,t){s[k]+=v;(why[k]=why[k]||[]).push(t)}
+function calc(P){P=P||load();var K=['resp','err','appr','deval','others','avoid'],src={},why={};
+ function put(name,k,v,t){if(!(v>0))return;src[name]=src[name]||{};src[name][k]=(src[name][k]||0)+v;(why[k]=why[k]||[]).push(t)}
  var e=P.ego||{},sc=e.sc||{},md=e.md||{};
  var map={ct:'resp',st:'appr',sb:'others',df:'deval',ab:'appr'};
- Object.keys(sc).forEach(function(k){if(map[k])add(map[k],sc[k]||0,'фоновый узор')});
- if(e.schema&&map[e.schema])add(map[e.schema],3,'ведущий узор');
- if(md.cr)add('err',md.cr,'строгий критик');if(md.dp)add('avoid',md.dp,'отстраненный защитник');
- if(P.dq&&P.dq.accepted!=null&&P.dq.accepted<70)add('deval',Math.round((70-P.dq.accepted)/10),'смахнула свое хорошее');
- if(P.egoSelf&&P.egoSelf.match!=null&&P.egoSelf.match<7)add('others',7-P.egoSelf.match,'путает Эго и Самость');
- var w=P.wheel||[];if(w.length){var lo=w.filter(function(x){return x<=3}).length;if(lo>=3)add('avoid',lo-2,'много низких сфер')}
- var ord=Object.keys(s).sort(function(a,b){return s[b]-s[a]});
- if(!s[ord[0]])ord=['appr','resp','others','deval','err','avoid'];
- return {lead:ord[0],queue:ord.slice(1),score:s,why:why}}
+ Object.keys(sc).forEach(function(k){if(map[k])put('ego',map[k],(sc[k]||0)/6,'фоновый узор')});
+ var mt=(md.vc||0)+(md.dp||0)+(md.cr||0)+(md.ha||0);if(mt){put('mode','err',(md.cr||0)/mt,'строгий критик');put('mode','avoid',(md.dp||0)/mt,'отстраненный защитник')}
+ if(P.dq&&P.dq.accepted!=null&&P.dq.accepted<70)put('dq','deval',(70-P.dq.accepted)/70,'смахнула свое хорошее');
+ if(P.egoSelf&&P.egoSelf.match!=null&&P.egoSelf.match<7)put('es','others',(7-P.egoSelf.match)/7,'путает Эго и Самость');
+ var w=P.wheel||[];if(w.length===8){var lo=w.filter(function(x){return x<=3}).length;if(lo>=3)put('wheel','avoid',(lo-2)/6,'много низких сфер')}
+ var s={},n={};K.forEach(function(k){s[k]=0;n[k]=0});
+ Object.keys(src).forEach(function(nm){K.forEach(function(k){var v=Math.min(1,src[nm][k]||0);if(v){s[k]+=v;n[k]++}})});
+ K.forEach(function(k){s[k]=Math.round(s[k]*100)/100});
+ var ord=K.slice().sort(function(a,b){return s[b]-s[a]||n[b]-n[a]});
+ var weak=!s[ord[0]];if(weak)ord=['appr','resp','others','deval','err','avoid'];
+ var tie=!weak&&s[ord[1]]===s[ord[0]];
+ return {lead:ord[0],queue:ord.slice(1),score:s,sources:n,why:why,weak:weak,tie:tie,ver:2}}
+function inKey(P){return JSON.stringify([P.ego&&P.ego.sc,P.ego&&P.ego.md,P.dq&&P.dq.accepted,P.egoSelf&&P.egoSelf.match,P.wheel])}
 window.GCalc=calc;
-window.GLead=function(){var P=load();if(!P.lab||!P.lab.lead){var c=calc(P);P.lab={lead:c.lead,queue:c.queue,score:c.score,cycle:1,agree:null};save(P)}return P.lab};
+window.GLead=function(){var P=load(),k=inKey(P);if(!P.lab||!P.lab.lead||(P.lab.agree==null&&(P.lab.cycle||1)<=1&&P.lab.key!==k)){var c=calc(P),L=P.lab||{};P.lab={lead:c.lead,queue:c.queue,score:c.score,sources:c.sources,weak:c.weak,tie:c.tie,key:k,cycle:L.cycle||1,agree:null,done:L.done};save(P)}return P.lab};
 
 // Противоречие одной фразой
 var WN=['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'];
