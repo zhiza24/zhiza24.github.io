@@ -1,84 +1,324 @@
-<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1793899064"></script><meta http-equiv="Cache-Control" content="no-cache">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Карта пути</title>
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#5a3a14">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="nav.css?v=8">
-<style>html,body{margin:0;height:100%;overflow:hidden;background:#2a1c0c}
-.map{position:fixed;left:0;right:0;top:0;bottom:calc(78px + env(safe-area-inset-bottom));background:#2a1c0c url(img/map_bg.jpg?v=8) no-repeat;overflow:hidden}
-.fog{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(20,12,4,.55) 0%, rgba(20,12,4,.15) 35%, transparent 60%);pointer-events:none;z-index:1}
-.o{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:2.5px solid rgba(255,220,140,.85);background:radial-gradient(circle at 40% 35%, rgba(255,240,180,.35), rgba(140,80,20,.4));box-shadow:0 0 0 1px #6a4010, inset 0 0 12px rgba(255,200,80,.4);z-index:2;transition:all .4s}
-.o:before{content:attr(data-n);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 18px 'Cormorant Garamond',serif;color:#fff8e0;text-shadow:0 1px 2px #000}
-.o.done{border-color:#c9a060;background:radial-gradient(circle at 40% 35%, rgba(200,160,80,.5), rgba(80,40,10,.5));opacity:.75}
-.o.nxt{box-shadow:0 0 0 3px #ffd877,0 0 22px 8px rgba(255,200,90,.75);animation:mN 1.6s ease-in-out infinite;border-color:#ffe0a0}
-@keyframes mN{50%{box-shadow:0 0 0 4px #fff0b8,0 0 34px 14px rgba(255,200,90,.95);transform:translate(-50%,-50%) scale(1.06)}}
-.dock{position:absolute;left:0;right:0;bottom:14px;height:168px;z-index:3}
-.cont{position:absolute;transform:translate(-50%,-50%);width:210px;height:58px;font-size:20px!important;animation:p 2.6s infinite;border-radius:16px;background:linear-gradient(145deg,#8a5420 0%,#c98a40 40%,#f0c870 70%,#8a5420 100%);display:flex;align-items:center;justify-content:center;font:700 22px 'Cormorant Garamond',serif;color:#fff8e0;text-shadow:0 2px 4px #3a1a05;text-decoration:none;white-space:nowrap;box-shadow:0 0 0 2px #5a3410,0 8px 20px rgba(0,0,0,.5),inset 0 2px 6px rgba(255,230,170,.6),inset 0 -3px 6px rgba(0,0,0,.3)}
-.cont:before{content:"";position:absolute;inset:4px;border-radius:12px;border:1px dashed rgba(255,230,170,.6);pointer-events:none}
-.start{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff5d0 0%,#f0c870 30%,#c98a40 60%,#8a5420 100%);display:flex;align-items:center;justify-content:center;font:700 24px 'Cormorant Garamond',serif;color:#fff8e0;text-shadow:0 2px 3px #000;text-decoration:none;animation:p 2s infinite;box-shadow:0 0 0 3px #7a4a16,0 0 0 6px rgba(201,138,64,.4),0 10px 24px rgba(0,0,0,.5),inset 0 3px 8px rgba(255,240,180,.5)}
-.start:before{content:"";position:absolute;inset:6px;border-radius:50%;border:1.2px dashed rgba(255,230,170,.65);pointer-events:none}
-@keyframes p{0%,100%{box-shadow:0 0 6px 2px rgba(255,211,106,.5)}50%{box-shadow:0 0 26px 10px rgba(255,211,106,.85)}}
-.cmp,.inf{position:absolute;bottom:48px;width:70px;height:70px}.cmp{left:12px}.inf{right:12px}
-.cmp img,.inf img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}.cmp img{border-radius:50%}
-.scl{position:fixed;z-index:76;left:50%;top:calc(env(safe-area-inset-top) + 44px);transform:translateX(-50%);width:min(70vw,280px,34dvh);height:auto;border:0;padding:0;background:none;cursor:pointer;animation:sclG 2.6s ease-in-out infinite}
-.scl img{display:block;width:100%;height:auto}
-.scl.op{filter:drop-shadow(0 0 14px rgba(255,210,120,.95))}
-@keyframes sclG{0%,100%{filter:drop-shadow(0 0 8px rgba(255,210,110,.8)) drop-shadow(0 0 18px rgba(255,180,60,.6))}50%{filter:drop-shadow(0 0 14px rgba(255,225,140,1)) drop-shadow(0 0 30px rgba(255,180,60,.85))}}
-.sov{position:fixed;inset:0;z-index:75;display:flex;align-items:flex-start;justify-content:center;padding-top:calc(env(safe-area-inset-top) + 80px);background:rgba(20,10,0,0);pointer-events:none;transition:background .4s}
-.sov.on{background:rgba(20,10,0,.55);pointer-events:auto}
-.spp{position:relative;width:min(88vw,370px);max-height:0;overflow:hidden;border-radius:6px;background:linear-gradient(#fbf0d2,#ecd39a);color:#3a220a;box-shadow:0 10px 40px rgba(0,0,0,.6);transition:max-height .8s cubic-bezier(.3,.8,.3,1)}
-.sov.on .spp{max-height:calc(100dvh - 140px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
-.spp:before,.spp:after{content:"";position:sticky;display:block;left:0;right:0;height:14px;background:linear-gradient(#e8c47a,#8a5a20,#c99a45);border-radius:7px;z-index:1}
-.spp:before{top:0}.spp:after{bottom:0}
-.sbd{padding:44px 22px 12px;max-height:calc(100dvh - 200px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow:auto;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope}
-.sbd h3{margin:0 0 8px;font:700 26px/1.1 'Cormorant Garamond',serif;color:#6a3e10;text-align:center}.sbd p{margin:0 0 10px}.sbd .ft{font-style:italic;color:#8a5a20}
-.sx{position:absolute;z-index:2;top:40px;right:8px;width:34px;height:34px;border:0;background:none;font:400 28px/1 serif;color:#6a3e10;cursor:pointer}
-.sau{position:absolute;z-index:2;top:44px;left:12px;width:30px;height:30px;border-radius:50%;border:1.5px solid #a8742a;background:radial-gradient(#fff1c8,#d9a54e);color:#3a220a;font:700 15px/1 serif;cursor:pointer;display:none}.sau.on{background:radial-gradient(#ffe08a,#c98a2e);box-shadow:0 0 10px #ffc04a}
-.cont{transform:scale(.7);transform-origin:left center}</style></head><body data-page="map">
-<button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll.webp?v=8" alt=""></button>
-<div class="sov" id="sov"><div class="spp"><button class="sx" id="sx" type="button" aria-label="Свернуть">×</button><button class="sau" id="sau" type="button" aria-label="Слушать">♪</button><div class="sbd" id="sbd"></div></div></div>
-<div class="map" id="m">
-<div class="fog"></div>
-<a class="o step" href="#" data-x="205" data-y="764" data-r="44" data-k="0"></a>
-<a class="o step" href="#" data-x="257" data-y="720" data-r="44" data-k="1"></a>
-<a class="o step" href="#" data-x="310" data-y="676" data-r="44" data-k="2"></a>
-<a class="o step" href="#" data-x="363" data-y="633" data-r="44" data-k="3"></a>
-<a class="o step" href="#" data-x="313" data-y="591" data-r="44" data-k="4"></a>
-<a class="o step" href="#" data-x="259" data-y="550" data-r="44" data-k="5"></a>
-<a class="o step" href="#" data-x="231" data-y="508" data-r="44" data-k="6"></a>
-<a class="o step" href="#" data-x="285" data-y="466" data-r="44" data-k="7"></a>
-<a class="o step" href="#" data-x="338" data-y="423" data-r="44" data-k="8"></a>
-<a class="o step" href="#" data-x="333" data-y="384" data-r="44" data-k="9"></a>
-<a class="o step" href="#" data-x="275" data-y="347" data-r="44" data-k="10"></a>
-<a class="o step" href="#" data-x="218" data-y="310" data-r="44" data-k="11"></a>
-<div class="dock">
-<a class="cmp" href="#soon" aria-label="Компас"><img src="img/compass.png" alt=""></a>
-<a class="start" href="form.html"><span>Старт</span></a>
-<a class="inf" href="#soon" aria-label="Информация"><svg viewBox="0 0 70 70" width="100%" height="100%"><defs><radialGradient id="ig" cx=".4" cy=".35"><stop offset="0" stop-color="#5a3a18"/><stop offset="1" stop-color="#1e120a"/></radialGradient><linearGradient id="ir" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#e0a940"/><stop offset="1" stop-color="#9a6226"/></linearGradient></defs><circle cx="35" cy="35" r="31" fill="url(#ig)" stroke="url(#ir)" stroke-width="4"/><circle cx="35" cy="35" r="25" fill="none" stroke="url(#ir)" stroke-width="1" stroke-dasharray="2 3"/><text x="35" y="47" text-anchor="middle" font-family="Cormorant Garamond,serif" font-style="italic" font-weight="700" font-size="36" fill="url(#ir)">i</text></svg></a>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0c10">
+<title>Путь Алхимика — карта путешествия</title>
+<style>
+  :root{
+    --night:#090b10; --ink:#11151d; --panel:#151923; --panel2:#1b202b;
+    --gold:#d9b56d; --gold2:#f3d99b; --amber:#bd7d35; --muted:#9a9aa0;
+    --line:#8b6735; --done:#d7b66f; --open:#e4a24d; --locked:#72717a;
+    --text:#f2eadb; --soft:#c9bdab;
+  }
+  *{box-sizing:border-box}
+  html{min-width:320px;background:var(--night);color:var(--text);font-family:Georgia,"Times New Roman",serif}
+  body{margin:0;min-width:320px;min-height:100vh;background:
+    radial-gradient(ellipse at 50% 0%,rgba(166,112,44,.13),transparent 42%),
+    linear-gradient(180deg,#0b0d13,#090b10 70%); overflow-x:hidden}
+  button{font:inherit}
+  .shell{width:min(100%,980px);margin:0 auto;padding:clamp(14px,3vw,28px) clamp(12px,3vw,24px) 40px}
+  .topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .brand{font:600 11px/1.2 Arial,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#c6a66c}
+  .demo{font:10px/1.2 Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#e7c98f;border:1px solid rgba(215,182,111,.45);padding:6px 9px;border-radius:99px;white-space:nowrap}
+  h1{font-size:clamp(27px,5vw,44px);font-weight:400;letter-spacing:.015em;text-align:center;margin:8px 0 7px;color:#f0dfbb}
+  .subtitle{text-align:center;color:#a9a092;font:12px/1.55 Arial,sans-serif;letter-spacing:.04em;margin:0 auto 22px;max-width:540px}
+  .map-frame{position:relative;isolation:isolate;border:1px solid rgba(211,169,94,.34);border-radius:22px;overflow:hidden;min-height:760px;
+    background:#11151c url("img/map_bg.jpg") center center/cover no-repeat;
+    box-shadow:0 22px 70px rgba(0,0,0,.5),inset 0 0 80px rgba(0,0,0,.6)}
+  .map-frame:before{content:"";position:absolute;inset:0;z-index:-1;background:
+    linear-gradient(180deg,rgba(6,8,12,.46),rgba(7,9,13,.64) 52%,rgba(7,9,13,.82)),
+    radial-gradient(ellipse at 50% 44%,transparent 10%,rgba(3,5,8,.38) 100%)}
+  .map-frame:after{content:"";position:absolute;inset:12px;pointer-events:none;border:1px solid rgba(218,181,112,.16);border-radius:14px}
+  .map-heading{position:absolute;top:20px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center;z-index:2;pointer-events:none}
+  .map-heading span{font:10px Arial,sans-serif;letter-spacing:.17em;text-transform:uppercase;color:#c7b38d}
+  .compass{width:38px;height:38px;opacity:.75}
+  .map-art{position:absolute;inset:58px 0 22px;width:100%;height:calc(100% - 80px);z-index:0;overflow:visible}
+  .route-glow{fill:none;stroke:rgba(237,177,84,.2);stroke-width:12;stroke-linecap:round;stroke-linejoin:round;filter:blur(5px)}
+  .route{fill:none;stroke:#c49a59;stroke-width:2.3;stroke-dasharray:3 7;stroke-linecap:round;stroke-linejoin:round;opacity:.88}
+  .route-inner{fill:none;stroke:#f1d69a;stroke-width:.8;stroke-dasharray:1 9;stroke-linecap:round;opacity:.6}
+  .terrain{fill:rgba(15,19,25,.77);stroke:rgba(218,181,112,.48);stroke-width:1.3}
+  .terrain-inner{fill:none;stroke:rgba(226,194,133,.22);stroke-width:1;stroke-dasharray:2 5}
+  .map-label{font:11px Arial,sans-serif;letter-spacing:.1em;fill:#d9c9a9;text-anchor:middle}
+  .map-small{font:8px Arial,sans-serif;letter-spacing:.16em;fill:#9e8a69;text-anchor:middle}
+  .node{position:absolute;z-index:3;transform:translate(-50%,-50%);width:clamp(112px,22%,174px);min-height:68px;padding:8px 8px 9px;border:1px solid rgba(214,178,111,.5);border-radius:13px;
+    color:var(--text);background:linear-gradient(145deg,rgba(28,31,38,.94),rgba(10,13,19,.96));text-align:center;cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,.42);transition:transform .18s,border-color .18s,box-shadow .18s}
+  .node:hover,.node:focus-visible{transform:translate(-50%,-50%) scale(1.045);border-color:#f0d18c;box-shadow:0 0 0 3px rgba(218,181,112,.12),0 12px 28px #0008;outline:none}
+  .node .num{display:block;font:9px Arial,sans-serif;letter-spacing:.2em;color:#a88a58;margin-bottom:4px}
+  .node .name{display:block;font-size:clamp(11px,1.6vw,14px);line-height:1.2;color:#f1e3c6}
+  .node .state{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font:8px Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#b8aa92}
+  .node .state:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+  .node.done{border-color:rgba(215,182,111,.75)}
+  .node.done .state{color:#d8bd80}
+  .node.current{border-color:#f4d58e;box-shadow:0 0 0 1px rgba(255,220,151,.28),0 0 26px rgba(224,166,75,.27),0 10px 24px #0009}
+  .node.current:after{content:"";position:absolute;inset:-5px;border:1px solid rgba(243,211,145,.35);border-radius:17px;animation:pulse 2.8s ease-in-out infinite;pointer-events:none}
+  .node.current .state{color:#ffd78e}
+  .node.available{border-color:rgba(218,151,72,.8)}
+  .node.available .state{color:#e5a85e}
+  .node.locked{opacity:.68;border-color:rgba(130,128,130,.34);filter:saturate(.55)}
+  .node.locked .state{color:#99969a}
+  .node.locked .state:before{content:"";width:6px;height:6px;border-radius:1px;background:transparent;border:1px solid currentColor;box-shadow:none}
+  .n1{left:50%;top:8%}.n2{left:23%;top:21%}.n3{left:76%;top:33%}.n4{left:27%;top:46%}
+  .n5{left:74%;top:58%}.n6{left:34%;top:70%}.n7{left:69%;top:83%}.n8{left:50%;top:95%}
+  .reactor-meter{display:flex;justify-content:center;gap:2px;margin:6px auto 0;max-width:94px}
+  .reactor-meter i{display:block;flex:1;height:3px;border-radius:2px;background:#48434a}
+  .reactor-meter i.on{background:#d8ad62;box-shadow:0 0 5px #d8ad6277}
+  .legend{display:flex;justify-content:center;flex-wrap:wrap;gap:9px 18px;padding:15px 8px 4px;color:#aaa08f;font:10px Arial,sans-serif}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:7px;height:7px;border-radius:50%;background:#999}
+  .legend .l-current{background:#ffd78e;box-shadow:0 0 7px #ffd78e}
+  .legend .l-done{background:#d8bd80}.legend .l-open{background:#e5a85e}.legend .l-locked{background:#777}
+  .map-foot{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:13px 4px 0;color:#847d72;font:10px/1.4 Arial,sans-serif}
+  .map-foot strong{color:#c9ae79;font-weight:400}
+  .overlay{position:fixed;inset:0;z-index:10;background:rgba(3,5,8,.76);backdrop-filter:blur(7px);display:none;align-items:flex-end;justify-content:center;padding:16px}
+  .overlay.show{display:flex}
+  .detail{position:relative;width:min(100%,520px);max-height:min(82vh,720px);overflow:auto;border:1px solid rgba(222,184,111,.48);border-radius:22px 22px 16px 16px;
+    background:radial-gradient(ellipse at 50% 0%,rgba(169,117,49,.14),transparent 45%),linear-gradient(160deg,#1a1e28,#0e1118 72%);
+    box-shadow:0 25px 90px #000b;padding:25px 23px 22px}
+  .close{position:absolute;right:15px;top:14px;width:34px;height:34px;border-radius:50%;border:1px solid #76613e;background:#171b23;color:#dfc58f;font:20px Arial,sans-serif;cursor:pointer}
+  .detail-kicker{font:10px Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#c29b5d;margin:1px 42px 8px 0}
+  .detail h2{font-size:clamp(23px,5vw,30px);font-weight:400;color:#f0dfbb;margin:0 0 10px}
+  .detail p{font:14px/1.65 Arial,sans-serif;color:#c3b9a8;margin:0 0 17px}
+  .progress-head{display:flex;justify-content:space-between;gap:10px;color:#d9c69f;font:11px Arial,sans-serif;margin:18px 0 8px}
+  .progress{height:5px;border-radius:8px;background:#34333a;overflow:hidden}
+  .progress b{display:block;height:100%;width:0;background:linear-gradient(90deg,#a96c2e,#f0cf86);box-shadow:0 0 12px #d7a85b}
+  .reactor-days{display:grid;grid-template-columns:repeat(21,1fr);gap:4px;margin:12px 0 3px}
+  .reactor-days i{aspect-ratio:1;border-radius:3px;background:#3d3a3b;border:1px solid #55504a}
+  .reactor-days i.done{background:#d0a75e;border-color:#e8c783;box-shadow:0 0 5px #c28c42aa}
+  .day-caption{font:10px Arial,sans-serif;color:#928879;margin-top:6px}
+  .detail-actions{display:flex;gap:10px;margin-top:22px}
+  .continue{flex:1;border:1px solid #d5ae69;border-radius:10px;padding:13px 16px;background:linear-gradient(135deg,#c28b42,#8f5e2d);color:#160f08;font:600 12px Arial,sans-serif;letter-spacing:.06em;cursor:pointer}
+  .secondary{border:1px solid #5a5144;border-radius:10px;padding:13px 15px;background:#171b23;color:#d5c5a4;font:12px Arial,sans-serif;cursor:pointer}
+  .status-note{margin-top:12px;color:#887f70;font:10px/1.5 Arial,sans-serif}
+  @keyframes pulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.9;transform:scale(1.025)}}
+  @media(max-width:520px){
+    .shell{padding:12px 10px 28px}
+    .map-frame{min-height:710px;border-radius:17px}
+    .map-frame:after{inset:8px}
+    .map-heading{top:14px;left:15px;right:15px}
+    .map-art{inset:50px 0 18px;height:calc(100% - 68px)}
+    .node{width:clamp(104px,31%,132px);min-height:64px;padding:7px 5px;border-radius:11px}
+    .node .name{font-size:11px}
+    .node .state{font-size:7px;letter-spacing:.06em}
+    .n1{left:50%;top:8%}.n2{left:23%;top:21%}.n3{left:77%;top:34%}.n4{left:24%;top:47%}
+    .n5{left:76%;top:60%}.n6{left:25%;top:72%}.n7{left:75%;top:85%}.n8{left:50%;top:96%}
+    .map-foot{font-size:9px}
+    .overlay{padding:9px}
+    .detail{padding:23px 18px 18px;max-height:86vh}
+  }
+  @media(min-width:700px){
+    .map-frame{min-height:900px}
+    .n1{top:8%}.n2{top:21%}.n3{top:34%}.n4{top:47%}.n5{top:60%}.n6{top:72%}.n7{top:85%}.n8{top:96%}
+  }
+  @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="nav.css?v=8"><style>.shell{padding-top:55px;padding-bottom:110px}.overlay{z-index:100}.demo{text-decoration:none}.map-frame{min-height:820px}@media(max-width:520px){.map-frame{min-height:820px}}.n8{top:94%!important}</style></head>
+<body data-page="map">
+<main class="shell">
+  <div class="topline">
+    <div class="brand">Путь Алхимика</div>
+    <a class="demo" id="resume" href="form.html">Продолжить путь</a>
+  </div>
+  <h1>Карта путешествия</h1>
+  <p class="subtitle">Восемь территорий. Одна непрерывная дорога от рождения к мастерству.</p>
+
+  <section class="map-frame" aria-label="Карта из восьми территорий">
+    <div class="map-heading">
+      <span>Атлас внутреннего пути</span>
+      <svg class="compass" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="15" fill="none" stroke="#c6a66c" stroke-opacity=".6"/>
+        <path d="M20 4 L23 18 L20 15 L17 18 Z M20 36 L17 22 L20 25 L23 22 Z M4 20 L18 17 L15 20 L18 23 Z M36 20 L22 23 L25 20 L22 17 Z" fill="#d6b574"/>
+        <circle cx="20" cy="20" r="2" fill="#f0d59b"/>
+      </svg>
+    </div>
+
+    <svg class="map-art" viewBox="0 0 600 760" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <radialGradient id="mist"><stop stop-color="#c18b49" stop-opacity=".22"/><stop offset="1" stop-color="#c18b49" stop-opacity="0"/></radialGradient>
+        <filter id="soft"><feGaussianBlur stdDeviation="12"/></filter>
+      </defs>
+      <ellipse cx="300" cy="350" rx="230" ry="300" fill="url(#mist)" filter="url(#soft)"/>
+      <!-- Непрерывный маршрут: узлы соединены одной дорогой -->
+      <path class="route-glow" d="M300 25 C365 68 160 104 138 166 S410 214 455 278 S135 338 145 405 S405 464 442 515 S150 590 150 638 S330 688 300 738"/>
+      <path class="route" d="M300 25 C365 68 160 104 138 166 S410 214 455 278 S135 338 145 405 S405 464 442 515 S150 590 150 638 S330 688 300 738"/>
+      <path class="route-inner" d="M300 25 C365 68 160 104 138 166 S410 214 455 278 S135 338 145 405 S405 464 442 515 S150 590 150 638 S330 688 300 738"/>
+      <!-- Контуры местности -->
+      <path class="terrain" d="M225 18 Q300 -2 370 30 Q396 54 367 88 Q309 110 240 82 Q204 55 225 18Z"/>
+      <path class="terrain-inner" d="M238 29 Q300 10 357 36 Q375 55 354 75 Q301 94 251 72 Q224 53 238 29Z"/>
+      <path class="terrain" d="M42 122 Q91 86 172 115 Q208 147 169 193 Q97 220 45 181 Q20 152 42 122Z"/>
+      <path class="terrain-inner" d="M55 132 Q102 105 162 126 Q187 150 160 179 Q100 199 57 173Z"/>
+      <path class="terrain" d="M407 204 Q475 175 550 218 Q584 256 540 299 Q466 321 412 284 Q385 244 407 204Z"/>
+      <path class="terrain-inner" d="M421 216 Q480 192 536 228 Q561 254 530 282 Q471 301 425 274Z"/>
+      <path class="terrain" d="M35 326 Q98 294 178 331 Q210 366 173 417 Q98 447 42 406 Q14 367 35 326Z"/>
+      <path class="terrain-inner" d="M49 339 Q105 315 164 343 Q188 369 160 400 Q104 424 53 394Z"/>
+      <path class="terrain" d="M407 427 Q479 392 555 436 Q585 475 541 526 Q466 548 412 508 Q385 470 407 427Z"/>
+      <path class="terrain-inner" d="M421 440 Q480 414 538 448 Q561 477 530 509 Q474 529 425 497Z"/>
+      <path class="terrain" d="M48 540 Q112 506 185 548 Q215 583 174 626 Q102 651 49 615 Q22 579 48 540Z"/>
+      <path class="terrain-inner" d="M61 552 Q117 528 170 560 Q194 585 163 610 Q109 632 61 602Z"/>
+      <path class="terrain" d="M393 625 Q464 591 544 632 Q576 669 536 710 Q463 736 405 698 Q376 661 393 625Z"/>
+      <path class="terrain-inner" d="M408 638 Q469 614 528 644 Q551 671 522 693 Q469 716 413 687Z"/>
+      <g fill="#d8b978" opacity=".55">
+        <circle cx="300" cy="120" r="2"/><circle cx="290" cy="128" r="1.5"/><circle cx="309" cy="132" r="1"/>
+        <circle cx="300" cy="310" r="2"/><circle cx="288" cy="319" r="1"/><circle cx="315" cy="325" r="1.5"/>
+        <circle cx="300" cy="520" r="2"/><circle cx="287" cy="530" r="1.2"/><circle cx="315" cy="537" r="1.2"/>
+      </g>
+      <text class="map-small" x="300" y="112">ITER · ПУТЬ</text>
+      <text class="map-small" x="300" y="304">ПРЕОБРАЖЕНИЕ</text>
+      <text class="map-small" x="300" y="514">ВЫБОР</text>
+      <text class="map-small" x="300" y="730">МАСТЕРСТВО</text>
+    </svg>
+
+    <button class="node current n1" data-id="1" aria-label="Открыть Ворота рождения">
+      <span class="num">ТЕРРИТОРИЯ I</span><span class="name">Ворота рождения</span><span class="state">Текущая</span>
+    </button>
+    <button class="node done n2" data-id="2" aria-label="Открыть Землю отражений">
+      <span class="num">ТЕРРИТОРИЯ II</span><span class="name">Земля отражений</span><span class="state">Пройдена</span>
+    </button>
+    <button class="node available n3" data-id="3" aria-label="Открыть Долину проявлений">
+      <span class="num">ТЕРРИТОРИЯ III</span><span class="name">Долина проявлений</span><span class="state">Доступна</span>
+    </button>
+    <button class="node locked n4" data-id="4" aria-label="Открыть Лабиринт повторений">
+      <span class="num">ТЕРРИТОРИЯ IV</span><span class="name">Лабиринт повторений</span><span class="state">Закрыта</span>
+    </button>
+    <button class="node locked n5" data-id="5" aria-label="Открыть Зеркальную цитадель">
+      <span class="num">ТЕРРИТОРИЯ V</span><span class="name">Зеркальная цитадель</span><span class="state">Закрыта</span>
+    </button>
+    <button class="node locked n6" data-id="6" aria-label="Открыть Кузницу выбора">
+      <span class="num">ТЕРРИТОРИЯ VI</span><span class="name">Кузница выбора</span><span class="state">Закрыта</span>
+    </button>
+    <button class="node locked n7" data-id="7" aria-label="Открыть Реактор преображения">
+      <span class="num">ТЕРРИТОРИЯ VII</span><span class="name">Реактор преображения</span><span class="state">Закрыта</span>
+      <span class="reactor-meter" aria-label="0 из 21 дней"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    </button>
+    <button class="node locked n8" data-id="8" aria-label="Открыть Землю мастерства">
+      <span class="num">ТЕРРИТОРИЯ VIII</span><span class="name">Земля мастерства</span><span class="state">Закрыта</span>
+    </button>
+  </section>
+
+  <div class="legend" aria-label="Обозначения состояний">
+    <span><i class="l-current"></i>Текущая</span>
+    <span><i class="l-done"></i>Открыта ранее</span>
+    <span><i class="l-open"></i>Доступна</span>
+    <span><i class="l-locked"></i>Закрыта</span>
+  </div>
+  <div class="map-foot">
+    <span><strong>0 → А → Б → С → Финал</strong> · единый маршрут</span>
+    <span>Сохраненный путь игрока</span>
+  </div>
+</main>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+  <section class="detail">
+    <button class="close" id="close" aria-label="Закрыть">×</button>
+    <div class="detail-kicker" id="detailKicker">Территория I · Точка 0</div>
+    <h2 id="detailTitle">Ворота рождения</h2>
+    <p id="detailDescription"></p>
+    <div class="progress-head"><span>Прогресс территории</span><span id="progressText">0 из 4 шагов</span></div>
+    <div class="progress"><b id="progressBar"></b></div>
+    <div id="reactorDetail" hidden>
+      <div class="reactor-days" id="reactorDays"></div>
+      <div class="day-caption">21 день · три отрезка пути: 1–7, 8–14, 15–21</div>
+    </div>
+    <div class="detail-actions">
+      <button class="continue" id="continue">Продолжить путь</button>
+      <button class="secondary" id="closeSecondary">Закрыть</button>
+    </div>
+    <div class="status-note" id="statusNote">Демонстрационное состояние. Кнопка не запускает игровые экраны.</div>
+  </section>
 </div>
-<a class="cont" id="cont" href="path.html" data-x="400" data-y="519">Продолжить путь</a></div>
-<script>
-function lay(){var m=document.getElementById('m'),W=m.clientWidth,H=m.clientHeight,s=Math.max(W/576,H/1024),ox=(W-576*s)/2,oy=H-1024*s;
-m.style.backgroundSize=576*s+'px '+1024*s+'px';m.style.backgroundPosition=ox+'px '+oy+'px';
-var c=document.getElementById('cont');c.style.left=Math.min(W-100,ox+400*s)+'px';c.style.top=(oy+519*s)+'px';m.querySelectorAll('.o').forEach(function(e){var d=e.dataset;e.style.left=(ox+d.x*s)+'px';e.style.top=(oy+d.y*s)+'px';e.style.width=e.style.height=(d.r*s)+'px'})}
-addEventListener('resize',lay);lay();
-try{(function(){return;var P=JSON.parse(localStorage.getItem('alch_profile'))||{};var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>=d)return;var ss=document.querySelectorAll('.o.step'),c=ss[ss.length-1-t];if(!c)return;c.classList.add('nxt');c.addEventListener('click',function(e){if(!c.classList.contains('nxt'))return;e.stopImmediatePropagation();e.preventDefault();P.progress={d:d,t:t+1};localStorage.setItem('alch_profile',JSON.stringify(P));c.classList.remove('nxt');c.classList.add('done');window.gToast&&gToast('Задание выполнено! Новый тест открыт');setTimeout(function(){location.href='hero.html?v=8'},1400)},true)})()}catch(e){}
-</script>
-<script>
-var SCROLL_TITLE='Послание';
-var SCROLL_HTML='<p>Приветствую вас, господа пробужденные…</p><p class="ft">Скоро здесь появится авторский текст.</p>';
-var SCROLL_AUDIO='snd/author.mp3';
-(function(){var o=document.getElementById('sov'),a=document.getElementById('sau'),au=null;
-document.getElementById('sbd').innerHTML='<h3>'+SCROLL_TITLE+'</h3>'+SCROLL_HTML;
-fetch(SCROLL_AUDIO,{method:'HEAD'}).then(function(r){if(r.ok){au=new Audio(SCROLL_AUDIO);au.onended=function(){a.classList.remove('on')};a.style.display='block'}}).catch(function(){});
-a.onclick=function(){if(!au)return;if(au.paused){au.play();a.classList.add('on')}else{au.pause();a.classList.remove('on')}};
-function cl(){o.classList.remove('on');document.getElementById('scl').classList.remove('op');if(au){au.pause();a.classList.remove('on')}}
-document.getElementById('scl').onclick=function(){o.classList.contains('on')?cl():(o.classList.add('on'),this.classList.add('op'))};
-document.getElementById('sx').onclick=cl;o.onclick=function(e){if(e.target==o)cl()};})();
-</script>
+
 <script src="nav.js?v=11"></script>
-<style>.o.step{border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,240,190,.55),rgba(255,200,90,.15) 60%,transparent 70%);box-shadow:0 0 14px rgba(255,210,110,.45)}.o.step.dn{background:radial-gradient(circle,#ffe9a8,#e0a940 55%,transparent 72%);box-shadow:0 0 20px #ffcf5a}.o.step.cur{animation:gl 1.4s infinite}@keyframes gl{50%{box-shadow:0 0 34px 10px #ffd877}}.o.step.lk{opacity:.35;filter:grayscale(1)}</style>
-<script src="stages.js?v=4"></script><script>(function(){var p=GP();try{var P=JSON.parse(localStorage.getItem('alch_profile'))||{};if(P.skill&&!p.done[0]){p.done[0]=1;SP(p)}}catch(e){}
-var cur=0;while(cur<12&&p.done[ORD[cur]])cur++;
-document.querySelectorAll('.o.step').forEach(function(e){var k=+e.dataset.k;e.href=stepUrl(k);e.classList.add(k<cur?'dn':(k==cur?'cur':'lk'));e.title=STEP_NAMES[k]});
-var c=document.getElementById('cont');c.href=cur<12?stepUrl(cur):'reactor.html'})()</script></body></html>
+<script>
+(() => {
+  // Геометрия и описания территорий; состояние ниже берется из профиля.
+  const territories = {
+    1:{roman:"I",point:"Точка 0",name:"Ворота рождения",status:"current",description:"Начало путешествия. Здесь герой знакомится со своей исходной точкой, замечает фоновые состояния и получает первые ориентиры.",progress:2,total:4,step:"Продолжить знакомство"},
+    2:{roman:"II",point:"Точка А",name:"Земля отражений",status:"done",description:"Исследование внутренних сфер, ценностей, желаний и того, как привычная картина мира отражается в ежедневных решениях.",progress:7,total:7,step:"Территория пройдена"},
+    3:{roman:"III",point:"Точка Б",name:"Долина проявлений",status:"available",description:"Наблюдение за реальными ситуациями в разных сферах жизни. Здесь становится заметно, как внутренние правила проявляются в действиях и результатах.",progress:0,total:3,step:"Начать исследование"},
+    4:{roman:"IV",point:"Точка Б",name:"Лабиринт повторений",status:"locked",description:"Исследование повторяющихся сценариев, скрытых правил и причин, по которым знакомые ситуации воспроизводятся снова.",progress:0,total:5,step:"Откроется после предыдущей территории"},
+    5:{roman:"V",point:"Точка Б",name:"Зеркальная цитадель",status:"locked",description:"Сборка фрактальной карты: увидеть взаимосвязи, опоры и способы защиты, которые влияют на выбор.",progress:0,total:2,step:"Откроется после предыдущей территории"},
+    6:{roman:"VI",point:"Точка Б",name:"Кузница выбора",status:"locked",description:"Выбор одной точки влияния и подготовка к практическому эксперименту. Здесь намерение превращается в конкретное действие.",progress:0,total:2,step:"Откроется после предыдущей территории"},
+    7:{roman:"VII",point:"Точка С",name:"Реактор преображения",status:"locked",description:"Одна территория и 21 последовательный день наблюдений и экспериментов. Три отрезка помогают увидеть динамику, не превращая календарный пропуск в обнуление пути.",progress:0,total:21,step:"21 день практики",reactor:true},
+    8:{roman:"VIII",point:"Финал",name:"Земля мастерства",status:"locked",description:"Возвращение к исходным ориентирам, сравнение результатов и фиксация того, что изменилось в восприятии, решениях и действиях.",progress:0,total:3,step:"Откроется после завершения Реактора"}
+  };
+  let profile={};
+  try{profile=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
+  const flow=window.GFLOW||[],saved=profile.flow||{};
+  const lastIndex=flow.findIndex(x=>x.u===saved.last);
+  const position=lastIndex>=0?lastIndex:Math.max(1,Math.min(Number(saved.max)||1,flow.length-1));
+  function territory(step){
+    if(step.pt==='0')return 1;if(step.pt==='А')return 2;
+    if(step.u==='slot.html?id=evidence')return 3;
+    if(step.u==='slot.html?id=fractal')return 5;
+    if(step.u==='slot.html?id=leverage'||step.u==='slot.html?id=guard')return 6;
+    if(step.pt==='Б')return 4;if(step.pt==='С')return 7;return 8;
+  }
+  const currentId=flow[position]?territory(flow[position]):1;
+  const visitedMax=Math.max(position,Math.min(Number(saved.max)||0,flow.length-1));
+  Object.keys(territories).forEach(key=>{
+    const id=Number(key),t=territories[id];
+    const steps=flow.map((x,i)=>({x,i})).filter(item=>territory(item.x)===id);
+    t.indices=steps.map(item=>item.i);t.total=steps.length;
+    t.progress=steps.filter(item=>item.i<visitedMax).length;
+    const seen=steps.some(item=>item.i<=visitedMax);
+    t.status=id===currentId?'current':seen?'done':'locked';
+    t.url=id===currentId&&flow[position]?flow[position].u:steps.length?steps[0].x.u:'form.html';
+    if(t.reactor){t.total=21;t.progress=Object.values((profile.reactor||{}).days||{}).filter(v=>Array.isArray(v)&&v.some(Boolean)).length;}
+    const node=document.querySelector('.node[data-id="'+id+'"]');
+    node.classList.remove('current','done','available','locked');node.classList.add(t.status);
+    node.querySelector('.state').textContent=t.status==='current'?'Ты здесь':t.status==='done'?'Открыта ранее':'Пока закрыта';
+    if(t.reactor)node.querySelectorAll('.reactor-meter i').forEach((cell,i)=>cell.classList.toggle('on',i<t.progress));
+  });
+  document.getElementById('resume').href=flow[position]?flow[position].u:'form.html';
+  const statusNames={current:"Текущая",done:"Открыта ранее",available:"Доступна",locked:"Закрыта"};
+  const overlay=document.getElementById("overlay");
+  const title=document.getElementById("detailTitle");
+  const kicker=document.getElementById("detailKicker");
+  const description=document.getElementById("detailDescription");
+  const progressText=document.getElementById("progressText");
+  const progressBar=document.getElementById("progressBar");
+  const note=document.getElementById("statusNote");
+  const reactorDetail=document.getElementById("reactorDetail");
+  const reactorDays=document.getElementById("reactorDays");
+  let selected=1;
+
+  function openTerritory(id){
+    const t=territories[id]; if(!t)return;
+    selected=id;
+    title.textContent=t.name;
+    kicker.textContent=`Территория ${t.roman} · ${t.point} · ${statusNames[t.status]}`;
+    description.textContent=t.description;
+    progressText.textContent=t.reactor?`${t.progress} из 21 дней`:`${t.progress} из ${t.total} экранов позади по сохраненному пути`;
+    progressBar.style.width=(t.progress/t.total*100)+"%";
+    reactorDetail.hidden=!t.reactor;
+    reactorDays.replaceChildren();
+    if(t.reactor){
+      for(let i=1;i<=21;i++){
+        const cell=document.createElement("i");
+        if(i<=t.progress)cell.className="done";
+        cell.title=`День ${i}`;
+        reactorDays.append(cell);
+      }
+    }
+    const button=document.getElementById("continue");
+    button.textContent=t.status==="locked"?"Территория закрыта":t.status==="done"?"Открыть территорию":"Продолжить путь";
+    button.disabled=t.status==="locked";
+    button.style.opacity=button.disabled?".55":"1";
+    button.style.cursor=button.disabled?"not-allowed":"pointer";
+    note.textContent=t.status==="locked"?"Продолжай путь по текущей территории.":"Положение взято из сохраненного маршрута. Открытие экрана само по себе не подтверждает выполнение задания.";
+    overlay.classList.add("show");
+    document.getElementById("close").focus();
+  }
+  function close(){overlay.classList.remove("show")}
+  document.querySelectorAll(".node").forEach(node=>node.addEventListener("click",()=>openTerritory(Number(node.dataset.id))));
+  document.getElementById("close").addEventListener("click",close);
+  document.getElementById("closeSecondary").addEventListener("click",close);
+  overlay.addEventListener("click",e=>{if(e.target===overlay)close()});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+  document.getElementById("continue").addEventListener("click",()=>{if(territories[selected].status!=="locked")location.href=territories[selected].url});
+})();
+</script>
+</body>
+</html>
