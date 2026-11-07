@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><script src="flow.js?v=tasks1"></script><script src="route.js?v=tasks1"></script><script src="route-gate.js?v=tasks1"></script><script src="gender.js?v=1"></script>
+<head><script src="flow.js?v=tasks1"></script><script src="route.js?v=visual1"></script><script src="route-gate.js?v=visual1"></script><script src="gender.js?v=1"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0c10">
@@ -31,9 +31,6 @@
 @keyframes p{0%,100%{box-shadow:0 0 6px 2px rgba(255,211,106,.5)}50%{box-shadow:0 0 26px 10px rgba(255,211,106,.85)}}
   .cont[hidden]{display:none}
   .dock a:focus-visible{outline:3px solid #ffe7b0;outline-offset:6px}
-  .start-confirm{width:min(92vw,460px);color:var(--text)}
-  .start-confirm::backdrop{background:#030508bb;backdrop-filter:blur(5px)}
-  .start-confirm a{display:flex;align-items:center;justify-content:center;text-decoration:none;min-height:48px;margin:10px 0}
   h1{font-size:clamp(27px,5vw,44px);font-weight:400;letter-spacing:.015em;text-align:center;margin:8px 0 7px;color:#f0dfbb}
   .subtitle{text-align:center;color:#a9a092;font:12px/1.55 Arial,sans-serif;letter-spacing:.04em;margin:0 auto 22px;max-width:540px}
   .map-frame{position:relative;isolation:isolate;border:1px solid rgba(211,169,94,.34);border-radius:22px;overflow:hidden;min-height:760px;
@@ -223,13 +220,7 @@
   <a class="cont" id="resume" href="form.html" hidden>Продолжить игру</a>
   <a class="start" id="start" href="form.html"><span>Старт</span></a>
 </div>
-<dialog class="detail start-confirm" id="startChoice" aria-labelledby="startTitle">
-  <h2 id="startTitle">Начало пути</h2>
-  <p>У Вас уже есть сохраненный путь. Старт не сбросит ответы или достижения. Можно посмотреть начало или продолжить актуальный шаг.</p>
-  <a class="secondary" id="viewBeginning" href="tasks.html">Посмотреть начало</a>
-  <a class="continue" id="resumeChoice" href="tasks.html">Продолжить текущий путь</a>
-  <button class="secondary" id="cancelStart" type="button">Отмена</button>
-</dialog>
+
 
 <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
   <section class="detail">
@@ -251,7 +242,7 @@
   </section>
 </div>
 
-<script src="engine.js?v=n6"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=1"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=tasks1"></script>
+<script src="engine.js?v=n6"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=1"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=visual1"></script>
 <script>
 (() => {
   // Геометрия и описания территорий; состояние ниже берется из профиля.
@@ -299,13 +290,9 @@
   cta.hidden=!started;
   cta.textContent=checkpoint.finished?'Посмотреть пройденное':'Продолжить игру';
   cta.href=checkpoint.finished?'tasks.html':checkpoint.url;
-  const start=document.getElementById('start'),choice=document.getElementById('startChoice');
-  const beginning=GRoute.status('form.html',profile)==='done'?GRoute.reviewUrl('form.html'):'form.html';
+  const start=document.getElementById('start');
+  const beginning=started?GRoute.reviewUrl('form.html'):'form.html';
   start.href=started?beginning:'form.html';
-  document.getElementById('viewBeginning').href=beginning;
-  document.getElementById('resumeChoice').href=cta.href;
-  if(started)start.onclick=function(event){event.preventDefault();choice.showModal()};
-  document.getElementById('cancelStart').onclick=function(){choice.close()};
   const statusNames={current:"Текущая",done:"Пройдена",available:"Посещена",locked:"Закрыта"};
   const overlay=document.getElementById("overlay");
   const title=document.getElementById("detailTitle");

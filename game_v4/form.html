@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><script src="flow.js?v=tasks1"></script><script src="route.js?v=tasks1"></script><script src="route-gate.js?v=tasks1"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1793899064"></script><meta http-equiv="Cache-Control" content="no-cache">
+<!doctype html><html lang="ru"><head><script src="flow.js?v=tasks1"></script><script src="route.js?v=visual1"></script><script src="route-gate.js?v=visual1"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1793899064"></script><meta http-equiv="Cache-Control" content="no-cache">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Инициация алхимика</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#100e0c">
@@ -82,21 +82,35 @@ h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-
 <div class="flash" id="flash"></div>
 <div class="sheet" id="sheet"><div class="sh" id="shc"></div></div>
 <script src="arcana.js?v=8"></script>
-<script src="engine.js?v=n6"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=1"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=tasks1"></script>
+<script src="engine.js?v=n6"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=1"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=visual1"></script>
 <script>
+var REVIEW=!!window.GReview,editing=false;
 var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
 var nm=document.getElementById('nm'),bd=document.getElementById('bd'),er=document.getElementById('er');
 nm.value=P.name||'';bd.value=P.birth||'';
-function save(){var fresh=GPassport.load();['name','birth','gender','points'].forEach(function(k){if(P[k]!==undefined)fresh[k]=P[k]});localStorage.setItem('alch_profile',JSON.stringify(fresh));P=fresh}
+function save(){if(REVIEW)return;var fresh=GPassport.load();['name','birth','gender','points'].forEach(function(k){if(P[k]!==undefined)fresh[k]=P[k]});localStorage.setItem('alch_profile',JSON.stringify(fresh));P=fresh}
 document.querySelectorAll('.md').forEach(function(b){if(P.gender==b.dataset.g)b.classList.add('on');b.onclick=function(){document.querySelectorAll('.md').forEach(function(x){x.classList.remove('on')});b.classList.add('on');P.gender=b.dataset.g;save();calc()}});
 nm.oninput=function(){P.name=nm.value.trim();save()};
 function red(n){while(n>22){n=String(n).split('').reduce(function(a,c){return a+ +c},0)}return n}
 function parse(v){var m=/^(\d\d)\.(\d\d)\.(\d{4})$/.exec(v);if(!m)return null;var d=+m[1],mo=+m[2],y=+m[3],dt=new Date(y,mo-1,d);
 if(y<1920||y>new Date().getFullYear()||dt.getMonth()!=mo-1||dt.getDate()!=d||dt>new Date())return null;return{d:d,m:mo,y:y}}
 bd.oninput=function(){var v=bd.value.replace(/\D/g,'').slice(0,8),o=v.slice(0,2);if(v.length>2)o+='.'+v.slice(2,4);if(v.length>4)o+='.'+v.slice(4);bd.value=o;P.birth=o;save();calc()};
-function calc(){var layers=GPassport.calculate(bd.value);if(layers){P.points=[layers.positions.A,layers.positions.C,layers.positions.E,layers.positions.G];save();GPassport.ensure(P)}}
+function calc(){var layers=GPassport.calculate(bd.value);if(layers){P.points=[layers.positions.A,layers.positions.C,layers.positions.E,layers.positions.G];save();if(!REVIEW)GPassport.ensure(P)}}
 var sheet=document.getElementById('sheet');sheet.onclick=function(e){if(e.target==sheet)sheet.classList.remove('on')};
-document.getElementById('next').onclick=function(){P.name=nm.value.trim();var m=!P.name?'Напишите, как к вам обращаться.':!parse(bd.value)?'Проверьте дату рождения.':!P.gender?'Выберите: М или Ж.':'';er.textContent=m;if(m)return;save();GPassport.ensure(P);if(window.GRoute)GRoute.complete('form.html');document.getElementById('flash').classList.add('on');setTimeout(function(){location.href='elder.html'},1300)};
+var next=document.getElementById('next');
+function reviewMode(){nm.readOnly=bd.readOnly=!editing;document.querySelectorAll('.md').forEach(function(b){b.disabled=!editing});next.textContent=editing?'Сохранить изменения':'Изменить данные';}
+if(REVIEW){
+ reviewMode();var exit=document.createElement('a');exit.textContent='К заданиям';exit.href='tasks.html';exit.className='b b1';exit.style.cssText='display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:10px;padding:0 18px;text-decoration:none';next.after(exit);
+}
+next.onclick=function(){
+ if(REVIEW&&!editing){editing=true;reviewMode();nm.focus();return;}
+ P.name=nm.value.trim();var m=!P.name?'Напишите, как к вам обращаться.':!parse(bd.value)?'Проверьте дату рождения.':!P.gender?'Выберите: М или Ж.':'';er.textContent=m;if(m)return;
+ if(REVIEW){
+  if(!confirm('Сохранить измененные имя, дату и пол? Паспорт будет пересчитан при изменении даты. Прежний паспорт сохранится в истории. Путь, результаты и текущий шаг не будут сброшены.'))return;
+  var fresh=GPassport.load();['name','birth','gender','points'].forEach(function(k){if(P[k]!==undefined)fresh[k]=P[k]});GPassport.ensure(fresh);GPro.save(fresh);P=fresh;editing=false;reviewMode();er.textContent='Данные сохранены. Ваш путь и результаты сохранены.';return;
+ }
+ save();GPassport.ensure(P);if(window.GRoute)GRoute.complete('form.html');document.getElementById('flash').classList.add('on');setTimeout(function(){location.href='elder.html'},1300);
+};
 calc();
 </script>
 </body></html>

@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const file=location.pathname.split('/').pop()||'index.html',q=new URLSearchParams(location.search);
-let target=null,u=null;
+let target=null,u=null;window.GReview=GRoute.isVisualReview();
 for(const step of GFLOW){const [name,query]=step.u.split('?'),params=new URLSearchParams(query||'');if(name!==file)continue;if(params.has('k')&&params.get('k')!==q.get('k'))continue;if(params.has('id')&&params.get('id')!==q.get('id'))continue;u=step.u;break;}
 // Hero, diary and map remain permanent resources, not an alternate route.
 const resource=['index.html','cover_v1.html','map.html','diary.html','hero.html','tasks.html'].includes(file);
@@ -13,7 +13,7 @@ if(u&&!resource){
  if(status==='locked')target='tasks.html?locked=1';
  if(!preview){
   if(status==='locked')target='tasks.html?locked=1';
-  else if(status==='done'&&!(u==='slot.html?id=mirrors'&&q.has('review')))target=GRoute.reviewUrl(u);
+  else if(status==='done'&&!window.GReview&&!(u==='slot.html?id=mirrors'&&q.has('review')))target=GRoute.reviewUrl(u);
  }
 }
 if(target){
