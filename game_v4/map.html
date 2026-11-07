@@ -21,11 +21,19 @@
   .shell{width:min(100%,980px);margin:0 auto;padding:clamp(14px,3vw,28px) clamp(12px,3vw,24px) 40px}
   .topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
   .brand{font:600 11px/1.2 Arial,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#c6a66c}
-  .map-entry{max-width:500px;margin:0 auto 22px;text-align:center}
-  .map-start{display:flex;align-items:center;justify-content:center;min-height:54px;padding:13px 20px;border:1px solid #f0cc81;border-radius:13px;background:linear-gradient(135deg,#edcb83,#ba8745);color:#211609;font:700 17px/1.5 Arial,sans-serif;text-decoration:none;box-shadow:0 6px 25px #a36d272e}
-  .map-start:hover{background:#f1d69b}
-  .map-start:focus-visible{outline:3px solid #ffe7b0;outline-offset:4px}
-  .entry-note{margin:9px 0 0;color:#c5b28f;font:12px/1.6 Arial,sans-serif}
+  /* Original map CTA finishes, recovered from 422f530^; only the dock layout adapts to the segmented map. */
+  .dock{position:fixed;left:0;right:0;bottom:calc(78px + env(safe-area-inset-bottom));height:190px;max-width:480px;margin:auto;z-index:45;pointer-events:none}
+  .dock a{pointer-events:auto}
+.start{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff5d0 0%,#f0c870 30%,#c98a40 60%,#8a5420 100%);display:flex;align-items:center;justify-content:center;font:700 24px 'Cormorant Garamond',serif;color:#fff8e0;text-shadow:0 2px 3px #000;text-decoration:none;animation:p 2s infinite;box-shadow:0 0 0 3px #7a4a16,0 0 0 6px rgba(201,138,64,.4),0 10px 24px rgba(0,0,0,.5),inset 0 3px 8px rgba(255,240,180,.5)}
+.start:before{content:"";position:absolute;inset:6px;border-radius:50%;border:1.2px dashed rgba(255,230,170,.65);pointer-events:none}
+.cont{position:absolute;right:12px;bottom:128px;width:168px;height:48px;font-size:17px!important;animation:p 2.6s infinite;border-radius:16px;background:linear-gradient(145deg,#8a5420 0%,#c98a40 40%,#f0c870 70%,#8a5420 100%);display:flex;align-items:center;justify-content:center;font:700 17px 'Cormorant Garamond',serif;color:#fff8e0;text-shadow:0 2px 4px #3a1a05;text-decoration:none;white-space:nowrap;box-shadow:0 0 0 2px #5a3410,0 8px 20px rgba(0,0,0,.5),inset 0 2px 6px rgba(255,230,170,.6),inset 0 -3px 6px rgba(0,0,0,.3)}
+.cont:before{content:"";position:absolute;inset:4px;border-radius:12px;border:1px dashed rgba(255,230,170,.6);pointer-events:none}
+@keyframes p{0%,100%{box-shadow:0 0 6px 2px rgba(255,211,106,.5)}50%{box-shadow:0 0 26px 10px rgba(255,211,106,.85)}}
+  .cont[hidden]{display:none}
+  .dock a:focus-visible{outline:3px solid #ffe7b0;outline-offset:6px}
+  .start-confirm{width:min(92vw,460px);color:var(--text)}
+  .start-confirm::backdrop{background:#030508bb;backdrop-filter:blur(5px)}
+  .start-confirm a{display:flex;align-items:center;justify-content:center;text-decoration:none;min-height:48px;margin:10px 0}
   h1{font-size:clamp(27px,5vw,44px);font-weight:400;letter-spacing:.015em;text-align:center;margin:8px 0 7px;color:#f0dfbb}
   .subtitle{text-align:center;color:#a9a092;font:12px/1.55 Arial,sans-serif;letter-spacing:.04em;margin:0 auto 22px;max-width:540px}
   .map-frame{position:relative;isolation:isolate;border:1px solid rgba(211,169,94,.34);border-radius:22px;overflow:hidden;min-height:760px;
@@ -118,7 +126,7 @@
   }
   @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="nav.css?v=8"><style>.shell{padding-top:55px;padding-bottom:110px}.overlay{z-index:100}.demo{text-decoration:none}.map-frame{min-height:820px}@media(max-width:520px){.map-frame{min-height:820px}}.n8{top:94%!important}</style></head>
+<link rel="stylesheet" href="nav.css?v=8"><style>.shell{padding-top:55px;padding-bottom:310px}.overlay{z-index:100}.demo{text-decoration:none}.map-frame{min-height:820px}@media(max-width:520px){.map-frame{min-height:820px}}.n8{top:94%!important}</style></head>
 <body data-page="map">
 <main class="shell">
   <div class="topline">
@@ -126,11 +134,6 @@
   </div>
   <h1>Карта путешествия</h1>
   <p class="subtitle">Восемь территорий. Одна непрерывная дорога от рождения к мастерству.</p>
-
-  <div class="map-entry">
-    <a class="map-start" id="resume" href="form.html">Старт</a>
-    <p class="entry-note" id="entryNote">Начните путь с инициации.</p>
-  </div>
 
   <section class="map-frame" aria-label="Карта из восьми территорий">
     <div class="map-heading">
@@ -216,6 +219,17 @@
     <span>Сохраненный путь игрока</span>
   </div>
 </main>
+<div class="dock" aria-label="Начало и продолжение игры">
+  <a class="cont" id="resume" href="form.html" hidden>Продолжить игру</a>
+  <a class="start" id="start" href="form.html"><span>Старт</span></a>
+</div>
+<dialog class="detail start-confirm" id="startChoice" aria-labelledby="startTitle">
+  <h2 id="startTitle">Начало пути</h2>
+  <p>У Вас уже есть сохраненный путь. Старт не сбросит ответы или достижения. Можно посмотреть начало или продолжить актуальный шаг.</p>
+  <a class="secondary" id="viewBeginning" href="tasks.html">Посмотреть начало</a>
+  <a class="continue" id="resumeChoice" href="tasks.html">Продолжить текущий путь</a>
+  <button class="secondary" id="cancelStart" type="button">Отмена</button>
+</dialog>
 
 <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
   <section class="detail">
@@ -282,9 +296,16 @@
   const started=position>1||Object.keys(saved.completed||{}).length>0||
     ['name','birth','points','mapStyle','ego','wheel','wheelTest','mirrors','passport'].some(key=>profile[key]&&(!(Array.isArray(profile[key]))||profile[key].length))||
     Number(profile.reactor?.day)>0||Object.keys(profile.reactor?.days||{}).length>0;
-  cta.textContent=checkpoint.finished?'Посмотреть пройденное':started?'Продолжить игру':'Старт';
+  cta.hidden=!started;
+  cta.textContent=checkpoint.finished?'Посмотреть пройденное':'Продолжить игру';
   cta.href=checkpoint.finished?'tasks.html':checkpoint.url;
-  document.getElementById('entryNote').textContent=checkpoint.finished?'Все результаты сохранены. Можно вернуться к пройденным этапам.':started?'Актуальный шаг: '+flow[checkpoint.index].t:'Ваш путь начнется с инициации.';
+  const start=document.getElementById('start'),choice=document.getElementById('startChoice');
+  const beginning=GRoute.status('form.html',profile)==='done'?GRoute.reviewUrl('form.html'):'form.html';
+  start.href=started?beginning:'form.html';
+  document.getElementById('viewBeginning').href=beginning;
+  document.getElementById('resumeChoice').href=cta.href;
+  if(started)start.onclick=function(event){event.preventDefault();choice.showModal()};
+  document.getElementById('cancelStart').onclick=function(){choice.close()};
   const statusNames={current:"Текущая",done:"Пройдена",available:"Посещена",locked:"Закрыта"};
   const overlay=document.getElementById("overlay");
   const title=document.getElementById("detailTitle");
