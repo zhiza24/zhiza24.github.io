@@ -13,7 +13,7 @@ if(u&&!resource){
  if(status==='locked')target='tasks.html?locked=1';
  if(!preview){
   if(status==='locked')target='tasks.html?locked=1';
-  else if(status==='done'&&!window.GReview&&!(u==='slot.html?id=mirrors'&&q.has('review')))target=GRoute.reviewUrl(u);
+  else if(status==='done'&&!(window.GOpening&&GOpening.active)&&!window.GReview&&!(u==='slot.html?id=mirrors'&&q.has('review')))target=GRoute.reviewUrl(u);
  }
 }
 if(target){

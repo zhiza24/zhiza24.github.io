@@ -29,11 +29,11 @@ function hypotheses(layers){return D.themes.map(t=>{
  return {id:t.id,status:'new',pole:'neutral',sources:{pythagoras:p,directions:d,arcana:a},numericWeight:numeric,archetypalWeight:archetypal,weight:numeric+archetypal,normalizedSupport:(numeric+archetypal)/2.5,independentGroups:(numeric?1:0)+(archetypal?1:0)};
 })}
 function load(){try{return JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){return {}}}
-function ensure(P){P=P||load();const layers=calculate(P.birth);if(!layers)return null;
+function ensure(P,storage){P=P||load();const layers=calculate(P.birth);if(!layers)return null;
  if(!P.passport||P.passport.birth!==P.birth||P.passport.version!==D.version){
   if(P.passport){P.passportHistory=P.passportHistory||[];P.passportHistory.push(JSON.parse(JSON.stringify(P.passport)))}
   P.passport={version:D.version,birth:P.birth,createdAt:Date.now(),layers,answers:{},history:[],hypotheses:hypotheses(layers)};
-  localStorage.setItem('alch_profile',JSON.stringify(P));
+  (storage||localStorage).setItem('alch_profile',JSON.stringify(P));
  }
  return P.passport;
 }

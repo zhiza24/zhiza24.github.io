@@ -15,7 +15,7 @@ with sync_playwright() as p:
   return {'name':'Тест','birth':'10.02.1979','gender':'f','wheel':[1,2,3,4,5,6,7,8],'reactor':{'day':5,'days':{}},'lab':{'lead':'resp','queue':['err'],'cycle':1,'agree':True},'flow':{'version':2,'current':flow[i],'last':'reactor.html','completed':{u:100 for u in flow[1:i]}},'diary':{'ins':[],'q':[]}}
  def seed(data):
   page.goto(base+'tasks.html');page.evaluate('(v)=>localStorage.setItem("alch_profile",JSON.stringify(v))',data);page.reload();return page.evaluate('localStorage.alch_profile')
- def unchanged(raw): assert page.evaluate('localStorage.alch_profile')==raw,'Read-only/locked navigation mutated profile'
+ def unchanged(raw): assert page.evaluate('window.GOpening?JSON.stringify(GOpening.savedProfile()):localStorage.alch_profile')==raw,'Read-only/locked navigation mutated profile'
  def check(): assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),'Mobile overflow'
  for i in [1,12,21,27,35,36,37,39]:
   data=at(i);raw=seed(data);assert page.locator('.task-card.current').count()==1;assert page.locator('.task-card.current').get_attribute('data-step')==flow[i]

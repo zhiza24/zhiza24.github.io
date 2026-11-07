@@ -21,7 +21,7 @@ with sync_playwright() as p:
    if name=='new':assert not cont.is_visible()
    else:
     a=cont.bounding_box();cbox=circle.bounding_box();assert a['y']+a['height']<cbox['y'];assert a['x']+a['width']/2>cbox['x']+cbox['width']/2;assert a['width']<=170
-    circle.click();page.wait_for_url('**/form.html?review=1');assert page.locator('.board').is_visible();assert page.locator('#nm').evaluate('(e)=>e.readOnly');assert page.evaluate('localStorage.alch_profile')==before;page.go_back();page.wait_for_url('**/map.html');assert page.evaluate('localStorage.alch_profile')==before
+    circle.click();page.wait_for_url('**/form.html?opening=1&v=opening2');assert page.locator('.board').is_visible();assert not page.locator('#nm').evaluate('(e)=>e.readOnly');assert page.evaluate('JSON.stringify(GOpening.savedProfile())')==before;page.go_back();page.wait_for_url('**/map.html');assert page.evaluate('localStorage.alch_profile')==before
    assert cta.evaluate('(e)=>{const r=e.getBoundingClientRect();return r.height>=48&&r.y>=0&&r.bottom<document.querySelector(".gnav").getBoundingClientRect().top&&e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}')
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth');assert page.locator('.node.locked').count()>0
    if width==390 and name in ['new','middleA']:page.screenshot(path=str(OUT/(name+'-mobile.png')),full_page=False)

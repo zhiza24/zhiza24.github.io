@@ -8,7 +8,7 @@ var I=JSON.parse("{\"task\": \"<svg viewBox=\\\"0 0 32 32\\\" width=\\\"32\\\" h
 function B(h,i,t,k){return '<a href="'+h+'"'+(k==cur?' class="on"':'')+'><span class="i">'+i+'</span>'+t+'</a>'}
 n.innerHTML='<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".5" stop-color="#e0a940"/><stop offset="1" stop-color="#a8692a"/></linearGradient></defs></svg>'+B('tasks.html',I.task,'Задания','tasks')+B('map.html?v=9',I.map,'Карта','map')+'<a href="hero.html?v=8" class="hero'+(cur=='hero'?' on':'')+'"><img src="img/hero_icon.png" alt="">Герой</a>'+B('diary.html',I.diary,'Дневник','diary')+'<a href="#menu" data-menu>'+I.menu+'Меню</a>';
 var t=document.createElement('div');t.className='gtoast';t.textContent='Скоро откроется';
-document.body.append(n,d,t);
+document.body.append(n,d,t);if(window.GOpening){var hint=document.createElement('p');hint.textContent='Вы снова в начале. Ваш основной путь сохранен. Карта вернет к нему.';d.querySelector('.pn').prepend(hint);var map=n.querySelector('a[href^="map.html"]');map.lastChild.textContent='Мой путь';map.title='Вернуться к сохраненному пути';}
 function toast(){t.classList.add('on');setTimeout(function(){t.classList.remove('on')},1600)}
 document.addEventListener('click',function(e){var a=e.target.closest('a');if(!a)return;var h=a.getAttribute('href');
 if(a.hasAttribute('data-menu')){e.preventDefault();d.classList.add('open');return}
@@ -44,8 +44,8 @@ document.querySelectorAll('.gtopb,.garr').forEach(function(e){e.remove()});
 var st=document.createElement('style');st.textContent='.gtop{position:fixed;left:0;right:0;top:0;z-index:60;display:flex;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;background:linear-gradient(#0c0804ee,#0c080400);pointer-events:none}.gtop button{pointer-events:auto;width:40px;height:40px;border-radius:50%;border:1.5px solid #c99a45;background:rgba(58,36,12,.9);color:#f0c870;font:800 22px Manrope,sans-serif;line-height:36px;padding:0;cursor:pointer}.gtop button.off{opacity:.3}.gtop .gpt{flex:1;text-align:center;color:#f0c870;font:700 13px Manrope,sans-serif;letter-spacing:.5px;text-shadow:0 1px 3px #000}';document.head.appendChild(st);
 var bar=document.createElement('div');bar.className='gtop';var b=document.createElement('button'),t=document.createElement('div'),fw=document.createElement('button');b.textContent='‹';fw.textContent='›';b.setAttribute('aria-label','Назад');fw.setAttribute('aria-label','Вперед');t.className='gpt';t.textContent=pt?('Точка '+pt+(pt==='Финал'?'':'')).replace('Точка Финал','Финал')+' · '+GFLOW[i].t:'';bar.append(b,t,fw);document.body.appendChild(bar);
 function P(){try{return JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){return{}}}
-function ok(){var u=i>=0?GFLOW[i].u:'';return !!(u&&window.GRoute&&(GRoute.reading(u)||GRoute.ready(u,P())))}
-function nxt(){return flowNext()}
+function ok(){if(window.GOpening&&i===1)return false;var u=i>=0?GFLOW[i].u:'';return !!(u&&window.GRoute&&(GRoute.reading(u)||GRoute.ready(u,P())))}
+function nxt(){var n=flowNext();return n&&window.GOpening?GOpening.url(n):n}
 setInterval(function(){fw.classList.toggle('off',!nxt()||!ok())},500);
-b.onclick=function(){if(window.gBack&&window.gBack())return;if(i>0)location.href=GFLOW[i-1].u;else history.back()};
-fw.onclick=function(){var n=nxt();if(!n)return;if(!ok()){if(window.gToast){var tt=document.querySelector('.gtoast');if(tt){tt.textContent='Сначала заполните этот шаг';gToast();setTimeout(function(){tt.textContent='Скоро откроется'},1700)}}return}if(window.GRoute&&!GRoute.complete())return;location.href=n}})();
+b.onclick=function(){if(window.gBack&&window.gBack())return;if(i>0)location.href=window.GOpening?GOpening.url(GFLOW[i-1].u):GFLOW[i-1].u;else history.back()};
+fw.onclick=function(){var n=nxt();if(!n)return;if(!ok()){if(window.gToast){var tt=document.querySelector('.gtoast');if(tt){tt.textContent='Сначала заполните этот шаг';gToast();setTimeout(function(){tt.textContent='Скоро откроется'},1700)}}return}if(window.GRoute&&!(window.GOpening&&GRoute.status(GFLOW[i].u)==='done')&&!GRoute.complete())return;location.href=n}})();

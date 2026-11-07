@@ -1,0 +1,43 @@
+"""Play the original opening, including actual choices; the real saved game survives."""
+import functools,http.server,json,pathlib,threading
+from playwright.sync_api import sync_playwright
+ROOT=pathlib.Path(__file__).resolve().parents[1];OUT=pathlib.Path('/workspace/opening-sequence-test-output');OUT.mkdir(exist_ok=True)
+class Quiet(http.server.SimpleHTTPRequestHandler):
+ def log_message(self,*a):pass
+server=http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Quiet,directory=str(ROOT)));threading.Thread(target=server.serve_forever,daemon=True).start();base=f'http://127.0.0.1:{server.server_port}/game_v4/'
+with sync_playwright() as p:
+ browser=p.chromium.launch(executable_path='/usr/bin/google-chrome',headless=True,args=['--no-sandbox']);errors=[];console_errors=[];responses=[]
+ for width,replay in [(320,False),(390,False),(1280,False),(320,True),(390,True),(1280,True)]:
+  ctx=browser.new_context(viewport={'width':width,'height':844 if width<1000 else 900},timezone_id='Europe/Moscow');ctx.route('**/upd.js*',lambda r:r.fulfill(body=''));ctx.route('https://fonts.googleapis.com/**',lambda r:r.fulfill(body=''));page=ctx.new_page();page.on('pageerror',lambda e:errors.append(str(e)));page.on('console',lambda m:console_errors.append(m.text) if m.type=='error' else None);page.on('response',lambda r:responses.append((r.url,r.status)));probe=ctx.new_page();probe.goto(base+'tasks.html');flow=probe.evaluate('GFLOW.map(s=>s.u)');at=21 if width==320 else 35
+  seed={'name':'Тест','birth':'10.02.1979','gender':'f','points':[10,2,4,16],'flow':{'version':2,'current':flow[at],'completed':{u:100 for u in flow[1:at]},'visited':{'elder.html':123},'results':{'choose.html':{'keep':'snapshot'}}},'reactor':{'day':5,'days':{'1':'saved'}},'lab':{'lead':'resp','queue':['err']},'diary':{'ins':[{'x':'Сохранить','d':100}]},'mirror_exercise':{'completed_at':100,'personal_note':'Мое наблюдение'},'passport':{'birth':'10.02.1979','version':'old-canary','answers':{'keep':'saved'}},'keep':True}
+  probe.evaluate('(p)=>{localStorage.clear();if(p)localStorage.alch_profile=JSON.stringify(p)}',seed if replay else None);original=probe.evaluate('localStorage.alch_profile');page.goto(base+'map.html');page.evaluate('sessionStorage.gLastStep="native-marker"');page.locator('#start').click();page.wait_for_function("location.pathname.endsWith('/form.html')&&document.getElementById('next')");assert page.locator('#next').inner_text()=='РОЖДЕНИЕ ГЕРОЯ';assert not page.locator('#nm').evaluate('(e)=>e.readOnly');assert page.locator('.orn').is_visible();draft_before=probe.evaluate('localStorage.alch_profile');assert not replay or draft_before==original
+  page.locator('#nm').click();page.locator('#nm').press_sequentially('Показ игры');page.locator('#bd').click();page.locator('#bd').press_sequentially('11021980');assert page.locator('#bd').input_value()=='11.02.1980';page.locator('[data-g=f]').click();assert probe.evaluate('localStorage.alch_profile')==draft_before,'Typing must not save identity or advance progress'
+  if replay:page.reload();assert probe.evaluate('localStorage.alch_profile')==original;page.locator('#nm').fill('Показ игры');page.locator('#bd').fill('11.02.1980')
+  def shot(name):
+   if replay and width==390:page.screenshot(path=str(OUT/name))
+  shot('01-form-mobile.png');page.locator('#next').click();page.wait_for_function("location.pathname.endsWith('/elder.html')&&document.getElementById('snd')");page.wait_for_timeout(2300);assert page.locator('#v').get_attribute('src')=='media/elder.mp4';assert page.locator('#au').get_attribute('src')=='media/voice.mp3';page.locator('#snd').click();assert page.locator('#snd').get_attribute('aria-pressed')=='true';page.wait_for_function('document.getElementById("v").readyState>=2');page.wait_for_function('document.getElementById("au").currentTime>0&&!document.getElementById("au").paused');assert page.locator('#au').evaluate('(a)=>!a.error');shot('02-elder-mobile.png')
+  if replay:
+   saved=probe.evaluate('JSON.parse(localStorage.alch_profile)');assert saved['name']=='Показ игры' and saved['birth']=='11.02.1980';assert saved['passportHistory'][-1]==seed['passport']
+   for key in ['flow','reactor','lab','diary','mirror_exercise','keep']:assert saved[key]==seed[key],key
+   saved_raw=probe.evaluate('localStorage.alch_profile');page.reload();assert probe.evaluate('localStorage.alch_profile')==saved_raw
+  page.locator('#arr').click();page.wait_for_function("location.pathname.endsWith('/hero.html')&&document.getElementById('go')");page.wait_for_timeout(1700);assert page.locator('#scr').is_visible();shot('03-hero-mobile.png');page.locator('#go').click();page.wait_for_function("location.pathname.endsWith('/scene.html')&&new URLSearchParams(location.search).get('k')==='start'&&document.getElementById('go')");page.locator('#h').click();page.wait_for_timeout(700);assert 'elder.jpg' in page.locator('.bg').evaluate('(e)=>getComputedStyle(e).backgroundImage');shot('04-elder-story-mobile.png');page.locator('#go').click();page.wait_for_function("location.pathname.endsWith('/choose.html')&&document.querySelector('#big img')");assert page.locator('#big img').evaluate('(i)=>i.complete&&i.naturalWidth>0');shot('05-card-choice-mobile.png');page.locator('#go').click();page.wait_for_function("location.pathname.endsWith('/scene.html')&&new URLSearchParams(location.search).get('k')==='road'&&document.getElementById('cv')");page.locator('#h').click();page.wait_for_timeout(500);shot('06-fog-mobile.png')
+  # Real scratch interaction, then the original question-and-answer bridge.
+  page.mouse.move(30,180);page.mouse.down()
+  for i in range(90):page.mouse.move(30+(i*29)%(width-60),100+(i*23)%200)
+  page.mouse.up();page.wait_for_function("document.querySelector('#go.on')");page.locator('#go').click();page.wait_for_function("location.pathname.endsWith('/bridge.html')&&document.querySelector('#box .a')");shot('07-bridge-mobile.png')
+  while page.locator('#box .a').count():
+   page.locator('#box .a').first.click();page.wait_for_timeout(650)
+  page.locator('#nx').click();page.wait_for_function("location.pathname.endsWith('/lanterns.html')&&document.querySelector('.ln')");shot('08-lanterns-mobile.png')
+  for i in range(7):page.locator('.ln').nth(i).click()
+  page.locator('#go').click();page.wait_for_function("location.pathname.endsWith('/sum.html')&&document.querySelector('#box .go')");assert 'свиток пути' in page.locator('body').inner_text().lower();assert not page.locator('.task-review').count();page.locator('#box .go').click();page.wait_for_function("location.pathname.endsWith('/slot.html')&&new URLSearchParams(location.search).get('id')==='dialog'&&document.querySelector('#dl button')");assert not page.locator('.task-review').count();page.locator('#dl button').first.click()
+  if replay:
+   assert probe.evaluate('localStorage.alch_profile')==saved_raw,'Interactions changed the real game';page.reload();assert probe.evaluate('localStorage.alch_profile')==saved_raw
+   # A query string does not unlock a future stage of the separate game either.
+   page.goto(base+'scene.html?k=pa&opening=1&v=opening2');page.wait_for_function("location.pathname.endsWith('/tasks.html')&&new URLSearchParams(location.search).has('locked')");assert probe.evaluate('localStorage.alch_profile')==saved_raw;page.goto(base+'map.html');assert page.locator('#resume').get_attribute('href')==seed['flow']['current'];assert page.evaluate('sessionStorage.gLastStep')=='native-marker';assert page.evaluate('!window.GOpening')
+  else:
+   saved=probe.evaluate('JSON.parse(localStorage.alch_profile)');assert saved['name']=='Показ игры';assert saved['flow']['completed']['lanterns.html'];assert saved['flow']['current']=='slot.html?id=dialog'
+  print(json.dumps({'case':'repeat' if replay else 'new','width':width,'result':'PASS'}),flush=True);ctx.close()
+ assert not errors,errors;assert not console_errors,console_errors
+ assets=[(u,s) for u,s in responses if any(x in u for x in ['media/elder.mp4','media/voice.mp3','img/elder.jpg','img/map_bg.jpg'])];assert assets and all(s in [200,206] for u,s in assets),assets
+ print(json.dumps({'result':'PASS','viewports':[320,390,1280],'modes':['new game','repeat from existing A/reactor saves'],'checks':['form draft and easy selected date replacement','original birth CTA','Elder video/audio','Hero and Elder story','actual card choice, fog scratch, bridge answers, lanterns and dialogue choice','no record-card substitution','reload and separate route locks','explicit identity save only; original results/progress/session preserved','return to actual saved step'],'runtime_errors':errors,'console_errors':console_errors,'screenshots':str(OUT)},ensure_ascii=False));browser.close()
+server.shutdown()
