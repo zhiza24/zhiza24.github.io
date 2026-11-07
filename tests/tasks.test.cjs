@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+function unit(seed={}){let raw=JSON.stringify(seed);const w={window:null,Date,URLSearchParams,location:{search:'',pathname:'/tasks.html'},localStorage:{getItem:()=>raw,setItem:(k,v)=>raw=v}};w.window=w;vm.createContext(w);for(const f of ['flow.js','route.js'])vm.runInContext(fs.readFileSync('game_v4/'+f,'utf8'),w);return w;}
+const w=unit(),flow=Array.from(w.GFLOW,x=>x.u);
+const seedAt=i=>({flow:{version:2,current:flow[i],last:'reactor.html',completed:Object.fromEntries(flow.slice(1,i).map(u=>[u,100]))},name:'Тест',gender:'f',wheel:[1,2,3,4,5,6,7,8],mirror_exercise:{keep:true},passport:{keep:true},lab:{lead:'resp',queue:['err'],cycle:1,agree:true},reactor:{day:5,days:{0:[1,1,1,1]}}});
+for(const index of [1,12,21,27,35,36,37,39]){const p=seedAt(index),x=unit(p);assert.equal(x.GRoute.resume(),flow[index]);flow.forEach((u,i)=>assert.equal(x.GRoute.status(u,p),i<index?'done':i===index?'current':'locked'));if(index<flow.length-1)assert.equal(x.GRoute.complete(flow[index+1]),false);assert.equal(x.GRoute.resume(),flow[index]);}
+const stale=unit({flow:{last:'reactor.html',max:100},reactor:{day:9}});assert.equal(stale.GRoute.resume(),'form.html');assert.equal(stale.GRoute.load().reactor.day,9);
+const fake=unit({flow:{version:2,current:'reactor.html',last:'reactor.html',completed:{}}});assert.equal(fake.GRoute.resume(),'form.html');
+const all=seedAt(flow.length-1);all.flow.completed[flow.at(-1)]=100;assert.equal(unit(all).GRoute.state().finished,true);
+const index=22,p=seedAt(index),x=unit(p),before=JSON.stringify(x.GRoute.load());assert.equal(x.GRoute.complete(flow[index-1]),false);assert.equal(JSON.stringify(x.GRoute.load()),before);assert.equal(x.GRoute.complete(flow[index]),true);assert.equal(x.GRoute.resume(),flow[index+1]);assert.ok(x.GRoute.load().flow.results[flow[index]]);assert.deepEqual(JSON.parse(JSON.stringify(x.GRoute.load().passport)),p.passport);
+console.log('PASS: new and stale saves; 0/A/B/C/final checkpoints; statuses; no future completion; no past date mutation; safe snapshots; unrelated data preserved.');

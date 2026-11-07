@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><script src="gender.js?v=1"></script>
+<head><script src="flow.js?v=tasks1"></script><script src="route.js?v=tasks1"></script><script src="route-gate.js?v=tasks1"></script><script src="gender.js?v=1"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0c10">
@@ -229,7 +229,7 @@
   </section>
 </div>
 
-<script src="route.js?v=1"></script><script src="engine.js?v=n6"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=1"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=passport1"></script>
+<script src="engine.js?v=n6"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=1"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=tasks1"></script>
 <script>
 (() => {
   // Геометрия и описания территорий; состояние ниже берется из профиля.
@@ -256,22 +256,21 @@
     if(step.pt==='Б')return 4;if(step.pt==='С')return 7;return 8;
   }
   const currentId=flow[position]?territory(flow[position]):1;
-  const visitedMax=Math.max(position,Math.min(Number(saved.max)||0,flow.length-1));
   Object.keys(territories).forEach(key=>{
     const id=Number(key),t=territories[id];
     const steps=flow.map((x,i)=>({x,i})).filter(item=>territory(item.x)===id);
     t.indices=steps.map(item=>item.i);t.total=steps.length;
-    t.progress=steps.filter(item=>(saved.completed||{})[item.x.u]).length;
-    const seen=steps.some(item=>(saved.visited||{})[item.x.u]||item.i<=visitedMax);
-    t.status=id===currentId?'current':t.progress===t.total?'done':seen?'available':'locked';
-    t.url=id===currentId&&flow[position]?flow[position].u:'diary.html?tab=tests&territory='+id;
+    t.progress=steps.filter(item=>GRoute.status(item.x.u,profile)==='done').length;
+    const seen=steps.some(item=>item.i<position);
+    t.status=t.progress===t.total?'done':id===currentId?'current':seen?'available':'locked';
+    t.url='tasks.html#block-'+encodeURIComponent(steps[0]?.x.pt||'0');
     if(t.reactor){t.total=21;t.progress=Math.max(0,Math.min(21,Number((profile.reactor||{}).day)||0));}
     const node=document.querySelector('.node[data-id="'+id+'"]');
     node.classList.remove('current','done','available','locked');node.classList.add(t.status);
     node.querySelector('.state').textContent=t.status==='current'?'Ты здесь':t.status==='done'?'Пройдена':t.status==='available'?'Посещена':'Пока закрыта';
     if(t.reactor)node.querySelectorAll('.reactor-meter i').forEach((cell,i)=>cell.classList.toggle('on',i<t.progress));
   });
-  document.getElementById('resume').href=flow[position]?flow[position].u:'form.html';
+  document.getElementById('resume').href='tasks.html';
   const statusNames={current:"Текущая",done:"Пройдена",available:"Посещена",locked:"Закрыта"};
   const overlay=document.getElementById("overlay");
   const title=document.getElementById("detailTitle");
