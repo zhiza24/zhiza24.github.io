@@ -14,8 +14,15 @@ with sync_playwright() as p:
   page.set_viewport_size({'width':width,'height':844 if width<1000 else 900})
   for name,data,label,href in cases:
    page.goto(base+'tasks.html');page.evaluate('(p)=>{localStorage.clear();localStorage.setItem("alch_profile",JSON.stringify(p))}',data);before=page.evaluate('localStorage.alch_profile');page.goto(base+'map.html')
-   cta=page.locator('#resume');assert cta.inner_text()==label;assert cta.get_attribute('href')==href;assert page.locator('.node').count()==8;assert page.evaluate('localStorage.alch_profile')==before
-   assert cta.evaluate('(e)=>{const r=e.getBoundingClientRect();return r.height>=48&&r.y>=0&&r.bottom<innerHeight-100&&document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===e}')
+   circle=page.locator('#start');cont=page.locator('#resume');cta=circle if name=='new' else cont
+   assert circle.inner_text()=='Старт';assert cta.inner_text()==label;assert cta.get_attribute('href')==href;assert page.locator('.node').count()==8;assert page.evaluate('localStorage.alch_profile')==before
+   assert circle.evaluate('(e)=>{const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width===96&&r.height===96&&s.borderRadius==="50%"&&s.backgroundImage.includes("radial-gradient")}')
+   assert circle.evaluate('(e)=>{const r=e.getBoundingClientRect(),nav=document.querySelector(".gnav").getBoundingClientRect();return r.bottom<nav.top&&r.top>innerHeight/2&&e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}')
+   if name=='new':assert not cont.is_visible()
+   else:
+    a=cont.bounding_box();cbox=circle.bounding_box();assert a['y']+a['height']<cbox['y'];assert a['x']+a['width']/2>cbox['x']+cbox['width']/2;assert a['width']<=170
+    circle.click();assert page.locator('#startChoice').is_visible();assert page.evaluate('localStorage.alch_profile')==before;page.locator('#cancelStart').click();assert page.evaluate('localStorage.alch_profile')==before
+   assert cta.evaluate('(e)=>{const r=e.getBoundingClientRect();return r.height>=48&&r.y>=0&&r.bottom<document.querySelector(".gnav").getBoundingClientRect().top&&e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}')
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth');assert page.locator('.node.locked').count()>0
    if width==390 and name in ['new','middleA']:page.screenshot(path=str(OUT/(name+'-mobile.png')),full_page=False)
    page.reload();assert cta.inner_text()==label;assert page.evaluate('localStorage.alch_profile')==before
@@ -23,6 +30,6 @@ with sync_playwright() as p:
  # A direct future URL still cannot unlock progress.
  page.goto(base+'tasks.html');page.evaluate('localStorage.setItem("alch_profile","{}")');page.goto(base+'reactor.html');page.wait_for_url('**/tasks.html?locked=1');assert page.evaluate('localStorage.alch_profile')=='{}'
  assert not errors,errors
- print(json.dumps({'result':'PASS','viewports':[320,390,1280],'cases':[c[0] for c in cases],'checks':['visible initial CTA >=48px and unoccluded','correct label and exact current target','eight map segments/locks retained','reload and saved data preserved','future direct URL remains locked'],'runtime_errors':errors},ensure_ascii=False))
+ print(json.dumps({'result':'PASS','viewports':[320,390,1280],'cases':[c[0] for c in cases],'checks':['original 96px round gold Start restored','small side Continue, above circle without overlap','both controls above bottom nav at 320/390/1280','existing Start opens no-reset choice','correct confirmed current target','eight map segments/locks retained','reload and saved data preserved','future direct URL remains locked'],'runtime_errors':errors},ensure_ascii=False))
  context.close();b.close()
 server.shutdown()
