@@ -22,8 +22,8 @@ with sync_playwright() as p:
     context.route('**/upd.js*',lambda route:route.fulfill(body=''))
     context.route('https://fonts.googleapis.com/**',lambda route:route.fulfill(body=''))
     page=context.new_page(); errors=[]; page.on('pageerror',lambda error:errors.append(str(error)))
-    page.goto(base+'slot.html?id=mirrors')
-    page.evaluate('(seed)=>localStorage.setItem("alch_profile",JSON.stringify(seed))',seed);page.reload()
+    page.goto(base+'tasks.html')
+    page.evaluate('(seed)=>localStorage.setItem("alch_profile",JSON.stringify(seed))',seed);page.goto(base+'slot.html?id=mirrors')
     no_overflow(page);shot(page,'intro-mobile.png')
     click(page,'Посмотреть в первое зеркало')
     for i in range(6):
@@ -52,7 +52,7 @@ with sync_playwright() as p:
     click(page,'Продолжить к Источнику');page.wait_for_url('**/slot.html?id=source')
     assert 'Я обнаружила' in page.locator('#m').inner_text()
     # Actual browser back and reload, then read-only review through diary.
-    page.go_back();assert 'Отражение собрано' in page.locator('#m').inner_text();page.reload();no_overflow(page)
+    page.go_back();page.wait_for_url('**/tasks.html?review=**');assert 'Просмотр пройденного' in page.locator('#tasks').inner_text();page.reload();assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
     page.goto(base+'diary.html?tab=tests');page.locator('a[href*="review="]').click()
     before=page.evaluate('localStorage.alch_profile');page.reload();assert page.evaluate('localStorage.alch_profile')==before
     assert page.locator('#m button').count()==0

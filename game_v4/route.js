@@ -26,10 +26,52 @@ function ready(u,p){
  if(u==='slot.html?id=retest')return !!p.retest;
  return false;
 }
-function resume(){const p=load(),f=p.flow||{};return index(f.current)>=0?f.current:index(f.last)>=0?f.last:'form.html'}
-function complete(u,p){u=u||currentUrl();p=p||load();if(mirrorReadonly()||(u==='slot.html?id=mirrors'&&!ready(u,p)))return false;if(!u||index(u)<0)return false;p.flow=p.flow||{};const f=p.flow;f.completed=f.completed||{};f.completed[u]=Date.now();const at=index(u);if(at>=index(resume())){const next=GFLOW[at+1];f.current=next?next.u:u;f.last=f.current}f.version=2;save(p);return true}
-function advance(){const u=currentUrl();complete(u);const i=index(u);return i>=0&&GFLOW[i+1]?GFLOW[i+1].u:'map.html'}
-function init(){if(mirrorReadonly())return;const p=load();p.flow=p.flow||{};const f=p.flow;if(!f.version){f.legacy={last:f.last||null,max:f.max||0};f.completed=f.completed||{};f.current=index(f.last)>=0?f.last:'form.html';f.version=2}f.visited=f.visited||{};const u=currentUrl();if(u)f.visited[u]=Date.now();save(p)}
+/* A cursor is a checkpoint only when its preceding step was actually completed.
+   Visited pages, legacy last/max and query strings never unlock a step. */
+function state(p){
+ p=p||load();const flow=window.GFLOW||[],f=p.flow||{},done=f.completed||{};
+ let at=1,candidate=index(f.current);
+ if(f.version>=2&&candidate>=1&&(candidate===1||done[flow[candidate-1].u]))at=candidate;
+ while(at<flow.length-1&&done[flow[at].u])at++;
+ const finished=at===flow.length-1&&!!done[flow[at].u];
+ return {index:at,url:flow[at]?flow[at].u:'form.html',finished};
+}
+function status(u,p){const i=index(u),s=state(p);if(i<0)return 'resource';return i<s.index||s.finished&&i===s.index?'done':i===s.index?'current':'locked';}
+function resume(){return state().url;}
+function reviewUrl(u){return 'tasks.html?review='+encodeURIComponent(u);}
+function complete(u,p){
+ u=u||currentUrl();p=p||load();
+ if(mirrorReadonly()||status(u,p)==='locked'||(u==='slot.html?id=mirrors'&&!ready(u,p)))return false;
+ if(!u||index(u)<0)return false;
+ p.flow=p.flow||{};const f=p.flow;f.completed=f.completed||{};
+ // Revisiting an already completed step must not change its date or route.
+ if(f.completed[u]&&!(u==='slot.html?id=mirrors'&&p.mirror_exercise))return false;
+ const at=index(u),checkpoint=state(p);f.completed[u]=Date.now();
+ // Keep a compact immutable result snapshot for safe review, not a mutable scene replay.
+ f.results=f.results||{};if(!f.results[u])f.results[u]=snapshot(u,p);
+ if(at>=checkpoint.index){const next=GFLOW[at+1];f.current=next?next.u:u;f.last=f.current;}
+ f.version=2;save(p);return true;
+}
+function advance(){const u=currentUrl();if(!complete(u))return 'tasks.html';const i=index(u);return i>=0&&GFLOW[i+1]?GFLOW[i+1].u:'tasks.html';}
+function init(){
+ const p=load(),u=currentUrl();if(mirrorReadonly()||!u||status(u,p)!=='current')return;
+ p.flow=p.flow||{};const f=p.flow;
+ if(!f.version){f.legacy={last:f.last||null,max:f.max||0};f.completed=f.completed||{};f.current=state(p).url;f.last=f.current;f.version=2;}
+ f.visited=f.visited||{};f.visited[u]=Date.now();save(p);
+}
+function snapshot(u,p){
+ const keys={
+  'form.html':['name','birth','gender'], 'choose.html':['mapStyle'], 'bridge.html':['hand','handTop'],
+  'ego.html':['ego'], 'swipe.html':['dq'], 'res.html':['res','body'], 'wheel8.html':['wheel'],
+  'wheel-test.html':['wheelTest'], 'values.html':['values','egoSelf','focuses'],
+  'slot.html?id=mirrors':['mirror_exercise'], 'slot.html?id=dialog':['dialog'],
+  'slot.html?id=evidence':['fractal'], 'slot.html?id=sort':['lab'], 'slot.html?id=found':['lab'],
+  'slot.html?id=pb_end':['lab'], 'slot.html?id=fractal':['fractal'], 'slot.html?id=leverage':['fractal'],
+  'slot.html?id=guard':['guard'], 'reactor.html':['reactor'], 'slot.html?id=retest':['retest'],
+  'slot.html?id=compare':['wheel','retest'], 'slot.html?id=end':['reactor','retest','arts']};
+ const data={};(keys[u]||['arts']).forEach(k=>{if(p[k]!==undefined)data[k]=p[k]});
+ const logs=(p.log||[]).slice(-3);return JSON.parse(JSON.stringify({data,logs}));
+}
 function reading(u){return u==='elder.html'||u==='hero.html'||u==='sum.html'||u==='fin.html'||u.startsWith('scene.html')||['pa_end','pb_intro','pc_intro','compare'].some(k=>u==='slot.html?id='+k)}
-window.GRoute={load,resume,complete,advance,init,ready,reading};
+window.GRoute={load,resume,complete,advance,init,ready,reading,state,status,reviewUrl,snapshot};
 })();
