@@ -18,7 +18,7 @@ var ST=[
 ];
 function GP(){var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}if(!P.path){try{P.path=JSON.parse(localStorage.getItem('alch_path'))}catch(e){}}var p=P.path||{done:{},log:[]};p.done=p.done||{};p.log=p.log||[];
  // карта считает пройденные вехи по единой линии GFLOW
- var mx=(P.flow&&P.flow.max)||0;if(window.GFLOW)MSU.forEach(function(u,k){var i=GFLOW.findIndex(function(s){return s.u===u});p.done['m'+k]=i>=0&&mx>=i?1:0});return p}
+ var completed=(P.flow&&P.flow.completed)||{};MSU.forEach(function(u,k){p.done['m'+k]=completed[u]?1:0});return p}
 function SP(p){var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}P.path=p;localStorage.setItem('alch_profile',JSON.stringify(P));localStorage.removeItem('alch_path')}
 // 12 шагов пути героя: номер на карте -> испытание
 var MSU=['form.html','choose.html','bridge.html','scene.html?k=ego','ego.html','swipe.html','wheel-test.html','values.html','slot.html?id=sort','slot.html?id=eraser','reactor.html','slot.html?id=compare'];

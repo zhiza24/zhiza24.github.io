@@ -1,9 +1,9 @@
-<!doctype html><html lang="ru"><head><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1793899064"></script><meta http-equiv="Cache-Control" content="no-cache">
+<!doctype html><html lang="ru"><head><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1793899064"></script><meta http-equiv="Cache-Control" content="no-cache">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Герой</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="nav.css?v=8">
+<link rel="stylesheet" href="nav.css?v=8"><link rel="stylesheet" href="passport.css?v=1">
 <style>
 html,body{margin:0;height:100%;overflow:hidden;background:#2a1606;font-family:Manrope,sans-serif;color:#3a220a}
 body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 50% 45%,#f6e6bf 0%,#e8cf98 55%,#b98a48 100%);box-shadow:inset 0 0 0 4px #8a5a20,inset 0 0 0 6px #e8c47a,inset 0 0 40px rgba(110,60,10,.5)}
@@ -51,7 +51,7 @@ body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
 <div class="c m st" id="lv" style="left:66.41%;top:12.21%;width:7.81%;height:5.86%;font-size:5.73cqw"></div>
 <div class="c lb" style="left:65.62%;top:17.97%;width:9.64%;height:1.46%;font-size:1.69cqw">Точка Б</div>
 <div class="c m st" id="p1" style="left:79.69%;top:15.43%;width:7.81%;height:5.86%;font-size:5.73cqw"></div>
-<div class="c lb" style="left:79.43%;top:20.70%;width:8.33%;height:1.56%;font-size:1.69cqw">Точка Ц</div>
+<div class="c lb" style="left:79.43%;top:20.70%;width:8.33%;height:1.56%;font-size:1.69cqw">Точка С</div>
 <div class="c m st" id="p2" style="left:41.67%;top:21.29%;width:7.81%;height:5.86%;font-size:5.73cqw"></div>
 <div class="c lb" style="left:41.15%;top:27.05%;width:9.38%;height:1.56%;font-size:1.69cqw">Точка А</div>
 <div class="c m st" id="p3" style="left:37.50%;top:30.76%;width:7.81%;height:5.86%;font-size:5.73cqw"></div>
@@ -71,46 +71,6 @@ body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
 </div></div>
 <div class="ov" id="ov"><div class="pp"><button class="x" type="button" id="x" aria-label="Закрыть">×</button><h3 id="ph"></h3><div class="bd" id="pb"></div></div></div>
 <div id="tk"><div><h3>Выполни задание</h3><p>Открой карту: светящийся круг ждет тебя.</p><button type="button" id="tkb">Открыть карту</button></div></div>
-<script src="arcana.js?v=8"></script>
-<script src="nav.js?v=11"></script>
-<script>
-var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
-function red(n){while(n>22){n=String(n).split('').reduce(function(a,c){return a+ +c},0)}return n}
-var mm=/^(\d\d)\.(\d\d)\.(\d{4})$/.exec(P.birth||''),pts=P.points||[];
-if(mm){var l=red(+mm[1]),i=+mm[2],v=red(mm[3].split('').reduce(function(a,c){return a+ +c},0));pts=[l,i,v,red(l+i+v)]}
-var n=pts[0]||12,A=ARCANA[n-1],f=P.gender=='f',R=ARCANA_ROLE[n]?ARCANA_ROLE[n][f?1:0]:A.epithet;
-var RN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI','XXII'];
-document.getElementById('role').textContent=R;
-document.getElementById('nm').textContent=P.name||(f?'Героиня':'Герой');document.getElementById('who').textContent='Аркан '+RN[n-1]+' · '+A.name;
 
-var Q=A.light.replace(/\.$/,'').split(/,\s*|\s+и\s+/).filter(Boolean).slice(0,4);
-document.getElementById('ql').innerHTML=Q.map(function(q){return q.charAt(0).toUpperCase()+q.slice(1)}).join(' · ');
-var SK=P.skill||{},mix=SK.top&&SK.top.length>1,k=mix?'mix':SK.key;
-var POW={s:'Твоя сила в том, что ты действуешь сразу. Пока другие сомневаются, ты уже делаешь первый шаг и зажигаешь движение вокруг себя.',
-n:'Твоя сила в том, что ты сначала видишь. Ты замечаешь то, что ускользает от других, и поэтому твой шаг всегда точный.',
-str:'Твоя сила в том, что ты строишь свое. Ты не идешь чужими тропами, а создаешь путь, по которому потом пойдут другие.',
-z:'Твоя сила в том, что ты чувствуешь людей рядом. Ты умеешь идти вместе, держать общий ритм и подхватывать тех, кто рядом.',
-mix:'Твоя сила в гибкости. В тебе живут разные способы действовать, и ты выбираешь тот, который нужен прямо сейчас.'};
-var L=[{t:'Твоя сила',c:POW[k]?'<p>'+POW[k]+'</p>':'<p>Пройди Колесо судьбы, и этот свиток откроется.</p>'},
-{t:'Твой аркан',c:'<p><b>Аркан '+RN[n-1]+' · 1 уровень</b><br>Личность '+(pts[0]||'?')+' · Интуиция '+(pts[1]||'?')+' · Вызов '+(pts[2]||'?')+' · Ключ '+(pts[3]||'?')+'</p><p><b>'+A.name+' — '+R+'</b></p><p>'+A.personality+'</p><p><b>Свет.</b> '+A.light+'</p><p>'+A.other+'</p>'}];
-var ov=document.getElementById('ov');
-document.getElementById('scr').onclick=function(e){var b=e.target.closest('.sl[data-i]');if(!b)return;var s=L[+b.dataset.i];document.getElementById('ph').textContent=s.t;document.getElementById('pb').innerHTML=s.c;ov.classList.add('on')};
-document.getElementById('x').onclick=function(){ov.classList.remove('on')};ov.onclick=function(e){if(e.target==ov)ov.classList.remove('on')};
-document.getElementById('go').onclick=function(){location.href='scene.html?k=start'};
-
-(function(){var T=['Колесо судьбы','Точка отсчета','Кривой мир','Колесо жизни','Желания','Ценности','Направления','Свиток Дизайна'];
-var g=P.progress||{};var d=Math.max(g.d||0,P.skill?1:0),t=g.t||0;if(t>d)t=d;P.progress={d:d,t:t};localStorage.setItem('alch_profile',JSON.stringify(P));
-var b=document.getElementById('ts');b.innerHTML=T.map(function(n,i){var c=i<d?'dn':(i==d&&t>=d?'nx':'lk');return '<button type="button" class="'+c+'" data-i="'+i+'" title="'+n+'"><i>'+(i<d?'✓':i+1)+'</i>'+n+'</button>'}).join('');
-document.getElementById('tq').textContent=t;
-b.onclick=function(e){var x=e.target.closest('button');if(!x)return;var i=+x.dataset.i;if(i==0&&d>=1){location.href='scene.html?k=start';return}if(t<d&&i==d){document.getElementById('tk').classList.add('on');return}window.gToast?gToast('Скоро'):alert('Скоро')};
-var k=document.getElementById('tk');if(t<d&&d>1)k.classList.add('on');document.getElementById('tkb').onclick=function(){location.href='map.html?v=9'};k.onclick=function(e){if(e.target==k)k.classList.remove('on')};})();
-
-(function(){var N=['Точка 0 · Самоценность','Точка 0 · Фоновое состояние','Точка А · Привычный сценарий','Точка А · Реальная точка А','Точка Б · Желания и ценности','Точка Б · Выбор приоритета','Точка Ц · Действие и доказательства'];window.heroStepsDraw=function(){S=Math.max(S,+(P.steps||0));draw()};var O=['td','p3','p2','ar','p0','lv','p1'],S=+(P.steps||0);
-function draw(){O.forEach(function(id,i){var e=document.getElementById(id);if(!e)return;e.className='c m st '+(i<S?'dn':i==S?'nx':'lk');e.textContent=i<S?'✓':i+1;e.title=N[i]})}draw();
-})();
-</script>
-<style>.nxs{position:fixed;left:16px;right:16px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:55;display:block;text-align:center;padding:16px;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope,sans-serif;text-decoration:none;box-shadow:0 0 0 3px #ffd877,0 8px 24px rgba(255,200,90,.6);animation:nxu .6s ease-out both,nxp 1.8s 1s infinite;opacity:0}
-.nxs small{display:block;font-size:12px;font-weight:600;opacity:.8}
-@keyframes nxu{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}@keyframes nxp{50%{box-shadow:0 0 0 3px #ffd877,0 0 34px 10px rgba(255,210,110,.8)}}</style>
-<script src="stages.js?v=4"></script><script>try{var p=GP();if(!p.done[0]){p.done[0]=1;SP(p)}}catch(e){}setTimeout(function(){var a=document.createElement('a');a.className='nxs';a.href='scene.html?k=start';a.innerHTML='Начать путь →<small>Выбери свою карту</small>';a.style.opacity=1;document.body.appendChild(a)},500)</script><div id="arts" style="position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));display:flex;gap:8px;z-index:30"></div><script>try{var AP=JSON.parse(localStorage.getItem('alch_profile'))||{},IC={'Мост':'🌉','Компас':'🧭','Огонь':'🔥','Кристалл пути':'💎','Фонарь':'🏮','Черный кристалл':'🖤','Зеркало':'🪞','Колесо':'☸️'};document.getElementById('arts').innerHTML=(AP.arts||[]).map(function(a){return '<span title="'+a+'" style="width:40px;height:40px;border-radius:50%;background:#24160c;border:1.5px solid #c9a46a;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 10px #ffcf5a">'+(IC[a]||'💎')+'</span>'}).join('')}catch(e){}</script><div id="stp" style="display:none;position:fixed;inset:0;z-index:80;background:rgba(12,8,4,.85);padding:calc(40px + env(safe-area-inset-top)) 16px"><div style="max-width:480px;margin:0 auto;padding:18px;border-radius:16px;background:linear-gradient(#f6e6bf,#e2c78e);color:#3a2410;font-family:Manrope"><div style="font:700 22px Cormorant Garamond,serif;color:#6a3a12">Твой Дневник</div><p style="font-size:14px">Здесь ты будешь записывать инсайты, а игра сохранит итоги всех испытаний. Сделай первую запись: твоя точка старта.</p><div id="hn"></div><textarea id="sta" rows="4" style="width:100%;box-sizing:border-box;margin-top:8px;padding:10px;border-radius:10px;border:1.5px solid #a8692a;font:15px Manrope" placeholder="Чего я хочу или что у меня болит..."></textarea><button id="stb" style="display:block;width:100%;margin-top:10px;padding:13px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);font:800 16px Manrope">Записать в Дневник</button></div></div>
-<script>(function(){var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}if(P.start)return;var H=['Я хочу понять, куда мне идти','Я устала все тянуть одна','Хочу больше денег и свободы','Не чувствую, что живу свою жизнь','Хочу перестать себя обесценивать'];stp.style.display='block';hn.innerHTML=H.map(function(x){return '<button style="margin:3px;padding:7px 11px;border:1.5px solid #a8692a;border-radius:999px;background:#fff6dc;font:600 13px Manrope">'+x+'</button>'}).join('');hn.querySelectorAll('button').forEach(function(b){b.onclick=function(){sta.value=(sta.value?sta.value+'. ':'')+b.textContent}});stb.onclick=function(){var v=sta.value.trim();if(!v)return;P.start=v;localStorage.setItem('alch_profile',JSON.stringify(P));try{var g=GP();g.log=g.log||[];g.log.push({t:Date.now(),x:'Точка старта: '+v});SP(g)}catch(e){}stp.style.display='none'}})();</script></body></html>
+<script src="route.js?v=1"></script><script src="engine.js?v=n6"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=1"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=passport1"></script><script src="passport-ui.js?v=1"></script>
+</body></html>
