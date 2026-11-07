@@ -21,7 +21,7 @@ with sync_playwright() as p:
    if name=='new':assert not cont.is_visible()
    else:
     a=cont.bounding_box();cbox=circle.bounding_box();assert a['y']+a['height']<cbox['y'];assert a['x']+a['width']/2>cbox['x']+cbox['width']/2;assert a['width']<=170
-    circle.click();assert page.locator('#startChoice').is_visible();assert page.evaluate('localStorage.alch_profile')==before;page.locator('#cancelStart').click();assert page.evaluate('localStorage.alch_profile')==before
+    circle.click();page.wait_for_url('**/form.html?review=1');assert page.locator('.board').is_visible();assert page.locator('#nm').evaluate('(e)=>e.readOnly');assert page.evaluate('localStorage.alch_profile')==before;page.go_back();page.wait_for_url('**/map.html');assert page.evaluate('localStorage.alch_profile')==before
    assert cta.evaluate('(e)=>{const r=e.getBoundingClientRect();return r.height>=48&&r.y>=0&&r.bottom<document.querySelector(".gnav").getBoundingClientRect().top&&e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}')
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth');assert page.locator('.node.locked').count()>0
    if width==390 and name in ['new','middleA']:page.screenshot(path=str(OUT/(name+'-mobile.png')),full_page=False)
@@ -30,6 +30,6 @@ with sync_playwright() as p:
  # A direct future URL still cannot unlock progress.
  page.goto(base+'tasks.html');page.evaluate('localStorage.setItem("alch_profile","{}")');page.goto(base+'reactor.html');page.wait_for_url('**/tasks.html?locked=1');assert page.evaluate('localStorage.alch_profile')=='{}'
  assert not errors,errors
- print(json.dumps({'result':'PASS','viewports':[320,390,1280],'cases':[c[0] for c in cases],'checks':['original 96px round gold Start restored','small side Continue, above circle without overlap','both controls above bottom nav at 320/390/1280','existing Start opens no-reset choice','correct confirmed current target','eight map segments/locks retained','reload and saved data preserved','future direct URL remains locked'],'runtime_errors':errors},ensure_ascii=False))
+ print(json.dumps({'result':'PASS','viewports':[320,390,1280],'cases':[c[0] for c in cases],'checks':['original 96px round gold Start restored','small side Continue, above circle without overlap','both controls above bottom nav at 320/390/1280','existing Start opens original form safely without mutation','correct confirmed current target','eight map segments/locks retained','reload and saved data preserved','future direct URL remains locked'],'runtime_errors':errors},ensure_ascii=False))
  context.close();b.close()
 server.shutdown()

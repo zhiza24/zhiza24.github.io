@@ -39,7 +39,7 @@ with sync_playwright() as p:
  # Past direct scenes are redirected BEFORE script side effects, with query spoofing ineffective.
  data=at(27);raw=seed(data)
  for target in ['wheel-test.html','slot.html?id=source','scene.html?k=pa','form.html','choose.html']:
-  page.goto(base+target);page.wait_for_url('**/tasks.html?review=**');unchanged(raw)
+  expected=page.evaluate('(u)=>GRoute.reviewUrl(u)',target);page.goto(base+target);page.wait_for_url(base+expected);unchanged(raw)
  # The actual final scene can finish the last cycle, without creating a fake next task.
  data=at(len(flow)-1);data['reactor']['day']=21;data['retest']={'wheel':[2]*8};data['lab']['queue']=[];seed(data);page.locator('.task-hero a').click();page.wait_for_url('**/slot.html?id=end');page.locator('#nx').click();page.wait_for_url('**/tasks.html');raw=page.evaluate('localStorage.alch_profile');assert page.locator('.task-card.locked,.task-card.current').count()==0;assert page.locator('.task-hero').inner_text().startswith('Путь завершен');unchanged(raw)
  # Nav assignment links and Hero hotspot always go to the task list, not a stale reactor last.

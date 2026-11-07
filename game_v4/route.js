@@ -7,7 +7,10 @@ function save(p){localStorage.setItem(K,JSON.stringify(p))}
 function index(u){return (window.GFLOW||[]).findIndex(x=>x.u===u)}
 function currentUrl(){const i=window.gIdx?gIdx():-1;return i<0?null:GFLOW[i].u}
 function mirrorReadonly(){const q=new URLSearchParams(location.search);return q.get('id')==='mirrors'&&(q.get('preview')==='1'||q.has('review'));}
+function visualReview(u){return ['index.html','form.html','elder.html','sum.html','fin.html','scene.html?k=start','scene.html?k=ego','scene.html?k=pa','scene.html?k=pa_test','slot.html?id=source','slot.html?id=pa_end','slot.html?id=pb_intro','slot.html?id=pc_intro','slot.html?id=mirage'].includes(u);}
+function isVisualReview(){const q=new URLSearchParams(location.search),f=location.pathname.split('/').pop()||'index.html';const u=f==='scene.html'?f+'?k='+q.get('k'):f==='slot.html'?f+'?id='+q.get('id'):f;return q.get('review')==='1'&&visualReview(u);}
 function ready(u,p){
+ if(isVisualReview())return false;
  if(u==='slot.html?id=mirrors')return !mirrorReadonly()&&!((p.mirrors||{}).draft)&&!!(p.mirror_exercise&&p.mirror_exercise.completed_at);
  if(u==='form.html')return !!(p.name&&window.GPassport&&GPassport.parse(p.birth)&&['m','f'].includes(p.gender)&&p.points);
  if((p.flow||{}).completed&&p.flow.completed[u])return true;
@@ -38,10 +41,10 @@ function state(p){
 }
 function status(u,p){const i=index(u),s=state(p);if(i<0)return 'resource';return i<s.index||s.finished&&i===s.index?'done':i===s.index?'current':'locked';}
 function resume(){return state().url;}
-function reviewUrl(u){return 'tasks.html?review='+encodeURIComponent(u);}
+function reviewUrl(u){return visualReview(u)?u+(u.includes('?')?'&':'?')+'review=1':'tasks.html?review='+encodeURIComponent(u);}
 function complete(u,p){
  u=u||currentUrl();p=p||load();
- if(mirrorReadonly()||status(u,p)==='locked'||(u==='slot.html?id=mirrors'&&!ready(u,p)))return false;
+ if(isVisualReview()||mirrorReadonly()||status(u,p)==='locked'||(u==='slot.html?id=mirrors'&&!ready(u,p)))return false;
  if(!u||index(u)<0)return false;
  p.flow=p.flow||{};const f=p.flow;f.completed=f.completed||{};
  // Revisiting an already completed step must not change its date or route.
@@ -54,7 +57,7 @@ function complete(u,p){
 }
 function advance(){const u=currentUrl();if(!complete(u))return 'tasks.html';const i=index(u);return i>=0&&GFLOW[i+1]?GFLOW[i+1].u:'tasks.html';}
 function init(){
- const p=load(),u=currentUrl();if(mirrorReadonly()||!u||status(u,p)!=='current')return;
+ const p=load(),u=currentUrl();if(isVisualReview()||mirrorReadonly()||!u||status(u,p)!=='current')return;
  p.flow=p.flow||{};const f=p.flow;
  if(!f.version){f.legacy={last:f.last||null,max:f.max||0};f.completed=f.completed||{};f.current=state(p).url;f.last=f.current;f.version=2;}
  f.visited=f.visited||{};f.visited[u]=Date.now();save(p);
@@ -72,6 +75,6 @@ function snapshot(u,p){
  const data={};(keys[u]||['arts']).forEach(k=>{if(p[k]!==undefined)data[k]=p[k]});
  const logs=(p.log||[]).slice(-3);return JSON.parse(JSON.stringify({data,logs}));
 }
-function reading(u){return u==='elder.html'||u==='hero.html'||u==='sum.html'||u==='fin.html'||u.startsWith('scene.html')||['pa_end','pb_intro','pc_intro','compare'].some(k=>u==='slot.html?id='+k)}
-window.GRoute={load,resume,complete,advance,init,ready,reading,state,status,reviewUrl,snapshot};
+function reading(u){if(isVisualReview())return false;return u==='elder.html'||u==='hero.html'||u==='sum.html'||u==='fin.html'||u.startsWith('scene.html')||['pa_end','pb_intro','pc_intro','compare'].some(k=>u==='slot.html?id='+k)}
+window.GRoute={load,resume,complete,advance,init,ready,reading,state,status,reviewUrl,snapshot,visualReview,isVisualReview};
 })();

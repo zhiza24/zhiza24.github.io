@@ -9,6 +9,7 @@ function date(t){return new Date(t).toLocaleString('ru-RU',{timeZone:'Europe/Mos
 function title(step){return step.t.replace(/ё/g,'е');}
 function review(u){
  const step=GFLOW.find(x=>x.u===u);if(!step||GRoute.status(u,p)!=='done'){para(host,'Этот шаг пока закрыт. Сначала завершите актуальное задание.','task-notice');return false;}
+ if(GRoute.visualReview(u)){location.replace(GRoute.reviewUrl(u));return true;}
  host.append(el('h1',title(step)));para(host,'Просмотр пройденного этапа. Ответы, даты и продвижение не меняются.','task-notice');
  const at=(p.flow||{}).completed?.[u];if(at)para(host,'Завершено '+date(at),'muted');
  const box=el('section',undefined,'task-review'),saved=p.flow?.results?.[u];
