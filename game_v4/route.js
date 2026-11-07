@@ -6,7 +6,9 @@ function load(){try{return JSON.parse(localStorage.getItem(K))||{}}catch(e){retu
 function save(p){localStorage.setItem(K,JSON.stringify(p))}
 function index(u){return (window.GFLOW||[]).findIndex(x=>x.u===u)}
 function currentUrl(){const i=window.gIdx?gIdx():-1;return i<0?null:GFLOW[i].u}
+function mirrorReadonly(){const q=new URLSearchParams(location.search);return q.get('id')==='mirrors'&&(q.get('preview')==='1'||q.has('review'));}
 function ready(u,p){
+ if(u==='slot.html?id=mirrors')return !mirrorReadonly()&&!((p.mirrors||{}).draft)&&!!(p.mirror_exercise&&p.mirror_exercise.completed_at);
  if(u==='form.html')return !!(p.name&&window.GPassport&&GPassport.parse(p.birth)&&['m','f'].includes(p.gender)&&p.points);
  if((p.flow||{}).completed&&p.flow.completed[u])return true;
  if(u==='choose.html')return !!p.mapStyle;
@@ -25,9 +27,9 @@ function ready(u,p){
  return false;
 }
 function resume(){const p=load(),f=p.flow||{};return index(f.current)>=0?f.current:index(f.last)>=0?f.last:'form.html'}
-function complete(u){u=u||currentUrl();if(!u||index(u)<0)return false;const p=load();p.flow=p.flow||{};const f=p.flow;f.completed=f.completed||{};f.completed[u]=Date.now();const at=index(u);if(at>=index(resume())){const next=GFLOW[at+1];f.current=next?next.u:u;f.last=f.current}f.version=2;save(p);return true}
+function complete(u,p){u=u||currentUrl();p=p||load();if(mirrorReadonly()||(u==='slot.html?id=mirrors'&&!ready(u,p)))return false;if(!u||index(u)<0)return false;p.flow=p.flow||{};const f=p.flow;f.completed=f.completed||{};f.completed[u]=Date.now();const at=index(u);if(at>=index(resume())){const next=GFLOW[at+1];f.current=next?next.u:u;f.last=f.current}f.version=2;save(p);return true}
 function advance(){const u=currentUrl();complete(u);const i=index(u);return i>=0&&GFLOW[i+1]?GFLOW[i+1].u:'map.html'}
-function init(){const p=load();p.flow=p.flow||{};const f=p.flow;if(!f.version){f.legacy={last:f.last||null,max:f.max||0};f.completed=f.completed||{};f.current=index(f.last)>=0?f.last:'form.html';f.version=2}f.visited=f.visited||{};const u=currentUrl();if(u)f.visited[u]=Date.now();save(p)}
+function init(){if(mirrorReadonly())return;const p=load();p.flow=p.flow||{};const f=p.flow;if(!f.version){f.legacy={last:f.last||null,max:f.max||0};f.completed=f.completed||{};f.current=index(f.last)>=0?f.last:'form.html';f.version=2}f.visited=f.visited||{};const u=currentUrl();if(u)f.visited[u]=Date.now();save(p)}
 function reading(u){return u==='elder.html'||u==='hero.html'||u==='sum.html'||u==='fin.html'||u.startsWith('scene.html')||['pa_end','pb_intro','pc_intro','compare'].some(k=>u==='slot.html?id='+k)}
 window.GRoute={load,resume,complete,advance,init,ready,reading};
 })();
