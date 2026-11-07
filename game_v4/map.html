@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><script src="flow.js?v=tasks1"></script><script src="route.js?v=visual1"></script><script src="route-gate.js?v=visual1"></script><script src="gender.js?v=1"></script>
+<head><script src="flow.js?v=tasks1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=opening2"></script><script src="route-gate.js?v=opening2"></script><script src="gender.js?v=1"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0c10">
@@ -242,7 +242,7 @@
   </section>
 </div>
 
-<script src="engine.js?v=n6"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=1"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=visual1"></script>
+<script src="engine.js?v=n6"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=opening2"></script>
 <script>
 (() => {
   // Геометрия и описания территорий; состояние ниже берется из профиля.
@@ -291,7 +291,7 @@
   cta.textContent=checkpoint.finished?'Посмотреть пройденное':'Продолжить игру';
   cta.href=checkpoint.finished?'tasks.html':checkpoint.url;
   const start=document.getElementById('start');
-  const beginning=started?GRoute.reviewUrl('form.html'):'form.html';
+  const beginning=started?'form.html?opening=1&v=opening2':'form.html';
   start.href=started?beginning:'form.html';
   const statusNames={current:"Текущая",done:"Пройдена",available:"Посещена",locked:"Закрыта"};
   const overlay=document.getElementById("overlay");

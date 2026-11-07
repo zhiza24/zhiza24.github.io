@@ -8,7 +8,7 @@ function index(u){return (window.GFLOW||[]).findIndex(x=>x.u===u)}
 function currentUrl(){const i=window.gIdx?gIdx():-1;return i<0?null:GFLOW[i].u}
 function mirrorReadonly(){const q=new URLSearchParams(location.search);return q.get('id')==='mirrors'&&(q.get('preview')==='1'||q.has('review'));}
 function visualReview(u){return ['index.html','form.html','elder.html','sum.html','fin.html','scene.html?k=start','scene.html?k=ego','scene.html?k=pa','scene.html?k=pa_test','slot.html?id=source','slot.html?id=pa_end','slot.html?id=pb_intro','slot.html?id=pc_intro','slot.html?id=mirage'].includes(u);}
-function isVisualReview(){const q=new URLSearchParams(location.search),f=location.pathname.split('/').pop()||'index.html';const u=f==='scene.html'?f+'?k='+q.get('k'):f==='slot.html'?f+'?id='+q.get('id'):f;return q.get('review')==='1'&&visualReview(u);}
+function isVisualReview(){if(window.GOpening&&GOpening.active)return false;const q=new URLSearchParams(location.search),f=location.pathname.split('/').pop()||'index.html';const u=f==='scene.html'?f+'?k='+q.get('k'):f==='slot.html'?f+'?id='+q.get('id'):f;return q.get('review')==='1'&&visualReview(u);}
 function ready(u,p){
  if(isVisualReview())return false;
  if(u==='slot.html?id=mirrors')return !mirrorReadonly()&&!((p.mirrors||{}).draft)&&!!(p.mirror_exercise&&p.mirror_exercise.completed_at);
@@ -55,7 +55,7 @@ function complete(u,p){
  if(at>=checkpoint.index){const next=GFLOW[at+1];f.current=next?next.u:u;f.last=f.current;}
  f.version=2;save(p);return true;
 }
-function advance(){const u=currentUrl();if(!complete(u))return 'tasks.html';const i=index(u);return i>=0&&GFLOW[i+1]?GFLOW[i+1].u:'tasks.html';}
+function advance(){const u=currentUrl(),repeat=window.GOpening&&GOpening.active;if(!(repeat&&status(u)==='done')&&!complete(u))return 'tasks.html';const i=index(u),next=i>=0&&GFLOW[i+1]?GFLOW[i+1].u:'tasks.html';return repeat?GOpening.url(next):next;}
 function init(){
  const p=load(),u=currentUrl();if(isVisualReview()||mirrorReadonly()||!u||status(u,p)!=='current')return;
  p.flow=p.flow||{};const f=p.flow;
