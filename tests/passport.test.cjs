@@ -2,6 +2,8 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const {JSDOM,ResourceLoader,VirtualConsole}=require('jsdom');
 const root=path.join(__dirname,'../game_v4');
 function unit(seed={}){let value=JSON.stringify(seed);const w={localStorage:{getItem:()=>value,setItem:(k,v)=>value=v},Date,window:null};w.window=w;vm.createContext(w);for(const f of ['passport-data.js','passport.js','route.js'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),w);return w}
+assert.doesNotMatch(fs.readFileSync(path.join(root,'slot.html'),'utf8'),/гипотез|диагноз/i);
+for(const f of ['elder.html','scene.html','choose.html','bridge.html','lanterns.html','sum.html','ego.html','swipe.html','res.html','breath.html','fin.html','wheel8.html','wheel-test.js','values.html'])assert.ok(fs.readFileSync(path.join(root,f),'utf8').includes('GRoute.advance()'),f+' must save progress before transition');
 const w=unit(),p=w.GPassport.calculate('10.02.1979');
 assert.deepEqual(JSON.parse(JSON.stringify(p.positions)),{A:10,B:12,C:2,D:10,E:8,F:10,G:20,H:3,I:4});
 assert.deepEqual(Array.from(p.workingNumbers),[29,11,27,9]);
