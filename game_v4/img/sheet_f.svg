@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="864" height="1152" viewBox="0 0 864 1152">
+  <defs>
+    <filter id="feather" x="-15%" y="-15%" width="130%" height="130%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+    <mask id="portraitMask" maskUnits="userSpaceOnUse" x="0" y="0" width="864" height="1152">
+      <rect width="864" height="1152" fill="black"/>
+      <ellipse cx="630" cy="493" rx="250" ry="286" fill="white" filter="url(#feather)"/>
+    </mask>
+  </defs>
+  <image x="0" y="0" width="864" height="1152" xlink:href="sheet.jpg"/>
+  <image x="350" y="145" width="560" height="747" preserveAspectRatio="none" xlink:href="hero_f.jpg" mask="url(#portraitMask)"/>
+</svg>
