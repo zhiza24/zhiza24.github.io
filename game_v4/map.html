@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head>
+<head><script src="gender.js?v=1"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0c10">
@@ -229,7 +229,7 @@
   </section>
 </div>
 
-<script src="nav.js?v=11"></script>
+<script src="route.js?v=1"></script><script src="engine.js?v=n6"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=1"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=passport1"></script>
 <script>
 (() => {
   // Геометрия и описания территорий; состояние ниже берется из профиля.
@@ -246,11 +246,11 @@
   let profile={};
   try{profile=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
   const flow=window.GFLOW||[],saved=profile.flow||{};
-  const lastIndex=flow.findIndex(x=>x.u===saved.last);
+  const lastIndex=flow.findIndex(x=>x.u===(window.GRoute?GRoute.resume():saved.last));
   const position=lastIndex>=0?lastIndex:Math.max(1,Math.min(Number(saved.max)||1,flow.length-1));
   function territory(step){
     if(step.pt==='0')return 1;if(step.pt==='А')return 2;
-    if(step.u==='slot.html?id=evidence')return 3;
+    if(step.u==='slot.html?id=pb_intro'||step.u==='slot.html?id=evidence')return 3;
     if(step.u==='slot.html?id=fractal')return 5;
     if(step.u==='slot.html?id=leverage'||step.u==='slot.html?id=guard')return 6;
     if(step.pt==='Б')return 4;if(step.pt==='С')return 7;return 8;
@@ -261,18 +261,18 @@
     const id=Number(key),t=territories[id];
     const steps=flow.map((x,i)=>({x,i})).filter(item=>territory(item.x)===id);
     t.indices=steps.map(item=>item.i);t.total=steps.length;
-    t.progress=steps.filter(item=>item.i<visitedMax).length;
-    const seen=steps.some(item=>item.i<=visitedMax);
-    t.status=id===currentId?'current':seen?'done':'locked';
-    t.url=id===currentId&&flow[position]?flow[position].u:steps.length?steps[0].x.u:'form.html';
-    if(t.reactor){t.total=21;t.progress=Object.values((profile.reactor||{}).days||{}).filter(v=>Array.isArray(v)&&v.some(Boolean)).length;}
+    t.progress=steps.filter(item=>(saved.completed||{})[item.x.u]).length;
+    const seen=steps.some(item=>(saved.visited||{})[item.x.u]||item.i<=visitedMax);
+    t.status=id===currentId?'current':t.progress===t.total?'done':seen?'available':'locked';
+    t.url=id===currentId&&flow[position]?flow[position].u:'diary.html?tab=tests&territory='+id;
+    if(t.reactor){t.total=21;t.progress=Math.max(0,Math.min(21,Number((profile.reactor||{}).day)||0));}
     const node=document.querySelector('.node[data-id="'+id+'"]');
     node.classList.remove('current','done','available','locked');node.classList.add(t.status);
-    node.querySelector('.state').textContent=t.status==='current'?'Ты здесь':t.status==='done'?'Открыта ранее':'Пока закрыта';
+    node.querySelector('.state').textContent=t.status==='current'?'Ты здесь':t.status==='done'?'Пройдена':t.status==='available'?'Посещена':'Пока закрыта';
     if(t.reactor)node.querySelectorAll('.reactor-meter i').forEach((cell,i)=>cell.classList.toggle('on',i<t.progress));
   });
   document.getElementById('resume').href=flow[position]?flow[position].u:'form.html';
-  const statusNames={current:"Текущая",done:"Открыта ранее",available:"Доступна",locked:"Закрыта"};
+  const statusNames={current:"Текущая",done:"Пройдена",available:"Посещена",locked:"Закрыта"};
   const overlay=document.getElementById("overlay");
   const title=document.getElementById("detailTitle");
   const kicker=document.getElementById("detailKicker");
@@ -290,7 +290,7 @@
     title.textContent=t.name;
     kicker.textContent=`Территория ${t.roman} · ${t.point} · ${statusNames[t.status]}`;
     description.textContent=t.description;
-    progressText.textContent=t.reactor?`${t.progress} из 21 дней`:`${t.progress} из ${t.total} экранов позади по сохраненному пути`;
+    progressText.textContent=t.reactor?`${t.progress} из 21 дней`:`${t.progress} из ${t.total} подтвержденных шагов`;
     progressBar.style.width=(t.progress/t.total*100)+"%";
     reactorDetail.hidden=!t.reactor;
     reactorDays.replaceChildren();
@@ -303,11 +303,11 @@
       }
     }
     const button=document.getElementById("continue");
-    button.textContent=t.status==="locked"?"Территория закрыта":t.status==="done"?"Открыть территорию":"Продолжить путь";
+    button.textContent=t.status==="locked"?"Территория закрыта":t.status!=="current"?"Смотреть результаты":"Продолжить путь";
     button.disabled=t.status==="locked";
     button.style.opacity=button.disabled?".55":"1";
     button.style.cursor=button.disabled?"not-allowed":"pointer";
-    note.textContent=t.status==="locked"?"Продолжай путь по текущей территории.":"Положение взято из сохраненного маршрута. Открытие экрана само по себе не подтверждает выполнение задания.";
+    note.textContent=t.status==="locked"?"Продолжай путь по текущей территории.":"Здесь сохраняется твой путь. К прежним результатам можно возвращаться в дневнике.";
     overlay.classList.add("show");
     document.getElementById("close").focus();
   }
