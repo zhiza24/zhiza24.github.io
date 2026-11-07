@@ -21,7 +21,11 @@
   .shell{width:min(100%,980px);margin:0 auto;padding:clamp(14px,3vw,28px) clamp(12px,3vw,24px) 40px}
   .topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
   .brand{font:600 11px/1.2 Arial,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#c6a66c}
-  .demo{font:10px/1.2 Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#e7c98f;border:1px solid rgba(215,182,111,.45);padding:6px 9px;border-radius:99px;white-space:nowrap}
+  .map-entry{max-width:500px;margin:0 auto 22px;text-align:center}
+  .map-start{display:flex;align-items:center;justify-content:center;min-height:54px;padding:13px 20px;border:1px solid #f0cc81;border-radius:13px;background:linear-gradient(135deg,#edcb83,#ba8745);color:#211609;font:700 17px/1.5 Arial,sans-serif;text-decoration:none;box-shadow:0 6px 25px #a36d272e}
+  .map-start:hover{background:#f1d69b}
+  .map-start:focus-visible{outline:3px solid #ffe7b0;outline-offset:4px}
+  .entry-note{margin:9px 0 0;color:#c5b28f;font:12px/1.6 Arial,sans-serif}
   h1{font-size:clamp(27px,5vw,44px);font-weight:400;letter-spacing:.015em;text-align:center;margin:8px 0 7px;color:#f0dfbb}
   .subtitle{text-align:center;color:#a9a092;font:12px/1.55 Arial,sans-serif;letter-spacing:.04em;margin:0 auto 22px;max-width:540px}
   .map-frame{position:relative;isolation:isolate;border:1px solid rgba(211,169,94,.34);border-radius:22px;overflow:hidden;min-height:760px;
@@ -119,10 +123,14 @@
 <main class="shell">
   <div class="topline">
     <div class="brand">Путь Алхимика</div>
-    <a class="demo" id="resume" href="form.html">Продолжить путь</a>
   </div>
   <h1>Карта путешествия</h1>
   <p class="subtitle">Восемь территорий. Одна непрерывная дорога от рождения к мастерству.</p>
+
+  <div class="map-entry">
+    <a class="map-start" id="resume" href="form.html">Старт</a>
+    <p class="entry-note" id="entryNote">Начните путь с инициации.</p>
+  </div>
 
   <section class="map-frame" aria-label="Карта из восьми территорий">
     <div class="map-heading">
@@ -270,7 +278,13 @@
     node.querySelector('.state').textContent=t.status==='current'?'Ты здесь':t.status==='done'?'Пройдена':t.status==='available'?'Посещена':'Пока закрыта';
     if(t.reactor)node.querySelectorAll('.reactor-meter i').forEach((cell,i)=>cell.classList.toggle('on',i<t.progress));
   });
-  document.getElementById('resume').href='tasks.html';
+  const checkpoint=GRoute.state(profile),cta=document.getElementById('resume');
+  const started=position>1||Object.keys(saved.completed||{}).length>0||
+    ['name','birth','points','mapStyle','ego','wheel','wheelTest','mirrors','passport'].some(key=>profile[key]&&(!(Array.isArray(profile[key]))||profile[key].length))||
+    Number(profile.reactor?.day)>0||Object.keys(profile.reactor?.days||{}).length>0;
+  cta.textContent=checkpoint.finished?'Посмотреть пройденное':started?'Продолжить игру':'Старт';
+  cta.href=checkpoint.finished?'tasks.html':checkpoint.url;
+  document.getElementById('entryNote').textContent=checkpoint.finished?'Все результаты сохранены. Можно вернуться к пройденным этапам.':started?'Актуальный шаг: '+flow[checkpoint.index].t:'Ваш путь начнется с инициации.';
   const statusNames={current:"Текущая",done:"Пройдена",available:"Посещена",locked:"Закрыта"};
   const overlay=document.getElementById("overlay");
   const title=document.getElementById("detailTitle");
