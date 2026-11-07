@@ -68,17 +68,37 @@ h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-
 .note,.hint,.err{font-family:Manrope,sans-serif!important;font-style:normal!important;font-size:clamp(15px,2vh,17px)!important}
 .gen{gap:10px!important}.flr{flex:none;filter:drop-shadow(0 0 4px rgba(255,200,110,.5))}
 .born{letter-spacing:.08em!important}
+
+/* Шаг 1: создание героя — два постоянных образа вместо абстрактного переключателя пола. */
+.lead{margin:0;text-align:center;color:#e8d4ae;font:500 clamp(14px,1.9vh,16px)/1.35 Manrope,sans-serif}
+.hero-choices{display:grid!important;grid-template-columns:1fr 1fr;gap:12px!important;align-items:start;justify-content:center}
+.hero-choice{min-width:0;padding:6px 6px 9px;border:1px solid #75542f;border-radius:14px;background:linear-gradient(160deg,#2b2017,#130e09);color:#ead7b4;cursor:pointer;opacity:.82;transition:border-color .2s,opacity .2s,transform .2s,box-shadow .2s}
+.hero-choice img{display:block;width:100%;height:clamp(112px,20vh,158px);object-fit:cover;object-position:center 18%;border-radius:9px}
+.hero-choice span{display:block;padding-top:8px;font:700 clamp(12px,1.8vh,15px) Manrope,sans-serif}
+.hero-choice[aria-pressed="true"]{opacity:1;border:2px solid #f0cf86;box-shadow:0 0 0 3px #d8ad6240,0 0 22px #d8ad6250;transform:translateY(-2px)}
+.hero-choice:focus-visible,.born:focus-visible,.bar input:focus-visible{outline:3px solid #ffe7b0;outline-offset:3px}
+.privacy{margin:0;text-align:center;color:#c7b99f;font:500 11px/1.4 Manrope,sans-serif}
+.board{justify-content:flex-start!important;gap:clamp(6px,1.1vh,11px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.board>h1,.board>.orn{flex:none}
+.grp,.gen,.note{flex:none;margin:0!important}
+.go{flex:none!important;margin-top:auto;margin-bottom:clamp(4px,1vh,10px)}
+@media(max-height:680px){.hero-choice img{height:100px}.board{gap:5px;padding-top:8px;padding-bottom:8px}.lead{font-size:13px}.privacy{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.hero-choice,.born{transition:none;animation:none}}
 </style></head><body data-page="form">
 <div class="scr"><div class="board">
-<h1 style="margin-top:clamp(10px,2.4vh,26px)">ИНИЦИАЦИЯ АЛХИМИКА</h1><div class="orn"></div>
-<div class="grp"><label class="lab" for="nm">Введите ваше имя<small>или как к вам обращаться</small></label>
-<div class="bar"><input id="nm" autocomplete="name" placeholder="Имя"></div></div>
+<h1 style="margin-top:clamp(8px,1.8vh,18px)">СОЗДАНИЕ ГЕРОЯ</h1><div class="orn"></div>
+<p class="lead">Выберите образ, который будет сопровождать Вас в путешествии.</p>
+<div class="gen hero-choices" role="group" aria-label="Выбор образа героя">
+<button class="hero-choice" data-g="m" type="button" aria-pressed="false"><img src="img/hero_m.jpg" alt="Мужской образ героя"><span>Мужской образ</span></button>
+<button class="hero-choice" data-g="f" type="button" aria-pressed="false"><img src="img/hero_f.jpg" alt="Женский образ героя"><span>Женский образ</span></button>
+</div>
+<div class="grp"><label class="lab" for="nm">Имя героя<small>или имя, которым к Вам обращаться</small></label>
+<div class="bar"><input id="nm" autocomplete="name" placeholder="Ваше имя"></div></div>
 <div class="grp"><label class="lab" for="bd">Дата рождения</label>
-<div class="bar"><input id="bd" inputmode="numeric" placeholder="ДД.ММ.ГГГГ" maxlength="10"></div></div>
-<div class="gen"><span class="sym">♂</span><button class="md" data-g="m" type="button">М</button><svg class="flr" viewBox="0 0 90 30" width="78" height="26" aria-hidden="true"><g fill="none" stroke="#e0b866" stroke-width="1.4" stroke-linecap="round"><path d="M4 15h22M64 15h22"/><path d="M26 15c4-8 12-8 14-2-3 4-9 3-9-1M64 15c-4-8-12-8-14-2 3 4 9 3 9-1"/><path d="M26 15c4 8 12 8 14 2M64 15c-4 8-12 8-14 2"/></g><path d="M45 8l5 7-5 7-5-7z" fill="#f0cf86"/></svg><button class="md" data-g="f" type="button">Ж</button><span class="sym">♀</span></div>
-<p class="note">Ваши данные — это координаты вашего старта в Мире Алхимии.</p>
-
-<div class="go"><button class="born" type="button" id="next">РОЖДЕНИЕ ГЕРОЯ</button><p class="err" id="er"></p></div></div></div>
+<div class="bar"><input id="bd" inputmode="numeric" placeholder="ДД.ММ.ГГГГ" maxlength="10" autocomplete="bday"></div></div>
+<p class="note">Дата рождения нужна для расчета четырех символических позиций Вашей карты. Это не диагноз и не предсказание.</p>
+<p class="privacy">Профиль и ответы сохраняются в браузере на этом устройстве.</p>
+<div class="go"><button class="born" type="button" id="next">НАЧАТЬ ПУТЬ</button><p class="err" id="er" role="alert" aria-live="polite"></p></div></div></div>
 <div class="flash" id="flash"></div>
 <div class="sheet" id="sheet"><div class="sh" id="shc"></div></div>
 <script src="arcana.js?v=8"></script>
@@ -87,8 +107,14 @@ h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-
 var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}
 var nm=document.getElementById('nm'),bd=document.getElementById('bd'),er=document.getElementById('er');
 nm.value=P.name||'';bd.value=P.birth||'';
-// Inputs are a draft. Only the original birth button saves personal data.
-document.querySelectorAll('.md').forEach(function(b){if(P.gender==b.dataset.g)b.classList.add('on');b.onclick=function(){document.querySelectorAll('.md').forEach(function(x){x.classList.remove('on')});b.classList.add('on');P.gender=b.dataset.g}});
+// Inputs and hero appearance are drafts. Personal data is saved only after confirmation.
+var choices=document.querySelectorAll('.hero-choice');
+function selectHero(value){
+ P.gender=value;
+ choices.forEach(function(b){var selected=b.dataset.g===value;b.setAttribute('aria-pressed',selected?'true':'false')});
+ er.textContent='';
+}
+choices.forEach(function(b){b.setAttribute('aria-pressed',P.gender===b.dataset.g?'true':'false');b.onclick=function(){selectHero(b.dataset.g)}});
 function parse(v){return GPassport.parse(v)}
 bd.onfocus=bd.onclick=function(){bd.select()};
 nm.onfocus=nm.onclick=function(){nm.select()};
@@ -96,7 +122,7 @@ bd.oninput=function(){var v=bd.value.replace(/\D/g,'').slice(0,8),o=v.slice(0,2)
 var sheet=document.getElementById('sheet');sheet.onclick=function(e){if(e.target==sheet)sheet.classList.remove('on')};
 if(window.GOpening)er.textContent='Ваш путь сохранен. Карта вернет к нему.';
 document.getElementById('next').onclick=function(){
- P.name=nm.value.trim();P.birth=bd.value;var m=!P.name?'Напишите, как к вам обращаться.':!parse(P.birth)?'Проверьте дату рождения.':!P.gender?'Выберите: М или Ж.':'';er.textContent=m;if(m)return;
+ P.name=nm.value.trim();P.birth=bd.value;var m=!P.name?'Укажите имя героя.':!parse(P.birth)?'Проверьте дату рождения.':!P.gender?'Выберите образ героя.':'';er.textContent=m;if(m)return;
  var layers=GPassport.calculate(P.birth);P.points=[layers.positions.A,layers.positions.C,layers.positions.E,layers.positions.G];
  if(window.GOpening)GOpening.saveIdentity(P);
  var fresh=GPassport.load();['name','birth','gender','points'].forEach(function(k){fresh[k]=P[k]});GPassport.ensure(fresh);GPro.save(fresh);
