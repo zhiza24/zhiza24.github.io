@@ -45,7 +45,7 @@ function advance(){const c=wheel.cursor,s=wheel.spheres[c.sphere];if(!ready(s,c.
 function renderWheel(){
  if(wheel.completed||wheel.cursor.sphere>=8){renderWheelSummary();return;}
  const c=wheel.cursor,s=wheel.spheres[c.sphere],q=WHEEL_QUESTIONS[c.sphere].questions[c.question],selected=s.ratings[c.question],im=s.improvements[c.question];if(im.change==='yes'&&!Number.isInteger(im.strength)){im.strength=5;persistWheel();}
- let html='<h2>Колесо жизненных сфер</h2><p class="muted">Вопрос '+(c.sphere*3+c.question+1)+' из 24 · '+s.name+'</p><div class="progress"><span style="width:'+((c.sphere*3+c.question)/24*100)+'%"></span></div><h3>'+q.text+'</h3><div class="options">';
+ let html='<h2>Колесо жизненных сфер</h2><p class="muted">Вопрос '+(c.sphere*3+c.question+1)+' из 24 · '+s.name+'</p><div class="progress"><span style="width:'+((c.sphere*3+c.question)/24*100)+'%"></span></div><h3>'+wheelText(q.text)+'</h3><div class="options">';
  q.options.forEach(o=>{const label=typeof o.text==='object'?(gender==='f'?o.text.f:o.text.m):o.text;html+='<button type="button" class="choice '+(selected===o.score?'on':'')+'" data-rating="'+o.score+'">'+label+'</button>';});
  html+='</div><button type="button" class="choice '+(selected==='na'?'on':'')+'" data-rating="na">Не относится ко мне</button>';
  if(selected!==null){html+='<div class="position"><h3>Хотели бы улучшить?</h3><div class="options"><button class="choice '+(im.change==='yes'?'on':'')+'" data-change="yes">Да</button><button class="choice '+(im.change==='no'?'on':'')+'" data-change="no">Нет</button></div>';
