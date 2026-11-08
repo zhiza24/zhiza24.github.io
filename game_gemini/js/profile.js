@@ -68,7 +68,7 @@
       birthdate = y + '-' + m + '-' + d;
     }
     const genderRaw = String(source.gender || '').toLowerCase();
-    return { name: source.name || '', birthdate, gender: ['f','ж','female','женский'].includes(genderRaw) ? 'female' : 'male', createdAt: source.createdAt || null };
+    return { name: source.name || '', birthdate, gender: ['m','м','male','мужской'].includes(genderRaw) ? 'male' : 'female', createdAt: source.createdAt || null };
   }
 
   function importLegacy(raw, sourceKey) {
