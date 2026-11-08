@@ -17,7 +17,7 @@ function renderPassport(){
  const birth=fmtBirth(profile.meta.birthdate),layers=window.GPassport.calculate(birth);
  if(!layers){passportPanel.innerHTML='<p>Сначала заполните дату рождения в паспорте героя.</p>';return;}
  const hypotheses=window.GPassport.hypotheses(layers);
- API.update(p=>{const old=p.symbolic.matrix.passport||{};p.symbolic.matrix.passport={...old,version:layers.version,birth,layers,answers:old.answers||{},hypotheses:old.hypotheses||hypotheses,calculatedAt:old.calculatedAt||new Date().toISOString()};p.symbolic.methodVersion=layers.version;p.symbolic.status='calculated';});
+ API.update(p=>{const old=p.symbolic.matrix.passport||{},samePassport=old.birth===birth&&old.version===layers.version;if(old.birth&&!samePassport){p.legacy.passportHistory=p.legacy.passportHistory||[];p.legacy.passportHistory.push(old);}p.symbolic.matrix.passport={...old,version:layers.version,birth,layers,answers:samePassport?(old.answers||{}):{},hypotheses:samePassport&&old.hypotheses&&old.hypotheses.length?old.hypotheses:hypotheses,calculatedAt:samePassport&&old.calculatedAt?old.calculatedAt:new Date().toISOString()};p.symbolic.methodVersion=layers.version;p.symbolic.status='calculated';});
  const current=API.load().symbolic.matrix.passport;
  const names=window.GPassportData.arcana;
  const femaleNames=['Создательница','Хранительница','Садовница','Архитектор','Наставница','Дипломат','Путница','Укротительница','Искательница','Навигатор','Судья','Меняющая перспективу','Алхимик','Целительница','Испытательница','Разрушительница','Провидица','Сновидица','Светоносица','Пробужденная','Завершительница','Странница'];
