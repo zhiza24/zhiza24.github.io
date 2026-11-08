@@ -4,6 +4,7 @@ const API=window.AlchemistProfile,profile=API.load();
 const passportPanel=document.getElementById('passport-panel'),wheelPanel=document.getElementById('wheel-panel'),status=document.getElementById('save-status');
 const gender=profile.meta.gender==='female'?'f':'m';
 const fmtBirth=(v)=>String(v||'').split('-').reverse().join('.');
+function wheelText(value){return value&&typeof value==='object'?(gender==='f'?value.f:value.m):value;}
 function savePassportAnswer(key,choice,note){
  API.update(p=>{const pass=p.symbolic.matrix.passport;if(!pass)return;
  pass.answers=pass.answers||{};const record={choice,note:String(note||''),at:new Date().toISOString(),question:key};pass.answers[key]=record;
@@ -63,7 +64,7 @@ function wheelSVG(values,title){const size=212,cx=106,cy=106;let out='<svg viewB
 function renderWheelSummary(){
  const first=API.load().lifeAreas.firstLook||[],detailed=wheel.spheres.map(s=>mean(s.ratings));
  let html='<h2>Колесо запомнило Ваш путь</h2><p class="muted">Первый взгляд и подробные ответы по восьми сферам.</p><div class="wheel-grid"><div><h3>Первый взгляд</h3>'+wheelSVG(first,'Первый взгляд')+'</div><div><h3>По ответам</h3>'+wheelSVG(detailed,'По ответам')+'</div></div><h3>Сферы</h3>';
- wheel.spheres.forEach((s,i)=>{html+='<div class="sphere"><b>'+s.name+'</b><p>Первый взгляд: '+(typeof first[i]==='number'?first[i]+' / 10':'нет оценки')+' · Подробная оценка: '+(detailed[i]===null?'нет применимых ответов':detailed[i].toFixed(2)+' / 10')+'</p>';s.improvements.forEach((im,j)=>{if(im.change==='yes')html+='<p>'+WHEEL_QUESTIONS[i].questions[j].text+' — сила желания: '+im.strength+' / 10. Срок: '+im.urgency+'</p>';});html+='</div>';});
+ wheel.spheres.forEach((s,i)=>{html+='<div class="sphere"><b>'+s.name+'</b><p>Первый взгляд: '+(typeof first[i]==='number'?first[i]+' / 10':'нет оценки')+' · Подробная оценка: '+(detailed[i]===null?'нет применимых ответов':detailed[i].toFixed(2)+' / 10')+'</p>';s.improvements.forEach((im,j)=>{if(im.change==='yes')html+='<p>'+wheelText(WHEEL_QUESTIONS[i].questions[j].text)+' — сила желания: '+im.strength+' / 10. Срок: '+im.urgency+'</p>';});html+='</div>';});
  const eligible=[];wheel.spheres.forEach((s,i)=>s.improvements.forEach((im,j)=>{if(im.change==='yes')eligible.push({id:i*3+j,name:s.name,question:WHEEL_QUESTIONS[i].questions[j].text,strength:im.strength,urgency:im.urgency});}));
  const eligibleIds=eligible.map(x=>x.id),previous=Array.isArray(wheel.priorities)?wheel.priorities:[],chosen=previous.filter((id,pos)=>eligibleIds.includes(id)&&previous.indexOf(id)===pos);
  if(!wheel.prioritiesChosen)wheel.priorities=eligible.sort((a,b)=>(b.strength||0)-(a.strength||0)||urgency.indexOf(a.urgency)-urgency.indexOf(b.urgency)||a.id-b.id).map(x=>x.id);
