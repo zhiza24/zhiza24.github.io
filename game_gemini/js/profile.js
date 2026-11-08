@@ -50,7 +50,7 @@
       p[k] = mergeObject(base[k], raw[k]);
     });
     p.symbolic.arcana = mergeObject(base.symbolic.arcana, (raw.symbolic || {}).arcana);
-    p.research = {};
+    p.research = { ...base.research, ...(raw.research || {}) };
     RESEARCH_KEYS.forEach(k => {
       p.research[k] = mergeObject(base.research[k], (raw.research || {})[k]);
     });
@@ -198,11 +198,11 @@
     });
   }
   function resolveHypothesis(id, decision, note) {
-    if (!['confirmed','rejected',' уточнено','refined'].includes(decision)) throw new Error('Неизвестный вариант ответа на гипотезу.');
+    if (!['confirmed','rejected','refined'].includes(decision)) throw new Error('Неизвестный вариант ответа на гипотезу.');
     return update(p => {
       const h = p.hypotheses.find(item => item.id === id);
       if (!h) throw new Error('Гипотеза не найдена.');
-      h.status = decision === ' уточнено' ? 'refined' : decision;
+      h.status = decision;
       h.playerFeedback = { decision: h.status, note: String(note || ''), at: new Date().toISOString() };
       p.history.push({ type: 'hypothesis_feedback', hypothesisId: id, decision: h.status, at: h.playerFeedback.at });
     });
