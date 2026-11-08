@@ -41,7 +41,7 @@ function ready(s,q){const im=s.improvements[q],answered=s.ratings[q]==='na'||[1,
 function advance(){const c=wheel.cursor,s=wheel.spheres[c.sphere];if(!ready(s,c.question))return;wheel.history.push({...c});if(c.sphere===7&&c.question===2)wheel.completed=true;else wheel.cursor=c.question<2?{sphere:c.sphere,question:c.question+1}:{sphere:c.sphere+1,question:0};persistWheel();renderWheel();}
 function renderWheel(){
  if(wheel.completed||wheel.cursor.sphere>=8){renderWheelSummary();return;}
- const c=wheel.cursor,s=wheel.spheres[c.sphere],q=WHEEL_QUESTIONS[c.sphere].questions[c.question],selected=s.ratings[c.question],im=s.improvements[c.question];
+ const c=wheel.cursor,s=wheel.spheres[c.sphere],q=WHEEL_QUESTIONS[c.sphere].questions[c.question],selected=s.ratings[c.question],im=s.improvements[c.question];if(im.change==='yes'&&!Number.isInteger(im.strength)){im.strength=5;persistWheel();}
  let html='<h2>Колесо жизненных сфер</h2><p class="muted">Вопрос '+(c.sphere*3+c.question+1)+' из 24 · '+s.name+'</p><div class="progress"><span style="width:'+((c.sphere*3+c.question)/24*100)+'%"></span></div><h3>'+q.text+'</h3><div class="options">';
  q.options.forEach(o=>{const label=typeof o.text==='object'?(gender==='f'?o.text.f:o.text.m):o.text;html+='<button type="button" class="choice '+(selected===o.score?'on':'')+'" data-rating="'+o.score+'">'+label+'</button>';});
  html+='</div><button type="button" class="choice '+(selected==='na'?'on':'')+'" data-rating="na">Не относится ко мне</button>';
