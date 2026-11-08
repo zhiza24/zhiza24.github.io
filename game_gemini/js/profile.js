@@ -129,8 +129,26 @@
         }
       }
     } catch (error) { console.error('Не удалось прочитать профиль героя', error); }
-    const profile = raw && raw.schemaVersion ? normalize(raw) : importLegacy(raw, sourceKey);
-    if (raw) save(profile);
+    let profile = raw && raw.schemaVersion ? normalize(raw) : importLegacy(raw, sourceKey);
+    // Если новый профиль уже создан, отдельно подхватываем прежний alch_profile,
+    // не затирая более свежие данные game_gemini.
+    try {
+      const oldGame = JSON.parse(localStorage.getItem('alch_profile') || 'null');
+      if (oldGame && !profile.legacy.game_v4) {
+        const imported = importLegacy(oldGame, 'alch_profile');
+        profile.legacy.game_v4 = clone(oldGame);
+        if (!hasBirth(profile) && hasBirth(imported)) profile.meta = imported.meta;
+        if (!Object.keys(profile.symbolic.matrix || {}).length) profile.symbolic.matrix = imported.symbolic.matrix;
+        if (!Object.keys(profile.lifeAreas.areas || {}).length) profile.lifeAreas = imported.lifeAreas;
+        if (!profile.lifeAreas.firstLook.length) profile.lifeAreas.firstLook = imported.lifeAreas.firstLook;
+        if (!profile.personalRoute.priorities.length) profile.personalRoute.priorities = imported.personalRoute.priorities;
+        if (!profile.inventory.artifacts.length) profile.inventory.artifacts = imported.inventory.artifacts;
+        profile.diary = mergeObject(imported.diary, profile.diary);
+        imported.history.forEach(item => profile.history.push(item));
+        profile.history.push({ type: 'game_v4_profile_attached', at: new Date().toISOString(), note: 'Старый профиль подключен к единому профилю; исходное хранилище сохранено.' });
+      }
+    } catch (error) { console.warn('Не удалось подключить старый профиль', error); }
+    if (raw || profile.history.length) save(profile);
     return profile;
   }
 
