@@ -139,8 +139,17 @@
         profile.legacy.game_v4 = clone(oldGame);
         if (!hasBirth(profile) && hasBirth(imported)) profile.meta = imported.meta;
         if (!Object.keys(profile.symbolic.matrix || {}).length) profile.symbolic.matrix = imported.symbolic.matrix;
-        if (!Object.keys(profile.lifeAreas.areas || {}).length) profile.lifeAreas = imported.lifeAreas;
+        // Подключаем паспорт и колесо по отдельности: наличие одного поля не должно
+        // блокировать перенос остальных данных старого профиля.
+        if (!profile.symbolic.matrix.passport && imported.symbolic.matrix.passport) {
+          profile.symbolic.matrix.passport = imported.symbolic.matrix.passport;
+        }
+        profile.lifeAreas.areas = mergeObject(imported.lifeAreas.areas, profile.lifeAreas.areas);
+        if (!profile.lifeAreas.wheelTest && imported.lifeAreas.wheelTest) {
+          profile.lifeAreas.wheelTest = imported.lifeAreas.wheelTest;
+        }
         if (!profile.lifeAreas.firstLook.length) profile.lifeAreas.firstLook = imported.lifeAreas.firstLook;
+        if (!profile.lifeAreas.priorities.length) profile.lifeAreas.priorities = imported.lifeAreas.priorities;
         if (!profile.personalRoute.priorities.length) profile.personalRoute.priorities = imported.personalRoute.priorities;
         if (!profile.inventory.artifacts.length) profile.inventory.artifacts = imported.inventory.artifacts;
         profile.diary = mergeObject(imported.diary, profile.diary);
