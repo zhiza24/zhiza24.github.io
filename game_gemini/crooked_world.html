@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FDFBF7"><title>Архитектура Личности · Кривой Мир</title>
+<link rel="stylesheet" href="css/game.css">
+<style>
+.cw-shell{max-width:680px;margin:0 auto;padding:22px 18px}.cw-muted{color:#75665e;line-height:1.6}.cw-card,.cw-result{background:#fff;border:1px solid #eee7db;border-radius:18px;padding:22px;margin:18px 0}.cw-option{display:block;width:100%;text-align:left;padding:15px 17px;margin:9px 0;border:1px solid #e5dccd;background:#fff;border-radius:12px;color:#302923;cursor:pointer;font:inherit}.cw-option.selected{border-color:#c5a059;background:#f4efe6}.cw-progress{height:6px;background:#eee7db;border-radius:9px;overflow:hidden;margin:12px 0 20px}.cw-progress span{display:block;height:100%;background:#c5a059}.cw-actions{display:flex;gap:10px;margin-top:18px}.cw-actions button{flex:1}.cw-btn{border:1px solid #e5dccd;border-radius:12px;padding:12px 15px;background:#fff;color:#302923;cursor:pointer}.cw-btn.primary{background:#302923;color:white;border-color:#302923}.cw-btn:disabled{opacity:.4;cursor:not-allowed}.cw-scale{margin:18px 0}.cw-scale-head{display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:7px}.cw-track{height:8px;background:#eee7db;border-radius:8px;overflow:hidden}.cw-fill{height:100%;background:#c5a059}.cw-note{font-size:14px;line-height:1.6;color:#75665e}
+</style>
+</head>
+<body>
+<main class="cw-shell">
+<div class="eyebrow">Этап B · Зеркало настоящего</div>
+<h1>Кривой Мир</h1>
+<p class="cw-muted">Исследование внутренних правил и фильтров, через которые Вы воспринимаете происходящее. Здесь нет правильных ответов — отмечайте то, что ближе к Вашему обычному опыту.</p>
+<div id="quiz">
+  <div class="cw-muted" id="counter"></div><div class="cw-progress"><span id="progress" style="width:0%"></span></div>
+  <section class="cw-card"><h2 id="question" style="font-size:19px;line-height:1.5;font-weight:500">Загрузка...</h2><div id="options"></div></section>
+  <div class="cw-actions"><button class="cw-btn" id="prev" type="button">Назад</button><button class="cw-btn primary" id="next" type="button" disabled>Далее</button></div>
+</div>
+<div id="results" hidden>
+  <section class="cw-result"><h2>Карта внутренних правил</h2><p class="cw-note">Баллы показывают, насколько часто Вы соглашаетесь с формулировками каждой шкалы. Это материал для наблюдения, а не диагноз и не оценка личности.</p><div id="scales"></div><p id="summary" class="cw-note"></p></section>
+  <div class="cw-actions"><button class="cw-btn" id="restart" type="button">Пройти заново</button><a class="cw-btn primary" href="research.html" style="text-align:center;text-decoration:none">К исследовательскому разделу</a></div>
+</div>
+<p class="cw-muted" id="save-status" aria-live="polite">Ответы сохраняются в едином профиле этого браузера.</p>
+</main>
+<script src="js/profile.js"></script><script src="data/crooked_world_questions.js"></script>
+<script>
+(function(){
+'use strict';
+const questions=window.crookedWorldQuestions||[];
+const labels={security:'Безопасность',value:'Ценность',responsibility:'Ответственность',trust:'Доверие',agency:'Агентность',scarcity:'Дефицит'};
+const options=[{text:'Совершенно согласен',points:3},{text:'Скорее согласен',points:2},{text:'Скорее не согласен',points:1},{text:'Совершенно не согласен',points:0}];
+let index=0,answers={};
+const $=id=>document.getElementById(id);
+function getModule(){const p=AlchemistProfile.load();return p.research.crookedWorld||{};}
+function persist(){
+  AlchemistProfile.update(p=>{const m=p.research.crookedWorld;m.rawAnswers={...answers};m.currentIndex=index;m.status='in_progress';});
+  $('save-status').textContent='Прогресс сохранен в едином профиле героя.';
+}
+function render(){
+  const q=questions[index];if(!q)return;
+  $('counter').textContent='Утверждение '+(index+1)+' из '+questions.length;
+  $('progress').style.width=((index+1)/questions.length*100)+'%';
+  $('question').textContent=q.text;$('options').replaceChildren();
+  options.forEach(opt=>{
+    const b=document.createElement('button');b.type='button';b.className='cw-option'+(answers[q.id]===opt.points?' selected':'');b.textContent=opt.text;
+    b.addEventListener('click',()=>{answers[q.id]=opt.points;renderOptions(q);$('next').disabled=false;persist();});
+    $('options').appendChild(b);
+  });
+  $('prev').disabled=index===0;$('next').disabled=answers[q.id]===undefined;
+}
+function renderOptions(q){[...$('options').children].forEach((b,i)=>b.classList.toggle('selected',options[i].points===answers[q.id]));}
+function scores(){const s={security:0,value:0,responsibility:0,trust:0,agency:0,scarcity:0};questions.forEach(q=>{if(Number.isFinite(answers[q.id]))s[q.scale]+=answers[q.id];});return s;}
+function finish(){
+  const result=scores();
+  AlchemistProfile.setResearchResult('crookedWorld',{scores:result,maxPerScale:12,scaleLabels:labels,questionCount:questions.length},answers);
+  AlchemistProfile.update(p=>{p.research.crookedWorld.currentIndex=questions.length-1;});
+  $('quiz').hidden=true;$('results').hidden=false;
+  const wrap=$('scales');wrap.replaceChildren();
+  Object.keys(labels).forEach(key=>{
+    const val=result[key],row=document.createElement('div');row.className='cw-scale';
+    const head=document.createElement('div');head.className='cw-scale-head';
+    const name=document.createElement('span');name.textContent=labels[key];
+    const score=document.createElement('span');score.textContent=val+' / 12';head.append(name,score);
+    const track=document.createElement('div');track.className='cw-track';
+    const fill=document.createElement('div');fill.className='cw-fill';fill.style.width=(val/12*100)+'%';track.append(fill);
+    row.append(head,track);wrap.append(row);
+  });
+  $('summary').textContent='Посмотрите, какие правила сейчас звучат для Вас сильнее. Их влияние может различаться в разных обстоятельствах; результаты можно будет сопоставить с другими разделами исследования.';
+  $('save-status').textContent='Результат сохранен в едином профиле героя.';
+}
+$('prev').addEventListener('click',()=>{if(index>0){index--;render();}});
+$('next').addEventListener('click',()=>{if(answers[questions[index].id]===undefined)return;if(index<questions.length-1){index++;persist();render();}else finish();});
+$('restart').addEventListener('click',()=>{if(!confirm('Начать модуль заново? Текущие ответы этого модуля будут заменены.'))return;answers={};index=0;AlchemistProfile.update(p=>{p.research.crookedWorld={status:'pending',rawAnswers:{},results:{},completedAt:null};});$('results').hidden=true;$('quiz').hidden=false;render();});
+function init(){
+ if(!questions.length){$('question').textContent='Не удалось загрузить утверждения.';return;}
+ const m=getModule();answers=m.rawAnswers&&typeof m.rawAnswers==='object'?{...m.rawAnswers}:{};
+ if(m.status==='completed'&&Object.keys(answers).length===questions.length){index=questions.length-1;render();finish();return;}
+ index=Math.min(Math.max(Number(m.currentIndex)||0,0),questions.length-1);render();
+}
+init();
+})();
+</script>
+</body></html>
