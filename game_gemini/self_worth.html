@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#FDFBF7"><title>Архитектура Личности · Самоценность</title><link rel="stylesheet" href="css/game.css">
+<style>
+.sw-shell{max-width:680px;margin:0 auto;padding:22px 18px}.sw-muted{color:#75665e;line-height:1.6}.sw-card,.sw-result{background:#fff;border:1px solid #eee7db;border-radius:18px;padding:22px;margin:18px 0}.sw-option{display:block;width:100%;text-align:left;padding:15px 17px;margin:9px 0;border:1px solid #e5dccd;background:#fff;border-radius:12px;color:#302923;cursor:pointer;font:inherit}.sw-option.selected{border-color:#c5a059;background:#f4efe6}.sw-progress{height:6px;background:#eee7db;border-radius:9px;overflow:hidden;margin:12px 0 20px}.sw-progress span{display:block;height:100%;background:#c5a059}.sw-actions{display:flex;gap:10px;margin-top:18px}.sw-actions>*{flex:1}.sw-btn{border:1px solid #e5dccd;border-radius:12px;padding:12px 15px;background:#fff;color:#302923;cursor:pointer;font:inherit;text-align:center;text-decoration:none}.sw-btn.primary{background:#302923;color:white;border-color:#302923}.sw-btn:disabled{opacity:.4;cursor:not-allowed}.sw-scale{margin:18px 0}.sw-scale-head{display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:7px}.sw-track{height:8px;background:#eee7db;border-radius:8px;overflow:hidden}.sw-fill{height:100%;background:#c5a059}.sw-note{font-size:14px;line-height:1.6;color:#75665e}
+</style></head><body><main class="sw-shell">
+<div class="eyebrow">Этап B · Зеркало настоящего</div><h1>Самоценность</h1>
+<p class="sw-muted">Исследование отношения к себе, права занимать место, принимать, отказывать, ошибаться и опираться на собственное мнение. Отвечайте так, как чаще бывает в Вашей жизни, а не так, как «следовало бы».</p>
+<div id="quiz"><div class="sw-muted" id="counter"></div><div class="sw-progress"><span id="progress" style="width:0%"></span></div>
+<section class="sw-card"><h2 id="question" style="font-size:19px;line-height:1.5;font-weight:500">Загрузка...</h2><div id="options"></div></section>
+<div class="sw-actions"><button class="sw-btn" id="prev" type="button">Назад</button><button class="sw-btn primary" id="next" type="button" disabled>Далее</button></div></div>
+<div id="results" hidden><section class="sw-result"><h2>Карта измерений самоценности</h2><p class="sw-note">Баллы отражают степень согласия с утверждениями. Это материал для самонаблюдения, не диагноз и не оценка Вашей ценности.</p><div id="scales"></div><p id="summary" class="sw-note"></p></section><div class="sw-actions"><button class="sw-btn" id="restart" type="button">Пройти заново</button><a class="sw-btn primary" href="research.html">К исследовательскому разделу</a></div></div>
+<p class="sw-muted" id="save-status" aria-live="polite">Ответы сохраняются в едином профиле этого браузера.</p></main>
+<script src="js/profile.js"></script><script src="data/self_worth_questions.js"></script><script>
+(function(){
+'use strict';
+const questions=window.selfWorthQuestions||[];
+const labels={presence:'Право занимать место и проявляться',mistakes:'Право на ошибку и несовершенство',receiving:'Право получать и принимать',boundaries:'Право отказывать без чувства вины',achievement:'Независимость от достижений',autonomy:'Внутренняя опора на себя'};
+const options=[{text:'Совершенно верно',points:3},{text:'Скорее верно',points:2},{text:'Скорее неверно',points:1},{text:'Совершенно неверно',points:0}];
+let index=0,answers={};const $=id=>document.getElementById(id);
+function moduleData(){return AlchemistProfile.load().research.selfWorth||{};}
+function persist(){AlchemistProfile.update(p=>{p.research.selfWorth.rawAnswers={...answers};p.research.selfWorth.currentIndex=index;p.research.selfWorth.status='in_progress';});$('save-status').textContent='Прогресс сохранен в едином профиле героя.';}
+function render(){
+ const q=questions[index];if(!q)return;
+ $('counter').textContent='Утверждение '+(index+1)+' из '+questions.length;$('progress').style.width=((index+1)/questions.length*100)+'%';$('question').textContent=q.text;$('options').replaceChildren();
+ options.forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='sw-option'+(answers[q.id]===opt.points?' selected':'');b.textContent=opt.text;b.addEventListener('click',()=>{answers[q.id]=opt.points;[...$('options').children].forEach((el,i)=>el.classList.toggle('selected',options[i].points===opt.points));$('next').disabled=false;persist();});$('options').append(b);});
+ $('prev').disabled=index===0;$('next').disabled=answers[q.id]===undefined;
+}
+function calculate(){const s={presence:0,mistakes:0,receiving:0,boundaries:0,achievement:0,autonomy:0};questions.forEach(q=>{if(Number.isFinite(answers[q.id]))s[q.dimension]+=answers[q.id];});return s;}
+function finish(){
+ const scores=calculate();AlchemistProfile.setResearchResult('selfWorth',{scores,maxPerDimension:12,dimensionLabels:labels,questionCount:questions.length},answers);
+ AlchemistProfile.update(p=>{p.research.selfWorth.currentIndex=questions.length-1;});
+ $('quiz').hidden=true;$('results').hidden=false;$('scales').replaceChildren();
+ Object.entries(labels).forEach(([key,label])=>{const val=scores[key],row=document.createElement('div');row.className='sw-scale';const head=document.createElement('div');head.className='sw-scale-head';const name=document.createElement('span');name.textContent=label;const score=document.createElement('span');score.textContent=val+' / 12';head.append(name,score);const track=document.createElement('div');track.className='sw-track';const fill=document.createElement('div');fill.className='sw-fill';fill.style.width=(val/12*100)+'%';track.append(fill);row.append(head,track);$('scales').append(row);});
+ $('summary').textContent='Отметьте измерения, в которых ответы чаще отражали напряжение или сомнение. Эти наблюдения можно будет сопоставить с результатами других модулей.';$('save-status').textContent='Результат сохранен в едином профиле героя.';
+}
+$('prev').addEventListener('click',()=>{if(index>0){index--;render();}});
+$('next').addEventListener('click',()=>{if(answers[questions[index].id]===undefined)return;if(index<questions.length-1){index++;persist();render();}else finish();});
+$('restart').addEventListener('click',()=>{if(!confirm('Начать модуль заново? Текущие ответы этого модуля будут заменены.'))return;answers={};index=0;AlchemistProfile.update(p=>{p.research.selfWorth={status:'pending',rawAnswers:{},results:{},completedAt:null};});$('results').hidden=true;$('quiz').hidden=false;render();});
+function init(){if(!questions.length){$('question').textContent='Не удалось загрузить утверждения.';return;}const m=moduleData();answers=m.rawAnswers&&typeof m.rawAnswers==='object'?{...m.rawAnswers}:{};if(m.status==='completed'&&Object.keys(answers).length===questions.length){index=questions.length-1;render();finish();return;}index=Math.min(Math.max(Number(m.currentIndex)||0,0),questions.length-1);render();}
+init();
+})();
+</script></body></html>
