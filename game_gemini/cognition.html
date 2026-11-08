@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FDFBF7">
+<title>Архитектура Личности · Когнитивные предпочтения</title>
+<link rel="stylesheet" href="css/game.css">
+<style>
+.quiz-shell{max-width:720px;margin:28px auto;padding:0 18px}.quiz-panel{background:#fff;border:1px solid #eee7db;border-radius:18px;padding:24px}.muted{color:#75665e;line-height:1.6}.option{display:block;width:100%;text-align:left;padding:15px 17px;margin:10px 0;border:1px solid #e5dccd;border-radius:12px;background:#fff;color:#302923;font:inherit;cursor:pointer}.option.selected{border-color:#b99a60;background:#f6f0e5}.row-actions{display:flex;gap:10px;margin-top:20px}.row-actions button{flex:1}.meter{height:8px;background:#eee7db;border-radius:8px;overflow:hidden;margin:12px 0 20px}.meter>span{display:block;height:100%;background:#b99a60}.axis{padding:15px 0;border-bottom:1px solid #eee7db}.axis:last-child{border:0}.axis-head{display:flex;justify-content:space-between;gap:12px;font-size:14px}.axis-track{height:9px;background:#eee7db;border-radius:8px;overflow:hidden;margin:10px 0}.axis-fill{height:100%;background:#b99a60}.result-note{line-height:1.65;margin:8px 0 0}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<main class="quiz-shell">
+<div class="eyebrow">Архитектура Личности</div>
+<section class="quiz-panel" id="quiz-area">
+<div class="step-label">Этап B · Зеркало настоящего</div>
+<h1>Когнитивные предпочтения</h1>
+<p class="muted">Исследование привычных способов воспринимать информацию, принимать решения и организовывать действия. Здесь нет правильных ответов.</p>
+<div class="meter"><span id="progress-fill" style="width:0%"></span></div>
+<div class="muted" id="q-counter">Вопрос 1 из 32</div>
+<h2 id="q-text">Загрузка…</h2>
+<div id="options-list"></div>
+<div class="row-actions"><button class="btn-secondary" id="prev-btn" type="button">Назад</button><button class="btn-primary" id="next-btn" type="button" disabled>Далее</button></div>
+</section>
+<section class="quiz-panel hidden" id="results-area">
+<div class="step-label">Результат исследования</div><h1>Ваш когнитивный профиль</h1>
+<p class="muted">Это описание предпочтений, а не фиксированный тип личности. В разных обстоятельствах Вы можете пользоваться обоими способами.</p>
+<div id="profile-axes-container"></div><div id="results-description"></div>
+<div class="row-actions"><button class="btn-secondary" id="restart-btn" type="button">Пройти заново</button><button class="btn-primary" id="map-btn" type="button">Продолжить путь</button></div>
+</section>
+<p class="muted" id="save-status">Ответы сохраняются в едином профиле этого браузера.</p>
+</main>
+<script src="js/profile.js"></script><script src="data/cognition_questions.js"></script>
+<script>
+(function(){
+'use strict';
+const questions=window.cognitionQuestions||[];
+const axes={
+ EI:{name:'Направленность внимания',left:'Вовне (E)',right:'Внутрь (I)',strength:'Внешний обмен может помогать Вам развивать мысли и включаться в процессы; внутреннее осмысление дает возможность сначала собрать собственную позицию.'},
+ SN:{name:'Способ восприятия',left:'Факты и детали (S)',right:'Связи и возможности (N)',strength:'Опора на конкретику помогает замечать проверяемые детали; внимание к связям и возможностям помогает видеть общую картину и перспективы.'},
+ LF:{name:'Принятие решений',left:'Логика и критерии (L)',right:'Ценности и люди (F)',strength:'Критерии и последовательность поддерживают объективную оценку; учет ценностей и человеческого контекста помогает видеть последствия решений для людей.'},
+ RP:{name:'Взаимодействие с внешним миром',left:'Структура и план (R)',right:'Гибкость и открытые возможности (P)',strength:'Структура помогает распределять усилия и завершать начатое; гибкость позволяет адаптироваться к новым вводным и сохранять пространство для вариантов.'}
+};
+let profile=AlchemistProfile.load(), currentIdx=0, answers={};
+const $=id=>document.getElementById(id);
+function moduleData(){return AlchemistProfile.load().research.cognitive||{};}
+function saveProgress(){
+ AlchemistProfile.update(p=>{const m=p.research.cognitive;m.status='in_progress';m.rawAnswers=JSON.parse(JSON.stringify(answers));m.currentIndex=currentIdx;});
+ $('save-status').textContent='Прогресс сохранен.';
+}
+function renderQuestion(){
+ const q=questions[currentIdx]; if(!q)return;
+ $('q-counter').textContent='Вопрос '+(currentIdx+1)+' из '+questions.length;
+ $('progress-fill').style.width=((currentIdx+1)/questions.length*100)+'%';
+ $('q-text').textContent=q.text; const list=$('options-list');list.innerHTML='';
+ q.options.forEach((opt,index)=>{
+  const b=document.createElement('button');b.type='button';b.className='option';
+  b.textContent=opt.text;
+  if(answers[q.id]&&answers[q.id].optionIndex===index)b.classList.add('selected');
+  b.addEventListener('click',()=>{answers[q.id]={optionIndex:index,pole:opt.pole};list.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');$('next-btn').disabled=false;saveProgress();});
+  list.appendChild(b);
+ });
+ $('prev-btn').disabled=currentIdx===0;
+ $('next-btn').disabled=!answers[q.id];
+ $('next-btn').textContent=currentIdx===questions.length-1?'Завершить':'Далее';
+}
+function calculate(){
+ const scores={EI:{E:0,I:0},SN:{S:0,N:0},LF:{L:0,F:0},RP:{R:0,P:0}};
+ questions.forEach(q=>{const a=answers[q.id];if(a&&scores[q.axis]&&scores[q.axis][a.pole]!==undefined)scores[q.axis][a.pole]++;});
+ return scores;
+}
+function renderResults(scores){
+ $('quiz-area').classList.add('hidden');$('results-area').classList.remove('hidden');
+ const host=$('profile-axes-container');host.innerHTML='';let paragraphs=[];
+ Object.entries(axes).forEach(([key,meta])=>{
+  const a=scores[key]||{};const l=a[key[0]]||0,r=a[key[1]]||0,total=l+r||1,diff=Math.abs(l-r),pct=Math.round(l/total*100);
+  const block=document.createElement('div');block.className='axis';
+  const head=document.createElement('div');head.className='axis-head';
+  const left=document.createElement('strong');left.textContent=meta.left+' · '+l;
+  const right=document.createElement('strong');right.textContent=r+' · '+meta.right;
+  head.append(left,right);
+  const track=document.createElement('div');track.className='axis-track';
+  const fill=document.createElement('div');fill.className='axis-fill';fill.style.width=pct+'%';track.append(fill);
+  const title=document.createElement('div');title.innerHTML='<strong>'+meta.name+'</strong>';
+  block.append(title,head,track);host.append(block);
+  let tendency=diff<=2?'Смешанный результат: выраженного перевеса нет.':(l>r?'Более заметно предпочтение '+meta.left+'.':'Более заметно предпочтение '+meta.right+'.');
+  paragraphs.push('<p class="result-note"><strong>'+meta.name+'.</strong> '+tendency+' '+meta.strength+'</p>');
+ });
+ $('results-description').innerHTML=paragraphs.join('');
+}
+function finish(){
+ if(questions.some(q=>!answers[q.id])){alert('Ответьте, пожалуйста, на все вопросы.');return;}
+ const scores=calculate(),result={scores,axes:Object.fromEntries(Object.entries(scores).map(([k,v])=>[k,{...v,preference:Math.abs(v[k[0]]-v[k[1]])<=2?'mixed':(v[k[0]]>v[k[1]]?k[0]:k[1])}]))};
+ AlchemistProfile.setResearchResult('cognitive',result,answers);
+ AlchemistProfile.update(p=>{p.research.cognitive.currentIndex=questions.length-1;});
+ renderResults(scores);
+}
+function restart(){
+ if(!confirm('Начать исследование заново? Сохраненный результат этого модуля будет заменен после нового завершения.'))return;
+ AlchemistProfile.update(p=>{p.research.cognitive={status:'in_progress',rawAnswers:{},results:{},completedAt:null,currentIndex:0};});
+ answers={};currentIdx=0;$('results-area').classList.add('hidden');$('quiz-area').classList.remove('hidden');renderQuestion();
+}
+function init(){
+ if(!questions.length){$('q-text').textContent='Не удалось загрузить вопросы.';return;}
+ const m=moduleData();answers=m.rawAnswers||{};
+ if(m.status==='completed'){renderResults(m.results.scores||calculate());return;}
+ currentIdx=Math.min(Math.max(Number(m.currentIndex)||0,0),questions.length-1);renderQuestion();
+}
+$('next-btn').addEventListener('click',()=>{if(!answers[questions[currentIdx].id])return;if(currentIdx<questions.length-1){currentIdx++;saveProgress();renderQuestion();}else finish();});
+$('prev-btn').addEventListener('click',()=>{if(currentIdx>0){currentIdx--;saveProgress();renderQuestion();}});
+$('restart-btn').addEventListener('click',restart);
+$('map-btn').addEventListener('click',()=>{window.location.href='research.html';});
+init();
+})();
+</script>
+</body></html>
