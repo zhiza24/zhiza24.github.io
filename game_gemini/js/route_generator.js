@@ -103,13 +103,7 @@
       const candidates = wheelCandidates(profile || {});
 
       return candidates.map((candidate, index) => {
-        const relevantHypotheses = hypotheses.map(h => ({
-          id: h.id,
-          title: h.title,
-          status: h.status,
-          note: h.note
-        }));
-        return {
+          return {
           id: 'route_priority_' + (index + 1),
           sphereKey: 'wheel_sphere_' + candidate.sphereIndex,
           sphereTitle: candidate.sphereTitle,
@@ -135,7 +129,6 @@
             priceOfChange: labyrinth.priceOfChange,
             obstacles: labyrinth.obstacles
           },
-          hypotheses: relevantHypotheses
         };
       });
     }
@@ -148,7 +141,7 @@
         wheelCompleted: !!(profile.lifeAreas && profile.lifeAreas.wheelTest &&
           profile.lifeAreas.wheelTest.completed),
         labyrinth,
-        confirmedHypotheses: confirmedHypotheses(profile || {})
+        confirmedHypotheses: hypotheses
       };
     }
   }
