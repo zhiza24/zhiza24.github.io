@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FDFBF7">
+<title>Архитектура Личности · Персональный маршрут</title>
+<link rel="stylesheet" href="css/game.css">
+<style>
+body{display:block;padding:18px}
+.route-shell{max-width:760px;margin:24px auto;padding:clamp(20px,5vw,30px);background:#fff;border:1px solid #eee7db;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.05)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#a8874d}
+.muted{color:#75665e;line-height:1.6}
+.priority-card,.notice{background:#f9f6f0;border:1px solid #e5e0d8;border-radius:14px;padding:18px;margin:16px 0}
+.priority-title{font-size:17px;font-weight:600;color:#80683f;margin:0 0 12px}
+.field{margin:14px 0}
+.field label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#75665e;margin-bottom:6px}
+.field textarea,.field input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #e5dccd;border-radius:9px;background:#fff;color:#2c221e;font:inherit}
+.field textarea{min-height:76px;resize:vertical}
+.field input:focus,.field textarea:focus{outline:none;border-color:#c5a059}
+.evidence{font-size:13px;color:#75665e;line-height:1.55;margin:10px 0}
+.tag{display:inline-block;padding:5px 8px;margin:3px;border:1px solid #e5dccd;border-radius:7px;background:#fff;font-size:12px;color:#665d53}
+.actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.actions a,.actions button{display:inline-block;text-decoration:none;text-align:center;border:1px solid #d9cfbd;border-radius:9px;padding:12px 16px;background:#fff;color:#302923;font:inherit;cursor:pointer}
+.actions .primary{background:#302923;color:#fff;border-color:#302923;flex:1}
+.actions button:disabled{opacity:.45;cursor:not-allowed}
+.status{font-size:13px;color:#61745d;margin-top:12px}
+@media(max-width:480px){.actions{flex-direction:column}.actions>*{width:100%;box-sizing:border-box}}
+</style>
+</head>
+<body>
+<main class="route-shell">
+  <div class="eyebrow">Этап E · Персональный маршрут</div>
+  <h1>Ваш персональный маршрут</h1>
+  <p class="muted">Здесь Вы выбираете направления изменений на основе собственных ответов. Оценки и гипотезы помогают увидеть материал для размышления, но не определяют за Вас, что делать.</p>
+  <section id="route-container" aria-live="polite"><p class="muted">Анализ сохраненных данных...</p></section>
+  <p id="save-status" class="muted" aria-live="polite">Маршрут сохраняется в едином профиле этого браузера.</p>
+  <div class="actions">
+    <a href="fractal_map.html">К фрактальной карте</a>
+    <a href="research.html">К исследовательскому разделу</a>
+    <button class="primary" id="save-route" type="button">Сохранить мой маршрут</button>
+  </div>
+</main>
+<script src="js/profile.js"></script>
+<script src="js/route_generator.js"></script>
+<script>
+(function(){
+'use strict';
+const host=document.getElementById('route-container');
+const status=document.getElementById('save-status');
+let route=[];
+let inputs={};
+
+function el(tag,className,text){
+  const node=document.createElement(tag);
+  if(className)node.className=className;
+  if(text!==undefined)node.textContent=text;
+  return node;
+}
+function addField(card,index,label,key,value,multiline){
+  const wrap=el('div','field');
+  const id='route_'+index+'_'+key;
+  const caption=el('label','',label);
+  caption.htmlFor=id;
+  const control=el(multiline?'textarea':'input');
+  control.id=id;
+  if(!multiline)control.type='text';
+  control.value=value||'';
+  control.addEventListener('input',()=>{route[index][key]=control.value;});
+  wrap.append(caption,control);
+  card.appendChild(wrap);
+}
+function render(){
+  host.replaceChildren();
+  const profile=AlchemistProfile.load();
+  inputs=RouteGenerator.getInputs(profile);
+  const saved=profile.personalRoute;
+  if(saved && Array.isArray(saved.priorities) && saved.priorities.length){
+    route=JSON.parse(JSON.stringify(saved.priorities));
+  }else{
+    route=RouteGenerator.generateRoute(profile);
+  }
+
+  if(!inputs.wheelAvailable){
+    const note=el('div','notice');
+    note.append(el('h2','','Сначала нужно заполнить Колесо жизненных сфер'));
+    note.append(el('p','muted','В профиле пока нет сохраненных ответов Колеса. Перейдите в исследовательский раздел, завершите его и вернитесь сюда.'));
+    host.appendChild(note);
+    document.getElementById('save-route').disabled=true;
+    return;
+  }
+  if(!route.length){
+    const note=el('div','notice');
+    note.append(el('h2','','Пока нет выбранных направлений'));
+    note.append(el('p','muted','В Колесе жизненных сфер пока не отмечены аспекты, которые Вы хотели бы изменить. Вернитесь к Колесу, отметьте желаемые изменения и сохраните приоритеты.'));
+    host.appendChild(note);
+    document.getElementById('save-route').disabled=true;
+    return;
+  }
+  document.getElementById('save-route').disabled=false;
+
+  const intro=el('div','notice');
+  intro.append(el('h2','','Предварительные направления'));
+  intro.append(el('p','muted','Сферы взяты из тех пунктов Колеса, где Вы сами отметили желание изменений. Вы можете переписать формулировки, уточнить ограничения и полностью изменить содержание плана.'));
+  if(inputs.labyrinth.desire)intro.append(el('p','', 'Ваше желание из Лабиринта: '+inputs.labyrinth.desire));
+  host.appendChild(intro);
+
+  route.forEach((item,index)=>{
+    const card=el('article','priority-card');
+    card.appendChild(el('h2','priority-title','Приоритет '+(index+1)+': '+item.sphereTitle));
+    if(item.evidence && item.evidence.length){
+      const evidence=el('div','evidence');
+      item.evidence.forEach(line=>evidence.appendChild(el('div','',line)));
+      card.appendChild(evidence);
+    }
+    if(item.desireStrength)card.appendChild(el('span','tag','Сила желания: '+item.desireStrength+'/10'));
+    if(item.urgency)card.appendChild(el('span','tag','Срок: '+item.urgency));
+    addField(card,index,'Желаемое изменение','targetChange',item.targetChange,true);
+    addField(card,index,'Что удерживает в прежнем положении','holdingFactor',item.holdingFactor,true);
+    addField(card,index,'Внутренние правила или привычные реакции','internalRules',item.internalRules,true);
+    addField(card,index,'Внешние ограничения','externalLimits',item.externalLimits,true);
+    addField(card,index,'Какие ресурсы уже есть','resources',item.resources,true);
+    addField(card,index,'Первый небольшой шаг','firstStep',item.firstStep,true);
+    addField(card,index,'Проверяемый признак продвижения','progressMetric',item.progressMetric,true);
+    if(item.hypotheses && item.hypotheses.length){
+      card.appendChild(el('h3','','Гипотезы, которые Вы подтвердили или уточнили'));
+      item.hypotheses.forEach(h=>{
+        const line=h.title+(h.status==='confirmed'?' · подтверждена':' · уточнена')+(h.note?' — '+h.note:'');
+        card.appendChild(el('p','evidence',line));
+      });
+    }
+    host.appendChild(card);
+  });
+
+  if(inputs.labyrinth.secondaryGain || inputs.labyrinth.priceOfChange || inputs.labyrinth.obstacles.length){
+    const context=el('section','notice');
+    context.appendChild(el('h3','','Материал из Лабиринта желаний'));
+    if(inputs.labyrinth.secondaryGain)context.appendChild(el('p','muted','Вторичная выгода: '+inputs.labyrinth.secondaryGain));
+    if(inputs.labyrinth.priceOfChange)context.appendChild(el('p','muted','Цена перемен: '+inputs.labyrinth.priceOfChange));
+    if(inputs.labyrinth.obstacles.length)context.appendChild(el('p','muted','Отмеченные препятствия: '+inputs.labyrinth.obstacles.join('; ')));
+    host.appendChild(context);
+  }
+}
+document.getElementById('save-route').addEventListener('click',()=>{
+  try{
+    AlchemistProfile.update(profile=>{
+      profile.personalRoute=profile.personalRoute||{status:'not_created',priorities:[],tasks:[]};
+      profile.personalRoute.priorities=JSON.parse(JSON.stringify(route));
+      profile.personalRoute.status='saved';
+      profile.personalRoute.updatedAt=new Date().toISOString();
+      profile.history.push({type:'personal_route_saved',at:profile.personalRoute.updatedAt});
+    });
+    status.textContent='Ваш маршрут сохранен в едином профиле героя.';
+  }catch(error){
+    status.textContent=error && error.message ? error.message : 'Не удалось сохранить маршрут.';
+  }
+});
+render();
+})();
+</script>
+</body>
+</html>
