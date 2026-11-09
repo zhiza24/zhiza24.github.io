@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#FDFBF7">
+  <title>Архитектура Личности · Лабиринт желаний</title>
+  <link rel="stylesheet" href="css/game.css">
+  <style>
+    body{display:block;padding:18px}
+    .labyrinth-shell{max-width:680px;margin:24px auto;padding:clamp(20px,5vw,30px);background:#fff;border:1px solid #eee7db;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.05)}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#a8874d}
+    .muted{color:#75665e;line-height:1.6}
+    .progress-track{height:5px;background:#eee7db;border-radius:9px;overflow:hidden;margin:16px 0 22px}
+    .progress-track span{display:block;height:100%;background:#c5a059;transition:width .2s ease}
+    .step-card{margin-bottom:24px}
+    .textarea-field{width:100%;min-height:120px;padding:16px;font-size:15px;border:1.5px solid #e5e0d8;background:#f9f6f0;border-radius:12px;color:#2c221e;font:inherit;resize:vertical;box-sizing:border-box}
+    .textarea-field:focus{outline:none;border-color:#c5a059;background:#fff}
+    .checkbox-option{display:flex;align-items:flex-start;padding:14px 16px;margin-bottom:10px;border:1.5px solid #e5e0d8;background:#f9f6f0;border-radius:10px;cursor:pointer;font-size:15px;color:#2c221e;line-height:1.45}
+    .checkbox-option.selected{border-color:#c5a059;background:#faf6ed}
+    .checkbox-option input{margin:3px 12px 0 0;accent-color:#c5a059;flex:0 0 auto}
+    .actions{display:flex;gap:12px;margin-top:24px}
+    .actions button{padding:12px 20px;border-radius:9px;cursor:pointer;font:inherit}
+    .btn-secondary{border:1px solid #ccc;background:#f5f5f5;color:#302923}
+    .btn-primary{border:0;background:#a8874d;color:#fff;flex:1}
+    .btn-primary:disabled,.btn-secondary:disabled{opacity:.45;cursor:not-allowed}
+    .results-box{background:#f9f6f0;border:1px solid #e5e0d8;border-radius:12px;padding:20px;margin-bottom:24px}
+    .summary-item{margin-bottom:16px;border-bottom:1px solid #e5e0d8;padding-bottom:12px}
+    .summary-item:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
+    .summary-title{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#a8874d;margin-bottom:6px}
+    .summary-content{font-size:15px;color:#2c221e;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+    @media(max-width:480px){.labyrinth-shell{margin:8px auto}.actions{gap:8px}.actions button{padding:12px 14px}}
+  </style>
+</head>
+<body>
+<main class="labyrinth-shell">
+  <div class="eyebrow">Этап C · Лабиринт желаний</div>
+  <h1 id="main-title">Лабиринт желаний</h1>
+  <p id="progress-subtitle" class="muted">Исследование подлинных устремлений, преград и вторичных выгод</p>
+  <div id="quiz-area">
+    <div id="q-counter" class="muted">Шаг 1 из 4</div>
+    <div class="progress-track" aria-hidden="true"><span id="progress-fill" style="width:25%"></span></div>
+    <section class="step-card">
+      <h2 id="step-prompt" style="font-size:18px;font-weight:500;line-height:1.5">Загрузка...</h2>
+      <div id="step-input-container"></div>
+    </section>
+    <p id="save-status" class="muted" aria-live="polite">Ответы сохраняются в профиле этого браузера.</p>
+    <div class="actions">
+      <button class="btn-secondary" id="prev-btn" type="button">Назад</button>
+      <button class="btn-primary" id="next-btn" type="button">Далее</button>
+    </div>
+  </div>
+  <section id="results-area" hidden>
+    <div class="results-box">
+      <h2 style="color:#a8874d;margin-top:0">Ваш путеводитель по Лабиринту желаний</h2>
+      <div id="summary-container"></div>
+    </div>
+    <div class="actions">
+      <button class="btn-secondary" id="restart-btn" type="button">Пройти заново</button>
+      <button class="btn-primary" id="research-btn" type="button">К исследовательскому разделу</button>
+    </div>
+  </section>
+</main>
+<script src="js/profile.js"></script>
+<script src="data/labyrinth_data.js"></script>
+<script>
+(function(){
+  'use strict';
+  const steps = window.labyrinthData.steps;
+  const moduleKey = 'labyrinth';
+  let currentStepIdx = 0;
+  let userAnswers = { reflections: {}, multi: {} };
+  const $ = id => document.getElementById(id);
+
+  function normalizeAnswers(value) {
+    const source = value && typeof value === 'object' ? value : {};
+    return {
+      reflections: source.reflections && typeof source.reflections === 'object' ? source.reflections : {},
+      multi: source.multi && typeof source.multi === 'object' ? source.multi : {}
+    };
+  }
+
+  function saveProgress() {
+    AlchemistProfile.update(profile => {
+      profile.research[moduleKey] = {
+        ...(profile.research[moduleKey] || {}),
+        currentStepIdx,
+        rawAnswers: userAnswers,
+        status: 'in_progress'
+      };
+    });
+    $('save-status').textContent = 'Изменения сохранены в едином профиле героя.';
+  }
+
+  function initLabyrinth() {
+    const profile = AlchemistProfile.load();
+    const saved = profile.research && profile.research[moduleKey];
+    if (saved && saved.rawAnswers) userAnswers = normalizeAnswers(saved.rawAnswers);
+    if (saved && saved.status === 'completed') {
+      finishQuiz(false);
+      return;
+    }
+    if (saved && Number.isInteger(saved.currentStepIdx)) {
+      currentStepIdx = Math.min(Math.max(saved.currentStepIdx, 0), steps.length - 1);
+    }
+    renderStep();
+  }
+
+  function renderStep() {
+    const step = steps[currentStepIdx];
+    $('q-counter').textContent = 'Шаг ' + (currentStepIdx + 1) + ' из ' + steps.length;
+    $('main-title').textContent = step.title;
+    $('progress-subtitle').textContent = step.subtitle;
+    $('step-prompt').textContent = step.prompt;
+    $('progress-fill').style.width = ((currentStepIdx + 1) / steps.length * 100) + '%';
+    const container = $('step-input-container');
+    container.replaceChildren();
+
+    if (step.type === 'input_reflection') {
+      const textarea = document.createElement('textarea');
+      textarea.className = 'textarea-field';
+      textarea.placeholder = step.placeholder || '';
+      textarea.value = userAnswers.reflections[step.id] || '';
+      textarea.setAttribute('aria-label', step.prompt);
+      textarea.addEventListener('input', () => {
+        userAnswers.reflections[step.id] = textarea.value;
+        saveProgress();
+      });
+      container.appendChild(textarea);
+    } else if (step.type === 'multi_choice') {
+      if (!Array.isArray(userAnswers.multi[step.id])) userAnswers.multi[step.id] = [];
+      step.options.forEach(option => {
+        const label = document.createElement('label');
+        label.className = 'checkbox-option' + (userAnswers.multi[step.id].includes(option.id) ? ' selected' : '');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = option.id;
+        checkbox.checked = userAnswers.multi[step.id].includes(option.id);
+        checkbox.addEventListener('change', () => {
+          const selected = new Set(userAnswers.multi[step.id]);
+          if (checkbox.checked) selected.add(option.id); else selected.delete(option.id);
+          userAnswers.multi[step.id] = Array.from(selected);
+          label.classList.toggle('selected', checkbox.checked);
+          saveProgress();
+        });
+        const text = document.createElement('span');
+        text.textContent = option.text;
+        label.append(checkbox, text);
+        container.appendChild(label);
+      });
+    }
+
+    $('prev-btn').disabled = currentStepIdx === 0;
+    $('next-btn').textContent = currentStepIdx === steps.length - 1 ? 'Завершить исследование' : 'Далее';
+  }
+
+  function finishQuiz(save = true) {
+    if (save) {
+      AlchemistProfile.setResearchResult(moduleKey, { summary: userAnswers }, userAnswers);
+      AlchemistProfile.update(profile => {
+        profile.research[moduleKey].currentStepIdx = steps.length - 1;
+        profile.research[moduleKey].status = 'completed';
+        profile.research[moduleKey].rawAnswers = userAnswers;
+      });
+    }
+    $('quiz-area').hidden = true;
+    $('results-area').hidden = false;
+    renderSummary();
+  }
+
+  function renderSummary() {
+    const container = $('summary-container');
+    container.replaceChildren();
+    steps.forEach(step => {
+      const item = document.createElement('div');
+      item.className = 'summary-item';
+      const title = document.createElement('div');
+      title.className = 'summary-title';
+      title.textContent = step.title;
+      const content = document.createElement('div');
+      content.className = 'summary-content';
+      let value = 'Не заполнено';
+      if (step.type === 'input_reflection') {
+        value = userAnswers.reflections[step.id] || 'Нет ответа';
+      } else if (step.type === 'multi_choice') {
+        const selected = userAnswers.multi[step.id] || [];
+        const texts = step.options.filter(option => selected.includes(option.id)).map(option => '• ' + option.text);
+        value = texts.length ? texts.join('\n') : 'Ничего не выбрано';
+      }
+      content.textContent = value;
+      item.append(title, content);
+      container.appendChild(item);
+    });
+  }
+
+  function restartQuiz() {
+    if (!window.confirm('Хотите пройти Лабиринт желаний заново? Сохраненные ответы этого модуля будут сброшены.')) return;
+    userAnswers = { reflections: {}, multi: {} };
+    currentStepIdx = 0;
+    AlchemistProfile.update(profile => {
+      profile.research[moduleKey] = {
+        status: 'in_progress', currentStepIdx: 0,
+        rawAnswers: userAnswers, results: {}, completedAt: null
+      };
+    });
+    $('results-area').hidden = true;
+    $('quiz-area').hidden = false;
+    $('save-status').textContent = 'Начато повторное прохождение.';
+    renderStep();
+  }
+
+  $('prev-btn').addEventListener('click', () => {
+    if (currentStepIdx > 0) { currentStepIdx--; saveProgress(); renderStep(); }
+  });
+  $('next-btn').addEventListener('click', () => {
+    if (currentStepIdx < steps.length - 1) {
+      currentStepIdx++;
+      saveProgress();
+      renderStep();
+    } else {
+      finishQuiz(true);
+    }
+  });
+  $('restart-btn').addEventListener('click', restartQuiz);
+  $('research-btn').addEventListener('click', () => { window.location.href = 'research.html'; });
+  initLabyrinth();
+})();
+</script>
+</body>
+</html>
