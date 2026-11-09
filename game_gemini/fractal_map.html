@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FDFBF7">
+<title>Архитектура Личности · Фрактальная карта</title>
+<link rel="stylesheet" href="css/game.css">
+<style>
+body{display:block;padding:18px}
+.fractal-shell{max-width:760px;margin:24px auto;padding:clamp(20px,5vw,30px);background:#fff;border:1px solid #eee7db;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.05)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#a8874d}
+.muted{color:#75665e;line-height:1.6}
+.intro{margin-bottom:22px}
+.pattern-card{background:#f9f6f0;border:1px solid #e5e0d8;border-radius:14px;padding:20px;margin:16px 0}
+.pattern-title{font-size:17px;font-weight:600;color:#80683f;margin-bottom:9px}
+.pattern-desc{font-size:14px;color:#2c221e;line-height:1.65}
+.pattern-tags,.evidence{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.tag{font-size:11px;letter-spacing:.04em;background:#fff;border:1px solid #e5e0d8;padding:5px 9px;border-radius:7px;color:#665d53}
+.evidence{display:block;padding:12px 14px;background:rgba(255,255,255,.65);border-radius:10px}
+.evidence-item{font-size:13px;line-height:1.5;margin:5px 0;color:#665d53}
+.reflection{margin-top:14px;padding-top:13px;border-top:1px solid #e5e0d8}
+.reflection p{font-size:14px;line-height:1.55}
+.reflection textarea{width:100%;min-height:76px;box-sizing:border-box;border:1px solid #e5dccd;border-radius:10px;padding:11px;font:inherit;background:#fff;resize:vertical}
+.feedback-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.feedback-actions button,.main-actions a{border:1px solid #d9cfbd;border-radius:10px;padding:10px 13px;background:#fff;color:#302923;font:inherit;cursor:pointer;text-decoration:none}
+.feedback-actions button.primary,.main-actions a.primary{background:#302923;color:#fff;border-color:#302923}
+.feedback-status{font-size:12px;color:#75665e;margin-top:9px}
+.empty-state,.module-status{background:#f9f6f0;border:1px solid #eee7db;border-radius:12px;padding:16px;margin:12px 0}
+.module-status ul{padding-left:20px;margin-bottom:0}
+.module-status li{margin:7px 0;font-size:14px}
+.status-done{color:#61745d}.status-progress{color:#9a7842}
+.main-actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+@media(max-width:480px){.pattern-card{padding:16px}.main-actions{flex-direction:column}.main-actions a{text-align:center}}
+</style>
+</head>
+<body>
+<main class="fractal-shell">
+  <div class="eyebrow">Этап D · Синтез опыта</div>
+  <h1>Фрактальная карта личности</h1>
+  <p class="muted intro">Здесь сопоставляются ответы из разных исследовательских модулей. Карта показывает возможные повторяющиеся механизмы, а не диагнозы и не окончательные выводы о Вас. Каждую гипотезу можно подтвердить, уточнить или отвергнуть.</p>
+  <section id="patterns-container" aria-live="polite"><p class="muted">Загрузка данных профиля...</p></section>
+  <section class="module-status" id="module-status"></section>
+  <div class="main-actions">
+    <a href="research.html">К исследовательскому разделу</a>
+  </div>
+</main>
+<script src="js/profile.js"></script>
+<script src="js/fractal_analyzer.js"></script>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+function node(tag,className,text){
+  const el=document.createElement(tag);
+  if(className)el.className=className;
+  if(text!==undefined)el.textContent=text;
+  return el;
+}
+function statusText(status){
+  return status==='completed'?'Пройден':status==='in_progress'?'В процессе':'Еще не пройден';
+}
+function renderStatus(profile){
+  const host=$('module-status');
+  host.replaceChildren();
+  const title=node('h3','', 'Какие исследования учтены');
+  const list=node('ul');
+  FractalAnalyzer.moduleStatus(profile).forEach(item=>{
+    const li=node('li');
+    const label=node('span','',item.label+': ');
+    const state=node('strong',item.status==='completed'?'status-done':item.status==='in_progress'?'status-progress':'',statusText(item.status));
+    li.append(label,state);list.appendChild(li);
+  });
+  const note=node('p','muted','Не пройденные модули не используются как подтверждение гипотез. Когда появятся новые результаты, карта сможет дополниться.');
+  host.append(title,list,note);
+}
+function saveFeedback(pattern,decision,note,status){
+  const id='fractal_'+pattern.id;
+  const profile=AlchemistProfile.load();
+  let existing=(profile.hypotheses||[]).find(item=>item.id===id);
+  if(!existing){
+    AlchemistProfile.addHypothesis({
+      id,title:pattern.title,description:pattern.description,
+      source:'fractal_map',sources:pattern.evidence,
+      modules:pattern.modules,status:'new'
+    });
+  }
+  AlchemistProfile.resolveHypothesis(id,decision,note);
+  status.textContent=decision==='confirmed'?'Отмечено: узнаю этот механизм.':decision==='rejected'?'Отмечено: не узнаю этот механизм.':'Отмечено: гипотезу нужно уточнить.';
+}
+function renderCard(pattern,profile){
+  const card=node('article','pattern-card');
+  card.appendChild(node('h2','pattern-title',pattern.title));
+  card.appendChild(node('p','pattern-desc',pattern.description));
+  const tags=node('div','pattern-tags');
+  pattern.modules.forEach(name=>tags.appendChild(node('span','tag',name)));
+  card.appendChild(tags);
+  const evidence=node('div','evidence');
+  evidence.appendChild(node('strong','','На чем основано сопоставление'));
+  pattern.evidence.forEach(item=>{
+    const line=node('p','evidence-item',item.module+': '+item.detail);
+    evidence.appendChild(line);
+  });
+  card.appendChild(evidence);
+  const reflection=node('div','reflection');
+  reflection.appendChild(node('p','',pattern.reflectionQuestion));
+  const textarea=node('textarea');
+  textarea.placeholder='Ваш пример или уточнение (необязательно)';
+  textarea.setAttribute('aria-label','Комментарий к гипотезе');
+  const actions=node('div','feedback-actions');
+  const status=node('p','feedback-status','Пока не отмечено.');
+  const id='fractal_'+pattern.id;
+  const saved=(profile.hypotheses||[]).find(item=>item.id===id);
+  if(saved && saved.playerFeedback){
+    textarea.value=saved.playerFeedback.note||'';
+    status.textContent=saved.status==='confirmed'?'Ранее отмечено: узнаю этот механизм.':saved.status==='rejected'?'Ранее отмечено: не узнаю этот механизм.':'Ранее отмечено: требуется уточнение.';
+  }
+  [
+    ['confirmed','Узнаю','primary'],
+    ['refined','Нужно уточнить',''],
+    ['rejected','Не узнаю','']
+  ].forEach(([decision,label,cls])=>{
+    const button=node('button',cls,label);
+    button.type='button';
+    button.addEventListener('click',()=>saveFeedback(pattern,decision,textarea.value,status));
+    actions.appendChild(button);
+  });
+  reflection.append(textarea,actions,status);
+  card.appendChild(reflection);
+  return card;
+}
+function render(){
+  const profile=AlchemistProfile.load();
+  const host=$('patterns-container');
+  host.replaceChildren();
+  const patterns=FractalAnalyzer.analyze(profile);
+  if(!patterns.length){
+    const empty=node('div','empty-state');
+    empty.appendChild(node('h2','','Пока недостаточно данных для сопоставления'));
+    empty.appendChild(node('p','muted','Фрактальная карта появится по мере прохождения исследовательских модулей. Сейчас часть необходимых результатов еще не сохранена. Мы не будем подменять отсутствующие данные общими описаниями.'));
+    host.appendChild(empty);
+  }else{
+    host.appendChild(node('p','muted','Найдено возможных сопоставлений: '+patterns.length+'. Прочитайте основания и отметьте, насколько каждое наблюдение совпадает с Вашим опытом.'));
+    patterns.forEach(pattern=>host.appendChild(renderCard(pattern,profile)));
+  }
+  renderStatus(profile);
+}
+render();
+})();
+</script>
+</body>
+</html>
