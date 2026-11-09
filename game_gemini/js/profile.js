@@ -4,7 +4,7 @@
   const PROFILE_KEY = 'alchemist_hero_profile_gemini';
   const LEGACY_KEYS = ['gemini_game_profile_v1', 'alch_profile'];
   const SCHEMA_VERSION = 2;
-  const RESEARCH_KEYS = ['adaptations','cognitive','crookedWorld','selfWorth','responsibility','criticalThinking'];
+  const RESEARCH_KEYS = ['adaptations','cognitive','crookedWorld','selfWorth','responsibility','criticalThinking','labyrinth'];
 
   function emptyProfile() {
     return {
