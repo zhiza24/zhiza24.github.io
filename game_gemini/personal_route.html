@@ -122,15 +122,19 @@ function render(){
     addField(card,index,'Какие ресурсы уже есть','resources',item.resources,true);
     addField(card,index,'Первый небольшой шаг','firstStep',item.firstStep,true);
     addField(card,index,'Проверяемый признак продвижения','progressMetric',item.progressMetric,true);
-    if(item.hypotheses && item.hypotheses.length){
-      card.appendChild(el('h3','','Гипотезы, которые Вы подтвердили или уточнили'));
-      item.hypotheses.forEach(h=>{
-        const line=h.title+(h.status==='confirmed'?' · подтверждена':' · уточнена')+(h.note?' — '+h.note:'');
-        card.appendChild(el('p','evidence',line));
-      });
-    }
     host.appendChild(card);
   });
+
+  if(inputs.confirmedHypotheses && inputs.confirmedHypotheses.length){
+    const hypotheses=el('section','notice');
+    hypotheses.appendChild(el('h3','','Подтвержденные и уточненные гипотезы фрактальной карты'));
+    hypotheses.appendChild(el('p','muted','Эти наблюдения сохранены как значимые для Вас. Они не привязаны автоматически к конкретной сфере: используйте их как материал для самостоятельного выбора.'));
+    inputs.confirmedHypotheses.forEach(h=>{
+      const line=h.title+(h.status==='confirmed'?' · подтверждена':' · уточнена')+(h.note?' — '+h.note:'');
+      hypotheses.appendChild(el('p','evidence',line));
+    });
+    host.appendChild(hypotheses);
+  }
 
   if(inputs.labyrinth.secondaryGain || inputs.labyrinth.priceOfChange || inputs.labyrinth.obstacles.length){
     const context=el('section','notice');
