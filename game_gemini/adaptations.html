@@ -32,7 +32,7 @@ const questions=window.adaptationsQuestions||[];
 const labels={A:'Замирание',B:'Контроль и действие',C:'Сокрытие и подстройка',D:'Поиск опоры'};
 const $=id=>document.getElementById(id);
 let index=0,answers={};
-function selectedStrategy(q){const a=answers[q.id];return a&&typeof a==='object'?a.answer:a;}
+function selectedStrategy(q){return answers[q.id]||null;}
 function persist(q){
  AlchemistProfile.recordAnswer('adaptations',q.id,answers[q.id],{questionText:q.text});
  $('save-status').textContent='Ответ сохранен. Можно продолжить позже.';
@@ -45,7 +45,7 @@ function render(){
  $('question').textContent=q.text;$('options').replaceChildren();
  q.options.forEach(opt=>{
   const b=document.createElement('button');b.type='button';b.className='option'+(chosen===opt.strategy?' selected':'');b.textContent=opt.text;
-  b.addEventListener('click',()=>{answers[q.id]={answer:opt.strategy};persist(q);render();});
+  b.addEventListener('click',()=>{answers[q.id]=opt.strategy;persist(q);render();});
   $('options').append(b);
  });
  $('back').disabled=index===0;$('next').disabled=!chosen;
@@ -59,7 +59,7 @@ function calculate(){
 }
 function finish(){
  const result=calculate();
- AlchemistProfile.setResearchResult('adaptations',result,answers);
+ AlchemistProfile.setResearchResult('adaptations',result);
  $('quiz-panel').classList.add('hidden');$('result-panel').classList.remove('hidden');
  const summary=$('result-summary');summary.replaceChildren();
  const lead=document.createElement('h2');lead.textContent=result.dominantStrategy?'Чаще выбиралась стратегия «'+labels[result.dominantStrategy]+'»':'Выраженного единственного ведущего варианта нет';
@@ -74,7 +74,10 @@ $('next').addEventListener('click',()=>{if(!selectedStrategy(questions[index]))r
 $('redo').addEventListener('click',()=>{index=0;render();$('result-panel').classList.add('hidden');$('quiz-panel').classList.remove('hidden');});
 function init(){
  const module=AlchemistProfile.load().research.adaptations||{};
- answers=module.rawAnswers&&typeof module.rawAnswers==='object'?{...module.rawAnswers}:{};
+ answers={};
+ if(module.rawAnswers&&typeof module.rawAnswers==='object'){
+  questions.forEach(q=>{const saved=module.rawAnswers[q.id];if(saved&&typeof saved.answer==='string')answers[q.id]=saved.answer;});
+ }
  const firstMissing=questions.findIndex(q=>!selectedStrategy(q));
  index=firstMissing<0?questions.length-1:Math.max(0,firstMissing);
  if(module.status==='completed'&&firstMissing<0){finish();return;}
