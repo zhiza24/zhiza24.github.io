@@ -3,6 +3,7 @@
   'use strict';
 
   const LINKS = [
+    { label: 'Карта мира', href: 'world_map.html', page: 'world_map.html' },
     { label: 'Паспорт', href: 'index.html', page: 'index.html' },
     { label: 'Колесо сфер', href: 'research.html#wheel-panel', page: 'research.html', hash: '#wheel-panel' },
     { label: 'Исследования', href: 'research.html#research-modules', page: 'research.html', hash: '#research-modules' },
