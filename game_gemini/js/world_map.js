@@ -86,7 +86,7 @@
     const regions = REGIONS.map((region, index) => ({
       id: region.id, number: region.number, title: region.title,
       subtitle: region.subtitle, description: region.description,
-      modules: region.modules, artifact: ARTIFACTS[region.artifact],
+      modules: region.modules, artifactId: region.artifact, artifact: ARTIFACTS[region.artifact],
       unlocked: !!region.unlock(profile, index),
       completed: !!region.complete(profile)
     }));
@@ -94,7 +94,7 @@
     let artifactsChanged = false;
     regions.forEach(region => {
       if (!region.completed) return;
-      const id = region.artifact;
+      const id = region.artifactId;
       if (ARTIFACTS[id] && !artifacts.some(item => item && (item.id === id || item === id))) {
         artifacts.push({ id, unlockedAt: new Date().toISOString() });
         artifactsChanged = true;
