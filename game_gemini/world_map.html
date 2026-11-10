@@ -64,7 +64,7 @@ function render(){
    links.append(a);
   });
   body.append(links,el('div','artifact-line','Артефакт территории: '+region.artifact.name));
-  const stateLabel=region.completed?'Завершено ✓':region.unlocked?'Доступно':'Закрыто · завершите предыдущую территорию';
+  const stateLabel=region.completed?'Завершено ✓':region.unlocked?'Доступно':region.id==='origins'?'Сначала создайте героя в паспорте':'Закрыто · завершите предыдущую территорию';
   card.append(number,body,el('div','region-state',stateLabel));host.append(card);
  });
  const grid=$('inventory-grid');grid.replaceChildren();
