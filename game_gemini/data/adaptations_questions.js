@@ -1,4 +1,5 @@
-// Модуль «Детские адаптации»: 24 ситуационных вопроса, четыре возможных способа реагирования.\nconst adaptationsQuestions = [
+// Модуль «Детские адаптации»: 24 ситуационных вопроса, четыре возможных способа реагирования.
+const adaptationsQuestions = [
   {
     "id": "adapt_01",
     "text": "Когда возникает напряжение в разговоре, я чаще…",
@@ -527,4 +528,5 @@
       }
     ]
   }
-];\nif (typeof window !== 'undefined') window.adaptationsQuestions = adaptationsQuestions;\n
+];
+if (typeof window !== 'undefined') window.adaptationsQuestions = adaptationsQuestions;
