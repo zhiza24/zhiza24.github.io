@@ -39,4 +39,5 @@ $('restart').addEventListener('click',()=>{if(!confirm('Начать модул�
 function init(){if(!questions.length){$('question').textContent='Не удалось загрузить утверждения.';return;}const m=moduleData();answers=m.rawAnswers&&typeof m.rawAnswers==='object'?{...m.rawAnswers}:{};if(m.status==='completed'&&Object.keys(answers).length===questions.length){index=questions.length-1;render();finish();return;}index=Math.min(Math.max(Number(m.currentIndex)||0,0),questions.length-1);render();}
 init();
 })();
-</script></body></html>
+</script><script src="js/navigation.js"></script>
+</body></html>
