@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FDFBF7">
+<title>Архитектура Личности · Земли Внутреннего Алхимика</title>
+<link rel="stylesheet" href="css/game.css">
+<style>
+body{display:block;padding:0 16px 42px}.world-shell{max-width:900px;margin:26px auto}.world-intro,.region,.inventory{background:#fff;border:1px solid #eee7db;border-radius:18px;padding:clamp(17px,3vw,25px);margin:16px 0;box-shadow:0 8px 26px rgba(45,34,25,.035)}
+.world-kicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#a8874d}.world-intro p,.region p,.inventory p{color:#75665e;line-height:1.65}
+.hero-line{display:flex;align-items:center;gap:14px;margin-top:14px}.hero-mark{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#f4efe6;color:#9a7842;font-size:25px;flex:none}.hero-name{font-weight:700;color:#302923}.hero-meta{font-size:12px;color:#75665e;margin-top:3px}
+.world-progress{height:7px;background:#eee7db;border-radius:9px;overflow:hidden;margin:14px 0 5px}.world-progress span{display:block;height:100%;background:#b99a60}
+.region{position:relative;display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:15px;align-items:center;transition:opacity .2s ease}.region.locked{opacity:.58;background:#faf9f6}.region.completed{border-color:#cbd7c3;background:#fbfdf9}
+.region-number{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#f5f0e6;color:#967747;font-size:21px}.region h2{margin:2px 0 5px;font-size:19px}.region-subtitle{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#9a7842}.region p{margin:6px 0 10px;font-size:14px}.module-links{display:flex;flex-wrap:wrap;gap:8px}.module-links a{font-size:12px;color:#80683f;text-decoration:none;border-bottom:1px solid #d9cfbd;padding-bottom:2px}
+.region-state{font-size:12px;color:#75665e;white-space:nowrap}.region.completed .region-state{color:#61745d}.artifact-line{font-size:12px;color:#8b744c;margin-top:10px}
+.inventory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}.artifact{border:1px solid #eee7db;border-radius:12px;padding:13px;text-align:center;background:#faf8f3}.artifact.locked{opacity:.45;filter:grayscale(1)}.artifact-icon{font-size:24px;color:#a8874d}.artifact strong{display:block;font-size:12px;margin-top:6px;color:#55483b}.artifact small{display:block;color:#75665e;font-size:10px;margin-top:4px}
+@media(max-width:620px){.region{grid-template-columns:42px minmax(0,1fr);gap:11px}.region-number{width:40px;height:40px;font-size:17px}.region-state{grid-column:2}.region h2{font-size:17px}.inventory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<main class="world-shell">
+<section class="world-intro">
+<div class="world-kicker">Путь Алхимика · Карта путешествия</div>
+<h1>Земли Внутреннего Алхимика</h1>
+<p>Это карта Вашего исследования. Территории отмечаются по мере того, как в профиле появляются результаты модулей. Артефакты здесь — символы собранного опыта, а не награды за скорость.</p>
+<div class="hero-line"><div class="hero-mark" id="hero-mark" aria-hidden="true">✧</div><div><div class="hero-name" id="hero-name">Ваш герой</div><div class="hero-meta" id="hero-meta">Путешествие начинается</div></div></div>
+<div class="world-progress"><span id="world-progress-fill" style="width:0%"></span></div>
+<div class="hero-meta" id="world-progress-label">Исследовано 0 из 6 территорий</div>
+</section>
+<section id="regions" aria-live="polite"></section>
+<section class="inventory">
+<div class="world-kicker">Собранные символы</div><h2>Сумка артефактов</h2>
+<p>Каждый артефакт появляется после завершения соответствующей территории. Он сохраняется в локальном профиле героя.</p>
+<div class="inventory-grid" id="inventory-grid"></div>
+</section>
+</main>
+<script src="js/profile.js"></script>
+<script src="js/world_map.js"></script>
+<script src="js/navigation.js"></script>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+function el(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;}
+function render(){
+ const state=WorldMapEngine.getState(),profile=state.profile,meta=profile.meta||{};
+ $('hero-name').textContent=meta.name||'Ваш герой';
+ $('hero-meta').textContent=(meta.gender==='female'?'Путница':meta.gender==='male'?'Путник':'Герой')+(meta.birthdate?' · '+meta.birthdate.split('-').reverse().join('.'):'');
+ $('hero-mark').textContent=meta.gender==='female'?'✧':'✦';
+ const count=state.regions.filter(x=>x.completed).length;
+ $('world-progress-fill').style.width=(count/6*100)+'%';
+ $('world-progress-label').textContent='Исследовано '+count+' из 6 территорий';
+ const host=$('regions');host.replaceChildren();
+ state.regions.forEach(region=>{
+  const card=el('article','region'+(region.completed?' completed':!region.unlocked?' locked':''));
+  const number=el('div','region-number',region.number);
+  const body=el('div','');
+  body.append(el('div','region-subtitle',region.subtitle),el('h2','',region.title),el('p','',region.description));
+  const links=el('div','module-links');
+  region.modules.forEach(mod=>{
+   const a=el('a','',mod.label);a.href=mod.url;
+   if(!region.unlocked){a.setAttribute('aria-disabled','true');a.style.pointerEvents='none';a.style.opacity='.45';}
+   links.append(a);
+  });
+  body.append(links,el('div','artifact-line','Артефакт территории: '+region.artifact.name));
+  const stateLabel=region.completed?'Завершено ✓':region.unlocked?'Доступно':'Закрыто · завершите предыдущую территорию';
+  card.append(number,body,el('div','region-state',stateLabel));host.append(card);
+ });
+ const grid=$('inventory-grid');grid.replaceChildren();
+ state.inventory.forEach(item=>{
+  const card=el('div','artifact'+(item.unlocked?'':' locked'));
+  card.append(el('div','artifact-icon',item.unlocked?item.icon:'?'),el('strong','',item.name),el('small','',item.unlocked?'Получен':'Пока не получен'));
+  grid.append(card);
+ });
+}
+render();
+})();
+</script>
+</body>
+</html>
