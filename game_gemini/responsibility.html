@@ -31,4 +31,5 @@ $('prev').onclick=()=>{if(step>0){step--;persist();render();}};$('next').onclick
 $('restart').onclick=()=>{if(!confirm('Начать модуль заново? Предыдущие ответы модуля «Ответственность» будут заменены.'))return;step=0;a={statements:{},indicators:{},situations:{}};AlchemistProfile.update(p=>{p.research.responsibility={status:'pending',rawAnswers:{},results:{},completedAt:null};});$('results').hidden=true;$('quiz').hidden=false;persist();render();};
 function init(){if(!d||d.statements.length!==24||d.indicators.length!==8||d.situations.length!==4){$('question').textContent='Не удалось загрузить полный комплект модуля.';return;}const m=AlchemistProfile.load().research.responsibility||{},r=m.rawAnswers||{};a={statements:{...(r.statements||{})},indicators:{...(r.indicators||{})},situations:{...(r.situations||{})}};if(m.status==='completed'&&Object.keys(a.statements).length===n&&Object.keys(a.situations).length===4){show(m.results||calculate());return;}step=Math.min(Math.max(Number(m.currentStep)||0,0),total-1);render();}
 init();})();
-</script></body></html>
+</script><script src="js/navigation.js"></script>
+</body></html>
