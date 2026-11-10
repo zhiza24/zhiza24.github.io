@@ -90,15 +90,17 @@
       unlocked: !!region.unlock(profile, index),
       completed: !!region.complete(profile)
     }));
-    const artifacts = Array.isArray(profile.inventory.artifacts) ? profile.inventory.artifacts : [];
+    const artifacts = Array.isArray(profile.inventory.artifacts) ? profile.inventory.artifacts.slice() : [];
+    let artifactsChanged = false;
     regions.forEach(region => {
       if (!region.completed) return;
       const id = Object.keys(ARTIFACTS).find(key => ARTIFACTS[key] === region.artifact);
       if (id && !artifacts.some(item => item && (item.id === id || item === id))) {
         artifacts.push({ id, unlockedAt: new Date().toISOString() });
+        artifactsChanged = true;
       }
     });
-    if (artifacts !== profile.inventory.artifacts) {
+    if (artifactsChanged) {
       api.update(p => { p.inventory.artifacts = artifacts; });
     }
     const inventory = Object.keys(ARTIFACTS).map(id => {
