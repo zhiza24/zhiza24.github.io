@@ -51,7 +51,7 @@
         { label: 'Фрактальная карта', url: 'fractal_map.html' }
       ],
       artifact: 'intent_compass',
-      complete: p => done(p, 'labyrinth') && (Array.isArray(p.hypotheses) && p.hypotheses.length > 0),
+      complete: p => done(p, 'labyrinth') && !!(p.pathway && p.pathway.progress && p.pathway.progress['labyrinth:fractal_map'] && p.pathway.progress['labyrinth:fractal_map'].visited),
       unlock: (p, i) => REGIONS[i - 1].complete(p)
     },
     {
