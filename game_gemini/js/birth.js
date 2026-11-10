@@ -72,7 +72,7 @@
     document.getElementById('edit-button').addEventListener('click', () => {
       restoreForm(api.load()); show(birthScreen);
     });
-    document.getElementById('continue-button').addEventListener('click', () => { window.location.href = 'research.html'; });
+    document.getElementById('continue-button').addEventListener('click', () => { window.location.href = 'world_map.html'; });
     document.getElementById('back-to-hero').addEventListener('click', () => {
       const profile = api.load();
       if (api.hasBirth(profile)) { renderProfile(profile); show(bornScreen); }
