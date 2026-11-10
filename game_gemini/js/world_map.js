@@ -94,8 +94,8 @@
     let artifactsChanged = false;
     regions.forEach(region => {
       if (!region.completed) return;
-      const id = Object.keys(ARTIFACTS).find(key => ARTIFACTS[key] === region.artifact);
-      if (id && !artifacts.some(item => item && (item.id === id || item === id))) {
+      const id = region.artifact;
+      if (ARTIFACTS[id] && !artifacts.some(item => item && (item.id === id || item === id))) {
         artifacts.push({ id, unlockedAt: new Date().toISOString() });
         artifactsChanged = true;
       }
