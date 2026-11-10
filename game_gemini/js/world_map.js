@@ -18,7 +18,7 @@
       modules: [{ label: 'Детские адаптации', url: 'adaptations.html' }],
       artifact: 'childhood_shard',
       complete: p => done(p, 'adaptations'),
-      unlock: () => true
+      unlock: p => !!(global.AlchemistProfile && global.AlchemistProfile.hasBirth(p))
     },
     {
       id: 'mist', number: 'II', title: 'Долина Искажений', subtitle: 'Линзы восприятия',
