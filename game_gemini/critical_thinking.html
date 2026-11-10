@@ -28,4 +28,5 @@ $('restart').onclick=()=>{if(!confirm('Начать модуль заново? �
 function init(){if(!data||data.statements.length!==24||data.situations.length!==8){$('question').textContent='Не удалось загрузить полный комплект модуля.';return;}const m=AlchemistProfile.load().research[moduleKey]||{},raw=m.rawAnswers||{};answers={statements:{...(raw.statements||{})},situations:{...(raw.situations||{})}};if(m.status==='completed'&&Object.keys(answers.statements).length===24&&Object.keys(answers.situations).length===8){show(m.results||calculate());return;}step=Math.min(Math.max(Number(m.currentStep)||0,0),total-1);render();}
 init();
 })();
-</script></body></html>
+</script><script src="js/navigation.js"></script>
+</body></html>
