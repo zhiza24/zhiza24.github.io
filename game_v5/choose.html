@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794403633"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9"><link rel="stylesheet" href="scroll.css?v=s4"><link rel="stylesheet" href="sun-btn.css?v=r7"><title>Выбери карту</title>
+<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794404057"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9"><link rel="stylesheet" href="scroll.css?v=s4"><link rel="stylesheet" href="sun-btn.css?v=r7"><title>Выбери карту</title>
 <style>html,body{margin:0;height:100%;background:#120c07;color:#f4ecdf;font-family:Manrope,sans-serif;overflow:hidden;overscroll-behavior:none}
 .w{max-width:520px;margin:0 auto;height:100dvh;box-sizing:border-box;padding:calc(58px + env(safe-area-inset-top)) 12px calc(112px + env(safe-area-inset-bottom)) 12px;display:flex;flex-direction:column;min-height:0;overflow:hidden;transition:filter .55s ease,-webkit-filter .55s ease}
 .cap{flex:none;display:table;margin:0 auto 6px;padding:7px 18px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 14px Manrope;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 18px rgba(255,200,90,.4)}
@@ -6,21 +6,25 @@
 .go{display:block;width:100%;margin-top:10px;padding:13px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope;cursor:pointer}
 .fx{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(10,6,3,.85);font:700 26px/1.3 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;padding:30px 24px}
 .fx small{display:block;margin-top:12px;font:600 16px/1.45 Manrope,sans-serif;color:#e8d2a0;max-width:320px;text-transform:none}
-.deck{flex:1;min-height:0;display:flex;flex-direction:row;align-items:stretch;gap:8px;overflow:hidden}
-.th{flex:none;width:48px;display:flex;flex-direction:column;justify-content:center;gap:5px;min-height:0}
-.th button{flex:none;width:100%;padding:0;border:2px solid #5a4028;border-radius:8px;overflow:hidden;background:#0c0804;cursor:pointer;opacity:.82;transition:border-color .2s,box-shadow .2s,opacity .2s,transform .2s;aspect-ratio:3/4;line-height:0;-webkit-tap-highlight-color:transparent}
+.deck{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.head{flex:1 1 auto;min-height:0;display:flex;flex-direction:row;align-items:center;justify-content:center;width:100%;container-type:size;--sun-size:56px;--halo-pad:calc(var(--sun-size) * .72 + 6px);--sun-col:calc(var(--sun-size) + var(--halo-pad));--th-est:48px;--card-h:min(100cqh,calc((100cqw - var(--th-est) - var(--sun-col) - 16px) * 4 / 3));--th-w:min(48px,max(26px,calc((var(--card-h) - 16px) / 5 * 3 / 4)));gap:8px;padding:0}
+.th{flex:none;width:var(--th-w);height:var(--card-h);display:flex;flex-direction:column;justify-content:space-between;align-items:center;min-height:0;overflow:visible}
+.th button{box-sizing:border-box;flex:none;width:100%;height:auto;aspect-ratio:3/4;padding:0;border:2px solid #5a4028;border-radius:7px;overflow:hidden;background:#0c0804;cursor:pointer;opacity:.55;transition:opacity .25s,border-color .25s,box-shadow .25s;line-height:0;-webkit-tap-highlight-color:transparent}
 .th button img{display:block;width:100%;height:100%;object-fit:contain;background:#0c0804}
-.th button.on{border-color:#ffd877;opacity:1;box-shadow:0 0 12px #ffcf5a,0 0 22px rgba(255,200,90,.45)}
-.main{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
-.head{flex:1 1 auto;min-height:0;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6px;padding:0 0 6px;width:100%}
-.card-stage{flex:1;min-width:0;min-height:0;height:100%;container-type:size;position:relative}
-.card-hero{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(100cqw,calc(100cqh * 3 / 4));height:min(100cqh,calc(100cqw * 4 / 3));border-radius:8px;overflow:hidden;background:#0c0804;box-shadow:0 8px 22px rgba(0,0,0,.55),0 0 0 1px #c9a46a,0 0 18px rgba(255,200,90,.18)}
-.card-hero img{display:block;width:100%;height:100%;object-fit:contain;background:#0c0804;pointer-events:none}
-.card-hero__name{position:absolute;left:0;right:0;bottom:0;padding:16px 8px 7px;background:linear-gradient(to top,rgba(8,5,2,.94) 0%,rgba(8,5,2,.7) 55%,transparent 100%);font:700 15px/1.1 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;letter-spacing:.03em;text-shadow:0 1px 4px #000;pointer-events:none}
-.card-hero.is-swap{animation:heroGlow .55s ease}
-@keyframes heroGlow{0%{box-shadow:0 0 0 1px #ffe7a0,0 0 28px 8px rgba(255,207,90,.8),0 8px 22px rgba(0,0,0,.55)}100%{box-shadow:0 8px 22px rgba(0,0,0,.55),0 0 0 1px #c9a46a,0 0 18px rgba(255,200,90,.18)}}
-.pkw{flex:none;display:flex;justify-content:center;align-items:center;margin:0;padding:0;width:auto;background:transparent;z-index:2}
-#big{flex:none;width:100%;min-height:min-content;overflow:visible;position:relative;z-index:0}
+.th button:hover{opacity:.8}
+.th button:active{opacity:1}
+.th button.on{border-color:#ffd877;opacity:1;box-shadow:0 0 10px #ffcf5a,0 0 18px rgba(255,200,90,.45)}
+.card-stage{flex:none;position:relative;height:var(--card-h);width:calc(var(--card-h) * 3 / 4)}
+.card-hero{position:absolute;inset:0;border-radius:8px;overflow:hidden;background:#0c0804;box-shadow:0 8px 22px rgba(0,0,0,.55),0 0 0 1px #c9a46a,0 0 18px rgba(255,200,90,.18)}
+.card-hero__art{position:absolute;inset:0}
+.card-hero__art img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;background:#0c0804;pointer-events:none;opacity:1;transition:opacity .4s ease}
+.card-hero__art img.incoming{opacity:0}
+.card-hero__art img.incoming.show{opacity:1}
+.card-hero__art img.out{opacity:0}
+.card-hero__name{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:16px 8px 7px;background:linear-gradient(to top,rgba(8,5,2,.94) 0%,rgba(8,5,2,.7) 55%,transparent 100%);font:700 15px/1.1 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;letter-spacing:.03em;text-shadow:0 1px 4px #000;pointer-events:none}
+.pkw{flex:none;display:flex;justify-content:flex-start;align-items:center;margin:0;padding:0 var(--halo-pad) 0 0;width:var(--sun-col);height:var(--card-h);box-sizing:border-box;background:transparent;z-index:2;overflow:visible}
+.pkw .sun-btn{--sun-size:56px}
+#big{flex:none;width:100%;min-height:min-content;overflow:visible;position:relative;z-index:0;margin-top:8px}
 .rt{display:flex;flex-direction:column;width:100%;overflow:hidden;gap:4px;isolation:isolate}
 .rt-body{display:block;overflow:hidden}
 .rt-body div{padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.07);font-size:14px;line-height:1.25;font-weight:500}
@@ -28,36 +32,39 @@
 .rt-body b{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1px;font-weight:800}
 .p b{color:#9fe0a0}.m b{color:#f0a090}
 html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none}
-@media(prefers-reduced-motion:reduce){.w{transition:none!important}.card-hero.is-swap{animation:none}}
+@media(prefers-reduced-motion:reduce){.w{transition:none!important}.card-hero__art img{transition:none!important}}
 .deck.is-enter .card-hero{animation:heroIn .55s cubic-bezier(.2,.8,.3,1) both}
 .deck.is-enter .pkw{animation:deckIn .5s .08s cubic-bezier(.2,.8,.3,1) both}
 .deck.is-enter .rt .p{animation:deckIn .5s .16s cubic-bezier(.2,.8,.3,1) both}
 .deck.is-enter .rt .m{animation:deckIn .5s .28s cubic-bezier(.2,.8,.3,1) both}
-.deck.is-enter .th button{opacity:.7;animation:thumbIn .4s cubic-bezier(.2,.8,.3,1) both}
+.deck.is-enter .th button{animation:thumbIn .4s cubic-bezier(.2,.8,.3,1) both}
 .deck.is-enter .th button:nth-child(1){animation-delay:.4s}
 .deck.is-enter .th button:nth-child(2){animation-delay:.48s}
 .deck.is-enter .th button:nth-child(3){animation-delay:.56s}
 .deck.is-enter .th button:nth-child(4){animation-delay:.64s}
 .deck.is-enter .th button:nth-child(5){animation-delay:.72s}
-@keyframes heroIn{from{transform:translate(-50%,-50%) translateY(18px);opacity:0}to{transform:translate(-50%,-50%);opacity:1}}@keyframes deckIn{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
-@keyframes thumbIn{from{opacity:.7;transform:translateX(-12px) scale(.96)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.deck.is-enter .pkw,.deck.is-enter .rt .p,.deck.is-enter .rt .m,.deck.is-enter .th button{animation:none;opacity:1;transform:none}.deck.is-enter .card-hero{animation:none;opacity:1;transform:translate(-50%,-50%)}}
+@keyframes heroIn{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
+@keyframes deckIn{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
+@keyframes thumbIn{from{opacity:.35;transform:translateX(-10px)}to{opacity:.55;transform:none}}
+.deck.is-enter .th button.on{animation-name:thumbInOn}
+@keyframes thumbInOn{from{opacity:.35;transform:translateX(-10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.deck.is-enter .card-hero,.deck.is-enter .pkw,.deck.is-enter .rt .p,.deck.is-enter .rt .m,.deck.is-enter .th button{animation:none;opacity:1;transform:none}.deck.is-enter .th button{opacity:.55}.deck.is-enter .th button.on{opacity:1}}
 @media(min-height:760px){
   .w{padding-left:14px;padding-right:16px}
-  .th{width:54px;gap:7px}
-  .card-hero__name{font-size:17px;padding:18px 10px 8px}
+  .head{--sun-size:64px;gap:10px}
   .pkw .sun-btn{--sun-size:64px}
+  .card-hero__name{font-size:17px;padding:18px 10px 8px}
   .rt-body div{padding:6px 10px;line-height:1.32}
   .rt{gap:5px}
+  #big{margin-top:10px}
 }
 @media(max-height:700px){
   .cap{margin-bottom:4px;padding:5px 14px;font-size:13px}
-  .head{gap:2px;padding:0 0 4px}
-  .th{width:46px;gap:4px}
-  .pkw{margin-left:-6px}
+  .head{gap:6px}
   .pkw .sun-btn{--sun-size:56px}
   .card-hero__name{font-size:14px;padding:12px 6px 5px}
   .rt-body div{padding:3px 7px;line-height:1.22}
+  #big{margin-top:6px}
 }
 .gsc-html .lead{font-weight:800;font-size:17px;color:#4a280c;text-align:center;margin:0 0 12px}
 @media(max-height:700px){
@@ -68,7 +75,7 @@ html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightnes
 }
 </style></head>
 <body data-page="task"><div class="w"><div class="cap">Выбери карту</div>
-<div class="deck" id="deck"><div class="th" id="th"></div><div class="main"><div class="head"><div class="card-stage"><div class="card-hero" id="pic"></div></div><div class="pkw"><button class="sun-btn sun-btn--sm" id="go" aria-label="Выбрать эту карту"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span><span class="sun-btn__label" aria-hidden="true"><svg viewBox="0 0 24 24" width="40%" height="40%"><path d="M5.2 16c-.8 0-1.3-.9-.8-1.6l6.8-10.2c.4-.6 1.2-.6 1.6 0l6.8 10.2c.5.7 0 1.6-.8 1.6z" transform="rotate(90 12 13)" fill="#e8590c"/></svg></span></button></div></div><div id="big"></div></div></div></div>
+<div class="deck" id="deck"><div class="head"><div class="th" id="th"></div><div class="card-stage"><div class="card-hero" id="pic"></div></div><div class="pkw"><button class="sun-btn sun-btn--sm" id="go" aria-label="Выбрать эту карту"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span><span class="sun-btn__label" aria-hidden="true"><svg viewBox="0 0 24 24" width="40%" height="40%"><path d="M5.2 16c-.8 0-1.3-.9-.8-1.6l6.8-10.2c.4-.6 1.2-.6 1.6 0l6.8 10.2c.5.7 0 1.6-.8 1.6z" transform="rotate(90 12 13)" fill="#e8590c"/></svg></span></button></div></div><div id="big"></div></div></div>
 
 <div class="fx" id="fx"></div><div class="fx" id="fq" style="font:600 16px Manrope;flex-direction:column"></div>
 <script src="stages.js?v=4"></script><script src="scroll.js?v=s4"></script><script>
@@ -78,9 +85,10 @@ var C=[
 {k:'str',img:'card_str.jpg',n:'Горный перевал',p:'Эта дорога ведет вверх, туда, откуда открывается широкий обзор. С высоты становятся заметны связи между событиями, скрытые маршруты и возможности, которые невозможно увидеть снизу. Здесь можно проложить собственный путь, не повторяя чужих маршрутов.',m:'Подъем требует усилий. Не на каждом участке встретятся указатели и проводники. Иногда придется самостоятельно искать проходы, принимать решения и нести ответственность за выбранное направление.'},
 {k:'z',img:'card_z.jpg',n:'Река попутчиков',p:'Эта дорога проходит по течению большой реки. На ее берегах встречаются проводники, союзники и случайные попутчики. Здесь одни возможности рождаются из встреч, другие — из общего движения. Иногда именно тот, кто оказывается рядом, помогает увидеть новый путь.',m:'Течение меняется, а вместе с ним могут меняться и направления движения. Не каждый попутчик знает, куда стремится река. Важно не потерять собственный ориентир среди чужих маршрутов.'},
 {k:'f',img:'wheel.webp',n:'Пусть выберет судьба',p:'Перед тобой все дороги. Ни одна еще не закрыта, и каждая может привести к неожиданным открытиям. Иногда случайная встреча или неожиданный поворот становятся началом самого важного путешествия. Позволь миру сделать первый ход.',m:GG('Когда направление выбирает случай, невозможно заранее знать, куда он приведет. Придется принять неизвестность и встретиться с дорогой, которую ты сам не выбирал.','Когда направление выбирает случай, невозможно заранее знать, куда он приведет. Придется принять неизвестность и встретиться с дорогой, которую ты сама не выбирала.')}];
-var i=0;
+var i=0,fadeT=0,fadeGen=0;
 function thumbs(){th.innerHTML=C.map(function(x,j){return '<button type="button" class="'+(j==i?'on':'')+'" aria-label="'+x.n+'" aria-pressed="'+(j==i?'true':'false')+'"><img src="img/'+x.img+'" alt=""></button>'}).join('');th.querySelectorAll('button').forEach(function(b,j){b.onclick=function(){if(i===j)return;i=j;dr(true)}})}
-function dr(swap){var c=C[i];pic.innerHTML='<img src="img/'+c.img+'" alt="">'+'<span class="card-hero__name">'+c.n+'</span>';if(swap){var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(!reduce){pic.classList.remove('is-swap');void pic.offsetWidth;pic.classList.add('is-swap')}}big.innerHTML='<div class="rt"><div class="rt-body"><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div></div></div>';if(th.children.length){th.querySelectorAll('button').forEach(function(b,j){b.classList.toggle('on',j==i);b.setAttribute('aria-pressed',j==i?'true':'false')})}else thumbs()}
+function setCard(c,swap){if(!pic.querySelector('.card-hero__art'))pic.innerHTML='<div class="card-hero__art"></div><span class="card-hero__name"></span>';var art=pic.querySelector('.card-hero__art'),nameEl=pic.querySelector('.card-hero__name'),src='img/'+c.img,reduce=false;nameEl.textContent=c.n;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}var cur=art.querySelector('img.current');if(!swap||reduce||!cur||cur.getAttribute('src')===src){if(!cur||cur.getAttribute('src')!==src)art.innerHTML='<img class="current" src="'+src+'" alt="">';return}fadeGen++;var gen=fadeGen,incoming=document.createElement('img');incoming.className='incoming';incoming.alt='';incoming.src=src;art.appendChild(incoming);requestAnimationFrame(function(){requestAnimationFrame(function(){incoming.classList.add('show');cur.classList.add('out')})});clearTimeout(fadeT);fadeT=setTimeout(function(){if(gen!==fadeGen)return;if(cur.parentNode)cur.parentNode.removeChild(cur);incoming.className='current'},420)}
+function dr(swap){var c=C[i];setCard(c,swap);big.innerHTML='<div class="rt"><div class="rt-body"><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div></div></div>';if(th.children.length){th.querySelectorAll('button').forEach(function(b,j){b.classList.toggle('on',j==i);b.setAttribute('aria-pressed',j==i?'true':'false')})}else thumbs()}
 thumbs();dr();
 document.getElementById('go').onclick=pick;
 var sx=0,sy=0;function onSwipeStart(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY}function onSwipeEnd(e){var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){i=(i+(dx<0?1:C.length-1))%C.length;dr(true)}}document.querySelector('.head').addEventListener('touchstart',onSwipeStart);document.querySelector('.head').addEventListener('touchend',onSwipeEnd);
