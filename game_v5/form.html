@@ -88,7 +88,7 @@ var P={};try{P=JSON.parse(localStorage.getItem('alch_v5_profile'))||{}}catch(e){
 var nm=document.getElementById('nm'),bd=document.getElementById('bd'),er=document.getElementById('er');
 nm.value=P.name||'';bd.value=P.birth||'';
 // Inputs are a draft. Only the original birth button saves personal data.
-document.querySelectorAll('.md').forEach(function(b){if(P.gender==b.dataset.g)b.classList.add('on');b.onclick=function(){document.querySelectorAll('.md').forEach(function(x){x.classList.remove('on')});b.classList.add('on');P.gender=b.dataset.g}});
+document.querySelectorAll('.md').forEach(function(b){if(P.gender==b.dataset.g)b.classList.add('on');b.onclick=function(){document.querySelectorAll('.md').forEach(function(x){x.classList.remove('on')});b.classList.add('on');P.gender=b.dataset.g;var img=document.querySelector('.gnav a.hero img');if(img)img.src=P.gender==='f'?'img/hero_f_portrait.jpg?v=h3':'img/hero_m_portrait.jpg?v=h3'}});
 function parse(v){return GPassport.parse(v)}
 bd.onfocus=bd.onclick=function(){bd.select()};
 nm.onfocus=nm.onclick=function(){nm.select()};
