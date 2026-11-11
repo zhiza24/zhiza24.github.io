@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><script src="flow.js?v=tasks1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=p1"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=cs1"></script><script src="gender.js?v=2"></script>
+<head><script>try{if(localStorage.getItem('alch_v5_author_seen'))document.documentElement.classList.add('aseen')}catch(e){}</script><script src="flow.js?v=tasks1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=p1"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=cs1"></script><script src="gender.js?v=2"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0c10">
@@ -61,9 +61,9 @@
   .spp-foot{position:absolute;left:0;right:0;bottom:0;height:var(--scroll-cap-bot);z-index:1;pointer-events:none;transform:translate3d(0,calc(var(--scroll-closed-h) - var(--sov-h)),0)}
   .sov.on .spp-clip,.sov.on .spp-inner,.sov.on .spp-foot{transform:translate3d(0,0,0)}
   .spp-art{position:absolute;inset:0;pointer-events:none}
-  .spp-top{position:absolute;left:0;top:0;width:100%;height:auto;display:block;z-index:1;-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 52px),transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 52px),transparent 100%)}
-  .spp-bot{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block;-webkit-mask-image:linear-gradient(to top,#000 0,#000 calc(100% - 52px),transparent 100%);mask-image:linear-gradient(to top,#000 0,#000 calc(100% - 52px),transparent 100%)}
-  .spp-mid{position:absolute;left:0;right:0;top:calc(var(--scroll-cap-top) * .45);bottom:calc(var(--scroll-cap-bot) * .48);background:url(img/scroll_open_mid.png?v=h9) center top / 100% auto repeat-y;z-index:0;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 20px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 20px),transparent 100%)}
+  .spp-top{position:absolute;left:0;top:0;width:100%;height:auto;display:block;z-index:1}
+  .spp-bot{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block}
+  .spp-mid{position:absolute;left:0;right:0;top:calc(var(--scroll-cap-top) * .45);bottom:calc(var(--scroll-cap-bot) * .42);background:url(img/scroll_open_mid.png?v=h9) center top / 100% auto repeat-y;z-index:0}
   .sbd{position:absolute;left:11%;right:11%;top:calc(var(--scroll-cap-top) * .36 + 44px);bottom:calc(var(--scroll-cap-bot) * .36 + 66px);overflow:auto;overscroll-behavior:contain;z-index:3;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);padding:12px 0 16px;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .18s ease}
   .sov.on .sbd,.sov.on .sx,.sov.on .sau{opacity:1;transition:opacity .25s ease .45s}
   .sclose{position:absolute;z-index:2;left:50%;bottom:calc(var(--scroll-cap-bot) * .36 + 12px);transform:translateX(-50%);min-width:140px;height:42px;padding:0 26px;border-radius:21px;border:1.5px solid #a8742a;background:linear-gradient(180deg,#fff3cf 0%,#efd08a 55%,#d6a54e 100%);box-shadow:0 0 0 1px rgba(255,240,200,.7) inset,0 3px 10px rgba(90,52,16,.35);color:#4a2a0a;font:700 18px/1 "Cormorant Garamond",serif;letter-spacing:.02em;white-space:nowrap;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .18s ease}
@@ -95,6 +95,22 @@
   .secondary{border:1px solid #5a5144;border-radius:10px;padding:13px 15px;background:#171b23;color:#d5c5a4;font:12px Arial,sans-serif;cursor:pointer}
   .status-note{margin-top:12px;color:#887f70;font:10px/1.5 Arial,sans-serif}
   @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+  /* first-visit author scroll: gone for good after closing */
+  html.aseen .scl,html.aseen .sov{display:none!important}
+  .sov{transition:opacity .5s ease}
+  .sov.gone{opacity:0;pointer-events:none}
+  .sov.closing .sbd,.sov.closing .sx,.sov.closing .sau,.sov.closing .sclose{visibility:hidden;opacity:0!important;transition:none!important}
+  body.scrolling .node.current,body.scrolling .start,body.scrolling .cont{animation-play-state:paused}
+  /* legible map text */
+  .node{width:46px;height:46px}
+  .node .num{font:700 20px/42px "Cormorant Garamond",serif;color:#2a1405;text-shadow:0 0 3px rgba(255,244,214,.95),0 0 1px #fff3cf}
+  .node.locked{filter:saturate(.35) brightness(.9);opacity:1}
+  .node .name{top:112%;font:700 14px/1.2 Manrope,Arial,sans-serif;color:#fff3d6;text-shadow:none;background:rgba(18,10,4,.84);border:1px solid rgba(240,209,140,.7);border-radius:10px;padding:4px 10px;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+  .start span{font-size:27px;color:#fffaf0;text-shadow:0 1px 0 #5a3410,0 2px 6px rgba(0,0,0,.85)}
+  .cont{font:800 15px Manrope,Arial,sans-serif;letter-spacing:.02em;color:#1e1206;text-shadow:0 1px 0 rgba(255,245,220,.6);background:linear-gradient(180deg,#fff1c8 0%,#efcd84 50%,#c9923f 100%);width:158px;height:46px;font-size:14.5px;letter-spacing:0;border:1.5px solid #fff0c4}
+  .map-screen>.cont{bottom:auto;transform:translate(-50%,-50%);z-index:46}
+  .cont:before{border-color:rgba(90,52,16,.45)}
 </style>
 <link rel="stylesheet" href="nav.css?v=h9"></head>
 <body data-page="map">
@@ -103,10 +119,10 @@
 <div class="sov" id="sov">
   <div class="spp" id="spp">
     <div class="spp-clip"><div class="spp-inner"><div class="spp-art" aria-hidden="true">
-      <img class="spp-top" src="img/scroll_open_top.png?v=h9" alt="">
+      <img class="spp-top" src="img/scroll_open_top_f.png?v=h10" decoding="sync" alt="">
       <div class="spp-mid"></div>
     </div></div></div>
-    <div class="spp-foot"><img class="spp-bot" src="img/scroll_open_bot.png?v=h9" alt="" aria-hidden="true"><button class="sclose" id="sclose" type="button">Закрыть</button></div>
+    <div class="spp-foot"><img class="spp-bot" src="img/scroll_open_bot_f.png?v=h10" decoding="sync" alt="" aria-hidden="true"><button class="sclose" id="sclose" type="button">Закрыть</button></div>
     <button class="sx" id="sx" type="button" aria-label="Свернуть">×</button>
     <button class="sau" id="sau" type="button" aria-label="Слушать">♪</button>
     <div class="sbd" id="sbd"></div>
@@ -205,6 +221,24 @@
   cta.hidden=!started;
   cta.textContent=checkpoint.finished?'Посмотреть пройденное':'Продолжить игру';
   cta.href=checkpoint.finished?'tasks.html':checkpoint.url;
+  // «Продолжить игру»: middle of the map, in a gap that does not cover any medallion
+  if(!cta.hidden){
+    const ms=document.querySelector('.map-screen');ms.appendChild(cta);
+    const placeCont=()=>{
+      const R=ms.getBoundingClientRect(),bw=cta.offsetWidth||158,bh=cta.offsetHeight||46,pad=12;
+      const nodes=[...document.querySelectorAll('.node,.hero-pin:not([hidden])')].map(n=>{const r=n.getBoundingClientRect();const nm=n.querySelector&&n.querySelector('.name');const rn=nm&&getComputedStyle(nm).opacity!=='0'?nm.getBoundingClientRect():null;return {l:Math.min(r.left,rn?rn.left:r.left)-R.left,r:Math.max(r.right,rn?rn.right:r.right)-R.left,t:r.top-R.top,b:Math.max(r.bottom,rn?rn.bottom:r.bottom)-R.top}});
+      const cx=R.width/2,cy=R.height*.5;let best=null;
+      for(let dy=0;dy<=R.height*.2;dy+=6){for(const sy of [1,-1]){const y=cy+dy*sy;
+        const hits=nodes.filter(n=>n.b>y-bh/2-pad&&n.t<y+bh/2+pad);
+        const xs=[cx,bw/2+4,R.width-bw/2-4];
+        hits.forEach(n=>{xs.push(n.l-pad-bw/2,n.r+pad+bw/2)});
+        for(const x of xs){if(x<bw/2+4||x>R.width-bw/2-4)continue;if(hits.some(n=>n.r>x-bw/2-pad&&n.l<x+bw/2+pad))continue;const s=Math.abs(x-cx)+Math.abs(y-cy)*1.4;if(!best||s<best.s)best={x,y,s}}
+      }if(best&&dy>0&&best.s<dy)break}
+      if(!best)best={x:cx,y:cy};
+      cta.style.left=best.x+'px';cta.style.top=best.y+'px';
+    };
+    placeCont();addEventListener('resize',placeCont);document.fonts&&document.fonts.ready.then(placeCont);
+  }
   const start=document.getElementById('start');
   const beginning=started?'form.html?opening=1&v=opening2':'form.html';
   start.href=started?beginning:'form.html';
@@ -265,20 +299,32 @@ var SCROLL_AUDIO='snd/author.mp3';
   document.getElementById('sbd').innerHTML='<h3>'+SCROLL_TITLE+'</h3>'+SCROLL_HTML;
   fetch(SCROLL_AUDIO,{method:'HEAD'}).then(function(r){if(r.ok){au=new Audio(SCROLL_AUDIO);au.onended=function(){a.classList.remove('on')};a.style.display='block'}}).catch(function(){});
   a.onclick=function(){if(!au)return;if(au.paused){au.play();a.classList.add('on')}else{au.pause();a.classList.remove('on')}};
+  var KEY='alch_v5_author_seen',seen=false,closed=false;
+  try{seen=!!localStorage.getItem(KEY)}catch(e){}
+  if(seen){o.remove();scl.remove();return}
   function cl(){
-    o.classList.remove('on');
-    scl.classList.remove('op');
+    if(closed||!o.classList.contains('ready'))return;closed=true;
+    try{localStorage.setItem(KEY,String(Date.now()))}catch(e){}
     if(au){au.pause();a.classList.remove('on')}
     clearTimeout(hideT);
-    hideT=setTimeout(function(){if(!o.classList.contains('on'))o.classList.remove('ready')},650);
+    o.classList.add('closing');
+    o.classList.remove('on');                       // roll up: transform-only (.6s)
+    hideT=setTimeout(function(){
+      o.classList.add('gone');                      // then fade away (.5s)
+      setTimeout(function(){o.remove();scl.remove();document.body.classList.remove('scrolling');document.documentElement.classList.add('aseen')},560);
+    },620);
   }
   function op(){
+    if(closed||o.classList.contains('ready'))return;
     clearTimeout(hideT);
+    document.body.classList.add('scrolling');
     o.classList.add('ready');
     scl.classList.add('op');
     requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add('on')})});
   }
-  scl.onclick=function(){o.classList.contains('on')||o.classList.contains('ready')?cl():op()};
+  // first visit: unroll by itself after a short pause
+  var autoT=setTimeout(op,900);
+  scl.onclick=function(){clearTimeout(autoT);op()};
   document.getElementById('sx').onclick=cl;
   document.getElementById('sclose').onclick=cl;
   o.onclick=function(e){if(e.target==o)cl()};
