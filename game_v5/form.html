@@ -68,6 +68,14 @@ h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-
 .note,.hint,.err{font-family:Manrope,sans-serif!important;font-style:normal!important;font-size:clamp(15px,2vh,17px)!important}
 .gen{gap:10px!important}.flr{flex:none;filter:drop-shadow(0 0 4px rgba(255,200,110,.5))}
 .born{letter-spacing:.08em!important}
+
+/* Keyboard mode: board becomes a scrollable panel sized to the visual viewport. */
+body.kb .gnav,body.kb .gtop,body.kb .gpt,body.kb .garr{display:none!important}
+body.kb .scr{bottom:auto;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding-top:8px}
+body.kb .board{flex:none;min-height:0;justify-content:flex-start!important;gap:clamp(8px,1.6vh,14px);padding-bottom:16px}
+body.kb .go{margin-bottom:0}
+body.kb .scr:after{content:"";display:block;flex:none;height:var(--kbpad,24px)}
+body.kb .scr{flex-direction:column}
 </style></head><body data-page="form">
 <div class="scr"><div class="board">
 <h1 style="margin-top:clamp(10px,2.4vh,26px)">ИНИЦИАЦИЯ АЛХИМИКА</h1><div class="orn"></div>
@@ -102,5 +110,33 @@ document.getElementById('next').onclick=function(){
  var fresh=GPassport.load();['name','birth','gender','points'].forEach(function(k){fresh[k]=P[k]});GPassport.ensure(fresh);GPro.save(fresh);
  if(window.GRoute)GRoute.complete('form.html');document.getElementById('flash').classList.add('on');setTimeout(function(){location.href=window.GOpening?GOpening.url('elder.html'):'elder.html'},1300);
 };
+</script>
+<script>
+/* iOS/Android keyboard: keep the focused field, the М/Ж row and the caption above the keyboard. */
+(function(){
+var vv=window.visualViewport,scr=document.querySelector('.scr'),body=document.body,on=0,raf=0;var base=window.innerHeight;
+function kbH(){return vv?Math.max(0,window.innerHeight-vv.height-vv.offsetTop):0}
+function focusedInput(){var a=document.activeElement;return a&&(a.id==='nm'||a.id==='bd')?a:null}
+function place(){raf=0;if(!focusedInput())base=Math.max(base,window.innerHeight);var f=focusedInput(),h=kbH(),vh=vv?vv.height:window.innerHeight,open=!!f&&(h>80||vh<base*.8);
+ if(open!==!!on){on=open;body.classList.toggle('kb',open);if(!open){scr.style.top=scr.style.height='';scr.scrollTop=0;window.scrollTo(0,0)}}
+ if(!open)return;
+ var top=vv?vv.offsetTop:0,ht=vv?vv.height:window.innerHeight;
+ scr.style.top=top+'px';scr.style.height=ht+'px';
+ // extra room so the last caption never hides under the keyboard toolbar / address pill
+ scr.style.setProperty('--kbpad','56px');
+ var gen=document.querySelector('.gen'),note=document.querySelector('.note');
+ var sr=scr.getBoundingClientRect(),fr=f.getBoundingClientRect(),nr=(note||gen).getBoundingClientRect();
+ var want=scr.scrollTop+(nr.bottom-sr.bottom)+16;                       // caption bottom at the view bottom
+ var maxUp=scr.scrollTop+(fr.top-sr.top)-12;                            // but never push the field off the top
+ var nt=Math.max(0,Math.min(want,maxUp));
+ if(Math.abs(nt-scr.scrollTop)>2)scr.scrollTop=nt;
+}
+function q(){if(!raf)raf=requestAnimationFrame(place)}
+if(vv){vv.addEventListener('resize',q);vv.addEventListener('scroll',q)}
+window.addEventListener('resize',q);
+document.addEventListener('focusin',function(){q();setTimeout(q,120);setTimeout(q,350);setTimeout(q,700)});
+document.addEventListener('focusout',function(){setTimeout(q,60)});
+window.addEventListener('scroll',function(){if(on&&window.scrollY)window.scrollTo(0,0)});
+})();
 </script>
 </body></html>
