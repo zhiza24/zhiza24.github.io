@@ -61,7 +61,7 @@
   .spp-mid{position:absolute;left:0;right:0;top:calc(var(--scroll-cap-top) * .45);bottom:calc(var(--scroll-cap-bot) * .48);background:url(img/scroll_open_mid.png?v=h9) center top / 100% auto repeat-y;z-index:0;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 20px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 20px),transparent 100%)}
   .sbd{position:absolute;left:11%;right:11%;top:calc(var(--scroll-cap-top) * .36 + 44px);bottom:calc(var(--scroll-cap-bot) * .36 + 66px);overflow:auto;overscroll-behavior:contain;z-index:2;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);padding:12px 0 16px;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .4s .4s}
   .sov.on .sbd{opacity:1}
-  .sclose{position:absolute;z-index:2;left:50%;bottom:calc(var(--scroll-cap-bot) * .36 + 12px);transform:translateX(-50%);min-width:176px;height:42px;padding:0 22px;border-radius:21px;border:1.5px solid #a8742a;background:linear-gradient(180deg,#fff3cf 0%,#efd08a 55%,#d6a54e 100%);box-shadow:0 0 0 1px rgba(255,240,200,.7) inset,0 3px 10px rgba(90,52,16,.35);color:#4a2a0a;font:700 18px/1 "Cormorant Garamond",serif;letter-spacing:.02em;white-space:nowrap;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .4s .4s}
+  .sclose{position:absolute;z-index:2;left:50%;bottom:calc(var(--scroll-cap-bot) * .36 + 12px);transform:translateX(-50%);min-width:140px;height:42px;padding:0 26px;border-radius:21px;border:1.5px solid #a8742a;background:linear-gradient(180deg,#fff3cf 0%,#efd08a 55%,#d6a54e 100%);box-shadow:0 0 0 1px rgba(255,240,200,.7) inset,0 3px 10px rgba(90,52,16,.35);color:#4a2a0a;font:700 18px/1 "Cormorant Garamond",serif;letter-spacing:.02em;white-space:nowrap;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .4s .4s}
   .sclose:before{content:"";position:absolute;inset:3px;border-radius:18px;border:1px dashed rgba(122,74,22,.45);pointer-events:none}
   .sov.on .sclose{opacity:1;pointer-events:auto}
   .sclose:focus-visible{outline:3px solid #8a5420;outline-offset:3px}
@@ -105,7 +105,7 @@
     <button class="sx" id="sx" type="button" aria-label="Свернуть">×</button>
     <button class="sau" id="sau" type="button" aria-label="Слушать">♪</button>
     <div class="sbd" id="sbd"></div>
-    <button class="sclose" id="sclose" type="button">Свернуть свиток</button>
+    <button class="sclose" id="sclose" type="button">Закрыть</button>
   </div>
 </div>
 <div class="map-screen">
