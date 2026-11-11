@@ -111,6 +111,29 @@
   .cont{font:800 15px Manrope,Arial,sans-serif;letter-spacing:.02em;color:#1e1206;text-shadow:0 1px 0 rgba(255,245,220,.6);background:linear-gradient(180deg,#fff1c8 0%,#efcd84 50%,#c9923f 100%);width:158px;height:46px;font-size:14.5px;letter-spacing:0;border:1.5px solid #fff0c4}
   .map-screen>.cont{bottom:auto;transform:translate(-50%,-50%);z-index:46}
   .cont:before{border-color:rgba(90,52,16,.45)}
+
+  /* chakra axis */
+  .axis-path{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:visible}
+  #apGlow{fill:none;stroke:#ffc24a;stroke-width:12;stroke-opacity:.55;vector-effect:non-scaling-stroke;filter:url(#apg)}
+  #apDots{fill:none;stroke:#fff3c4;stroke-width:5;stroke-linecap:round;stroke-dasharray:0.01 8;vector-effect:non-scaling-stroke}
+  .crown{position:absolute;left:50%;top:13%;width:40%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(255,250,232,.5) 0%,rgba(255,236,176,.28) 35%,rgba(255,220,140,0) 70%);mix-blend-mode:screen}
+  .node{--ck:#ffd36a;--ckg:rgba(255,211,106,.6);box-shadow:0 0 0 2px rgba(122,74,22,.9),0 0 0 4.5px var(--ck),0 0 16px 5px var(--ckg)!important}
+  .node[data-id="1"]{--ck:#e0262c;--ckg:rgba(224,38,44,.7)}
+  .node[data-id="2"]{--ck:#f27a1a;--ckg:rgba(242,122,26,.7)}
+  .node[data-id="3"]{--ck:#f5d22a;--ckg:rgba(245,210,42,.7)}
+  .node[data-id="4"]{--ck:#2fbf5c;--ckg:rgba(47,191,92,.7)}
+  .node[data-id="5"]{--ck:#2f86ea;--ckg:rgba(47,134,234,.75)}
+  .node[data-id="6"]{--ck:#4b3bd6;--ckg:rgba(90,70,230,.75)}
+  .node[data-id="7"]{--ck:#9b45e0;--ckg:rgba(155,69,224,.75)}
+  .node[data-id="8"]{--ck:#fff6dc;--ckg:rgba(255,238,180,.85)}
+  .node.locked{filter:none;opacity:1}
+  .node.locked:after{content:"";position:absolute;inset:-2px;border-radius:50%;background:rgba(30,20,10,.18);pointer-events:none}
+  .node.current{animation:ckp 2.2s ease-in-out infinite}
+  @keyframes ckp{0%,100%{box-shadow:0 0 0 2px rgba(122,74,22,.9),0 0 0 4.5px var(--ck),0 0 12px 3px var(--ckg)}50%{box-shadow:0 0 0 2px rgba(122,74,22,.9),0 0 0 5.5px var(--ck),0 0 30px 12px var(--ckg)}}
+  .start{animation:none;box-shadow:0 0 0 3px #7a4a16,0 0 0 6px #7a2e22,0 0 22px 8px rgba(122,40,28,.75),0 10px 24px rgba(0,0,0,.5),inset 0 3px 8px rgba(255,240,180,.5)}
+  .node .name{top:50%;left:calc(100% + 12px);transform:translateY(-50%)}
+  .hero-pin{transform:translate(calc(-50% - 52px),-50%)}
+  .map-screen>.cont{left:50%!important;top:50%!important;height:34px;width:176px;z-index:46;box-shadow:0 0 0 2px #5a3410,0 10px 26px rgba(0,0,0,.75),0 0 0 6px rgba(20,12,4,.35),inset 0 2px 6px rgba(255,240,200,.6);animation:none}
 </style>
 <link rel="stylesheet" href="nav.css?v=h9"></head>
 <body data-page="map">
@@ -130,7 +153,9 @@
 </div>
 <div class="map-screen">
   <div class="map-stage" id="mapStage">
-    <img class="map-img" src="img/map_pirate.jpg?v=h3" alt="Карта пути">
+    <img class="map-img" src="img/map_axis.jpg?v=ax1" alt="Карта пути">
+    <svg class="axis-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><filter id="apg" x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="1.6"/></filter></defs><path id="apGlow" d=""/><path id="apDots" d=""/></svg>
+    <div class="crown" aria-hidden="true"></div>
     <div class="hero-pin" id="heroPin" hidden><img data-hero-img="portrait" alt=""></div>
     <button class="node" data-id="1" aria-label="Открыть Ворота рождения"><span class="num">I</span><span class="name">Ворота рождения</span><span class="state">Текущая</span></button>
     <button class="node" data-id="2" aria-label="Открыть Землю отражений"><span class="num">II</span><span class="name">Земля отражений</span><span class="state">Пройдена</span></button>
@@ -168,7 +193,13 @@
 <script src="engine.js?v=p1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=h9"></script>
 <script>
 (() => {
-  const medalAt={1:[25,87],2:[52,73],3:[50,67.5],4:[49,57.5],5:[56,50.5],6:[47,42.5],7:[53,35],8:[49.5,28]};
+  const AX=50,Y0=80,Y8=20,STEP=(Y0-Y8)/7;
+  const medalAt={};for(let i=1;i<=8;i++)medalAt[i]=[AX,+(Y0-(i-1)*STEP).toFixed(2)];
+  // glowing path: winds around the axis and crosses it at every center (Старт at the bottom, castle on top)
+  (function(){const pts=[93,...Object.values(medalAt).map(p=>p[1]),11];let d='M'+AX+' '+pts[0],side=1;
+    for(let i=1;i<pts.length;i++){const y0=pts[i-1],y1=pts[i],dy=y0-y1,k=(i===1||i===pts.length-1)?7:12;
+      d+=' C'+(AX+side*k)+' '+(y0-dy/3).toFixed(2)+' '+(AX+side*k)+' '+(y1+dy/3).toFixed(2)+' '+AX+' '+y1;side=-side}
+    document.getElementById('apGlow').setAttribute('d',d);document.getElementById('apDots').setAttribute('d',d);})();
   const territories = {
     1:{roman:"I",point:"Точка 0",name:"Ворота рождения",status:"current",description:"Начало путешествия. Здесь герой знакомится со своей исходной точкой, замечает фоновые состояния и получает первые ориентиры.",progress:2,total:4,step:"Продолжить знакомство"},
     2:{roman:"II",point:"Точка А",name:"Земля отражений",status:"done",description:"Исследование внутренних сфер, ценностей, желаний и того, как привычная картина мира отражается в ежедневных решениях.",progress:7,total:7,step:"Территория пройдена"},
@@ -224,20 +255,6 @@
   // «Продолжить игру»: middle of the map, in a gap that does not cover any medallion
   if(!cta.hidden){
     const ms=document.querySelector('.map-screen');ms.appendChild(cta);
-    const placeCont=()=>{
-      const R=ms.getBoundingClientRect(),bw=cta.offsetWidth||158,bh=cta.offsetHeight||46,pad=12;
-      const nodes=[...document.querySelectorAll('.node,.hero-pin:not([hidden])')].map(n=>{const r=n.getBoundingClientRect();const nm=n.querySelector&&n.querySelector('.name');const rn=nm&&getComputedStyle(nm).opacity!=='0'?nm.getBoundingClientRect():null;return {l:Math.min(r.left,rn?rn.left:r.left)-R.left,r:Math.max(r.right,rn?rn.right:r.right)-R.left,t:r.top-R.top,b:Math.max(r.bottom,rn?rn.bottom:r.bottom)-R.top}});
-      const cx=R.width/2,cy=R.height*.5;let best=null;
-      for(let dy=0;dy<=R.height*.2;dy+=6){for(const sy of [1,-1]){const y=cy+dy*sy;
-        const hits=nodes.filter(n=>n.b>y-bh/2-pad&&n.t<y+bh/2+pad);
-        const xs=[cx,bw/2+4,R.width-bw/2-4];
-        hits.forEach(n=>{xs.push(n.l-pad-bw/2,n.r+pad+bw/2)});
-        for(const x of xs){if(x<bw/2+4||x>R.width-bw/2-4)continue;if(hits.some(n=>n.r>x-bw/2-pad&&n.l<x+bw/2+pad))continue;const s=Math.abs(x-cx)+Math.abs(y-cy)*1.4;if(!best||s<best.s)best={x,y,s}}
-      }if(best&&dy>0&&best.s<dy)break}
-      if(!best)best={x:cx,y:cy};
-      cta.style.left=best.x+'px';cta.style.top=best.y+'px';
-    };
-    placeCont();addEventListener('resize',placeCont);document.fonts&&document.fonts.ready.then(placeCont);
   }
   const start=document.getElementById('start');
   const beginning=started?'form.html?opening=1&v=opening2':'form.html';
