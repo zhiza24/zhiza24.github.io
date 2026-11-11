@@ -1,21 +1,21 @@
-<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794405005"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9"><link rel="stylesheet" href="scroll.css?v=s4"><title>Выбери карту</title>
+<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794406556"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9"><link rel="stylesheet" href="scroll.css?v=s4"><title>Выбери карту</title>
 <style>html,body{margin:0;height:100%;background:#120c07;color:#f4ecdf;font-family:Manrope,sans-serif;overflow:hidden;overscroll-behavior:none}
-.w{max-width:520px;margin:0 auto;height:100dvh;box-sizing:border-box;padding:calc(58px + env(safe-area-inset-top)) 12px calc(196px + env(safe-area-inset-bottom)) 12px;display:flex;flex-direction:column;min-height:0;overflow:hidden;transition:filter .55s ease,-webkit-filter .55s ease}
-.cap{flex:none;display:table;margin:0 auto 6px;padding:7px 18px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 14px Manrope;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 18px rgba(255,200,90,.4)}
+.w{max-width:520px;margin:0 auto;height:100dvh;box-sizing:border-box;padding:calc(58px + env(safe-area-inset-top)) 12px calc(178px + env(safe-area-inset-bottom)) 12px;display:flex;flex-direction:column;min-height:0;overflow:hidden;transition:filter .55s ease,-webkit-filter .55s ease}
+.cap{flex:none;display:table;margin:0 auto 16px;padding:7px 18px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 14px Manrope;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 18px rgba(255,200,90,.4)}
 @keyframes in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 .go{display:block;width:100%;margin-top:10px;padding:13px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope;cursor:pointer}
 .fx{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(10,6,3,.85);font:700 26px/1.3 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;padding:30px 24px}
 .fx small{display:block;margin-top:12px;font:600 16px/1.45 Manrope,sans-serif;color:#e8d2a0;max-width:320px;text-transform:none}
-.deck{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
-.head{flex:1 1 auto;min-height:0;display:flex;flex-direction:row;align-items:flex-end;justify-content:center;position:relative;width:100%;container-type:size;--th-est:48px;--card-h:min(100cqh,calc((100cqw - var(--th-est) - 8px) * 4 / 3));--th-w:min(48px,calc((var(--card-h) - 10px) / 5 * 3 / 4));gap:8px;padding:0}
+.deck{flex:1;min-height:0;display:flex;flex-direction:column;overflow:visible}
+.head{flex:1 1 auto;min-height:0;display:flex;flex-direction:row;align-items:flex-end;justify-content:flex-start;position:relative;width:100%;container-type:size;--card-h:100cqh;--th-w:min(56px,calc((var(--card-h) - 8px) / 5));gap:8px;padding:0}
 .th{flex:none;width:var(--th-w);height:var(--card-h);display:flex;flex-direction:column;justify-content:space-between;align-items:center;min-height:0;overflow:visible;z-index:2}
-.th button{box-sizing:border-box;position:relative;flex:none;width:100%;height:auto;aspect-ratio:3/4;padding:0;border:1.5px solid #c9a46a;border-radius:7px;overflow:visible;background:#0c0804;cursor:pointer;opacity:.85;transition:opacity .25s,border-color .25s,box-shadow .25s;line-height:0;-webkit-tap-highlight-color:transparent;box-shadow:0 0 6px rgba(255,200,90,.4),0 0 0 1px rgba(255,216,119,.25)}
-.th button img{display:block;width:100%;height:100%;object-fit:contain;background:#0c0804;border-radius:5px;overflow:hidden}
+.th button{box-sizing:border-box;position:relative;flex:none;width:var(--th-w);height:var(--th-w);aspect-ratio:1/1;padding:0;border:1.5px solid #c9a46a;border-radius:7px;overflow:visible;background:#0c0804;cursor:pointer;opacity:.85;transition:opacity .25s,border-color .25s,box-shadow .25s;line-height:0;-webkit-tap-highlight-color:transparent;box-shadow:0 0 6px rgba(255,200,90,.4),0 0 0 1px rgba(255,216,119,.25)}
+.th button img{display:block;width:100%;height:100%;object-fit:cover;background:#0c0804;border-radius:5px;overflow:hidden}
 .th button:not(.on):before{content:"";position:absolute;inset:0;border-radius:6px;background:linear-gradient(105deg,transparent 38%,rgba(255,230,170,.22) 50%,transparent 62%);background-size:240% 100%;background-position:120% 0;animation:thumbShimmer 3.8s ease-in-out infinite;pointer-events:none;z-index:1}
 @keyframes thumbShimmer{0%,30%{background-position:120% 0}60%,100%{background-position:-120% 0}}
 .th button:hover,.th button:active{opacity:1;box-shadow:0 0 10px rgba(255,200,90,.6)}
 .th button.on{border-color:transparent;opacity:1;box-shadow:none;z-index:3}
-.card-stage{flex:none;position:relative;height:var(--card-h);width:calc(var(--card-h) * 3 / 4);z-index:1}
+.card-stage{flex:1 1 auto;min-width:0;position:relative;height:var(--card-h);width:auto;z-index:1}
 .card-hero{position:absolute;inset:0;border-radius:8px;overflow:hidden;background:#0c0804;box-shadow:0 8px 22px rgba(0,0,0,.55)}
 .join{position:absolute;inset:0;pointer-events:none;z-index:4;overflow:visible;filter:drop-shadow(0 0 3px #ffcf5a) drop-shadow(0 0 10px rgba(255,200,90,.7))}
 .join i{position:absolute;box-sizing:border-box;pointer-events:none;display:block}
@@ -24,7 +24,7 @@
 .join__card{transition:clip-path .35s ease}
 .join__neck{background:transparent;border:0 solid #ffd877;border-top-width:2px;border-bottom-width:2px;z-index:5;transition:top .35s ease,height .35s ease,left .35s ease,width .35s ease}
 .card-hero__art{position:absolute;inset:0}
-.card-hero__art img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;background:#0c0804;pointer-events:none;opacity:1;transition:opacity .4s ease}
+.card-hero__art img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;background:#0c0804;pointer-events:none;opacity:1;transition:opacity .4s ease}
 .card-hero__art img.incoming{opacity:0}
 .card-hero__art img.incoming.show{opacity:1}
 .card-hero__art img.out{opacity:0}
@@ -38,7 +38,7 @@
 .p b{color:#9fe0a0}.m b{color:#f0a090}
 html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none}
 @media(prefers-reduced-motion:reduce){.w{transition:none!important}.card-hero__art img,.join__tab,.join__neck,.join__card{transition:none!important}.th button:not(.on):before,.nxs{animation:none!important}}
-.nxs{position:fixed;left:16px;right:16px;bottom:calc(118px + env(safe-area-inset-bottom));z-index:46;display:flex;align-items:center;justify-content:center;box-sizing:border-box;height:72px;padding:16px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope,sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;cursor:pointer;box-shadow:0 0 0 3px #ffd877,0 8px 24px rgba(255,200,90,.6);animation:nxp 1.8s 1s infinite;-webkit-tap-highlight-color:transparent}
+.nxs{position:fixed;left:16px;right:16px;bottom:calc(118px + env(safe-area-inset-bottom));z-index:46;display:flex;align-items:center;justify-content:center;box-sizing:border-box;height:54px;padding:10px 16px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 15px Manrope,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;box-shadow:0 0 0 3px #ffd877,0 8px 24px rgba(255,200,90,.6);animation:nxp 1.8s 1s infinite;-webkit-tap-highlight-color:transparent}
 body.gsc-open .nxs,body.gsc-first .nxs{opacity:0;pointer-events:none}
 @keyframes nxp{50%{box-shadow:0 0 0 3px #ffd877,0 0 34px 10px rgba(255,210,110,.8)}}
 .deck.is-enter .card-hero{animation:heroIn .55s cubic-bezier(.2,.8,.3,1) both}
@@ -64,7 +64,7 @@ body.gsc-open .nxs,body.gsc-first .nxs{opacity:0;pointer-events:none}
   .rt{gap:5px}
 }
 @media(max-height:700px){
-  .cap{display:none}
+  .cap{display:table;margin:0 auto 18px;padding:5px 14px;font-size:13px}
   .head{gap:6px}
   .card-title{font-size:20px;margin:3px 0 2px;letter-spacing:.07em}
   .rt-body div{padding:2px 7px;line-height:1.2}
@@ -80,7 +80,7 @@ body.gsc-open .nxs,body.gsc-first .nxs{opacity:0;pointer-events:none}
 </style></head>
 <body data-page="task"><div class="w"><div class="cap">Выбери карту</div>
 <div class="deck" id="deck"><div class="head"><div class="th" id="th"></div><div class="card-stage"><div class="card-hero" id="pic"></div></div><div class="join" id="join" aria-hidden="true"><i class="join__card"></i><i class="join__tab"></i><i class="join__neck"></i></div></div><div class="card-title" id="cname"></div><div id="big"></div></div></div>
-<button type="button" class="nxs" id="go" aria-label="Выбрать карту">ВЫБРАТЬ КАРТУ</button>
+<button type="button" class="nxs" id="go" aria-label="Выбрать эту карту">ВЫБРАТЬ ЭТУ КАРТУ</button>
 
 <div class="fx" id="fx"></div><div class="fx" id="fq" style="font:600 16px Manrope;flex-direction:column"></div>
 <script src="stages.js?v=4"></script><script src="scroll.js?v=s4"></script><script>
