@@ -1,20 +1,21 @@
-<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794440330"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9f19"><link rel="stylesheet" href="scroll.css?v=s5"><title>Выбери карту</title>
-<style>html,body{margin:0;height:100%;background:#120c07;color:#f4ecdf;font-family:Manrope,sans-serif;overflow:hidden;overscroll-behavior:none}
-.w{max-width:520px;margin:0 auto;height:100dvh;box-sizing:border-box;padding:calc(58px + env(safe-area-inset-top)) 12px calc(178px + env(safe-area-inset-bottom)) 12px;display:flex;flex-direction:column;min-height:0;overflow:hidden;transition:filter .55s ease,-webkit-filter .55s ease}
-.cap{flex:none;display:table;margin:0 auto 16px;padding:7px 18px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 17px Manrope;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 18px rgba(255,200,90,.4)}
+<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794440709"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9f19"><link rel="stylesheet" href="scroll.css?v=s5"><title>Выбери карту</title>
+<style>html,body{margin:0;min-height:100%;background:#120c07;color:#f4ecdf;font-family:Manrope,sans-serif;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
+html:not(.gsc-deck-focus),html:not(.gsc-deck-focus) body,body.gsc-open,body.gsc-first{overflow:hidden;height:100%;height:100dvh}
+.w{max-width:520px;margin:0 auto;min-height:100dvh;box-sizing:border-box;padding:calc(58px + env(safe-area-inset-top)) 8px calc(100px + env(safe-area-inset-bottom)) 8px;display:flex;flex-direction:column;overflow:visible;transition:filter .55s ease,-webkit-filter .55s ease}
+.cap{flex:none;display:table;margin:0 auto 12px;padding:7px 18px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 17px Manrope;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 18px rgba(255,200,90,.4)}
 @keyframes in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 .go{display:block;width:100%;margin-top:10px;padding:13px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 19px Manrope;cursor:pointer}
 .fx{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(10,6,3,.85);font:700 26px/1.3 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;padding:30px 24px}
 .fx small{display:block;margin-top:12px;font:600 19px/1.45 Manrope,sans-serif;color:#e8d2a0;max-width:320px;text-transform:none}
-.deck{flex:1;min-height:0;display:flex;flex-direction:column;overflow:visible;container-type:inline-size;container-name:deck}
-.head{flex:1 1 auto;min-height:0;display:flex;flex-direction:row;align-items:flex-end;justify-content:flex-start;position:relative;width:100%;container-type:size;--card-h:100cqh;--th-w:min(56px,calc((var(--card-h) - 8px) / 5));gap:8px;padding:0}
+.deck{display:flex;flex-direction:column;width:100%;overflow:visible;container-type:inline-size;container-name:deck}
+.head{flex:none;display:flex;flex-direction:row;align-items:flex-start;justify-content:flex-start;position:relative;width:100%;container-type:normal;box-sizing:content-box;gap:8px;padding:0 0 6px;--th-w:min(56px,calc((0.95 * (100cqi - 8px) - 8px) / 5.95));--card-h:calc((100cqi - var(--th-w) - 8px) * 0.95);height:var(--card-h)}
 .th{flex:none;width:var(--th-w);height:var(--card-h);display:flex;flex-direction:column;justify-content:space-between;align-items:center;min-height:0;overflow:visible;z-index:2}
 .th button{box-sizing:border-box;position:relative;flex:none;width:var(--th-w);height:var(--th-w);aspect-ratio:1/1;padding:0;border:1.5px solid #c9a46a;border-radius:7px;overflow:visible;background:#0c0804;cursor:pointer;opacity:.85;transition:opacity .25s,border-color .25s,box-shadow .25s;line-height:0;-webkit-tap-highlight-color:transparent;box-shadow:0 0 6px rgba(255,200,90,.4),0 0 0 1px rgba(255,216,119,.25)}
 .th button img{display:block;width:100%;height:100%;object-fit:cover;background:#0c0804;border-radius:5px;overflow:hidden}
 .th button:not(.on):before{content:"";position:absolute;inset:0;border-radius:6px;background:linear-gradient(105deg,transparent 38%,rgba(255,230,170,.22) 50%,transparent 62%);background-size:240% 100%;background-position:120% 0;animation:thumbShimmer 3.8s ease-in-out infinite;pointer-events:none;z-index:1}
 @keyframes thumbShimmer{0%,30%{background-position:120% 0}60%,100%{background-position:-120% 0}}
 .th button:hover,.th button:active{opacity:1;box-shadow:0 0 10px rgba(255,200,90,.6)}
-.th button.on{border-color:transparent;opacity:1;box-shadow:none;z-index:3}
+.th button.on{border:2px solid #ffd877;opacity:1;box-shadow:0 0 0 1px #ffd877,0 0 10px rgba(255,200,90,.75);z-index:3}
 .card-stage{flex:1 1 auto;min-width:0;position:relative;height:var(--card-h);width:auto;z-index:1}
 .card-hero{position:absolute;inset:0;border-radius:8px;overflow:hidden;background:#0c0804;box-shadow:0 8px 22px rgba(0,0,0,.55)}
 .join{position:absolute;inset:0;pointer-events:none;z-index:4;overflow:visible;filter:drop-shadow(0 0 3px #ffcf5a) drop-shadow(0 0 10px rgba(255,200,90,.7))}
@@ -28,17 +29,17 @@
 .card-hero__art img.incoming{opacity:0}
 .card-hero__art img.incoming.show{opacity:1}
 .card-hero__art img.out{opacity:0}
-.card-title{flex:none;margin:6px 0 4px;padding:0 8px;font:700 21px/1.15 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 1px 4px #000}
-#big{flex:none;width:100%;min-height:min-content;overflow:visible;position:relative;z-index:0;margin-top:0}
-.rt{display:flex;flex-direction:column;width:100%;overflow:hidden;gap:4px;isolation:isolate}
-.rt-body{display:block;overflow:hidden}
-.rt-body div{padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.07);font-size:18px;line-height:1.4;font-weight:500}
+.card-title{flex:none;margin:16px 0 8px;padding:0 8px;font:700 22px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 1px 4px #000;position:relative;z-index:1}
+#big{flex:none;width:100%;overflow:visible;position:relative;z-index:0;margin-top:0}
+.rt{display:flex;flex-direction:column;width:100%;overflow:visible;gap:8px;isolation:isolate}
+.rt-body{display:block;overflow:visible}
+.rt-body div{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.07);font-size:19px;line-height:1.45;font-weight:500}
 .rt-body .p{margin-bottom:0}
-.rt-body b{display:block;font-size:15px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:1px;font-weight:800}
+.rt-body b{display:block;font-size:15px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;font-weight:800}
 .p b{color:#9fe0a0}.m b{color:#f0a090}
 html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none}
 @media(prefers-reduced-motion:reduce){.w{transition:none!important}.card-hero__art img,.join__tab,.join__neck,.join__card{transition:none!important}.th button:not(.on):before,.nxs{animation:none!important}}
-.nxs{position:fixed;left:16px;right:16px;bottom:calc(118px + env(safe-area-inset-bottom));z-index:46;display:flex;align-items:center;justify-content:center;box-sizing:border-box;height:54px;padding:10px 16px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 19px Manrope,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;box-shadow:0 0 0 3px #ffd877,0 8px 24px rgba(255,200,90,.6);animation:nxp 1.8s 1s infinite;-webkit-tap-highlight-color:transparent}
+.nxs{display:flex;align-items:center;justify-content:center;box-sizing:border-box;flex:none;position:relative;width:100%;height:54px;margin:16px 0 0;padding:10px 16px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 19px Manrope,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;box-shadow:0 0 0 3px #ffd877,0 8px 24px rgba(255,200,90,.6);animation:nxp 1.8s 1s infinite;-webkit-tap-highlight-color:transparent;z-index:4}
 body.gsc-open .nxs,body.gsc-first .nxs{opacity:0;pointer-events:none}
 @keyframes nxp{50%{box-shadow:0 0 0 3px #ffd877,0 0 34px 10px rgba(255,210,110,.8)}}
 .deck.is-enter .card-hero{animation:heroIn .55s cubic-bezier(.2,.8,.3,1) both}
@@ -56,30 +57,12 @@ body.gsc-open .nxs,body.gsc-first .nxs{opacity:0;pointer-events:none}
 .deck.is-enter .th button.on{animation-name:thumbInOn}
 @keyframes thumbInOn{from{opacity:.35;transform:translateX(-10px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.deck.is-enter .card-hero,.deck.is-enter .rt .p,.deck.is-enter .rt .m,.deck.is-enter .th button{animation:none;opacity:1;transform:none}.deck.is-enter .th button{opacity:.85}.deck.is-enter .th button.on{opacity:1}}
-@media(min-height:760px){
-  .w{padding-left:14px;padding-right:16px}
-  .head{gap:10px}
-  .card-title{font-size:22px;margin:8px 0 6px;letter-spacing:.1em}
-  .rt-body div{padding:6px 10px;line-height:1.32}
-  .rt{gap:5px}
-}
-@media all{
-  .head{container-type:normal;align-items:flex-start;flex:0 0 var(--card-h);--th-w:min(56px,calc((0.95 * (100cqi - 8px) - 8px) / 5.95));--card-h:calc((100cqi - var(--th-w) - 8px) * 0.95)}
-  #big{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;flex-direction:column}
-  .rt{flex:1;min-height:0}
-  .rt-body{flex:1;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#e0b35a rgba(201,164,106,.25);padding-right:2px}
-  .rt-body::-webkit-scrollbar{width:4px}
-  .rt-body::-webkit-scrollbar-track{background:rgba(201,164,106,.2);border-radius:4px}
-  .rt-body::-webkit-scrollbar-thumb{background:#e0b35a;border-radius:4px}
-  #big:after{content:"";position:absolute;left:0;right:0;bottom:0;height:22px;pointer-events:none;z-index:2;background:linear-gradient(to bottom,rgba(18,12,7,0),#120c07);opacity:1;transition:opacity .25s}
-  #big.at-end:after{opacity:0}
-}
-@media(max-height:700px){
-  .cap{display:table;margin:0 auto 18px;padding:5px 14px;font-size:16px}
-  .head{gap:6px;--th-w:min(56px,calc((0.8 * (100cqi - 6px) - 8px) / 5.8));--card-h:calc((100cqi - var(--th-w) - 6px) * 0.8)}
-  .card-title{font-size:20px;margin:3px 0 2px;letter-spacing:.07em}
-  .rt-body div{padding:2px 7px;line-height:1.2}
-  .rt{gap:3px}
+@media(min-width:400px){
+  .w{padding-left:8px;padding-right:8px}
+  .head{gap:10px;--th-w:min(56px,calc((0.95 * (100cqi - 10px) - 8px) / 5.95));--card-h:calc((100cqi - var(--th-w) - 10px) * 0.95)}
+  .card-title{font-size:24px;margin:14px 0 10px;letter-spacing:.1em}
+  .rt-body div{padding:10px 12px}
+  .rt{gap:10px}
 }
 .gsc-html .lead{font-weight:800;font-size:19px;color:#4a280c;text-align:center;margin:0 0 12px}
 @media(max-height:700px){
@@ -90,8 +73,7 @@ body.gsc-open .nxs,body.gsc-first .nxs{opacity:0;pointer-events:none}
 }
 </style></head>
 <body data-page="task"><div class="w"><div class="cap">Выбери карту</div>
-<div class="deck" id="deck"><div class="head"><div class="th" id="th"></div><div class="card-stage"><div class="card-hero" id="pic"></div></div><div class="join" id="join" aria-hidden="true"><i class="join__card"></i><i class="join__tab"></i><i class="join__neck"></i></div></div><div class="card-title" id="cname"></div><div id="big"></div></div></div>
-<button type="button" class="nxs" id="go" aria-label="Выбрать эту карту">ВЫБРАТЬ ЭТУ КАРТУ</button>
+<div class="deck" id="deck"><div class="head"><div class="th" id="th"></div><div class="card-stage"><div class="card-hero" id="pic"></div></div><div class="join" id="join" aria-hidden="true"><i class="join__card"></i><i class="join__tab"></i><i class="join__neck"></i></div></div><div class="card-title" id="cname"></div><div id="big"></div><button type="button" class="nxs" id="go" aria-label="Выбрать эту карту">ВЫБРАТЬ ЭТУ КАРТУ</button></div></div>
 
 <div class="fx" id="fx"></div><div class="fx" id="fq" style="font:600 19px Manrope;flex-direction:column"></div>
 <script src="stages.js?v=4"></script><script src="scroll.js?v=s5"></script><script>
@@ -105,14 +87,12 @@ var i=0,fadeT=0,fadeGen=0;
 function thumbs(){th.innerHTML=C.map(function(x,j){return '<button type="button" class="'+(j==i?'on':'')+'" aria-label="'+x.n+'" aria-pressed="'+(j==i?'true':'false')+'"><img src="img/'+x.img+'" alt=""></button>'}).join('');th.querySelectorAll('button').forEach(function(b,j){b.onclick=function(){if(i===j)return;i=j;dr(true)}})}
 function setCard(c,swap){if(!pic.querySelector('.card-hero__art'))pic.innerHTML='<div class="card-hero__art"></div>';var art=pic.querySelector('.card-hero__art'),src='img/'+c.img,reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}var cur=art.querySelector('img.current');if(!swap||reduce||!cur||cur.getAttribute('src')===src){if(!cur||cur.getAttribute('src')!==src)art.innerHTML='<img class="current" src="'+src+'" alt="">';return}fadeGen++;var gen=fadeGen,incoming=document.createElement('img');incoming.className='incoming';incoming.alt='';incoming.src=src;art.appendChild(incoming);requestAnimationFrame(function(){requestAnimationFrame(function(){incoming.classList.add('show');cur.classList.add('out')})});clearTimeout(fadeT);fadeT=setTimeout(function(){if(gen!==fadeGen)return;if(cur.parentNode)cur.parentNode.removeChild(cur);incoming.className='current'},420)}
 var joinT=0;function scheduleJoin(){requestAnimationFrame(function(){requestAnimationFrame(updateJoin)});clearTimeout(joinT);joinT=setTimeout(updateJoin,650)}
-function updateTextFade(){var body=document.querySelector('.rt-body'),wrap=document.getElementById('big');if(!body||!wrap)return;var overflow=body.scrollHeight>body.clientHeight+2,end=!overflow||body.scrollHeight-body.clientHeight-body.scrollTop<4;wrap.classList.toggle('at-end',end)}
-function bindTextFade(){var body=document.querySelector('.rt-body');if(!body)return;body.scrollTop=0;body.addEventListener('scroll',updateTextFade,{passive:true});requestAnimationFrame(function(){requestAnimationFrame(updateTextFade)})}
-function dr(swap){var c=C[i];setCard(c,swap);cname.textContent=c.n;big.innerHTML='<div class="rt"><div class="rt-body"><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div></div></div>';if(th.children.length){th.querySelectorAll('button').forEach(function(b,j){b.classList.toggle('on',j==i);b.setAttribute('aria-pressed',j==i?'true':'false')})}else thumbs();scheduleJoin();bindTextFade()}
+function dr(swap){var c=C[i];setCard(c,swap);cname.textContent=c.n;big.innerHTML='<div class="rt"><div class="rt-body"><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div></div></div>';if(th.children.length){th.querySelectorAll('button').forEach(function(b,j){b.classList.toggle('on',j==i);b.setAttribute('aria-pressed',j==i?'true':'false')})}else thumbs();scheduleJoin()}
 function updateJoin(){var head=document.querySelector('.head'),tab=document.querySelector('.join__tab'),neck=document.querySelector('.join__neck'),frame=document.querySelector('.join__card'),thumb=th.querySelector('button.on'),card=document.getElementById('pic');if(!head||!tab||!neck||!frame||!thumb||!card)return;var hr=head.getBoundingClientRect(),t=thumb.getBoundingClientRect(),c=card.getBoundingClientRect(),o=2,ov=4,d=3,near=4;frame.style.left=(c.left-hr.left-o)+'px';frame.style.top=(c.top-hr.top-o)+'px';frame.style.width=(c.width+o*2)+'px';frame.style.height=(c.height+o*2)+'px';tab.style.left=(t.left-hr.left-o)+'px';tab.style.top=(t.top-hr.top-o)+'px';tab.style.width=(t.width+o*2)+'px';tab.style.height=(t.height+o*2)+'px';neck.style.left=(t.right-hr.left-ov)+'px';neck.style.top=(t.top-hr.top-o)+'px';neck.style.width=(c.left-t.right+ov*2)+'px';neck.style.height=(t.height+o*2)+'px';var topFlush=Math.abs(t.top-c.top)<near,botFlush=Math.abs(t.bottom-c.bottom)<near;neck.style.borderTopWidth=topFlush?'0':'2px';neck.style.borderBottomWidth=botFlush?'0':'2px';var frameH=c.height+o*2,notchTop=Math.max(0,(t.top-c.top)),notchBot=Math.min(frameH,(t.bottom-c.top)+o*2);frame.style.clipPath='polygon(0 0,100% 0,100% 100%,0 100%,0 '+notchBot+'px,'+d+'px '+notchBot+'px,'+d+'px '+notchTop+'px,0 '+notchTop+'px)';tab.style.clipPath='inset(0 '+d+'px 0 0)'}
 thumbs();dr();
 document.getElementById('go').onclick=pick;
 if(window.ResizeObserver){try{new ResizeObserver(function(){updateJoin()}).observe(document.querySelector('.head'))}catch(e){}}
-window.addEventListener('resize',function(){updateJoin();bindTextFade()});
+window.addEventListener('resize',function(){updateJoin()});
 var sx=0,sy=0;function onSwipeStart(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY}function onSwipeEnd(e){var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){i=(i+(dx<0?1:C.length-1))%C.length;dr(true)}}document.querySelector('.head').addEventListener('touchstart',onSwipeStart);document.querySelector('.head').addEventListener('touchend',onSwipeEnd);
 var FQ=[[GG('Почему ты не выбрал сам?','Почему ты не выбрала сама?'),[['Боюсь ошибиться','n'],['Все пути кажутся интересными','s'],['Пусть решит кто-то другой','z'],['Хочу проверить, что выпадет, а потом решу свое','str']]],['Если выпадет трудная карта, что сделаешь?',[['Пойду сразу, разберусь по дороге','s'],['Сначала изучу ее','n'],['Перестрою под себя','str'],['Найду, кто поможет','z']]],['Как ты чаще принимаешь решения в жизни?',[['Быстро, на импульсе','s'],['Долго взвешиваю','n'],['Делаю по-своему','str'],['Советуюсь с близкими','z']]]];
 function fate(){var sc={s:0,n:0,str:0,z:0},q=0;function sh(){if(q>=FQ.length){fq.style.display='none';var r=Math.floor(Math.random()*4);i=r;var top=Object.keys(sc).sort(function(a,b){return sc[b]-sc[a]})[0];fin(C[r],top,'выбор судьбы, ближе к типу '+top);return}var f=FQ[q];fq.style.display='flex';fq.innerHTML='<div style="max-width:420px;width:100%"><div style="font:700 26px Cormorant Garamond,serif;color:#ffe9a8;margin-bottom:14px">'+f[0]+'</div>'+f[1].map(function(a){return '<button class="go" style="background:#24160c;color:#f4ecdf;border:1.5px solid #c9a46a" data-k="'+a[1]+'">'+a[0]+'</button>'}).join('')+'</div>';fq.querySelectorAll('button').forEach(function(b){b.onclick=function(){sc[b.dataset.k]++;q++;sh()}})}sh()}
