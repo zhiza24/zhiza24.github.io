@@ -1,0 +1,47 @@
+/* Shared instruction-scroll template. Visual language matches the map author scroll. */
+:root{
+  --gsc-w:min(88vw,360px);
+  --gsc-closed-ratio:.35417;
+  --gsc-closed-h:calc(var(--gsc-w) * var(--gsc-closed-ratio));
+  --gsc-cap-top:calc(var(--gsc-w) * 248 / 604);
+  --gsc-cap-bot:calc(var(--gsc-w) * 248 / 604);
+  --gsc-nav-h:calc(80px + env(safe-area-inset-bottom));
+  --gsc-top:calc(env(safe-area-inset-top) + 56px);
+  --gsc-h:calc(100dvh - var(--gsc-top) - var(--gsc-nav-h));
+}
+.gsc-icon{position:fixed;z-index:45;top:calc(env(safe-area-inset-top) + 58px);right:calc(env(safe-area-inset-right) + 8px);width:88px;min-height:44px;padding:6px 0;border:0;background:none;cursor:pointer;filter:drop-shadow(0 4px 10px rgba(0,0,0,.55));transition:opacity .3s ease;line-height:0;-webkit-tap-highlight-color:transparent;display:flex;align-items:center}
+.gsc-icon img{display:block;width:100%;height:auto}
+.gsc-icon:focus-visible{outline:3px solid #ffe7b0;outline-offset:4px;border-radius:8px}
+body.gsc-open .gsc-icon,body.gsc-first .gsc-icon,.gsc-icon[hidden]{opacity:0;pointer-events:none}
+.gsc-ov{position:fixed;left:0;right:0;top:var(--gsc-top);bottom:var(--gsc-nav-h);z-index:48;display:flex;justify-content:center;align-items:flex-start;pointer-events:none;visibility:hidden;transition:opacity .5s ease}
+.gsc-ov:before{content:"";position:absolute;inset:0;background:rgba(12,8,4,.52);opacity:0;transition:opacity .6s ease;will-change:opacity;pointer-events:none}
+.gsc-ov.ready{visibility:visible;pointer-events:auto}
+.gsc-ov.on:before{opacity:1}
+.gsc-ov.gone{opacity:0;pointer-events:none}
+.gsc-spp{position:relative;width:min(var(--gsc-w),100%);height:100%;flex:none;--sc-ease:cubic-bezier(.45,.05,.25,1);--sc-dur:.6s}
+.gsc-clip,.gsc-inner,.gsc-foot{transition:transform var(--sc-dur) var(--sc-ease);will-change:transform;backface-visibility:hidden}
+.gsc-clip{position:absolute;inset:0;overflow:hidden;z-index:0;transform:translate3d(0,calc(var(--gsc-closed-h) - 100%),0)}
+.gsc-inner{position:absolute;inset:0;transform:translate3d(0,calc(100% - var(--gsc-closed-h)),0)}
+.gsc-foot{position:absolute;left:0;right:0;bottom:0;height:var(--gsc-cap-bot);z-index:1;pointer-events:none;transform:translate3d(0,calc(var(--gsc-closed-h) - var(--gsc-h)),0)}
+.gsc-ov.on .gsc-clip,.gsc-ov.on .gsc-inner,.gsc-ov.on .gsc-foot{transform:translate3d(0,0,0)}
+.gsc-art{position:absolute;inset:0;pointer-events:none}
+.gsc-top{position:absolute;left:0;top:0;width:100%;height:auto;display:block;z-index:1}
+.gsc-bot{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block}
+.gsc-mid{position:absolute;left:0;right:0;top:calc(var(--gsc-cap-top) * .45);bottom:calc(var(--gsc-cap-bot) * .42);background:url(img/scroll_open_mid.png?v=h9) center top / 100% auto repeat-y;z-index:0}
+.gsc-body{position:absolute;left:11%;right:11%;top:calc(var(--gsc-cap-top) * .36 + 44px);bottom:calc(var(--gsc-cap-bot) * .36 + 66px);overflow:auto;overscroll-behavior:contain;z-index:3;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);padding:12px 0 16px;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .18s ease}
+.gsc-ov.on .gsc-body,.gsc-ov.on .gsc-x,.gsc-ov.on .gsc-au{opacity:1;transition:opacity .25s ease .45s}
+.gsc-close{position:absolute;z-index:2;left:50%;bottom:calc(var(--gsc-cap-bot) * .36 + 12px);transform:translateX(-50%);min-width:140px;height:42px;padding:0 26px;border-radius:21px;border:1.5px solid #a8742a;background:linear-gradient(180deg,#fff3cf 0%,#efd08a 55%,#d6a54e 100%);box-shadow:0 0 0 1px rgba(255,240,200,.7) inset,0 3px 10px rgba(90,52,16,.35);color:#4a2a0a;font:700 18px/1 "Cormorant Garamond",serif;letter-spacing:.02em;white-space:nowrap;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .18s ease}
+.gsc-close:before{content:"";position:absolute;inset:3px;border-radius:18px;border:1px dashed rgba(122,74,22,.45);pointer-events:none}
+.gsc-ov.on .gsc-close{opacity:1;pointer-events:auto;transition:opacity .25s ease .45s}
+.gsc-close:focus-visible{outline:3px solid #8a5420;outline-offset:3px}
+.gsc-body h3{margin:0 0 10px;font:700 26px/1.15 "Cormorant Garamond",serif;color:#6a3e10;text-align:center}
+.gsc-body p{margin:0 0 10px}
+.gsc-body .ft{font-style:italic;color:#8a5a20}
+.gsc-x{position:absolute;z-index:3;opacity:0;transition:opacity .18s ease;top:calc(var(--gsc-w) * 100 / 604 + 4px);right:8%;width:34px;height:34px;border:0;background:none;font:400 28px/1 serif;color:#6a3e10;cursor:pointer}
+.gsc-au{position:absolute;z-index:3;opacity:0;transition:opacity .18s ease;top:calc(var(--gsc-w) * 100 / 604 + 6px);left:8%;width:30px;height:30px;border-radius:50%;border:1.5px solid #a8742a;background:radial-gradient(#fff1c8,#d9a54e);color:#3a220a;font:700 15px/1 serif;cursor:pointer;display:none}
+.gsc-au.on{background:radial-gradient(#ffe08a,#c98a2e);box-shadow:0 0 10px #ffc04a}
+.gsc-ov.closing .gsc-body,.gsc-ov.closing .gsc-x,.gsc-ov.closing .gsc-au,.gsc-ov.closing .gsc-close{visibility:hidden;opacity:0!important;transition:none!important}
+body.gsc-open{overflow:hidden}
+@media(prefers-reduced-motion:reduce){
+  .gsc-clip,.gsc-inner,.gsc-foot,.gsc-ov,.gsc-ov:before,.gsc-body,.gsc-x,.gsc-au,.gsc-close,.gsc-icon{transition:none!important}
+}
