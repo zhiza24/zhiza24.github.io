@@ -166,7 +166,8 @@
 <style>
   .start.sun-btn{position:absolute;background:transparent!important;box-shadow:none!important;animation:none!important;border:0;overflow:visible;display:block;line-height:0;text-decoration:none}
   .start.sun-btn:before{display:none!important;content:none!important}
-  .start.sun-btn .start-lbl{font-family:"Cormorant Garamond",serif;font-weight:700;letter-spacing:.1em;padding-left:.1em;color:#5a2a04;text-shadow:0 1px 0 rgba(255,250,215,.85),0 0 6px rgba(255,246,190,.9);line-height:1}
+  .start.sun-btn .start-lbl{filter:drop-shadow(0 0 4px rgba(255,248,200,.9))}
+  .start.sun-btn .start-cap{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:7px;z-index:6;font:800 12px/1 Manrope,Arial,sans-serif;letter-spacing:.2em;padding-left:.2em;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 8px rgba(0,0,0,.8);white-space:nowrap;pointer-events:none}
   .start.sun-btn .sun-btn__halo{inset:-48%}
 </style>
 <link rel="stylesheet" href="nav.css?v=h9"></head>
@@ -199,7 +200,7 @@
     <button class="node" data-id="6" aria-label="Открыть Кузницу выбора"><span class="num">VI</span><span class="name">Кузница выбора</span><span class="state">Закрыта</span></button>
     <button class="node" data-id="7" aria-label="Открыть Реактор преображения"><span class="num">VII</span><span class="name">Реактор преображения</span><span class="state">Закрыта</span><span class="reactor-meter" hidden aria-label="0 из 21 дней"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></button>
     <button class="node" data-id="8" aria-label="Открыть Землю мастерства"><span class="num">VIII</span><span class="name">Земля мастерства</span><span class="state">Закрыта</span></button>
-    <a class="start sun-btn" id="start" href="form.html"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span><span class="sun-btn__label start-lbl">СТАРТ</span></a>
+    <a class="start sun-btn" id="start" aria-label="Старт" href="form.html"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span><span class="sun-btn__label start-lbl" aria-hidden="true"><svg viewBox="0 0 24 24" width="40%" height="40%"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z" fill="#5a2a04"/></svg></span><span class="start-cap">СТАРТ</span></a>
   </div>
   <a class="cont" id="resume" href="form.html" hidden>Продолжить игру</a>
 </div>
@@ -277,7 +278,7 @@
     start.style.height=startSize+'px';
     start.style.fontSize=Math.round(startSize*.30)+'px';
     const startSpan=start.querySelector('.start-lbl');
-    if(startSpan)startSpan.style.fontSize=Math.round(startSize*.27)+'px';
+    
     start.style.left=AX+'%';
     start.style.top=(startY/H*100).toFixed(2)+'%';
     for(let i=1;i<=8;i++){
