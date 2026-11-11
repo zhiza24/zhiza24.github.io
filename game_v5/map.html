@@ -44,7 +44,7 @@
   .cont[hidden]{display:none}
   .dock a:focus-visible{outline:3px solid #ffe7b0;outline-offset:6px}
   @keyframes p{0%,100%{box-shadow:0 0 6px 2px rgba(255,211,106,.5)}50%{box-shadow:0 0 26px 10px rgba(255,211,106,.85)}}
-  .scl{position:fixed;z-index:55;left:50%;top:calc(env(safe-area-inset-top) + 78px);transform:translateX(-50%);width:var(--scroll-w);border:0;padding:0;background:none;cursor:pointer;transition:opacity .45s ease;filter:drop-shadow(0 6px 16px rgba(0,0,0,.45))}
+  .scl{position:fixed;z-index:55;left:50%;top:calc(env(safe-area-inset-top) + 78px);transform:translateX(-50%);width:var(--scroll-w);border:0;padding:0;background:none;cursor:pointer;transition:opacity .45s ease;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55))}
   .scl img{display:block;width:100%;height:auto}
   .scl.op{opacity:0;pointer-events:none}
   .sov{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 78px);bottom:var(--nav-h);z-index:48;display:flex;justify-content:center;align-items:flex-start;background:rgba(12,8,4,0);pointer-events:none;visibility:hidden;transition:background .45s ease,visibility .45s}
@@ -84,10 +84,10 @@
 <link rel="stylesheet" href="nav.css?v=h3"></head>
 <body data-page="map">
 <h1 class="vh">Карта путешествия</h1>
-<button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll_closed.jpg?v=h3" alt=""></button>
+<button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll_closed.png?v=h5" alt=""></button>
 <div class="sov" id="sov">
   <div class="spp" id="spp">
-    <img class="spp-art" src="img/scroll_open.jpg?v=h3" alt="">
+    <img class="spp-art" src="img/scroll_open.png?v=h5" alt="">
     <button class="sx" id="sx" type="button" aria-label="Свернуть">×</button>
     <button class="sau" id="sau" type="button" aria-label="Слушать">♪</button>
     <div class="sbd" id="sbd"></div>
