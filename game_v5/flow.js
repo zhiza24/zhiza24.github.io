@@ -4,7 +4,6 @@ window.GFLOW=[
 {u:'form.html',pt:'0',t:'Инициация: имя и дата рождения'},
 {u:'elder.html',pt:'0',t:'Заставка: Старец'},
 {u:'hero.html',pt:'0',t:'Герой'},
-{u:'scene.html?k=start',pt:'0',t:'Старец: начало пути'},
 {u:'choose.html',pt:'0',t:'Выбор карты'},
 {u:'scene.html?k=road',pt:'0',t:'Туман: стереть пальцем'},
 {u:'bridge.html',pt:'0',t:'Мост'},

@@ -18,6 +18,7 @@ if(u&&!resource){
 }
 // One-time cutscene before the Ego/Self dialogue; never changes route or saves.
 if(!target&&u==='slot.html?id=dialog'&&!window.GReview&&GRoute.status(u)==='current'){let seen=null;try{seen=localStorage.getItem('alch_v5_cutscene_iam')}catch(e){}if(!seen)target=window.GOpening&&GOpening.active?GOpening.url('cutscene.html'):'cutscene.html';}
+if(file==='scene.html'&&(!q.get('k')||q.get('k')==='start')){target=window.GOpening&&GOpening.active?GOpening.url('choose.html'):'choose.html';}
 if(target){
  location.replace(target);
  // The remaining legacy document is parsed as inert template content while
