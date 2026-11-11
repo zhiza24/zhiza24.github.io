@@ -166,7 +166,7 @@
 <style>
   .start.sun-btn{position:absolute;background:transparent!important;box-shadow:none!important;animation:none!important;border:0;overflow:visible;display:block;line-height:0;text-decoration:none}
   .start.sun-btn:before{display:none!important;content:none!important}
-  .start.sun-btn .start-lbl{font-family:Manrope,Arial,sans-serif;font-weight:800;letter-spacing:.06em;color:#3a1a02;text-shadow:0 0 4px rgba(255,248,190,1),0 0 8px rgba(255,242,122,.9);line-height:1}
+  .start.sun-btn .start-lbl{font-family:"Cormorant Garamond",serif;font-weight:700;letter-spacing:.1em;padding-left:.1em;color:#5a2a04;text-shadow:0 1px 0 rgba(255,250,215,.85),0 0 6px rgba(255,246,190,.9);line-height:1}
   .start.sun-btn .sun-btn__halo{inset:-48%}
 </style>
 <link rel="stylesheet" href="nav.css?v=h9"></head>
@@ -276,8 +276,8 @@
     start.style.width=startSize+'px';
     start.style.height=startSize+'px';
     start.style.fontSize=Math.round(startSize*.30)+'px';
-    const startSpan=start.querySelector('span');
-    if(startSpan)startSpan.style.fontSize=Math.round(startSize*.21)+'px';
+    const startSpan=start.querySelector('.start-lbl');
+    if(startSpan)startSpan.style.fontSize=Math.round(startSize*.27)+'px';
     start.style.left=AX+'%';
     start.style.top=(startY/H*100).toFixed(2)+'%';
     for(let i=1;i<=8;i++){
