@@ -9,7 +9,7 @@
 <style>
   :root{
     --night:#090b10; --gold:#d9b56d; --gold2:#f3d99b; --text:#f2eadb;
-    --scroll-w:min(52vw,200px);
+    --scroll-w:min(88vw,360px);
     --scroll-closed-ratio:.35417;
     --scroll-closed-h:calc(var(--scroll-w) * var(--scroll-closed-ratio));
     --scroll-cap-top:calc(var(--scroll-w) * 248 / 604);
@@ -55,10 +55,11 @@
   .sov.on{background:rgba(12,8,4,.52)}
   .spp{position:relative;width:min(var(--scroll-w),100%);height:var(--scroll-closed-h);max-height:100%;overflow:hidden;flex:none;transition:height .85s cubic-bezier(.22,.8,.28,1)}
   .sov.on .spp{height:100%}
-  .spp-art{position:absolute;left:0;top:0;width:100%;height:var(--sov-h);display:flex;flex-direction:column;pointer-events:none}
-  .spp-top,.spp-bot{width:100%;height:auto;display:block;flex:none}
-  .spp-mid{flex:1 1 auto;min-height:0;background:url(img/scroll_open_mid.png?v=h6) center top / 100% auto repeat-y}
-  .sbd{position:absolute;left:16%;right:16%;top:calc(var(--scroll-cap-top) + 6px);bottom:calc(var(--scroll-cap-bot) + 6px);overflow:auto;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .4s .4s}
+  .spp-art{position:absolute;left:0;top:0;width:100%;height:var(--sov-h);pointer-events:none}
+  .spp-top{position:absolute;left:0;top:0;width:100%;height:auto;display:block;z-index:1}
+  .spp-bot{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block;z-index:1}
+  .spp-mid{position:absolute;left:0;right:0;top:calc(var(--scroll-cap-top) * .68);bottom:calc(var(--scroll-cap-bot) * .48);background:url(img/scroll_open_mid.png?v=h7) center top / 100% auto repeat-y;z-index:0;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 40px,#000 calc(100% - 72px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 40px,#000 calc(100% - 72px),transparent 100%)}
+  .sbd{position:absolute;left:14%;right:14%;top:calc(var(--scroll-cap-top) + 8px);bottom:calc(var(--scroll-cap-bot) + 8px);overflow:auto;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .4s .4s}
   .sov.on .sbd{opacity:1}
   .sbd h3{margin:0 0 8px;font:700 26px/1.1 "Cormorant Garamond",serif;color:#6a3e10;text-align:center}
   .sbd p{margin:0 0 10px}
@@ -142,7 +143,7 @@
 <script src="engine.js?v=p1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=h3"></script>
 <script>
 (() => {
-  const medalAt={1:[25,87],2:[52,73],3:[50,67.5],4:[49,57.5],5:[56,50.5],6:[47,42.5],7:[53,35],8:[49.5,24]};
+  const medalAt={1:[25,87],2:[52,73],3:[50,67.5],4:[49,57.5],5:[56,50.5],6:[47,42.5],7:[53,35],8:[49.5,28]};
   const territories = {
     1:{roman:"I",point:"Точка 0",name:"Ворота рождения",status:"current",description:"Начало путешествия. Здесь герой знакомится со своей исходной точкой, замечает фоновые состояния и получает первые ориентиры.",progress:2,total:4,step:"Продолжить знакомство"},
     2:{roman:"II",point:"Точка А",name:"Земля отражений",status:"done",description:"Исследование внутренних сфер, ценностей, желаний и того, как привычная картина мира отражается в ежедневных решениях.",progress:7,total:7,step:"Территория пройдена"},
