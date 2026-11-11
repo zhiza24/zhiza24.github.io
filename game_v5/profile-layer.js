@@ -12,6 +12,7 @@
     path_crystal: { name: 'Кристалл пути', icon: '💎', aliases: ['Кристалл пути'] },
     lantern: { name: 'Фонарь', icon: '🏮', aliases: ['Фонарь'] },
     black_crystal: { name: 'Черный кристалл', icon: '🖤', aliases: ['Черный кристалл'] },
+    crystal_1: { name: 'Кристалл опоры', icon: '🔴', aliases: ['Кристалл опоры'] },
     mirror: { name: 'Зеркало', icon: '🪞', aliases: ['Зеркало'] },
     wheel: { name: 'Колесо', icon: '☸️', aliases: ['Колесо'] },
     sword: { name: 'Меч', icon: '⚔️', aliases: ['Меч'] },
@@ -32,6 +33,7 @@
     dialog: { field: 'dialog' },
     guard: { field: 'guard' },
     hand: { fields: ['hand', 'handTop'] },
+    pocherk: { field: 'pocherk' },
     mirrors: { field: 'mirror_exercise' },
     wheel: { field: 'wheel' },
     wheelTest: { field: 'wheelTest' }

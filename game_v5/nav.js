@@ -32,7 +32,7 @@ retest:{k:'Тест',h:'Повторное колесо',d:'Игрок снов�
 compare:{k:'Ответ',h:'Было и стало',d:'Наложенные колеса до и после, прирост по сферам и по трем направлениям. Доволен ли результатом.'},
 end:{k:'Заставка',h:'Финал пути',d:'Финальная сцена, все артефакты героя, путь завершен.'}};
 function gIdx(){var f=location.pathname.split('/').pop()||'index.html',q=new URLSearchParams(location.search),k=q.get('k'),id=q.get('id'),L=GFLOW;
-for(var i=0;i<L.length;i++){var u=L[i].u,p=u.split('?'),qq=new URLSearchParams(p[1]||'');if(p[0]!==f)continue;if(qq.get('k')&&qq.get('k')!==k)continue;if(qq.get('id')&&qq.get('id')!==id)continue;return i}
+for(var i=0;i<L.length;i++){var u=L[i].u,p=u.split('?'),qq=new URLSearchParams(p[1]||'');if(p[0]!==f)continue;if(qq.get('k')&&qq.get('k')!==k)continue;if(qq.get('id')&&qq.get('id')!==id)continue;if(qq.get('at')&&qq.get('at')!==q.get('at'))continue;return i}
 if(f==='scene.html'){var m={fog:6,gap:6,fire:6,lvl:8};if(m[k]!==undefined)return m[k]}
 if(f==='crystal.html')return 8;if(f==='stage.html'||f==='path.html'||f==='map.html')return -1;return -1}
 window.gIdx=gIdx;window.flowNext=function(){var i=gIdx();return i>=0&&i<GFLOW.length-1?GFLOW[i+1].u:null};

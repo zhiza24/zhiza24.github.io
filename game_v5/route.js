@@ -2,13 +2,17 @@
 (function(){
 'use strict';
 const K='alch_v5_profile';
-function relocate(p){p=p||{};const f=p.flow;if(!f)return p;let ch=false;if(f.current==='scene.html?k=start'){f.current='choose.html';ch=true}if(f.last==='scene.html?k=start'){f.last='choose.html';ch=true}if(ch){try{localStorage.setItem(K,JSON.stringify(p))}catch(e){}}return p}
+function relocate(p){p=p||{};const f=p.flow;if(!f)return p;let ch=false;if(f.current==='scene.html?k=start'){f.current='choose.html';ch=true}if(f.last==='scene.html?k=start'){f.last='choose.html';ch=true}
+ /* Фонари убраны из маршрута, их место заняла дыхательная пауза. Выданный «Фонарь» остается.
+    Заставка «Я есмь» стала шагом маршрута после дыхания; уже просмотренная считается пройденной. */
+ const B='breath.html?at=p0',C='cutscene.html';f.completed=f.completed||{};if(f.current==='lanterns.html'){f.current=B;ch=true}if(f.last==='lanterns.html'){f.last=B;ch=true}if(f.completed['lanterns.html']&&!f.completed[B]){f.completed[B]=f.completed['lanterns.html'];ch=true}
+ let seen=null;try{seen=localStorage.getItem('alch_v5_cutscene_iam')}catch(e){}if(seen&&f.completed[B]&&!f.completed[C]&&f.current!==B&&f.current!==C){f.completed[C]=+seen||Date.now();ch=true}if(ch){try{localStorage.setItem(K,JSON.stringify(p))}catch(e){}}return p}
 function load(){try{return relocate(JSON.parse(localStorage.getItem(K))||{})}catch(e){return {}}}
 function save(p){localStorage.setItem(K,JSON.stringify(p))}
 function index(u){return (window.GFLOW||[]).findIndex(x=>x.u===u)}
 function currentUrl(){const i=window.gIdx?gIdx():-1;return i<0?null:GFLOW[i].u}
 function mirrorReadonly(){const q=new URLSearchParams(location.search);return q.get('id')==='mirrors'&&(q.get('preview')==='1'||q.has('review'));}
-function visualReview(u){return ['index.html','form.html','elder.html','sum.html','fin.html','scene.html?k=ego','scene.html?k=pa','scene.html?k=pa_test','slot.html?id=source','slot.html?id=pa_end','slot.html?id=pb_intro','slot.html?id=pc_intro','slot.html?id=mirage'].includes(u);}
+function visualReview(u){return ['cutscene.html','index.html','form.html','elder.html','sum.html','fin.html','scene.html?k=ego','scene.html?k=pa','scene.html?k=pa_test','slot.html?id=source','slot.html?id=pa_end','slot.html?id=pb_intro','slot.html?id=pc_intro','slot.html?id=mirage'].includes(u);}
 function isVisualReview(){if(window.GOpening&&GOpening.active)return false;const q=new URLSearchParams(location.search),f=location.pathname.split('/').pop()||'index.html';const u=f==='scene.html'?f+'?k='+q.get('k'):f==='slot.html'?f+'?id='+q.get('id'):f;return q.get('review')==='1'&&visualReview(u);}
 function ready(u,p){
  if(isVisualReview())return false;
@@ -77,7 +81,7 @@ function init(){
 }
 function snapshot(u,p){
  const keys={
-  'form.html':['name','birth','gender'], 'choose.html':['mapStyle'], 'bridge.html':['hand','handTop'],
+  'form.html':['name','birth','gender'], 'choose.html':['mapStyle'], 'bridge.html':['pocherk','hand','handTop'],
   'ego.html':['ego'], 'swipe.html':['dq'], 'res.html':['res','body'], 'wheel8.html':['wheel'],
   'wheel-test.html':['wheelTest'], 'values.html':['values','egoSelf','focuses'],
   'slot.html?id=mirrors':['mirror_exercise'], 'slot.html?id=dialog':['dialog'],
