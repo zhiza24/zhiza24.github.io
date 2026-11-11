@@ -1,0 +1,92 @@
+/* Маршрут хранит посещение и подтвержденное завершение раздельно. */
+(function(){
+'use strict';
+const K='alch_v5_profile';
+function load(){try{return JSON.parse(localStorage.getItem(K))||{}}catch(e){return {}}}
+function save(p){localStorage.setItem(K,JSON.stringify(p))}
+function index(u){return (window.GFLOW||[]).findIndex(x=>x.u===u)}
+function currentUrl(){const i=window.gIdx?gIdx():-1;return i<0?null:GFLOW[i].u}
+function mirrorReadonly(){const q=new URLSearchParams(location.search);return q.get('id')==='mirrors'&&(q.get('preview')==='1'||q.has('review'));}
+function visualReview(u){return ['index.html','form.html','elder.html','sum.html','fin.html','scene.html?k=start','scene.html?k=ego','scene.html?k=pa','scene.html?k=pa_test','slot.html?id=source','slot.html?id=pa_end','slot.html?id=pb_intro','slot.html?id=pc_intro','slot.html?id=mirage'].includes(u);}
+function isVisualReview(){if(window.GOpening&&GOpening.active)return false;const q=new URLSearchParams(location.search),f=location.pathname.split('/').pop()||'index.html';const u=f==='scene.html'?f+'?k='+q.get('k'):f==='slot.html'?f+'?id='+q.get('id'):f;return q.get('review')==='1'&&visualReview(u);}
+function ready(u,p){
+ if(isVisualReview())return false;
+ if(u==='slot.html?id=mirrors')return !mirrorReadonly()&&!((p.mirrors||{}).draft)&&!!(p.mirror_exercise&&p.mirror_exercise.completed_at);
+ if(u==='form.html')return !!(p.name&&window.GPassport&&GPassport.parse(p.birth)&&['m','f'].includes(p.gender)&&p.points);
+ if((p.flow||{}).completed&&p.flow.completed[u])return true;
+ if(u==='choose.html')return !!p.mapStyle;
+ if(u==='ego.html')return !!p.ego;
+ if(u==='swipe.html')return !!p.dq;
+ if(u==='wheel8.html')return Array.isArray(p.wheel)&&p.wheel.length===8;
+ if(u==='wheel-test.html')return !!(p.wheelTest&&p.wheelTest.completed);
+ if(u==='values.html')return p.valuesStage==='done';
+ if(u==='reactor.html')return +(p.reactor||{}).day>=21;
+ if(u==='slot.html?id=dialog')return !!p.dialog;
+ if(u==='slot.html?id=sort')return !!(p.lab&&p.lab.sort&&p.lab.sort.length===6);
+ if(u==='slot.html?id=evidence')return !!(p.fractal&&p.fractal.evidence&&p.fractal.evidence.length>=3);
+ if(u==='slot.html?id=leverage')return !!(p.fractal&&p.fractal.lever);
+ if(u==='slot.html?id=guard')return !!(p.guard&&p.guard.answers&&p.guard.answers.length);
+ if(u==='slot.html?id=retest')return !!p.retest;
+ return false;
+}
+/* A cursor is a checkpoint only when its preceding step was actually completed.
+   Visited pages, legacy last/max and query strings never unlock a step. */
+function state(p){
+ p=p||load();const flow=window.GFLOW||[],f=p.flow||{},done=f.completed||{};
+ let at=1,candidate=index(f.current);
+ if(f.version>=2&&candidate>=1&&(candidate===1||done[flow[candidate-1].u]))at=candidate;
+ while(at<flow.length-1&&done[flow[at].u])at++;
+ const finished=at===flow.length-1&&!!done[flow[at].u];
+ return {index:at,url:flow[at]?flow[at].u:'form.html',finished};
+}
+function status(u,p){const i=index(u),s=state(p);if(i<0)return 'resource';return i<s.index||s.finished&&i===s.index?'done':i===s.index?'current':'locked';}
+function resume(){return state().url;}
+function reviewUrl(u){return visualReview(u)?u+(u.includes('?')?'&':'?')+'review=1':'tasks.html?review='+encodeURIComponent(u);}
+function complete(u,p){
+ u=u||currentUrl();p=p||load();
+ if(isVisualReview()||mirrorReadonly()||status(u,p)==='locked'||(u==='slot.html?id=mirrors'&&!ready(u,p)))return false;
+ if(!u||index(u)<0)return false;
+ p.flow=p.flow||{};const f=p.flow;f.completed=f.completed||{};
+ // Revisiting an already completed step must not change its date or route.
+ if(f.completed[u]&&!(u==='slot.html?id=mirrors'&&p.mirror_exercise))return false;
+ const at=index(u),checkpoint=state(p);f.completed[u]=Date.now();
+ // Keep a compact immutable result snapshot for safe review, not a mutable scene replay.
+ f.results=f.results||{};if(!f.results[u])f.results[u]=snapshot(u,p);
+ if(at>=checkpoint.index){const next=GFLOW[at+1];f.current=next?next.u:u;f.last=f.current;}
+ f.version=2;recordVisit(u,p);save(p);return true;
+}
+function advance(){const u=currentUrl(),repeat=window.GOpening&&GOpening.active;if(!(repeat&&status(u)==='done')&&!complete(u))return 'tasks.html';const i=index(u),next=i>=0&&GFLOW[i+1]?GFLOW[i+1].u:'tasks.html';return repeat?GOpening.url(next):next;}
+function recordVisit(u,p){
+ const passed=arguments.length>1&&!!p;
+ u=u||currentUrl();p=p||load();
+ if(isVisualReview()||mirrorReadonly()||!u||index(u)<0)return p;
+ if(status(u,p)==='locked')return p;
+ p.flow=p.flow||{};const f=p.flow;f.visited=f.visited||{};
+ // Первая отметка сохраняется, повторный заход ее не переписывает.
+ if(f.visited[u]==null)f.visited[u]=Date.now();
+ if(!passed)save(p);
+ return p;
+}
+function init(){
+ const p=load(),u=currentUrl();if(isVisualReview()||mirrorReadonly()||!u)return;
+ const st=status(u,p);if(st!=='current'&&st!=='done')return;
+ p.flow=p.flow||{};const f=p.flow;
+ if(!f.version){f.legacy={last:f.last||null,max:f.max||0};f.completed=f.completed||{};f.current=state(p).url;f.last=f.current;f.version=2;}
+ recordVisit(u,p);save(p);
+}
+function snapshot(u,p){
+ const keys={
+  'form.html':['name','birth','gender'], 'choose.html':['mapStyle'], 'bridge.html':['hand','handTop'],
+  'ego.html':['ego'], 'swipe.html':['dq'], 'res.html':['res','body'], 'wheel8.html':['wheel'],
+  'wheel-test.html':['wheelTest'], 'values.html':['values','egoSelf','focuses'],
+  'slot.html?id=mirrors':['mirror_exercise'], 'slot.html?id=dialog':['dialog'],
+  'slot.html?id=evidence':['fractal'], 'slot.html?id=sort':['lab'], 'slot.html?id=found':['lab'],
+  'slot.html?id=pb_end':['lab'], 'slot.html?id=fractal':['fractal'], 'slot.html?id=leverage':['fractal'],
+  'slot.html?id=guard':['guard'], 'reactor.html':['reactor'], 'slot.html?id=retest':['retest'],
+  'slot.html?id=compare':['wheel','retest'], 'slot.html?id=end':['reactor','retest','arts']};
+ const data={};(keys[u]||['arts']).forEach(k=>{if(p[k]!==undefined)data[k]=p[k]});
+ const logs=(p.log||[]).slice(-3);return JSON.parse(JSON.stringify({data,logs}));
+}
+function reading(u){if(isVisualReview())return false;return u==='elder.html'||u==='hero.html'||u==='sum.html'||u==='fin.html'||u.startsWith('scene.html')||['pa_end','pb_intro','pc_intro','compare'].some(k=>u==='slot.html?id='+k)}
+window.GRoute={load,resume,complete,advance,init,recordVisit,currentUrl,ready,reading,state,status,reviewUrl,snapshot,visualReview,isVisualReview};
+})();
