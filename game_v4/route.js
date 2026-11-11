@@ -53,14 +53,26 @@ function complete(u,p){
  // Keep a compact immutable result snapshot for safe review, not a mutable scene replay.
  f.results=f.results||{};if(!f.results[u])f.results[u]=snapshot(u,p);
  if(at>=checkpoint.index){const next=GFLOW[at+1];f.current=next?next.u:u;f.last=f.current;}
- f.version=2;save(p);return true;
+ f.version=2;recordVisit(u,p);save(p);return true;
 }
 function advance(){const u=currentUrl(),repeat=window.GOpening&&GOpening.active;if(!(repeat&&status(u)==='done')&&!complete(u))return 'tasks.html';const i=index(u),next=i>=0&&GFLOW[i+1]?GFLOW[i+1].u:'tasks.html';return repeat?GOpening.url(next):next;}
+function recordVisit(u,p){
+ const passed=arguments.length>1&&!!p;
+ u=u||currentUrl();p=p||load();
+ if(isVisualReview()||mirrorReadonly()||!u||index(u)<0)return p;
+ if(status(u,p)==='locked')return p;
+ p.flow=p.flow||{};const f=p.flow;f.visited=f.visited||{};
+ // Первая отметка сохраняется, повторный заход ее не переписывает.
+ if(f.visited[u]==null)f.visited[u]=Date.now();
+ if(!passed)save(p);
+ return p;
+}
 function init(){
- const p=load(),u=currentUrl();if(isVisualReview()||mirrorReadonly()||!u||status(u,p)!=='current')return;
+ const p=load(),u=currentUrl();if(isVisualReview()||mirrorReadonly()||!u)return;
+ const st=status(u,p);if(st!=='current'&&st!=='done')return;
  p.flow=p.flow||{};const f=p.flow;
  if(!f.version){f.legacy={last:f.last||null,max:f.max||0};f.completed=f.completed||{};f.current=state(p).url;f.last=f.current;f.version=2;}
- f.visited=f.visited||{};f.visited[u]=Date.now();save(p);
+ recordVisit(u,p);save(p);
 }
 function snapshot(u,p){
  const keys={
@@ -76,5 +88,5 @@ function snapshot(u,p){
  const logs=(p.log||[]).slice(-3);return JSON.parse(JSON.stringify({data,logs}));
 }
 function reading(u){if(isVisualReview())return false;return u==='elder.html'||u==='hero.html'||u==='sum.html'||u==='fin.html'||u.startsWith('scene.html')||['pa_end','pb_intro','pc_intro','compare'].some(k=>u==='slot.html?id='+k)}
-window.GRoute={load,resume,complete,advance,init,ready,reading,state,status,reviewUrl,snapshot,visualReview,isVisualReview};
+window.GRoute={load,resume,complete,advance,init,recordVisit,currentUrl,ready,reading,state,status,reviewUrl,snapshot,visualReview,isVisualReview};
 })();

@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><script src="flow.js?v=tasks1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=opening2"></script><script src="route-gate.js?v=opening2"></script><script src="gender.js?v=1"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Мост</title><script src="upd.js?v=1793899064"></script>
+<!doctype html><html lang="ru"><head><script src="flow.js?v=tasks1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=p1"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=opening2"></script><script src="gender.js?v=1"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Мост</title><script src="upd.js?v=1793899064"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 <style>html,body{margin:0;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif}
 .w{max-width:520px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(110px + env(safe-area-inset-bottom))}
@@ -38,10 +38,10 @@ document.querySelector('.cap').textContent=X.cap;fb.textContent=X.fb;
 var q=0,R=[];br.innerHTML=Q.map(function(){return '<div class="pl"></div>'}).join('');try{var f0=sessionStorage.getItem('fire0');if(kk=='fire'&&f0){sessionStorage.removeItem('fire0');R.push(f0);br.children[0].classList.add('on');q=1;setTimeout(function(){hr.style.left=(4+80/Q.length)+'%'},100)}}catch(e){}
 function sh(){if(q>=Q.length){done();return}var f=Q[q];box.innerHTML='<div class="q">'+f[0]+'</div>'+f[1].map(function(a){return '<button class="a" data-k="'+a[1]+'">'+a[0]+'</button>'}).join('');
 box.querySelectorAll('.a').forEach(function(b){b.onclick=function(){R.push(b.dataset.k);br.children[q].classList.add('on');try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}fb.textContent='Принято';q++;hr.style.left=(4+q*80/Q.length)+'%';setTimeout(sh,600)}})}
-function done(){var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}var sc=P.hand||{s:0,n:0,str:0,z:0};R.forEach(function(k){sc[k]++});P.hand=sc;P.arts=P.arts||[];if(P.arts.indexOf(X.sym)<0)P.arts.push(X.sym);
+function done(){var P={};try{P=JSON.parse(localStorage.getItem('alch_profile'))||{}}catch(e){}var sc=P.hand||{s:0,n:0,str:0,z:0};R.forEach(function(k){sc[k]++});P.hand=sc;if(window.GArts)GArts.grant(X.sym,{profile:P});else{P.arts=P.arts||[];if(P.arts.indexOf(X.sym)<0)P.arts.push(X.sym);}
 var top=Object.keys(sc).sort(function(a,b){return sc[b]-sc[a]})[0];P.handTop=top;localStorage.setItem('alch_profile',JSON.stringify(P));
 var p=GP();p.log.push({s:3,t:X.cap,r:'почерк сейчас: '+NM[top],d:new Date().toLocaleDateString('ru')});SP(p);
 box.innerHTML='<div class="q">'+(X.next?'Пройдено.':'Твой почерк действия: '+NM[top])+'</div><div class="fb">Награда: символ «'+X.sym+'», запись в Дневнике</div><button class="go" id="nx">Дальше</button>';
 nx.onclick=function(){location.href=GRoute.advance()}}
 sh();
-</script><script src="engine.js?v=n6"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=opening2"></script></body></html>
+</script><script src="engine.js?v=p1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=opening2"></script></body></html>

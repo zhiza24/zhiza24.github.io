@@ -5,8 +5,9 @@ function load(){var P={};try{P=JSON.parse(localStorage.getItem(K))||{}}catch(e){
  // миграция старых хранилищ в один профиль
  try{var op=JSON.parse(localStorage.getItem('alch_path')||'null');if(op&&!P.path){P.path=op}localStorage.removeItem('alch_path')}catch(e){}
  var od=localStorage.getItem('alch_day');if(od!==null){P.reactor=P.reactor||{};if(!P.reactor.day)P.reactor.day=+od||0;localStorage.removeItem('alch_day');save(P)}
+ if(window.GProfile)P=GProfile.migrate(P);
  return P}
-function save(P){localStorage.setItem(K,JSON.stringify(P))}
+function save(P){if(window.GProfile)P=GProfile.migrate(P);localStorage.setItem(K,JSON.stringify(P))}
 window.GPro={load:load,save:save,
  exportFile:function(){var b=new Blob([JSON.stringify(load(),null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='put-alhimika-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove()},
  importFile:function(f,cb){var r=new FileReader();r.onload=function(){try{var P=JSON.parse(r.result);save(P);cb&&cb(true)}catch(e){cb&&cb(false)}};r.readAsText(f)}};
