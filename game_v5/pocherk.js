@@ -41,12 +41,11 @@ function layout(){
 function IX(fx){return box.x+fx*box.w}
 
 /* ---------- bridge ---------- */
-var hero,mate,deck,built=0;
-var MATE_SVG='<svg viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="4" fill="#3a1f08"/><path d="M4 21c0-4.6 3.6-8 8-8s8 3.4 8 8z" fill="#3a1f08"/></svg>';
+var hero,deck,built=0;
 function buildBridge(){
  brg.innerHTML='<div class="deck" id="deck">'+[0,1,2,3].map(function(){return '<div class="sec"><div class="gh"></div><div class="bd"><i class="pk"></i><i class="pk"></i><i class="pk"></i><i class="pk"></i></div><i class="rope t"></i><i class="rope b"></i></div>'}).join('')+'</div><i class="post" id="p1"></i><i class="post" id="p2"></i><i class="post" id="p3"></i><i class="post" id="p4"></i>'+
-  '<div class="tok mate" id="mate">'+MATE_SVG+'</div><div class="tok hero" id="hero"><img alt="" src="'+(window.GHeroSrc?GHeroSrc('portrait'):'img/hero_m_portrait.jpg')+'"></div>';
- deck=$('deck');hero=$('hero');mate=$('mate');
+  '<div class="tok hero" id="hero"><img alt="" src="'+(window.GHeroSrc?GHeroSrc('portrait'):'img/hero_m_portrait.jpg')+'"></div>';
+ deck=$('deck');hero=$('hero');
 }
 var L0=.24,L1=.77,BY=0;
 function placeBridge(){
@@ -57,11 +56,10 @@ function placeBridge(){
 }
 function heroX(k){var l=IX(L0),r=IX(L1),seg=(r-l)/4;if(k<=0)return IX(.17);if(k>=5)return IX(.85);return l+seg*(k-.5)}
 function posTokens(walk){
- if(!hero)return;var k=built>=4&&crossed?5:built,hk=k,mk=k>=5?5:Math.max(0,k-1);
- var hx=heroX(hk),mx=k>=5?IX(.86):(mk===0?IX(.14):heroX(mk));
+ if(!hero)return;var k=built>=4&&crossed?5:built;
+ var hx=heroX(k);
  hero.style.left=hx+'px';hero.style.top=(BY-(k>=5?22:0))+'px';
- mate.style.left=mx+'px';mate.style.top=(BY+(mk===0?40:(k>=5?24:0)))+'px';
- if(walk){hero.classList.remove('walk');mate.classList.remove('walk');void hero.offsetWidth;hero.classList.add('walk');mate.classList.add('walk')}
+ if(walk){hero.classList.remove('walk');void hero.offsetWidth;hero.classList.add('walk')}
 }
 var crossed=false;
 function setBuilt(n,anim){built=n;var s=deck.children;for(var i=0;i<4;i++){if(i<n){if(!anim||i<n-1){s[i].style.transition='none';s[i].querySelectorAll('.bd,.rope').forEach(function(e){e.style.transition='none'})}s[i].classList.add('on')}}
@@ -138,7 +136,7 @@ var CRYSTAL='<svg viewBox="0 0 46 56" aria-hidden="true"><defs><linearGradient i
  '<polygon points="23,2 40,18 23,54 6,18" fill="url(#cr1)"/><polygon points="23,2 40,18 23,22" fill="#ff7a60" opacity=".7"/><polygon points="23,2 6,18 23,22" fill="#ff3a22" opacity=".8"/><polygon points="6,18 23,22 23,54" fill="url(#cr2)" opacity=".85"/><polygon points="40,18 23,22 23,54" fill="#d80c04" opacity=".85"/><polyline points="6,18 23,22 40,18" fill="none" stroke="#ffe0d6" stroke-width=".8" opacity=".8"/></svg>';
 function finish(fresh){
  P=load();D=draft(P);var R;
- if(P.pocherk&&P.pocherk.v===V&&P.pocherk.doneAt&&(!D.answers.length||D.answers.length<Q.length)){R=P.pocherk}
+ if(P.pocherk&&P.pocherk.doneAt&&(!D.answers.length||D.answers.length<Q.length)){R=P.pocherk}
  else{
   var r=score(D.answers);R={v:V,answers:D.answers,score:r.score,lead:r.lead,leads:r.leads,second:r.second,mixed:r.mixed,doneAt:(P.pocherk&&P.pocherk.doneAt&&P.pocherk.v===V&&JSON.stringify(P.pocherk.answers)===JSON.stringify(D.answers))?P.pocherk.doneAt:Date.now()};
   var first=!(P.pocherk&&P.pocherk.v===V&&P.pocherk.doneAt);
@@ -173,7 +171,7 @@ function showFinal(R,fresh){
 /* ---------- start / resume ---------- */
 function start(){
  P=load();D=draft(P);idx=D.answers.length;
- if(P.pocherk&&P.pocherk.v===V&&P.pocherk.doneAt&&idx===0){finish(false);return}
+ if(P.pocherk&&P.pocherk.doneAt&&idx===0){finish(false);return}
  if(idx>=Q.length){finish(false);return}
  var s=stageOf(idx);
  setStage(s,function(){
