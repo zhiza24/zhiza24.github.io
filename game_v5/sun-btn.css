@@ -21,12 +21,12 @@
 .sun-btn:focus-visible{outline:3px solid #ffe7b0;outline-offset:4px}
 .sun-btn__halo{
   position:absolute;inset:-62%;border-radius:50%;
-  background:radial-gradient(circle,
+  background:radial-gradient(circle closest-side,
     rgba(255,210,26,.7) 0%,
     rgba(255,140,0,.55) 28%,
     rgba(255,140,0,.28) 46%,
-    rgba(255,140,0,.1) 58%,
-    transparent 70%);
+    rgba(255,140,0,.1) 75%,
+    transparent 100%);
   animation:sun-breathe 3.2s ease-in-out infinite;
   pointer-events:none;z-index:0;
 }
