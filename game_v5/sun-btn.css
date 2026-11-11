@@ -31,7 +31,8 @@
   pointer-events:none;z-index:0;
 }
 /* No spoke / grey ring. Halo is the only glow. */
-.sun-btn__corona{display:none!important}
+.sun-btn__corona{position:absolute;inset:0;border-radius:50%;z-index:1;pointer-events:none;
+  box-shadow:0 0 0 2px #fff27a,0 0 12px 3px rgba(255,242,122,.95),0 0 28px 8px rgba(255,210,26,.75),0 0 52px 14px rgba(255,140,0,.5),0 0 90px 22px rgba(255,140,0,.28);}
 .sun-btn__core{
   position:absolute;inset:0;border-radius:50%;overflow:hidden;z-index:2;
   clip-path:circle(50% at 50% 50%);-webkit-clip-path:circle(50% at 50% 50%);
