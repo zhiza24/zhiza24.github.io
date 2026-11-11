@@ -132,6 +132,7 @@
     state.open = false;
     state.seen = isSeen(state.id);
     titleEl.textContent = opts.title || '';
+    closeBtn.textContent = opts.closeLabel || 'Закрыть';
     bodyEl.innerHTML = opts.html || '';
     setAudio(opts.audio || '');
     var every = !!opts.everyTime;

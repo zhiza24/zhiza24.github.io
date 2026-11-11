@@ -1,6 +1,6 @@
-<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-on) .deck{opacity:0!important;visibility:hidden!important;pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794401962"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9"><link rel="stylesheet" href="scroll.css?v=s3"><link rel="stylesheet" href="sun-btn.css?v=r7"><title>Выбери карту</title>
+<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794402704"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9"><link rel="stylesheet" href="scroll.css?v=s4"><link rel="stylesheet" href="sun-btn.css?v=r7"><title>Выбери карту</title>
 <style>html,body{margin:0;height:100%;background:#120c07;color:#f4ecdf;font-family:Manrope,sans-serif;overflow:hidden;overscroll-behavior:none}
-.w{max-width:520px;margin:0 auto;height:100dvh;box-sizing:border-box;padding:calc(58px + env(safe-area-inset-top)) 16px calc(112px + env(safe-area-inset-bottom));display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.w{max-width:520px;margin:0 auto;height:100dvh;box-sizing:border-box;padding:calc(58px + env(safe-area-inset-top)) 16px calc(112px + env(safe-area-inset-bottom));display:flex;flex-direction:column;min-height:0;overflow:hidden;transition:filter .55s ease,-webkit-filter .55s ease}
 .cap{flex:none;display:table;margin:0 auto 6px;padding:7px 18px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 14px Manrope;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 18px rgba(255,200,90,.4)}
 @keyframes in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 .go{display:block;width:100%;margin-top:10px;padding:13px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope;cursor:pointer}
@@ -9,68 +9,77 @@
 .th{flex:none;display:flex;gap:6px;margin:0;padding:6px 0 0;justify-content:center;position:relative;z-index:5;width:100%;background:#120c07}
 .th button{flex:1;max-width:64px;padding:0;border:2px solid #5a4028;border-radius:10px;overflow:hidden;background:none;cursor:pointer;opacity:.85;transition:.2s}
 .th button img{display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:contain;background:#0c0804;max-height:64px}.th button.on{border-color:#ffd877;opacity:1;transform:translateY(-3px);box-shadow:0 0 14px #ffcf5a}
-.deck{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;transition:opacity .35s ease}
-#big{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;clip-path:inset(0);position:relative;z-index:0}
-.big{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:4px;border:0;box-shadow:none;overflow:hidden;clip-path:inset(0);border-radius:0;animation:in .45s ease}
-.big img{flex:0 0 auto;display:block;width:auto;height:auto;max-width:80px;max-height:120px;aspect-ratio:2/3;object-fit:contain;background:#0c0804;border:2px solid #c9a46a;border-radius:12px;min-height:0;box-shadow:0 8px 22px rgba(0,0,0,.55)}
+.deck{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.head{flex:none;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:18px;padding:2px 0 8px;width:100%}
+.card-land{flex:none;width:132px;height:88px;border:2px solid #c9a46a;border-radius:12px;overflow:hidden;background:#0c0804;box-shadow:0 8px 22px rgba(0,0,0,.55)}
+.card-land img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 25%;background:#0c0804}
+.pkw{flex:none;display:flex;justify-content:center;align-items:center;margin:0;padding:0;width:auto;background:transparent}
+#big{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:0}
 .rt{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;overflow:hidden;gap:4px;isolation:isolate}
 .rt h2{flex:none;margin:0;padding:0 0 2px;font:700 20px/1.1 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;position:relative;z-index:1;background:#120c07}
-.rt-body{flex:1;min-height:0;overflow:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;display:block;contain:paint}
+.rt-body{flex:1;min-height:0;overflow:hidden;overscroll-behavior:contain;display:block;contain:paint}
 .rt-body div{padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.07);font-size:14.5px;line-height:1.32}.rt-body .p{margin-bottom:5px}
 .rt-body b{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:2px}
 .p b{color:#9fe0a0}.m b{color:#f0a090}
-.pkw{flex:none;display:flex;justify-content:center;align-items:center;margin:0;padding:10px 0 8px;position:relative;z-index:5;width:100%;background:transparent}
-body.gsc-open .deck{opacity:0!important;pointer-events:none}@media(prefers-reduced-motion:reduce){.deck{transition:none}}
-.deck.is-wait #big,.deck.is-wait .th,.deck.is-wait .pkw{opacity:0;visibility:hidden;pointer-events:none;transform:translateY(22px)}
-.deck.is-wait .big{animation:none}
-.deck.is-enter .big{animation:deckIn .55s cubic-bezier(.2,.8,.3,1) both}
+html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none}
+@media(prefers-reduced-motion:reduce){.w{transition:none!important}}
+.deck.is-enter .head{animation:deckIn .55s cubic-bezier(.2,.8,.3,1) both}
 .deck.is-enter .rt h2{animation:deckIn .5s .08s cubic-bezier(.2,.8,.3,1) both}
 .deck.is-enter .rt .p{animation:deckIn .5s .18s cubic-bezier(.2,.8,.3,1) both}
 .deck.is-enter .rt .m{animation:deckIn .5s .3s cubic-bezier(.2,.8,.3,1) both}
-.deck.is-enter .pkw{animation:deckIn .45s .42s cubic-bezier(.2,.8,.3,1) both}
-.deck.is-enter .th button{opacity:0;animation:thumbIn .4s cubic-bezier(.2,.8,.3,1) both}
+.deck.is-enter .th button{opacity:.7;animation:thumbIn .4s cubic-bezier(.2,.8,.3,1) both}
 .deck.is-enter .th button:nth-child(1){animation-delay:.5s}
 .deck.is-enter .th button:nth-child(2){animation-delay:.58s}
 .deck.is-enter .th button:nth-child(3){animation-delay:.66s}
 .deck.is-enter .th button:nth-child(4){animation-delay:.74s}
 .deck.is-enter .th button:nth-child(5){animation-delay:.82s}
-@keyframes deckIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-@keyframes thumbIn{from{opacity:0;transform:translateY(16px) scale(.92)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.deck.is-enter .big,.deck.is-enter .rt h2,.deck.is-enter .rt .p,.deck.is-enter .rt .m,.deck.is-enter .pkw,.deck.is-enter .th button{animation:none;opacity:1;transform:none}}
+@keyframes deckIn{from{transform:translateY(18px)}to{transform:none}}
+@keyframes thumbIn{from{opacity:.7;transform:translateY(12px) scale(.96)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.deck.is-enter .head,.deck.is-enter .rt h2,.deck.is-enter .rt .p,.deck.is-enter .rt .m,.deck.is-enter .th button{animation:none;opacity:1;transform:none}}
 @media(max-height:700px){
-  .cap{margin-bottom:6px;padding:6px 16px;font-size:13px}
-  .big{gap:4px}
-  .big img{max-width:72px;max-height:108px}
-  .pkw{padding:8px 0 6px}
-  .rt h2{font:700 18px/1.15 'Cormorant Garamond',serif}
-  .rt-body div{padding:6px 10px;font-size:14px;line-height:1.35}
+  .cap{margin-bottom:4px;padding:6px 16px;font-size:13px}
+  .head{gap:14px;padding:0 0 6px}
+  .card-land{width:120px;height:80px}
   .pkw .sun-btn{--sun-size:56px}
+  .rt h2{font:700 18px/1.15 'Cormorant Garamond',serif}
+  .rt-body div{padding:5px 9px;font-size:14px;line-height:1.3}
+  .rt-body .p{margin-bottom:4px}
+  .th{padding-top:4px}
   .th button{max-width:52px}
-  .th button img{max-height:58px}
+  .th button img{max-height:54px}
+}
+@media(max-height:680px){
+  .head{gap:12px;padding:0 0 4px}
+  .card-land{width:114px;height:76px}
+  .pkw .sun-btn{--sun-size:56px}
+  .rt h2{font:700 17px/1.1 'Cormorant Garamond',serif;padding-bottom:0}
+  .rt-body{gap:0}
+  .rt-body div{padding:5px 8px;font-size:14px;line-height:1.28}
+  .th button{max-width:50px}
+  .th button img{max-height:50px}
 }
 .gsc-html .lead{font-weight:800;font-size:17px;color:#4a280c;text-align:center;margin:0 0 12px}
-@media(max-height:700px){.rt-body{overflow:auto}}
 </style></head>
 <body data-page="task"><div class="w"><div class="cap">Выбери карту</div>
-<div class="deck is-wait" id="deck"><div id="big"></div><div class="pkw"><button class="sun-btn sun-btn--sm" id="go" aria-label="Выбрать эту карту"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span><span class="sun-btn__label">✓</span></button></div><div class="th" id="th"></div></div></div>
+<div class="deck" id="deck"><div class="head"><div class="card-land" id="pic"></div><div class="pkw"><button class="sun-btn sun-btn--sm" id="go" aria-label="Выбрать эту карту"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span><span class="sun-btn__label">✓</span></button></div></div><div id="big"></div><div class="th" id="th"></div></div></div>
 
 <div class="fx" id="fx"></div><div class="fx" id="fq" style="font:600 16px Manrope;flex-direction:column"></div>
-<script src="stages.js?v=4"></script><script src="scroll.js?v=s3"></script><script>
+<script src="stages.js?v=4"></script><script src="scroll.js?v=s4"></script><script>
 var C=[
 {k:'s',img:'card_s.jpg',n:'Тропа молний',p:'Эта дорога полна движения и неожиданных поворотов. Здесь возможности появляются внезапно, а перемены могут открыть путь туда, куда еще недавно невозможно было попасть. Главное сокровище этой тропы — способность не упускать момент.',m:'Не всякая молния освещает дорогу надолго. Иногда события развиваются быстрее, чем удается рассмотреть все препятствия. Придется учиться различать возможности и ловушки стремительного пути.'},
 {k:'n',img:'card_n.jpg',n:'Туманная долина',p:'Эта дорога открывается постепенно. Здесь важно замечать едва различимые знаки, прислушиваться к происходящему и не торопить события. Туман скрывает лишнее, оставляя возможность увидеть то, что обычно ускользает от взгляда.',m:'Не всегда можно сразу понять, куда ведет тропа. Иногда приходится долго идти в неизвестности, прежде чем открывается нужное направление. Главное испытание — не потерять путь, пока ищешь его очертания.'},
 {k:'str',img:'card_str.jpg',n:'Горный перевал',p:'Эта дорога ведет вверх, туда, откуда открывается широкий обзор. С высоты становятся заметны связи между событиями, скрытые маршруты и возможности, которые невозможно увидеть снизу. Здесь можно проложить собственный путь, не повторяя чужих маршрутов.',m:'Подъем требует усилий. Не на каждом участке встретятся указатели и проводники. Иногда придется самостоятельно искать проходы, принимать решения и нести ответственность за выбранное направление.'},
 {k:'z',img:'card_z.jpg',n:'Река попутчиков',p:'Эта дорога проходит по течению большой реки. На ее берегах встречаются проводники, союзники и случайные попутчики. Здесь одни возможности рождаются из встреч, другие — из общего движения. Иногда именно тот, кто оказывается рядом, помогает увидеть новый путь.',m:'Течение меняется, а вместе с ним могут меняться и направления движения. Не каждый попутчик знает, куда стремится река. Важно не потерять собственный ориентир среди чужих маршрутов.'},
 {k:'f',img:'wheel.webp',n:'Пусть выберет судьба',p:'Перед тобой все дороги. Ни одна еще не закрыта, и каждая может привести к неожиданным открытиям. Иногда случайная встреча или неожиданный поворот становятся началом самого важного путешествия. Позволь миру сделать первый ход.',m:GG('Когда направление выбирает случай, невозможно заранее знать, куда он приведет. Придется принять неизвестность и встретиться с дорогой, которую ты сам не выбирал.','Когда направление выбирает случай, невозможно заранее знать, куда он приведет. Придется принять неизвестность и встретиться с дорогой, которую ты сама не выбирала.')}];
-var i=0;function dr(){var c=C[i];big.innerHTML='<div class="big"><img src="img/'+c.img+'" alt=""><div class="rt"><h2>'+c.n+'</h2><div class="rt-body"><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div></div></div></div>';
+var i=0;function dr(){var c=C[i];pic.innerHTML='<img src="img/'+c.img+'" alt="">';big.innerHTML='<div class="rt"><h2>'+c.n+'</h2><div class="rt-body"><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div></div></div>';
 th.innerHTML=C.map(function(x,j){return '<button class="'+(j==i?'on':'')+'" onclick="i='+j+';dr()"><img src="img/'+x.img+'" alt=""></button>'}).join('')}dr();
 document.getElementById('go').onclick=pick;
-var sx=0,sy=0;big.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY});big.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){i=(i+(dx<0?1:C.length-1))%C.length;dr()}});
+var sx=0,sy=0;function onSwipeStart(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY}function onSwipeEnd(e){var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){i=(i+(dx<0?1:C.length-1))%C.length;dr()}}document.querySelector('.head').addEventListener('touchstart',onSwipeStart);document.querySelector('.head').addEventListener('touchend',onSwipeEnd);big.addEventListener('touchstart',onSwipeStart);big.addEventListener('touchend',onSwipeEnd);
 var FQ=[[GG('Почему ты не выбрал сам?','Почему ты не выбрала сама?'),[['Боюсь ошибиться','n'],['Все пути кажутся интересными','s'],['Пусть решит кто-то другой','z'],['Хочу проверить, что выпадет, а потом решу свое','str']]],['Если выпадет трудная карта, что сделаешь?',[['Пойду сразу, разберусь по дороге','s'],['Сначала изучу ее','n'],['Перестрою под себя','str'],['Найду, кто поможет','z']]],['Как ты чаще принимаешь решения в жизни?',[['Быстро, на импульсе','s'],['Долго взвешиваю','n'],['Делаю по-своему','str'],['Советуюсь с близкими','z']]]];
 function fate(){var sc={s:0,n:0,str:0,z:0},q=0;function sh(){if(q>=FQ.length){fq.style.display='none';var r=Math.floor(Math.random()*4);i=r;var top=Object.keys(sc).sort(function(a,b){return sc[b]-sc[a]})[0];fin(C[r],top,'выбор судьбы, ближе к типу '+top);return}var f=FQ[q];fq.style.display='flex';fq.innerHTML='<div style="max-width:420px;width:100%"><div style="font:700 24px Cormorant Garamond,serif;color:#ffe9a8;margin-bottom:14px">'+f[0]+'</div>'+f[1].map(function(a){return '<button class="go" style="background:#24160c;color:#f4ecdf;border:1.5px solid #c9a46a" data-k="'+a[1]+'">'+a[0]+'</button>'}).join('')+'</div>';fq.querySelectorAll('button').forEach(function(b){b.onclick=function(){sc[b.dataset.k]++;q++;sh()}})}sh()}
 function fin(c,k,r){var p=GP();p.done[2]=1;p.log.push({s:2,t:'Выбор карты пути',r:r||c.n,d:new Date().toLocaleDateString('ru')});SP(p);try{var P=JSON.parse(localStorage.getItem('alch_v5_profile'))||{};P.mapStyle=k;localStorage.setItem('alch_v5_profile',JSON.stringify(P))}catch(e){}fx.style.display='flex';fx.innerHTML='Твоя карта: «'+c.n+'»<small>Твой путь определен. Первая отметка появилась в Дневнике.</small><small>Впереди — новые открытия.</small>';setTimeout(function(){location.href=GRoute.advance()},3000)}
 function pick(){var c=C[i];if(c.k=='f'){fate();return}fin(c,c.k)}
 
-function revealDeck(animated){if(deck.dataset.ready)return;deck.dataset.ready='1';document.documentElement.classList.add('gsc-deck-on');deck.classList.remove('is-wait');var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(animated&&!reduce){deck.classList.add('is-enter');setTimeout(function(){deck.classList.remove('is-enter')},1400)}}
-Scroll.show({id:'choose',everyTime:true,delay:80,fast:true,title:'Выбери карту',html:'<p class="lead">Выбери карту, чтобы начать свой путь.</p><p>Твой путь начинается.</p><p>Перед тобой пять дорог. У каждой свой характер, свои возможности и испытания. Одни открывают путь через стремительное движение, другие требуют терпения, самостоятельности или умения находить попутчиков.</p><p>Рассмотри карты и выбери ту дорогу, по которой тебе хочется отправиться.</p><p>Не ищи правильный ответ. Доверься своему выбору.</p>',onClose:function(){revealDeck(true)}});
+function revealDeck(animated){document.documentElement.classList.add('gsc-deck-focus');if(deck.dataset.ready)return;deck.dataset.ready='1';var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(animated&&!reduce){deck.classList.add('is-enter');setTimeout(function(){deck.classList.remove('is-enter')},1400)}}
+Scroll.show({id:'choose',everyTime:true,delay:80,fast:true,closeLabel:'Выбрать карту',title:'Выбери карту',html:'<p class="lead">Выбери карту, чтобы начать свой путь.</p><p>Твой путь начинается.</p><p>Перед тобой пять дорог. У каждой свой характер, свои возможности и испытания. Одни открывают путь через стремительное движение, другие требуют терпения, самостоятельности или умения находить попутчиков.</p><p>Рассмотри карты и выбери ту дорогу, по которой тебе хочется отправиться.</p><p>Не ищи правильный ответ. Доверься своему выбору.</p>',onClose:function(){revealDeck(true)}});
 </script><script src="engine.js?v=p1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=r2"></script></body></html>
