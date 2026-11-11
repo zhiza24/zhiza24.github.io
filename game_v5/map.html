@@ -162,6 +162,13 @@
   .start span{font-size:22px}
   .hero-pin{transform:translate(calc(-50% - 44px),-50%);width:30px;height:30px}
 </style>
+<link rel="stylesheet" href="sun-btn.css?v=r6">
+<style>
+  .start.sun-btn{position:absolute;background:transparent!important;box-shadow:none!important;animation:none!important;border:0;overflow:visible;display:block;line-height:0;text-decoration:none}
+  .start.sun-btn:before{display:none!important;content:none!important}
+  .start.sun-btn .start-lbl{font-family:"Cormorant Garamond",serif;font-weight:700;color:#2a1606;text-shadow:0 0 3px rgba(255,242,122,.95),0 1px 1px rgba(80,30,0,.35);line-height:1}
+  .start.sun-btn .sun-btn__halo{inset:-48%}
+</style>
 <link rel="stylesheet" href="nav.css?v=h9"></head>
 <body data-page="map">
 <h1 class="vh">Карта путешествия</h1>
@@ -192,7 +199,7 @@
     <button class="node" data-id="6" aria-label="Открыть Кузницу выбора"><span class="num">VI</span><span class="name">Кузница выбора</span><span class="state">Закрыта</span></button>
     <button class="node" data-id="7" aria-label="Открыть Реактор преображения"><span class="num">VII</span><span class="name">Реактор преображения</span><span class="state">Закрыта</span><span class="reactor-meter" hidden aria-label="0 из 21 дней"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></button>
     <button class="node" data-id="8" aria-label="Открыть Землю мастерства"><span class="num">VIII</span><span class="name">Земля мастерства</span><span class="state">Закрыта</span></button>
-    <a class="start" id="start" href="form.html"><span>Старт</span></a>
+    <a class="start sun-btn" id="start" href="form.html"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span><span class="sun-btn__label start-lbl">Старт</span></a>
   </div>
   <a class="cont" id="resume" href="form.html" hidden>Продолжить игру</a>
 </div>
