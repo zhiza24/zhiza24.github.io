@@ -199,7 +199,7 @@ details[open]{animation:rise .3s var(--ease)}
 .core.go:after{display:none}
 /* правки 2 */
 .entry .ent{gap:0}.eh{font-size:30px;letter-spacing:.14em;margin-bottom:110px;text-align:center}
-.es{font-size:11px;letter-spacing:.32em;margin-top:110px;opacity:.75}
+.es{font-size:15px;letter-spacing:.28em;margin-top:110px;opacity:.75}
 .cover2{color:var(--ivory)}
 .cover2 .circ{position:absolute;left:50%;top:40%;width:150%;max-width:620px;transform:translate(-50%,-50%);opacity:.9;pointer-events:none}
 .cover2 .in{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;padding:max(22px,env(safe-area-inset-top)) 26px max(22px,env(safe-area-inset-bottom))}

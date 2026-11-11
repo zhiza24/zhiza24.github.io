@@ -9,8 +9,8 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf;-we
 .sc video{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
 .sc:after{content:"";position:absolute;z-index:1;left:0;right:0;bottom:0;height:46%;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.62) 38%,rgba(0,0,0,.9));pointer-events:none}
 .sc:before{content:"";position:absolute;z-index:2;left:0;right:0;top:0;height:calc(env(safe-area-inset-top) + 72px);background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,0));pointer-events:none}
-.ttl{position:absolute;z-index:3;left:18px;top:calc(env(safe-area-inset-top) + 20px);font:700 12px/1 Manrope,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#e9c97f;text-shadow:0 1px 6px #000;opacity:.9}
-.skip{position:absolute;z-index:6;right:14px;top:calc(env(safe-area-inset-top) + 10px);height:36px;padding:0 16px;border-radius:18px;border:1.5px solid rgba(233,201,127,.75);background:rgba(20,12,6,.55);color:#f4dfab;font:600 14px Manrope,sans-serif;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.ttl{position:absolute;z-index:3;left:18px;top:calc(env(safe-area-inset-top) + 20px);font:700 15px/1 Manrope,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#e9c97f;text-shadow:0 1px 6px #000;opacity:.9}
+.skip{position:absolute;z-index:6;right:14px;top:calc(env(safe-area-inset-top) + 10px);height:36px;padding:0 16px;border-radius:18px;border:1.5px solid rgba(233,201,127,.75);background:rgba(20,12,6,.55);color:#f4dfab;font:600 17px Manrope,sans-serif;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .tx{position:absolute;z-index:3;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 124px);text-align:center;pointer-events:none}
 .tx:before{content:"";position:absolute;z-index:-1;left:-16px;right:-16px;top:-34px;bottom:-30px;background:radial-gradient(ellipse 62% 58% at 50% 50%,rgba(20,10,0,.62),rgba(20,10,0,.3) 60%,rgba(20,10,0,0) 100%);opacity:0;transition:opacity .9s ease}
 .tx.has:before{opacity:1}
@@ -21,12 +21,12 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf;-we
 .nx.on{opacity:1;pointer-events:auto}
 .st{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(ellipse at 50% 42%,rgba(60,38,10,.35),rgba(0,0,0,.82) 70%),url(img/cutscene/iam_poster.jpg?v=cs2) center 40%/cover;cursor:pointer;transition:opacity .8s ease}
 .st.off{opacity:0;pointer-events:none}
-.st small{font:700 12px/1 Manrope,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#e9c97f}
+.st small{font:700 15px/1 Manrope,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#e9c97f}
 .st h1{margin:0;font:700 54px/1 'Cormorant Garamond',serif;color:#fbe6b4;text-shadow:0 0 24px rgba(255,205,120,.6),0 2px 10px #000}
 .play{margin-top:26px;width:96px;height:96px;border-radius:50%;border:2px solid #f5dca0;background:radial-gradient(circle at 35% 30%,#fff5d0 0%,#f0c870 35%,#c98a40 70%,#8a5420 100%);box-shadow:0 0 0 3px #7a4a16,0 0 30px rgba(255,211,106,.7);display:flex;align-items:center;justify-content:center;cursor:pointer;animation:pl 2.2s ease-in-out infinite}
 .play svg{width:38px;height:38px;margin-left:6px}
 @keyframes pl{0%,100%{box-shadow:0 0 0 3px #7a4a16,0 0 18px rgba(255,211,106,.5)}50%{box-shadow:0 0 0 3px #7a4a16,0 0 40px rgba(255,211,106,.9)}}
-.st p{margin:6px 0 0;font:500 14px Manrope,sans-serif;color:#e8d6ad;text-shadow:0 1px 6px #000}
+.st p{margin:6px 0 0;font:500 17px Manrope,sans-serif;color:#e8d6ad;text-shadow:0 1px 6px #000}
 .ztm{position:fixed;inset:0;z-index:9;background:#000;opacity:0;pointer-events:none;transition:opacity .9s}.ztm.on{opacity:1}
 </style></head><body data-page="cutscene">
 <div class="sc">

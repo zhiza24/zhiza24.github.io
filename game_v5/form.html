@@ -1,9 +1,9 @@
-<!doctype html><html lang="ru"><head><script src="flow.js?v=r3"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r3"></script><script src="profile-layer.js?v=2"></script><script src="route-gate.js?v=r3"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794406556"></script><meta http-equiv="Cache-Control" content="no-cache">
+<!doctype html><html lang="ru"><head><script src="flow.js?v=r3"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r3"></script><script src="profile-layer.js?v=2"></script><script src="route-gate.js?v=r3"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794433520"></script><meta http-equiv="Cache-Control" content="no-cache">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Инициация алхимика</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#100e0c">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="nav.css?v=h9">
+<link rel="stylesheet" href="nav.css?v=h9f19">
 <style>
 :root{--g:#c9a46a;--g2:#f0d9a8;--line:#7a5a3a;--ink:#f4ecdf;--d:"Cormorant Garamond",serif}
 *{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#100e0c;color:var(--ink);font-family:Manrope,sans-serif}
@@ -12,17 +12,17 @@
 h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-spacing:.06em;color:var(--g2);text-shadow:0 0 12px rgba(230,180,100,.35)}
 .orn{height:10px;margin:4px auto 0;width:70%;background:linear-gradient(90deg,transparent,#8a6438,transparent) center/100% 1px no-repeat;position:relative}
 .orn:after{content:"";position:absolute;left:50%;top:1px;width:8px;height:8px;background:#c9a46a;transform:translateX(-50%) rotate(45deg)}
-.lab{display:block;text-align:center;font:600 clamp(13px,1.9vh,16px) var(--d);letter-spacing:.1em;color:var(--g);margin:clamp(6px,1.2vh,12px) 0 4px;text-transform:uppercase}
+.lab{display:block;text-align:center;font:600 clamp(16px,2.26vh,19px) var(--d);letter-spacing:.1em;color:var(--g);margin:clamp(6px,1.2vh,12px) 0 4px;text-transform:uppercase}
 .bar{position:relative;margin:0 14px}
 .bar:before,.bar:after{content:"";position:absolute;top:50%;width:14px;height:14px;border:2px solid #9a7444;background:#1a130d;transform:translateY(-50%) rotate(45deg)}
 .bar:before{left:-9px}.bar:after{right:-9px}
 .bar input{width:100%;height:clamp(40px,5.6vh,48px);border:2px solid #8a6438;border-radius:6px;background:linear-gradient(#0e0a07,#1c150f);color:var(--ink);font:600 19px Manrope,sans-serif;text-align:center;outline:none;box-shadow:inset 0 0 0 1px #3a2a1a}
-.bar input::placeholder{color:#6e6256;font-weight:500;font-size:16px}
+.bar input::placeholder{color:#6e6256;font-weight:500;font-size:19px}
 .gen{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:clamp(8px,1.4vh,14px)}
 .sym{font:28px var(--d);color:var(--g)}
 .md{width:clamp(50px,7vh,60px);height:clamp(50px,7vh,60px);border-radius:50%;border:2px solid #9a7444;background:radial-gradient(#4a3420,#1e150d);color:var(--g2);font:700 26px var(--d);box-shadow:inset 0 0 0 3px #1a130d,inset 0 0 0 4px #6b4c2c;cursor:pointer}
 .md.on{background:radial-gradient(#f0d090,#a87430);color:#2a1606;box-shadow:0 0 16px rgba(255,200,110,.7),inset 0 0 0 3px #7a5020}
-.note{text-align:center;font:italic 500 clamp(14px,2vh,17px)/1.3 var(--d);color:#d8c7a4;margin:clamp(6px,1.2vh,12px) 6px 0}
+.note{text-align:center;font:italic 500 clamp(17px,2.24vh,19px)/1.3 var(--d);color:#d8c7a4;margin:clamp(6px,1.2vh,12px) 6px 0}
 .sph{display:flex;justify-content:center;margin:clamp(4px,1vh,10px) 0 -6px;position:relative}
 .sph img{height:clamp(44px,7vh,66px);filter:drop-shadow(0 0 14px rgba(255,190,90,.7))}
 .ped{height:8px;width:120px;margin:0 auto;border-radius:50%;background:radial-gradient(#8a6438,#2a1c10)}
@@ -31,14 +31,14 @@ h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-
 .pts{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0;min-height:0}
 .pt{border:1px solid #6b4c2c;border-radius:10px;background:linear-gradient(#2a1f16,#17110c);display:flex;align-items:center;gap:8px;padding:4px 8px;color:var(--ink);text-align:left;cursor:pointer;min-height:0}
 .pt b{flex:none;width:clamp(34px,5vh,44px);height:clamp(34px,5vh,44px);border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(#f0d090,#a87430);color:#2a1606;font:700 clamp(18px,2.6vh,22px) var(--d)}
-.pt small{display:block;font:600 11px Manrope;letter-spacing:.08em;color:var(--g);text-transform:uppercase}
-.pt span{display:block;font:700 clamp(14px,2vh,17px)/1.1 var(--d);color:var(--g2)}
-.hint{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;font:500 15px/1.4 Manrope;color:#8a7a66;padding:0 10px}
+.pt small{display:block;font:600 15px Manrope;letter-spacing:.08em;color:var(--g);text-transform:uppercase}
+.pt span{display:block;font:700 clamp(17px,2.24vh,19px)/1.1 var(--d);color:var(--g2)}
+.hint{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;font:500 19px/1.4 Manrope;color:#8a7a66;padding:0 10px}
 .btns{display:flex;gap:8px}
-.b{flex:1;height:clamp(42px,5.8vh,50px);border-radius:999px;font:700 15px Manrope;cursor:pointer}
+.b{flex:1;height:clamp(42px,5.8vh,50px);border-radius:999px;font:700 19px Manrope;cursor:pointer}
 .b1{border:2px solid var(--g);background:none;color:var(--g2)}
 .b2{border:0;background:linear-gradient(#e9c98a,#b88a48);color:#1a0f05}
-.err{color:#f0a080;text-align:center;font-size:13px;min-height:0;margin:4px 0 0}
+.err{color:#f0a080;text-align:center;font-size:16px;min-height:0;margin:4px 0 0}
 .go{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0}
 .born{width:88%;height:clamp(56px,8vh,68px);border-radius:999px;border:2px solid #f5dca0;background:radial-gradient(ellipse at 50% 30%,#fff1c8,#e2b45e 55%,#9a6a28);color:#2a1606;font:700 clamp(22px,3.2vh,27px) var(--d);letter-spacing:.04em;cursor:pointer;animation:glow 2.2s infinite}
 @keyframes glow{0%,100%{box-shadow:0 0 10px 2px rgba(255,205,120,.45)}50%{box-shadow:0 0 34px 12px rgba(255,205,120,.85)}}
@@ -48,12 +48,12 @@ h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-
 .sheet{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.6);display:none;align-items:flex-end}
 .sheet.on{display:flex}
 .sh{width:100%;max-height:75dvh;overflow:auto;background:linear-gradient(#2a1f16,#15100c);border-top:2px solid #9a7444;border-radius:20px 20px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom))}
-.sh h3{margin:0;font:700 28px var(--d);color:var(--g2)}.sh .k{font:600 12px Manrope;letter-spacing:.1em;color:var(--g);text-transform:uppercase}
-.sh p{font:16px/1.55 Manrope;color:#e8dcc6}.sh .x{float:right;background:none;border:0;color:var(--g2);font-size:28px}
-.lab{color:#fffaf0!important;font-size:clamp(16px,2.3vh,19px)!important;text-shadow:0 1px 3px #000,0 0 8px rgba(0,0,0,.6)}
+.sh h3{margin:0;font:700 28px var(--d);color:var(--g2)}.sh .k{font:600 15px Manrope;letter-spacing:.1em;color:var(--g);text-transform:uppercase}
+.sh p{font:19px/1.55 Manrope;color:#e8dcc6}.sh .x{float:right;background:none;border:0;color:var(--g2);font-size:28px}
+.lab{color:#fffaf0!important;font-size:clamp(19px,2.3vh,19px)!important;text-shadow:0 1px 3px #000,0 0 8px rgba(0,0,0,.6)}
 .bar input{color:#fff!important;text-shadow:0 1px 2px #000}
-.bar input::placeholder{color:#e8ddc8!important;opacity:.85;font-size:17px!important}
-.note{color:#fffaf0!important;font-size:clamp(16px,2.3vh,19px)!important;text-shadow:0 1px 3px #000}
+.bar input::placeholder{color:#e8ddc8!important;opacity:.85;font-size:19px!important}
+.note{color:#fffaf0!important;font-size:clamp(19px,2.3vh,19px)!important;text-shadow:0 1px 3px #000}
 .hint,.err{color:#fff3d6!important;text-shadow:0 1px 3px #000}
 .g,[data-g],[data-g] *{color:#fffaf0!important;text-shadow:0 1px 3px #000}
 .board,.panel,.card,.wrap{filter:brightness(1.35)}
@@ -63,9 +63,9 @@ h1{margin:0;text-align:center;font:700 clamp(22px,3.6vh,30px)/1 var(--d);letter-
 .board>h1,.board>.orn{flex:none}
 .grp,.gen,.note{flex:none;margin-top:0!important;margin-bottom:0!important}
 .go{flex:none!important;margin-bottom:clamp(6px,2vh,22px)}
-.lab{font-family:Manrope,sans-serif!important;font-weight:700!important;letter-spacing:.04em!important;text-transform:none!important;font-size:clamp(17px,2.4vh,20px)!important;margin-bottom:8px!important}
+.lab{font-family:Manrope,sans-serif!important;font-weight:700!important;letter-spacing:.04em!important;text-transform:none!important;font-size:clamp(19px,2.4vh,20px)!important;margin-bottom:8px!important}
 .lab small{display:block;font-weight:500;font-size:.78em;color:#efe6d4;letter-spacing:.02em;margin-top:2px}
-.note,.hint,.err{font-family:Manrope,sans-serif!important;font-style:normal!important;font-size:clamp(15px,2vh,17px)!important}
+.note,.hint,.err{font-family:Manrope,sans-serif!important;font-style:normal!important;font-size:clamp(19px,2.24vh,19px)!important}
 .gen{gap:10px!important}.flr{flex:none;filter:drop-shadow(0 0 4px rgba(255,200,110,.5))}
 .born{letter-spacing:.08em!important}
 
@@ -90,7 +90,7 @@ body.kb .scr{flex-direction:column}
 <div class="flash" id="flash"></div>
 <div class="sheet" id="sheet"><div class="sh" id="shc"></div></div>
 <script src="arcana.js?v=8"></script>
-<script src="engine.js?v=p1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=r3"></script>
+<script src="engine.js?v=p1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=r3f19"></script>
 <script>
 var P={};try{P=JSON.parse(localStorage.getItem('alch_v5_profile'))||{}}catch(e){}
 var nm=document.getElementById('nm'),bd=document.getElementById('bd'),er=document.getElementById('er');
