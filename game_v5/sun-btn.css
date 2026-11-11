@@ -1,4 +1,5 @@
-/* Shared living sun button. Restyle later in this one file. */
+/* Shared living sun button. Restyle later in this one file.
+   A bright emitting star: yellow core, orange plasma cells, yellow rim, soft orange halo. */
 .sun-btn{
   --sun-size:132px;
   position:relative;
@@ -19,75 +20,72 @@
 }
 .sun-btn:focus-visible{outline:3px solid #ffe7b0;outline-offset:4px}
 .sun-btn__halo{
-  position:absolute;inset:-22%;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,200,90,.52) 0%,rgba(255,160,60,.16) 46%,transparent 72%);
+  position:absolute;inset:-62%;border-radius:50%;
+  background:radial-gradient(circle,
+    rgba(255,210,26,.7) 0%,
+    rgba(255,140,0,.55) 28%,
+    rgba(255,140,0,.28) 46%,
+    rgba(255,140,0,.1) 58%,
+    transparent 70%);
   animation:sun-breathe 3.2s ease-in-out infinite;
   pointer-events:none;z-index:0;
 }
-.sun-btn__corona{
-  position:absolute;inset:-20%;border-radius:50%;
-  background:conic-gradient(from 0deg,
-    rgba(255,230,160,0) 0deg,rgba(255,235,180,.55) 4deg,rgba(255,230,160,0) 8deg,
-    rgba(255,230,160,0) 28deg,rgba(255,240,200,.4) 32deg,rgba(255,230,160,0) 36deg,
-    rgba(255,230,160,0) 55deg,rgba(255,220,150,.5) 59deg,rgba(255,230,160,0) 63deg,
-    rgba(255,230,160,0) 90deg,rgba(255,235,180,.35) 94deg,rgba(255,230,160,0) 98deg,
-    rgba(255,230,160,0) 120deg,rgba(255,240,200,.48) 124deg,rgba(255,230,160,0) 128deg,
-    rgba(255,230,160,0) 150deg,rgba(255,220,150,.4) 154deg,rgba(255,230,160,0) 158deg,
-    rgba(255,230,160,0) 180deg,rgba(255,235,180,.52) 184deg,rgba(255,230,160,0) 188deg,
-    rgba(255,230,160,0) 210deg,rgba(255,240,200,.36) 214deg,rgba(255,230,160,0) 218deg,
-    rgba(255,230,160,0) 245deg,rgba(255,220,150,.5) 249deg,rgba(255,230,160,0) 253deg,
-    rgba(255,230,160,0) 275deg,rgba(255,235,180,.38) 279deg,rgba(255,230,160,0) 283deg,
-    rgba(255,230,160,0) 310deg,rgba(255,240,200,.46) 314deg,rgba(255,230,160,0) 318deg,
-    rgba(255,230,160,0) 340deg,rgba(255,220,150,.42) 344deg,rgba(255,230,160,0) 348deg);
-  -webkit-mask-image:radial-gradient(circle,transparent 46%,#000 54%,#000 70%,transparent 76%);
-  mask-image:radial-gradient(circle,transparent 46%,#000 54%,#000 70%,transparent 76%);
-  animation:sun-corona-spin 28s linear infinite,sun-corona-flicker 2.8s ease-in-out infinite;
-  pointer-events:none;z-index:1;will-change:transform,opacity;
-}
+/* No spoke / grey ring. Halo is the only glow. */
+.sun-btn__corona{display:none!important}
 .sun-btn__core{
   position:absolute;inset:0;border-radius:50%;overflow:hidden;z-index:2;
-  box-shadow:0 0 16px rgba(255,190,80,.55),0 0 36px rgba(255,150,40,.28),inset 0 -6px 12px rgba(40,12,0,.35);
-  background:#8a3a10;
+  background:radial-gradient(circle at 50% 42%,#fff27a 0%,#ffd21a 34%,#ff9a1a 68%,#ff7a00 100%);
+  box-shadow:
+    0 0 0 2px #fff27a,
+    0 0 12px 3px rgba(255,242,122,.95),
+    0 0 28px 8px rgba(255,210,26,.75),
+    0 0 52px 14px rgba(255,140,0,.5),
+    0 0 90px 22px rgba(255,140,0,.28);
+}
+.sun-btn__core:after{
+  content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:4;
+  box-shadow:inset 0 0 0 2.5px #fff27a,inset 0 0 10px 2px rgba(255,242,122,.7);
 }
 .sun-btn__tex{
-  position:absolute;inset:-18%;
-  background:url(img/sphere.png) center/cover no-repeat;
+  position:absolute;inset:-22%;
+  background:url(img/sun_plasma.png?v=r3) center/cover no-repeat;
   animation:sun-spin 22s linear infinite;
   will-change:transform;
   pointer-events:none;
+  opacity:.92;
 }
 .sun-btn__plasma{
-  position:absolute;inset:0;border-radius:50%;
+  position:absolute;inset:-8%;border-radius:50%;
   background:
-    radial-gradient(circle at 32% 26%,rgba(255,255,230,.55),transparent 38%),
-    conic-gradient(from 30deg,rgba(255,180,60,0),rgba(255,240,190,.4),rgba(255,120,40,0) 42%,rgba(255,220,150,.3),transparent 78%);
-  mix-blend-mode:soft-light;
+    radial-gradient(circle at 50% 42%,rgba(255,242,122,.92) 0%,rgba(255,210,26,.4) 30%,transparent 58%),
+    radial-gradient(circle at 32% 28%,rgba(255,242,122,.45),transparent 36%),
+    conic-gradient(from 20deg,rgba(255,154,26,0),rgba(255,210,26,.35),rgba(255,122,0,0) 40%,rgba(255,154,26,.28),transparent 75%);
+  mix-blend-mode:screen;
   animation:sun-plasma 7s ease-in-out infinite alternate,sun-spin 18s linear infinite reverse;
   pointer-events:none;will-change:transform,opacity;
 }
 .sun-btn__label{
-  position:relative;z-index:3;
+  position:relative;z-index:5;
   display:flex;align-items:center;justify-content:center;
   width:100%;height:100%;
   color:#2a1606;
   font:800 calc(var(--sun-size) * .4)/1 Manrope,sans-serif;
-  text-shadow:0 1px 0 rgba(255,240,200,.75),0 0 8px rgba(255,220,150,.85);
+  text-shadow:0 0 2px rgba(255,242,122,.9),0 1px 1px rgba(80,30,0,.4);
   pointer-events:none;
 }
 @keyframes sun-spin{to{transform:rotate(360deg)}}
-@keyframes sun-breathe{0%,100%{opacity:.62;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
-@keyframes sun-corona-spin{to{transform:rotate(360deg)}}
-@keyframes sun-corona-flicker{0%,100%{opacity:.32}35%{opacity:.72}55%{opacity:.4}78%{opacity:.8}}
-@keyframes sun-plasma{0%{opacity:.5}100%{opacity:.95}}
+@keyframes sun-breathe{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes sun-plasma{0%{opacity:.7}100%{opacity:1}}
 @media (prefers-reduced-motion:reduce){
-  .sun-btn__halo,.sun-btn__corona,.sun-btn__tex,.sun-btn__plasma{animation:none!important}
+  .sun-btn__halo,.sun-btn__tex,.sun-btn__plasma{animation:none!important}
 }
-/* When used on the start core, drop the old flat fill so the living surface shows. */
 button.core.sun-btn{
   width:var(--sun-size)!important;height:var(--sun-size)!important;
   background:transparent!important;box-shadow:none!important;
   animation:none!important;border:none!important;filter:none!important;
 }
 button.core.sun-btn:before,button.core.sun-btn:after{display:none!important;content:none!important;animation:none!important}
-button.core.sun-btn>.halo{display:none!important}
+button.core.sun-btn>.halo,
+button.core.sun-btn>.ring,
+button.core.sun-btn>.ring.r2{display:none!important}
 .pkw .sun-btn,.sun-btn--sm{--sun-size:64px}
