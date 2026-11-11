@@ -166,7 +166,7 @@
 <style>
   .start.sun-btn{position:absolute;background:transparent!important;box-shadow:none!important;animation:none!important;border:0;overflow:visible;display:block;line-height:0;text-decoration:none}
   .start.sun-btn:before{display:none!important;content:none!important}
-  .start.sun-btn .start-lbl{font-family:"Cormorant Garamond",serif;font-weight:700;color:#2a1606;text-shadow:0 0 3px rgba(255,242,122,.95),0 1px 1px rgba(80,30,0,.35);line-height:1}
+  .start.sun-btn .start-lbl{font-family:Manrope,Arial,sans-serif;font-weight:800;letter-spacing:.06em;color:#3a1a02;text-shadow:0 0 4px rgba(255,248,190,1),0 0 8px rgba(255,242,122,.9);line-height:1}
   .start.sun-btn .sun-btn__halo{inset:-48%}
 </style>
 <link rel="stylesheet" href="nav.css?v=h9"></head>
@@ -199,7 +199,7 @@
     <button class="node" data-id="6" aria-label="Открыть Кузницу выбора"><span class="num">VI</span><span class="name">Кузница выбора</span><span class="state">Закрыта</span></button>
     <button class="node" data-id="7" aria-label="Открыть Реактор преображения"><span class="num">VII</span><span class="name">Реактор преображения</span><span class="state">Закрыта</span><span class="reactor-meter" hidden aria-label="0 из 21 дней"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></button>
     <button class="node" data-id="8" aria-label="Открыть Землю мастерства"><span class="num">VIII</span><span class="name">Земля мастерства</span><span class="state">Закрыта</span></button>
-    <a class="start sun-btn" id="start" href="form.html"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span><span class="sun-btn__label start-lbl">Старт</span></a>
+    <a class="start sun-btn" id="start" href="form.html"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span><span class="sun-btn__label start-lbl">СТАРТ</span></a>
   </div>
   <a class="cont" id="resume" href="form.html" hidden>Продолжить игру</a>
 </div>
@@ -277,7 +277,7 @@
     start.style.height=startSize+'px';
     start.style.fontSize=Math.round(startSize*.30)+'px';
     const startSpan=start.querySelector('span');
-    if(startSpan)startSpan.style.fontSize=Math.round(startSize*.32)+'px';
+    if(startSpan)startSpan.style.fontSize=Math.round(startSize*.21)+'px';
     start.style.left=AX+'%';
     start.style.top=(startY/H*100).toFixed(2)+'%';
     for(let i=1;i<=8;i++){
@@ -350,9 +350,9 @@
   const started=position>1||Object.keys(saved.completed||{}).length>0||
     ['name','birth','points','mapStyle','ego','wheel','wheelTest','mirrors','passport'].some(key=>profile[key]&&(!(Array.isArray(profile[key]))||profile[key].length))||
     Number(profile.reactor?.day)>0||Object.keys(profile.reactor?.days||{}).length>0;
-  cta.hidden=!started;
+  cta.hidden=false;
   cta.textContent=checkpoint.finished?'Посмотреть пройденное':'Продолжить игру';
-  cta.href=checkpoint.finished?'tasks.html':checkpoint.url;
+  cta.href=!started?'form.html':checkpoint.finished?'tasks.html':checkpoint.url;
   if(!cta.hidden){
     const ms=document.querySelector('.map-screen');ms.appendChild(cta);
   }
