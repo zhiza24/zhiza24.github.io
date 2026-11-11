@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><script src="flow.js?v=r3"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r3"></script><script src="profile-layer.js?v=2"></script><script src="route-gate.js?v=r3b"></script><script src="gender.js?v=2"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><script src="upd.js?v=1794440811"></script><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet"><title>Дыхание</title>
+<!doctype html><html lang="ru"><head><script src="flow.js?v=r3"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r3"></script><script src="profile-layer.js?v=2"></script><script src="route-gate.js?v=r3b"></script><script src="gender.js?v=2"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><script src="upd.js?v=1794440916"></script><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet"><title>Дыхание</title>
 <link rel="stylesheet" href="sun-btn.css?v=r7f19">
 <style>html{background:#0c0804}html,body{margin:0;min-height:100%}body{min-height:100vh;background:radial-gradient(ellipse at 50% 40%,#2a1808,#0c0804 70%) fixed;color:#f4ecdf;font-family:Manrope,sans-serif;text-align:center;overflow:hidden}
 .w{max-width:420px;margin:0 auto;padding:calc(76px + env(safe-area-inset-top)) 16px 120px}
@@ -9,7 +9,9 @@ h2{font:700 27px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;margin:0 0 6px}
 .ring .tr{fill:none;stroke:rgba(201,164,106,.28);stroke-width:2}
 .ring .ln{fill:none;stroke:url(#gl);stroke-width:4;stroke-linecap:round;filter:drop-shadow(0 0 6px #ffcf5a)}
 .ring .dt{fill:#fff3c4;filter:drop-shadow(0 0 8px #ffcf5a)}
-button.sun-btn.br{--sun-size:132px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-user-drag:none}
+button.sun-btn.br{--sun-size:132px;transition:transform 4s ease-in-out}
+button.sun-btn.br.in{transform:scale(1.22)}
+button.sun-btn.br.out{transform:scale(.92);transition-duration:5s}
 .bcap{margin-top:8px;font:800 15px/1 Manrope,sans-serif;letter-spacing:.2em;color:#fff;text-shadow:0 1px 2px #000,0 0 8px rgba(0,0,0,.8)}
 .hint{color:#c9a46a;font-size:17px;margin-top:16px;min-height:20px}
 @media (max-height:700px){.w{padding-top:calc(64px + env(safe-area-inset-top))}.ring{width:240px;height:240px}button.sun-btn.br{--sun-size:116px}.hint{margin-top:14px}}</style><link rel="stylesheet" href="nav.css?v=h9f19"></head><body data-page="task">
@@ -20,32 +22,14 @@ button.sun-btn.br{--sun-size:132px;touch-action:none;user-select:none;-webkit-us
   <span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span>
   <span class="sun-btn__core"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span>
 </button></div><div class="bcap">ВДОХ И ВЫДОХ</div>
-<div class="hint" id="hint">Зажми солнце и дыши вместе с золотой линией</div></div>
+<div class="hint" id="hint">Нажми на солнце и дыши вместе с золотой линией</div></div>
 <script>(function(){
-/* Дыхательная пауза: зажать и держать. Вдох 4 с, выдох 5 с, без пауз. При раннем отпускании линия плавно откатывается, нужен один непрерывный зажим. */
-var IN=4,OUT=5,T=IN+OUT,C=804.25,R=128,BACK=3,held=0,mode='idle',pid=null,raf=0,tPrev=0,doneF=false;
-var ph=document.getElementById('ph'),hl=document.getElementById('hl'),ln=document.getElementById('ln'),dt=document.getElementById('dt'),hint=document.getElementById('hint');
-function draw(f){f=Math.max(0,Math.min(1,f));ln.setAttribute('stroke-dashoffset',String(C*(1-f)));var a=f*2*Math.PI;dt.setAttribute('cx',140+R*Math.cos(a));dt.setAttribute('cy',140+R*Math.sin(a))}
-function scaleOf(t){if(t<=0)return 1;if(t<IN)return 1+0.22*(t/IN);return 1.22-0.30*((t-IN)/OUT)}
-function apply(t){draw(t/T);hl.style.transform='scale('+scaleOf(t)+')'}
-function phase(s){if(!s){ph.dataset.s='';ph.textContent='';return}if(ph.dataset.s===s)return;ph.dataset.s=s;ph.textContent=s;try{navigator.vibrate&&navigator.vibrate(25)}catch(e){}}
-function stopLoop(){if(raf){cancelAnimationFrame(raf);raf=0}}
-function fin(){if(doneF)return;doneF=true;mode='done';pid=null;stopLoop();held=T;apply(T);phase('');ph.textContent='Я есмь';hint.textContent='';try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}
+/* Дыхательная пауза без задержек: одно нажатие, вдох 4 с, выдох 5 с. */
+var IN=4,OUT=5,T=IN+OUT,C=804.25,R=128,t0=0,run=false,doneF=false,ph=document.getElementById('ph'),hl=document.getElementById('hl'),ln=document.getElementById('ln'),dt=document.getElementById('dt'),hint=document.getElementById('hint');
+function draw(f){ln.setAttribute('stroke-dashoffset',String(C*(1-f)));var a=f*2*Math.PI;dt.setAttribute('cx',140+R*Math.cos(a));dt.setAttribute('cy',140+R*Math.sin(a))}
+function phase(s){if(ph.dataset.s===s)return;ph.dataset.s=s;ph.textContent=s;hl.classList.remove('in','out');void hl.offsetWidth;hl.classList.add(s==='Вдох'?'in':'out');try{navigator.vibrate&&navigator.vibrate(25)}catch(e){}}
+function fin(){doneF=true;draw(1);hl.classList.remove('in','out');ph.textContent='Я есмь';hint.textContent='';try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}
  setTimeout(function(){location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance()},1400)}
-function loop(now){raf=requestAnimationFrame(loop);var dt=Math.min(0.05,(now-tPrev)/1000);tPrev=now;
- if(mode==='hold'){held=Math.min(T,held+dt);apply(held);phase(held<IN?'Вдох':'Выдох');if(held>=T)fin()}
- else if(mode==='back'){held=Math.max(0,held-dt*BACK);apply(held);if(held<=0){held=0;apply(0);mode='idle';phase('');stopLoop()}}
- else stopLoop()}
-function startLoop(){if(raf)return;tPrev=performance.now();raf=requestAnimationFrame(loop)}
-function down(e){if(doneF||pid!=null)return;if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();pid=e.pointerId;try{hl.setPointerCapture(pid)}catch(err){}mode='hold';hint.textContent='';startLoop()}
-function up(e){if(pid==null||(e&&e.pointerId!=null&&e.pointerId!==pid))return;pid=null;if(e){try{hl.releasePointerCapture(e.pointerId)}catch(err){}}if(doneF||mode!=='hold')return;mode='back';phase('');hint.textContent='Держи до конца, пока линия не замкнется';startLoop()}
-function block(e){e.preventDefault()}
-hl.addEventListener('pointerdown',down,{passive:false});
-hl.addEventListener('pointerup',up);
-hl.addEventListener('pointercancel',up);
-hl.addEventListener('lostpointercapture',function(e){if(e.pointerId===pid)up(e)});
-hl.addEventListener('contextmenu',block);
-hl.addEventListener('dragstart',block);
-hl.addEventListener('click',block);
-hl.addEventListener('selectstart',block);
+function tick(){var t=(performance.now()-t0)/1000;if(t>=T){fin();return}draw(t/T);phase(t<IN?'Вдох':'Выдох');requestAnimationFrame(tick)}
+hl.onclick=function(){if(run||doneF)return;run=true;hint.textContent='';t0=performance.now();requestAnimationFrame(tick)};
 })();</script><script src="engine.js?v=p1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=r3f19"></script></body></html>
