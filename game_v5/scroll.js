@@ -12,7 +12,7 @@
 (function () {
   'use strict';
   var KEY_PREFIX = 'alch_v5_scroll_';
-  var root, ov, bodyEl, titleEl, icon, closeBtn, xBtn, auBtn, hideT, autoT, au;
+  var root, ov, bodyEl, scrollEl, titleEl, icon, closeBtn, xBtn, auBtn, hideT, autoT, au;
   var state = { id: '', onClose: null, closing: false, open: false, seen: false };
 
   function assetBase() {
@@ -56,6 +56,7 @@
     document.body.appendChild(root);
     ov = document.getElementById('gsc-ov');
     bodyEl = ov.querySelector('.gsc-html');
+    scrollEl = ov.querySelector('.gsc-body');
     titleEl = document.getElementById('gsc-title');
     icon = document.getElementById('gsc-icon');
     closeBtn = document.getElementById('gsc-close');
@@ -83,6 +84,12 @@
     au.onended = function () { auBtn.classList.remove('on'); };
     auBtn.style.display = 'block';
   }
+
+  function resetBodyScroll() {
+    if (scrollEl) { scrollEl.scrollTop = 0; scrollEl.scrollLeft = 0; }
+    if (ov) ov.scrollTop = 0;
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
   function open() {
     if (!ov || state.open || state.closing) return;
     clearTimeout(hideT);
@@ -91,10 +98,26 @@
     document.body.classList.add('gsc-open');
     ov.classList.add('ready');
     state.open = true;
+    resetBodyScroll();
     requestAnimationFrame(function () {
-      requestAnimationFrame(function () { ov.classList.add('on'); });
+      requestAnimationFrame(function () {
+        ov.classList.add('on');
+        resetBodyScroll();
+      });
     });
-    setTimeout(function () { try { closeBtn.focus(); } catch (e) {} }, 500);
+    var reduce = false;
+    try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    var dur = reduce ? 0 : (document.body.classList.contains('gsc-fast') ? 320 : 640);
+    setTimeout(function () {
+      resetBodyScroll();
+      try { closeBtn.focus({ preventScroll: true }); } catch (e) {
+        try { closeBtn.focus(); } catch (e2) {}
+        resetBodyScroll();
+      }
+    }, dur);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { if (state.open) resetBodyScroll(); });
+    }
   }
   function finishClose(cb) {
     state.closing = false;
@@ -135,6 +158,7 @@
     closeBtn.textContent = opts.closeLabel || 'Закрыть';
     bodyEl.innerHTML = opts.html || '';
     setAudio(opts.audio || '');
+    resetBodyScroll();
     var every = !!opts.everyTime;
     var delay = opts.delay != null ? +opts.delay : 900;
     if (opts.fast) document.body.classList.add('gsc-fast');
