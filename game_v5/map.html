@@ -9,19 +9,19 @@
 <style>
   :root{
     --night:#090b10; --gold:#d9b56d; --gold2:#f3d99b; --text:#f2eadb;
-    --scroll-w:min(78vw,300px);
+    --scroll-w:min(52vw,200px);
     --scroll-closed-ratio:.35417;
     --scroll-open-ratio:1.4898;
     --scroll-closed-h:calc(var(--scroll-w) * var(--scroll-closed-ratio));
     --nav-h:calc(78px + env(safe-area-inset-bottom));
-    --dock-h:158px;
+    --top-h:calc(56px + env(safe-area-inset-top));
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var(--text);font-family:Georgia,"Times New Roman",serif}
   button{font:inherit}
   .vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
-  .map-screen{position:fixed;left:0;right:0;top:0;bottom:var(--nav-h);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;overflow:hidden}
-  .map-stage{position:relative;width:min(100%,calc((100dvh - var(--nav-h) - var(--dock-h)) * 784 / 1168));max-height:calc(100dvh - var(--nav-h) - var(--dock-h));aspect-ratio:784/1168;flex:0 0 auto}
+  .map-screen{position:fixed;left:0;right:0;top:var(--top-h);bottom:var(--nav-h);overflow:hidden}
+  .map-stage{position:absolute;height:100%;width:auto;aspect-ratio:784/1168;left:50%;bottom:0;transform:translateX(-50%)}
   .map-img{width:100%;height:100%;object-fit:fill;display:block;pointer-events:none}
   .node{position:absolute;z-index:3;transform:translate(-50%,-50%);width:42px;height:42px;padding:0;border-radius:50%;border:2px solid #f0d18c;background:radial-gradient(circle at 35% 30%,#fff5d0 0%,#f0c870 35%,#c98a40 70%,#8a5420 100%);box-shadow:0 0 0 2px rgba(122,74,22,.85),0 0 16px rgba(255,211,106,.7);color:#3a1a05;cursor:pointer}
   .node .num{display:block;font:700 14px/42px "Cormorant Garamond",serif;text-align:center}
@@ -33,9 +33,9 @@
   .node.done{box-shadow:0 0 0 2px rgba(122,74,22,.85),0 0 14px rgba(216,189,128,.8)}
   .node.available{border-color:#e5a85e}
   .node.locked{filter:grayscale(.45) brightness(.72);opacity:.78}
-  .hero-pin{position:absolute;z-index:4;width:46px;height:64px;transform:translate(-50%,calc(-100% - 6px));pointer-events:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,.55))}
-  .hero-pin img{width:100%;height:100%;object-fit:contain;object-position:center top;display:block}
-  .dock{position:relative;width:100%;max-width:480px;height:var(--dock-h);flex:0 0 auto;pointer-events:none;z-index:45}
+  .hero-pin{position:absolute;z-index:4;width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid #f0d18c;background:#2a1a0c;box-shadow:0 0 0 2px #7a4a16,0 0 10px rgba(255,211,106,.8);transform:translate(-50%,calc(-100% - 8px));pointer-events:none}
+  .hero-pin img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block}
+  .dock{position:absolute;left:0;right:0;bottom:0;height:158px;pointer-events:none;z-index:45}
   .dock a{pointer-events:auto}
   .start{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff5d0 0%,#f0c870 30%,#c98a40 60%,#8a5420 100%);display:flex;align-items:center;justify-content:center;font:700 24px "Cormorant Garamond",serif;color:#fff8e0;text-shadow:0 2px 3px #000;text-decoration:none;animation:p 2s infinite;box-shadow:0 0 0 3px #7a4a16,0 0 0 6px rgba(201,138,64,.4),0 10px 24px rgba(0,0,0,.5),inset 0 3px 8px rgba(255,240,180,.5)}
   .start:before{content:"";position:absolute;inset:6px;border-radius:50%;border:1.2px dashed rgba(255,230,170,.65);pointer-events:none}
@@ -44,10 +44,10 @@
   .cont[hidden]{display:none}
   .dock a:focus-visible{outline:3px solid #ffe7b0;outline-offset:6px}
   @keyframes p{0%,100%{box-shadow:0 0 6px 2px rgba(255,211,106,.5)}50%{box-shadow:0 0 26px 10px rgba(255,211,106,.85)}}
-  .scl{position:fixed;z-index:55;left:50%;top:calc(env(safe-area-inset-top) + 56px);transform:translateX(-50%);width:var(--scroll-w);border:0;padding:0;background:none;cursor:pointer;transition:opacity .45s ease;filter:drop-shadow(0 6px 16px rgba(0,0,0,.45))}
+  .scl{position:fixed;z-index:55;left:50%;top:calc(env(safe-area-inset-top) + 78px);transform:translateX(-50%);width:var(--scroll-w);border:0;padding:0;background:none;cursor:pointer;transition:opacity .45s ease;filter:drop-shadow(0 6px 16px rgba(0,0,0,.45))}
   .scl img{display:block;width:100%;height:auto}
   .scl.op{opacity:0;pointer-events:none}
-  .sov{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 56px);bottom:var(--nav-h);z-index:48;display:flex;justify-content:center;align-items:flex-start;background:rgba(12,8,4,0);pointer-events:none;visibility:hidden;transition:background .45s ease,visibility .45s}
+  .sov{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 78px);bottom:var(--nav-h);z-index:48;display:flex;justify-content:center;align-items:flex-start;background:rgba(12,8,4,0);pointer-events:none;visibility:hidden;transition:background .45s ease,visibility .45s}
   .sov.ready{visibility:visible;pointer-events:auto}
   .sov.on{background:rgba(12,8,4,.52)}
   .spp{position:relative;width:min(var(--scroll-w),100%);height:var(--scroll-closed-h);max-height:100%;overflow:hidden;flex:none;transition:height .85s cubic-bezier(.22,.8,.28,1)}
@@ -96,7 +96,7 @@
 <div class="map-screen">
   <div class="map-stage" id="mapStage">
     <img class="map-img" src="img/map_pirate.jpg?v=h3" alt="Карта пути">
-    <div class="hero-pin" id="heroPin" hidden><img data-hero-img="full" alt=""></div>
+    <div class="hero-pin" id="heroPin" hidden><img data-hero-img="portrait" alt=""></div>
     <button class="node" data-id="1" aria-label="Открыть Ворота рождения"><span class="num">I</span><span class="name">Ворота рождения</span><span class="state">Текущая</span></button>
     <button class="node" data-id="2" aria-label="Открыть Землю отражений"><span class="num">II</span><span class="name">Земля отражений</span><span class="state">Пройдена</span></button>
     <button class="node" data-id="3" aria-label="Открыть Долину проявлений"><span class="num">III</span><span class="name">Долина проявлений</span><span class="state">Доступна</span></button>
@@ -133,7 +133,7 @@
 <script src="engine.js?v=p1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=h3"></script>
 <script>
 (() => {
-  const medalAt={1:[50,91],2:[52,76.5],3:[50,67.5],4:[49,57.5],5:[56,50.5],6:[47,42.5],7:[53,35],8:[49.5,27.5]};
+  const medalAt={1:[25,87],2:[52,73],3:[50,67.5],4:[49,57.5],5:[56,50.5],6:[47,42.5],7:[53,35],8:[49.5,24]};
   const territories = {
     1:{roman:"I",point:"Точка 0",name:"Ворота рождения",status:"current",description:"Начало путешествия. Здесь герой знакомится со своей исходной точкой, замечает фоновые состояния и получает первые ориентиры.",progress:2,total:4,step:"Продолжить знакомство"},
     2:{roman:"II",point:"Точка А",name:"Земля отражений",status:"done",description:"Исследование внутренних сфер, ценностей, желаний и того, как привычная картина мира отражается в ежедневных решениях.",progress:7,total:7,step:"Территория пройдена"},
@@ -176,7 +176,7 @@
   const pin=document.getElementById('heroPin');
   if(window.GHeroApply)GHeroApply();
   const pinImg=pin&&pin.querySelector('img');
-  if(pinImg&&!pinImg.getAttribute('src'))pinImg.src=window.GHeroSrc?GHeroSrc('full'):'img/hero_m_full.jpg?v=h3';
+  if(pinImg&&!pinImg.getAttribute('src'))pinImg.src=window.GHeroSrc?GHeroSrc('portrait'):'img/hero_m_portrait.jpg?v=h3';
   const pinAt=medalAt[currentId];
   if(pin&&pinAt){pin.style.left=pinAt[0]+'%';pin.style.top=pinAt[1]+'%';pin.hidden=false;}
   const checkpoint=GRoute.state(profile),cta=document.getElementById('resume');
