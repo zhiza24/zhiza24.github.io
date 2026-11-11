@@ -45,3 +45,9 @@ body.gsc-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){
   .gsc-clip,.gsc-inner,.gsc-foot,.gsc-ov,.gsc-ov:before,.gsc-body,.gsc-x,.gsc-au,.gsc-close,.gsc-icon{transition:none!important}
 }
+
+body.gsc-fast .gsc-spp{--sc-dur:.3s}
+body.gsc-fast .gsc-ov.on .gsc-body,
+body.gsc-fast .gsc-ov.on .gsc-x,
+body.gsc-fast .gsc-ov.on .gsc-au,
+body.gsc-fast .gsc-ov.on .gsc-close{transition:opacity .18s ease .16s}

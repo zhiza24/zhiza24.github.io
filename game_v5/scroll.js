@@ -134,14 +134,19 @@
     titleEl.textContent = opts.title || '';
     bodyEl.innerHTML = opts.html || '';
     setAudio(opts.audio || '');
-    icon.hidden = !state.seen;
-    if (state.seen) {
+    var every = !!opts.everyTime;
+    var delay = opts.delay != null ? +opts.delay : 900;
+    if (opts.fast) document.body.classList.add('gsc-fast');
+    else document.body.classList.remove('gsc-fast');
+    if (state.seen && !every) {
+      icon.hidden = false;
       document.documentElement.classList.add('gsc-seen');
       document.body.classList.remove('gsc-first');
       return;
     }
+    icon.hidden = true;
     document.body.classList.add('gsc-first');
-    autoT = setTimeout(open, 900);
+    autoT = setTimeout(open, isNaN(delay) ? 900 : delay);
   }
 
   window.Scroll = {
