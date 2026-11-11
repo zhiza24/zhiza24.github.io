@@ -34,6 +34,8 @@
 .sun-btn__corona{display:none!important}
 .sun-btn__core{
   position:absolute;inset:0;border-radius:50%;overflow:hidden;z-index:2;
+  clip-path:circle(50% at 50% 50%);-webkit-clip-path:circle(50% at 50% 50%);
+  -webkit-mask-image:-webkit-radial-gradient(white,black);mask-image:radial-gradient(circle,#000 70%,#000 71%);transform:translateZ(0);
   background:radial-gradient(circle at 50% 42%,#fff27a 0%,#ffd21a 34%,#ff9a1a 68%,#ff7a00 100%);
   box-shadow:
     0 0 0 2px #fff27a,
@@ -47,7 +49,7 @@
   box-shadow:inset 0 0 0 2.5px #fff27a,inset 0 0 10px 2px rgba(255,242,122,.7);
 }
 .sun-btn__tex{
-  position:absolute;inset:-22%;
+  position:absolute;inset:-22%;border-radius:50%;
   background:url(img/sun_plasma.png?v=r3) center/cover no-repeat;
   animation:sun-spin 22s linear infinite;
   will-change:transform;
