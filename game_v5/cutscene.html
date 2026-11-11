@@ -1,0 +1,92 @@
+<!doctype html><html lang="ru"><head><script src="flow.js?v=tasks1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=p1"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=cs1"></script><script src="gender.js?v=2"></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Я есмь</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf;-webkit-tap-highlight-color:transparent}
+.sc{position:fixed;inset:0;overflow:hidden;background:#000}
+.sc video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.sc:after{content:"";position:absolute;left:0;right:0;bottom:0;height:44%;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.55) 42%,rgba(0,0,0,.88));pointer-events:none}
+.sc:before{content:"";position:absolute;z-index:2;left:0;right:0;top:0;height:calc(env(safe-area-inset-top) + 72px);background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,0));pointer-events:none}
+.ttl{position:absolute;z-index:3;left:18px;top:calc(env(safe-area-inset-top) + 20px);font:700 12px/1 Manrope,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#e9c97f;text-shadow:0 1px 6px #000;opacity:.9}
+.skip{position:absolute;z-index:6;right:14px;top:calc(env(safe-area-inset-top) + 10px);height:36px;padding:0 16px;border-radius:18px;border:1.5px solid rgba(233,201,127,.75);background:rgba(20,12,6,.55);color:#f4dfab;font:600 14px Manrope,sans-serif;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.tx{position:absolute;z-index:3;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 124px);text-align:center;pointer-events:none}
+.tx p{margin:0 0 .3em;font:600 clamp(20px,2.9vh,27px)/1.22 'Cormorant Garamond',serif;color:#fbe6b4;text-shadow:0 2px 10px #000,0 0 2px #000;opacity:0;transform:translateY(10px);transition:opacity 1s ease,transform 1s ease}
+.tx p.on{opacity:1;transform:none}
+.tx.out p{opacity:0;transition:opacity .7s ease}
+.nx{position:absolute;z-index:4;left:50%;bottom:calc(env(safe-area-inset-bottom) + 44px);transform:translateX(-50%);width:min(70%,300px);height:54px;border-radius:999px;border:2px solid #f5dca0;background:radial-gradient(ellipse at 50% 30%,#fff1c8,#e2b45e 55%,#9a6a28);color:#2a1606;font:700 24px 'Cormorant Garamond',serif;box-shadow:0 0 18px rgba(255,205,120,.45);opacity:0;pointer-events:none;transition:opacity 1s;cursor:pointer}
+.nx.on{opacity:1;pointer-events:auto}
+.st{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(ellipse at 50% 42%,rgba(60,38,10,.35),rgba(0,0,0,.82) 70%),url(img/cutscene/iam_poster.jpg) center 40%/cover;cursor:pointer;transition:opacity .8s ease}
+.st.off{opacity:0;pointer-events:none}
+.st small{font:700 12px/1 Manrope,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#e9c97f}
+.st h1{margin:0;font:700 54px/1 'Cormorant Garamond',serif;color:#fbe6b4;text-shadow:0 0 24px rgba(255,205,120,.6),0 2px 10px #000}
+.play{margin-top:26px;width:96px;height:96px;border-radius:50%;border:2px solid #f5dca0;background:radial-gradient(circle at 35% 30%,#fff5d0 0%,#f0c870 35%,#c98a40 70%,#8a5420 100%);box-shadow:0 0 0 3px #7a4a16,0 0 30px rgba(255,211,106,.7);display:flex;align-items:center;justify-content:center;cursor:pointer;animation:pl 2.2s ease-in-out infinite}
+.play svg{width:38px;height:38px;margin-left:6px}
+@keyframes pl{0%,100%{box-shadow:0 0 0 3px #7a4a16,0 0 18px rgba(255,211,106,.5)}50%{box-shadow:0 0 0 3px #7a4a16,0 0 40px rgba(255,211,106,.9)}}
+.st p{margin:6px 0 0;font:500 14px Manrope,sans-serif;color:#e8d6ad;text-shadow:0 1px 6px #000}
+.ztm{position:fixed;inset:0;z-index:9;background:#000;opacity:0;pointer-events:none;transition:opacity .9s}.ztm.on{opacity:1}
+</style></head><body data-page="cutscene">
+<div class="sc">
+  <video id="v" src="media/iam.mp4?v=cs1" poster="img/cutscene/iam_poster.jpg" playsinline webkit-playsinline preload="auto"></video>
+  <div class="ttl">Точка 0 · Я есмь</div>
+  <div class="tx" id="tx"></div>
+  <button class="nx" id="nx" type="button">Далее</button>
+</div>
+<div class="st" id="st" role="button" aria-label="Начать">
+  <small>Ворота рождения</small>
+  <h1>Я есмь</h1>
+  <div class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z" fill="#3a1a05"/></svg></div>
+  <p>Нажми, чтобы начать · со звуком</p>
+</div>
+<button class="skip" id="skip" type="button">Пропустить</button>
+<div class="ztm" id="ztm"></div>
+<script>
+(function(){
+'use strict';
+var SEEN='alch_v5_cutscene_iam', NEXT='slot.html?id=dialog';
+/* Captions follow the voice: [show, hide, [[text, at], ...]] */
+var CAP=[
+ [0.5,5.4,[['Весь мир принадлежит тебе',0.5],['по праву рождения.',2.7]]],
+ [6.3,10.6,[['Это право дали высшие силы,',6.3],['а не люди.',8.6]]],
+ [11.6,18.6,[['Мир всегда говорит «да».',11.6],['Право выбора всегда за тобой.',15.0]]],
+ [36.0,999,[['Каким будет твой путь,',36.0],['твоя вера и твой выбор,',38.0],['зависит от тебя.',39.7]]]
+];
+var v=document.getElementById('v'),tx=document.getElementById('tx'),st=document.getElementById('st'),nx=document.getElementById('nx'),cur=-1,ps=[],started=false,leaving=false;
+function setGroup(i){
+ if(i===cur)return;cur=i;
+ if(i<0){tx.classList.add('out');return}
+ tx.classList.remove('out');tx.innerHTML=CAP[i][2].map(function(l){return '<p>'+l[0]+'</p>'}).join('');ps=tx.querySelectorAll('p');
+}
+function tick(){
+ var t=v.currentTime,g=-1;
+ for(var i=0;i<CAP.length;i++)if(t>=CAP[i][0]&&t<CAP[i][1]){g=i;break}
+ setGroup(g);
+ if(g>=0)CAP[g][2].forEach(function(l,k){if(t>=l[1]&&ps[k])ps[k].classList.add('on')});
+ if(t>=40.6)nx.classList.add('on');
+ if(!v.paused&&!v.ended)requestAnimationFrame(tick);
+}
+function go(){
+ if(leaving)return;leaving=true;
+ try{localStorage.setItem(SEEN,String(Date.now()))}catch(e){}
+ try{v.pause()}catch(e){}
+ document.getElementById('ztm').classList.add('on');
+ var url=window.GOpening&&GOpening.active?GOpening.url(NEXT):NEXT;
+ setTimeout(function(){location.href=url},700);
+}
+function start(){
+ if(started)return;started=true;st.classList.add('off');
+ v.muted=false;
+ var p=v.play();
+ if(p&&p.catch)p.catch(function(){v.muted=true;v.play().catch(function(){nx.classList.add('on')})});
+}
+st.addEventListener('click',start);
+v.addEventListener('play',function(){requestAnimationFrame(tick)});
+v.addEventListener('seeked',tick);
+v.addEventListener('ended',function(){tick();nx.classList.add('on')});
+v.addEventListener('error',function(){nx.classList.add('on')});
+nx.onclick=go;
+document.getElementById('skip').onclick=go;
+})();
+</script>
+</body></html>
