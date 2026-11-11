@@ -11,10 +11,13 @@
     --night:#090b10; --gold:#d9b56d; --gold2:#f3d99b; --text:#f2eadb;
     --scroll-w:min(52vw,200px);
     --scroll-closed-ratio:.35417;
-    --scroll-open-ratio:1.4898;
     --scroll-closed-h:calc(var(--scroll-w) * var(--scroll-closed-ratio));
+    --scroll-cap-top:calc(var(--scroll-w) * 248 / 604);
+    --scroll-cap-bot:calc(var(--scroll-w) * 248 / 604);
     --nav-h:calc(78px + env(safe-area-inset-bottom));
     --top-h:calc(56px + env(safe-area-inset-top));
+    --sov-top:calc(env(safe-area-inset-top) + 78px);
+    --sov-h:calc(100dvh - env(safe-area-inset-top) - 78px - var(--nav-h));
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var(--text);font-family:Georgia,"Times New Roman",serif}
@@ -47,19 +50,21 @@
   .scl{position:fixed;z-index:55;left:50%;top:calc(env(safe-area-inset-top) + 78px);transform:translateX(-50%);width:var(--scroll-w);border:0;padding:0;background:none;cursor:pointer;transition:opacity .45s ease;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55))}
   .scl img{display:block;width:100%;height:auto}
   .scl.op{opacity:0;pointer-events:none}
-  .sov{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 78px);bottom:var(--nav-h);z-index:48;display:flex;justify-content:center;align-items:flex-start;background:rgba(12,8,4,0);pointer-events:none;visibility:hidden;transition:background .45s ease,visibility .45s}
+  .sov{position:fixed;left:0;right:0;top:var(--sov-top);bottom:var(--nav-h);z-index:48;display:flex;justify-content:center;align-items:flex-start;background:rgba(12,8,4,0);pointer-events:none;visibility:hidden;transition:background .45s ease,visibility .45s}
   .sov.ready{visibility:visible;pointer-events:auto}
   .sov.on{background:rgba(12,8,4,.52)}
   .spp{position:relative;width:min(var(--scroll-w),100%);height:var(--scroll-closed-h);max-height:100%;overflow:hidden;flex:none;transition:height .85s cubic-bezier(.22,.8,.28,1)}
-  .sov.on .spp{height:min(100%,calc(var(--scroll-w) * var(--scroll-open-ratio)))}
-  .spp-art{position:absolute;left:0;top:0;width:100%;height:auto;display:block;pointer-events:none}
-  .sbd{position:absolute;left:17%;right:17%;top:16%;bottom:13%;overflow:auto;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .4s .4s}
+  .sov.on .spp{height:100%}
+  .spp-art{position:absolute;left:0;top:0;width:100%;height:var(--sov-h);display:flex;flex-direction:column;pointer-events:none}
+  .spp-top,.spp-bot{width:100%;height:auto;display:block;flex:none}
+  .spp-mid{flex:1 1 auto;min-height:0;background:url(img/scroll_open_mid.png?v=h6) center top / 100% auto repeat-y}
+  .sbd{position:absolute;left:16%;right:16%;top:calc(var(--scroll-cap-top) + 6px);bottom:calc(var(--scroll-cap-bot) + 6px);overflow:auto;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .4s .4s}
   .sov.on .sbd{opacity:1}
   .sbd h3{margin:0 0 8px;font:700 26px/1.1 "Cormorant Garamond",serif;color:#6a3e10;text-align:center}
   .sbd p{margin:0 0 10px}
   .sbd .ft{font-style:italic;color:#8a5a20}
-  .sx{position:absolute;z-index:2;top:11%;right:8%;width:34px;height:34px;border:0;background:none;font:400 28px/1 serif;color:#6a3e10;cursor:pointer}
-  .sau{position:absolute;z-index:2;top:11.5%;left:8%;width:30px;height:30px;border-radius:50%;border:1.5px solid #a8742a;background:radial-gradient(#fff1c8,#d9a54e);color:#3a220a;font:700 15px/1 serif;cursor:pointer;display:none}
+  .sx{position:absolute;z-index:2;top:calc(var(--scroll-w) * 100 / 604 + 4px);right:8%;width:34px;height:34px;border:0;background:none;font:400 28px/1 serif;color:#6a3e10;cursor:pointer}
+  .sau{position:absolute;z-index:2;top:calc(var(--scroll-w) * 100 / 604 + 6px);left:8%;width:30px;height:30px;border-radius:50%;border:1.5px solid #a8742a;background:radial-gradient(#fff1c8,#d9a54e);color:#3a220a;font:700 15px/1 serif;cursor:pointer;display:none}
   .sau.on{background:radial-gradient(#ffe08a,#c98a2e);box-shadow:0 0 10px #ffc04a}
   .overlay{position:fixed;inset:0;z-index:80;background:rgba(3,5,8,.76);backdrop-filter:blur(7px);display:none;align-items:flex-end;justify-content:center;padding:16px}
   .overlay.show{display:flex}
@@ -87,7 +92,11 @@
 <button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll_closed.png?v=h5" alt=""></button>
 <div class="sov" id="sov">
   <div class="spp" id="spp">
-    <img class="spp-art" src="img/scroll_open.png?v=h5" alt="">
+    <div class="spp-art" aria-hidden="true">
+      <img class="spp-top" src="img/scroll_open_top.png?v=h6" alt="">
+      <div class="spp-mid"></div>
+      <img class="spp-bot" src="img/scroll_open_bot.png?v=h6" alt="">
+    </div>
     <button class="sx" id="sx" type="button" aria-label="Свернуть">×</button>
     <button class="sau" id="sau" type="button" aria-label="Слушать">♪</button>
     <div class="sbd" id="sbd"></div>
