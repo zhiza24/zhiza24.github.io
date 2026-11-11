@@ -9,8 +9,8 @@ const resource=['index.html','cover_v1.html','map.html','diary.html','hero.html'
 if(['path.html','stage.html','wheel.html','crystal.html'].includes(file)||file==='slot.html'&&q.get('id')==='map_all')target='tasks.html';
 if(!u&&['scene.html','slot.html'].includes(file)&&!['info','theme'].includes(q.get('id')))target='tasks.html';
 if(u&&!resource){
- const status=GRoute.status(u),preview=u==='slot.html?id=mirrors'&&q.get('preview')==='1';
- if(status==='locked')target='tasks.html?locked=1';
+ const status=GRoute.status(u),preview=(u==='slot.html?id=mirrors'||file==='breath.html')&&q.get('preview')==='1';
+ if(status==='locked'&&!(preview&&file==='breath.html'))target='tasks.html?locked=1';
  if(!preview){
   if(status==='locked')target='tasks.html?locked=1';
   else if(status==='done'&&!(window.GOpening&&GOpening.active)&&!window.GReview&&!(u==='slot.html?id=mirrors'&&q.has('review')))target=GRoute.reviewUrl(u);
