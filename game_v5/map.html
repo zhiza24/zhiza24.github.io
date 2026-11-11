@@ -47,29 +47,34 @@
   .cont[hidden]{display:none}
   .dock a:focus-visible{outline:3px solid #ffe7b0;outline-offset:6px}
   @keyframes p{0%,100%{box-shadow:0 0 6px 2px rgba(255,211,106,.5)}50%{box-shadow:0 0 26px 10px rgba(255,211,106,.85)}}
-  .scl{position:fixed;z-index:55;left:50%;top:calc(env(safe-area-inset-top) + 78px);transform:translateX(-50%);width:var(--scroll-w);border:0;padding:0;background:none;cursor:pointer;transition:opacity .45s ease;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55))}
+  .scl{position:fixed;z-index:55;left:50%;top:calc(env(safe-area-inset-top) + 78px);transform:translateX(-50%);width:var(--scroll-w);border:0;padding:0;background:none;cursor:pointer;transition:opacity .3s ease;will-change:opacity;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55))}
   .scl img{display:block;width:100%;height:auto}
   .scl.op{opacity:0;pointer-events:none}
-  .sov{position:fixed;left:0;right:0;top:var(--sov-top);bottom:var(--nav-h);z-index:48;display:flex;justify-content:center;align-items:flex-start;background:rgba(12,8,4,0);pointer-events:none;visibility:hidden;transition:background .45s ease,visibility .45s}
+  .sov{position:fixed;left:0;right:0;top:var(--sov-top);bottom:var(--nav-h);z-index:48;display:flex;justify-content:center;align-items:flex-start;pointer-events:none;visibility:hidden}
+  .sov:before{content:"";position:absolute;inset:0;background:rgba(12,8,4,.52);opacity:0;transition:opacity .6s ease;will-change:opacity;pointer-events:none}
   .sov.ready{visibility:visible;pointer-events:auto}
-  .sov.on{background:rgba(12,8,4,.52)}
-  .spp{position:relative;width:min(var(--scroll-w),100%);height:var(--scroll-closed-h);max-height:100%;overflow:hidden;flex:none;transition:height .85s cubic-bezier(.22,.8,.28,1)}
-  .sov.on .spp{height:100%}
-  .spp-art{position:absolute;left:0;top:0;width:100%;height:var(--sov-h);pointer-events:none}
+  .sov.on:before{opacity:1}
+  .spp{position:relative;width:min(var(--scroll-w),100%);height:100%;flex:none;--sc-ease:cubic-bezier(.45,.05,.25,1);--sc-dur:.6s}
+  .spp-clip,.spp-inner,.spp-foot{transition:transform var(--sc-dur) var(--sc-ease);will-change:transform;backface-visibility:hidden}
+  .spp-clip{position:absolute;inset:0;overflow:hidden;z-index:0;transform:translate3d(0,calc(var(--scroll-closed-h) - 100%),0)}
+  .spp-inner{position:absolute;inset:0;transform:translate3d(0,calc(100% - var(--scroll-closed-h)),0)}
+  .spp-foot{position:absolute;left:0;right:0;bottom:0;height:var(--scroll-cap-bot);z-index:1;pointer-events:none;transform:translate3d(0,calc(var(--scroll-closed-h) - var(--sov-h)),0)}
+  .sov.on .spp-clip,.sov.on .spp-inner,.sov.on .spp-foot{transform:translate3d(0,0,0)}
+  .spp-art{position:absolute;inset:0;pointer-events:none}
   .spp-top{position:absolute;left:0;top:0;width:100%;height:auto;display:block;z-index:1;-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 52px),transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 52px),transparent 100%)}
-  .spp-bot{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block;z-index:1;-webkit-mask-image:linear-gradient(to top,#000 0,#000 calc(100% - 52px),transparent 100%);mask-image:linear-gradient(to top,#000 0,#000 calc(100% - 52px),transparent 100%)}
+  .spp-bot{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block;-webkit-mask-image:linear-gradient(to top,#000 0,#000 calc(100% - 52px),transparent 100%);mask-image:linear-gradient(to top,#000 0,#000 calc(100% - 52px),transparent 100%)}
   .spp-mid{position:absolute;left:0;right:0;top:calc(var(--scroll-cap-top) * .45);bottom:calc(var(--scroll-cap-bot) * .48);background:url(img/scroll_open_mid.png?v=h9) center top / 100% auto repeat-y;z-index:0;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 20px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 20px),transparent 100%)}
-  .sbd{position:absolute;left:11%;right:11%;top:calc(var(--scroll-cap-top) * .36 + 44px);bottom:calc(var(--scroll-cap-bot) * .36 + 66px);overflow:auto;overscroll-behavior:contain;z-index:2;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);padding:12px 0 16px;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .4s .4s}
-  .sov.on .sbd{opacity:1}
-  .sclose{position:absolute;z-index:2;left:50%;bottom:calc(var(--scroll-cap-bot) * .36 + 12px);transform:translateX(-50%);min-width:140px;height:42px;padding:0 26px;border-radius:21px;border:1.5px solid #a8742a;background:linear-gradient(180deg,#fff3cf 0%,#efd08a 55%,#d6a54e 100%);box-shadow:0 0 0 1px rgba(255,240,200,.7) inset,0 3px 10px rgba(90,52,16,.35);color:#4a2a0a;font:700 18px/1 "Cormorant Garamond",serif;letter-spacing:.02em;white-space:nowrap;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .4s .4s}
+  .sbd{position:absolute;left:11%;right:11%;top:calc(var(--scroll-cap-top) * .36 + 44px);bottom:calc(var(--scroll-cap-bot) * .36 + 66px);overflow:auto;overscroll-behavior:contain;z-index:3;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);padding:12px 0 16px;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .18s ease}
+  .sov.on .sbd,.sov.on .sx,.sov.on .sau{opacity:1;transition:opacity .25s ease .45s}
+  .sclose{position:absolute;z-index:2;left:50%;bottom:calc(var(--scroll-cap-bot) * .36 + 12px);transform:translateX(-50%);min-width:140px;height:42px;padding:0 26px;border-radius:21px;border:1.5px solid #a8742a;background:linear-gradient(180deg,#fff3cf 0%,#efd08a 55%,#d6a54e 100%);box-shadow:0 0 0 1px rgba(255,240,200,.7) inset,0 3px 10px rgba(90,52,16,.35);color:#4a2a0a;font:700 18px/1 "Cormorant Garamond",serif;letter-spacing:.02em;white-space:nowrap;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .18s ease}
   .sclose:before{content:"";position:absolute;inset:3px;border-radius:18px;border:1px dashed rgba(122,74,22,.45);pointer-events:none}
-  .sov.on .sclose{opacity:1;pointer-events:auto}
+  .sov.on .sclose{opacity:1;pointer-events:auto;transition:opacity .25s ease .45s}
   .sclose:focus-visible{outline:3px solid #8a5420;outline-offset:3px}
   .sbd h3{margin:0 0 8px;font:700 26px/1.1 "Cormorant Garamond",serif;color:#6a3e10;text-align:center}
   .sbd p{margin:0 0 10px}
   .sbd .ft{font-style:italic;color:#8a5a20}
-  .sx{position:absolute;z-index:2;top:calc(var(--scroll-w) * 100 / 604 + 4px);right:8%;width:34px;height:34px;border:0;background:none;font:400 28px/1 serif;color:#6a3e10;cursor:pointer}
-  .sau{position:absolute;z-index:2;top:calc(var(--scroll-w) * 100 / 604 + 6px);left:8%;width:30px;height:30px;border-radius:50%;border:1.5px solid #a8742a;background:radial-gradient(#fff1c8,#d9a54e);color:#3a220a;font:700 15px/1 serif;cursor:pointer;display:none}
+  .sx{position:absolute;z-index:3;opacity:0;transition:opacity .18s ease;top:calc(var(--scroll-w) * 100 / 604 + 4px);right:8%;width:34px;height:34px;border:0;background:none;font:400 28px/1 serif;color:#6a3e10;cursor:pointer}
+  .sau{position:absolute;z-index:3;opacity:0;transition:opacity .18s ease;top:calc(var(--scroll-w) * 100 / 604 + 6px);left:8%;width:30px;height:30px;border-radius:50%;border:1.5px solid #a8742a;background:radial-gradient(#fff1c8,#d9a54e);color:#3a220a;font:700 15px/1 serif;cursor:pointer;display:none}
   .sau.on{background:radial-gradient(#ffe08a,#c98a2e);box-shadow:0 0 10px #ffc04a}
   .overlay{position:fixed;inset:0;z-index:80;background:rgba(3,5,8,.76);backdrop-filter:blur(7px);display:none;align-items:flex-end;justify-content:center;padding:16px}
   .overlay.show{display:flex}
@@ -97,15 +102,14 @@
 <button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll_closed.png?v=h8" alt=""></button>
 <div class="sov" id="sov">
   <div class="spp" id="spp">
-    <div class="spp-art" aria-hidden="true">
+    <div class="spp-clip"><div class="spp-inner"><div class="spp-art" aria-hidden="true">
       <img class="spp-top" src="img/scroll_open_top.png?v=h9" alt="">
       <div class="spp-mid"></div>
-      <img class="spp-bot" src="img/scroll_open_bot.png?v=h9" alt="">
-    </div>
+    </div></div></div>
+    <div class="spp-foot"><img class="spp-bot" src="img/scroll_open_bot.png?v=h9" alt="" aria-hidden="true"><button class="sclose" id="sclose" type="button">Закрыть</button></div>
     <button class="sx" id="sx" type="button" aria-label="Свернуть">×</button>
     <button class="sau" id="sau" type="button" aria-label="Слушать">♪</button>
     <div class="sbd" id="sbd"></div>
-    <button class="sclose" id="sclose" type="button">Закрыть</button>
   </div>
 </div>
 <div class="map-screen">
@@ -266,7 +270,7 @@ var SCROLL_AUDIO='snd/author.mp3';
     scl.classList.remove('op');
     if(au){au.pause();a.classList.remove('on')}
     clearTimeout(hideT);
-    hideT=setTimeout(function(){if(!o.classList.contains('on'))o.classList.remove('ready')},900);
+    hideT=setTimeout(function(){if(!o.classList.contains('on'))o.classList.remove('ready')},650);
   }
   function op(){
     clearTimeout(hideT);
