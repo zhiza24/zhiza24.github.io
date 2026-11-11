@@ -56,9 +56,9 @@
   .spp{position:relative;width:min(var(--scroll-w),100%);height:var(--scroll-closed-h);max-height:100%;overflow:hidden;flex:none;transition:height .85s cubic-bezier(.22,.8,.28,1)}
   .sov.on .spp{height:100%}
   .spp-art{position:absolute;left:0;top:0;width:100%;height:var(--sov-h);pointer-events:none}
-  .spp-top{position:absolute;left:0;top:0;width:100%;height:auto;display:block;z-index:1}
+  .spp-top{position:absolute;left:0;top:0;width:100%;height:auto;display:block;z-index:1;-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 52px),transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 52px),transparent 100%)}
   .spp-bot{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block;z-index:1}
-  .spp-mid{position:absolute;left:0;right:0;top:calc(var(--scroll-cap-top) * .68);bottom:calc(var(--scroll-cap-bot) * .48);background:url(img/scroll_open_mid.png?v=h7) center top / 100% auto repeat-y;z-index:0;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 40px,#000 calc(100% - 72px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 40px,#000 calc(100% - 72px),transparent 100%)}
+  .spp-mid{position:absolute;left:0;right:0;top:calc(var(--scroll-cap-top) * .45);bottom:calc(var(--scroll-cap-bot) * .48);background:url(img/scroll_open_mid.png?v=h7) center top / 100% auto repeat-y;z-index:0;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 72px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 72px),transparent 100%)}
   .sbd{position:absolute;left:14%;right:14%;top:calc(var(--scroll-cap-top) + 8px);bottom:calc(var(--scroll-cap-bot) + 8px);overflow:auto;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .4s .4s}
   .sov.on .sbd{opacity:1}
   .sbd h3{margin:0 0 8px;font:700 26px/1.1 "Cormorant Garamond",serif;color:#6a3e10;text-align:center}
@@ -90,7 +90,7 @@
 <link rel="stylesheet" href="nav.css?v=h3"></head>
 <body data-page="map">
 <h1 class="vh">Карта путешествия</h1>
-<button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll_closed.png?v=h5" alt=""></button>
+<button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll_closed.png?v=h8" alt=""></button>
 <div class="sov" id="sov">
   <div class="spp" id="spp">
     <div class="spp-art" aria-hidden="true">
