@@ -6,18 +6,20 @@
 <style>
 html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf;-webkit-tap-highlight-color:transparent}
 .sc{position:fixed;inset:0;overflow:hidden;background:#000}
-.sc video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
-.sc:after{content:"";position:absolute;left:0;right:0;bottom:0;height:44%;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.55) 42%,rgba(0,0,0,.88));pointer-events:none}
+.sc video{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.sc:after{content:"";position:absolute;z-index:1;left:0;right:0;bottom:0;height:46%;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.62) 38%,rgba(0,0,0,.9));pointer-events:none}
 .sc:before{content:"";position:absolute;z-index:2;left:0;right:0;top:0;height:calc(env(safe-area-inset-top) + 72px);background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,0));pointer-events:none}
 .ttl{position:absolute;z-index:3;left:18px;top:calc(env(safe-area-inset-top) + 20px);font:700 12px/1 Manrope,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#e9c97f;text-shadow:0 1px 6px #000;opacity:.9}
 .skip{position:absolute;z-index:6;right:14px;top:calc(env(safe-area-inset-top) + 10px);height:36px;padding:0 16px;border-radius:18px;border:1.5px solid rgba(233,201,127,.75);background:rgba(20,12,6,.55);color:#f4dfab;font:600 14px Manrope,sans-serif;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .tx{position:absolute;z-index:3;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 124px);text-align:center;pointer-events:none}
-.tx p{margin:0 0 .3em;font:600 clamp(20px,2.9vh,27px)/1.22 'Cormorant Garamond',serif;color:#fbe6b4;text-shadow:0 2px 10px #000,0 0 2px #000;opacity:0;transform:translateY(10px);transition:opacity 1s ease,transform 1s ease}
+.tx:before{content:"";position:absolute;z-index:-1;left:-16px;right:-16px;top:-34px;bottom:-30px;background:radial-gradient(ellipse 62% 58% at 50% 50%,rgba(20,10,0,.62),rgba(20,10,0,.3) 60%,rgba(20,10,0,0) 100%);opacity:0;transition:opacity .9s ease}
+.tx.has:before{opacity:1}
+.tx p{margin:0 0 .3em;font:700 clamp(20px,2.9vh,27px)/1.22 'Cormorant Garamond',serif;color:#fff0cc;text-shadow:0 0 14px rgba(0,0,0,.95),0 0 6px rgba(0,0,0,.9),0 2px 3px #000;opacity:0;transform:translateY(10px);transition:opacity 1s ease,transform 1s ease}
 .tx p.on{opacity:1;transform:none}
 .tx.out p{opacity:0;transition:opacity .7s ease}
 .nx{position:absolute;z-index:4;left:50%;bottom:calc(env(safe-area-inset-bottom) + 44px);transform:translateX(-50%);width:min(70%,300px);height:54px;border-radius:999px;border:2px solid #f5dca0;background:radial-gradient(ellipse at 50% 30%,#fff1c8,#e2b45e 55%,#9a6a28);color:#2a1606;font:700 24px 'Cormorant Garamond',serif;box-shadow:0 0 18px rgba(255,205,120,.45);opacity:0;pointer-events:none;transition:opacity 1s;cursor:pointer}
 .nx.on{opacity:1;pointer-events:auto}
-.st{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(ellipse at 50% 42%,rgba(60,38,10,.35),rgba(0,0,0,.82) 70%),url(img/cutscene/iam_poster.jpg) center 40%/cover;cursor:pointer;transition:opacity .8s ease}
+.st{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(ellipse at 50% 42%,rgba(60,38,10,.35),rgba(0,0,0,.82) 70%),url(img/cutscene/iam_poster.jpg?v=cs2) center 40%/cover;cursor:pointer;transition:opacity .8s ease}
 .st.off{opacity:0;pointer-events:none}
 .st small{font:700 12px/1 Manrope,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#e9c97f}
 .st h1{margin:0;font:700 54px/1 'Cormorant Garamond',serif;color:#fbe6b4;text-shadow:0 0 24px rgba(255,205,120,.6),0 2px 10px #000}
@@ -28,7 +30,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf;-we
 .ztm{position:fixed;inset:0;z-index:9;background:#000;opacity:0;pointer-events:none;transition:opacity .9s}.ztm.on{opacity:1}
 </style></head><body data-page="cutscene">
 <div class="sc">
-  <video id="v" src="media/iam.mp4?v=cs1" poster="img/cutscene/iam_poster.jpg" playsinline webkit-playsinline preload="auto"></video>
+  <video id="v" src="media/iam.mp4?v=cs2" poster="img/cutscene/iam_poster.jpg?v=cs2" playsinline webkit-playsinline preload="auto"></video>
   <div class="ttl">Точка 0 · Я есмь</div>
   <div class="tx" id="tx"></div>
   <button class="nx" id="nx" type="button">Далее</button>
@@ -47,23 +49,23 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#f4ecdf;-we
 var SEEN='alch_v5_cutscene_iam', NEXT='slot.html?id=dialog';
 /* Captions follow the voice: [show, hide, [[text, at], ...]] */
 var CAP=[
- [0.5,5.4,[['Весь мир принадлежит тебе',0.5],['по праву рождения.',2.7]]],
- [6.3,10.6,[['Это право дали высшие силы,',6.3],['а не люди.',8.6]]],
- [11.6,18.6,[['Мир всегда говорит «да».',11.6],['Право выбора всегда за тобой.',15.0]]],
- [36.0,999,[['Каким будет твой путь,',36.0],['твоя вера и твой выбор,',38.0],['зависит от тебя.',39.7]]]
+ [1.0,6.4,[['Весь мир принадлежит тебе',1.1],['по праву рождения.',3.85]]],
+ [10.6,15.6,[['Это право дали высшие силы,',10.6],['а не люди.',13.95]]],
+ [29.9,37.2,[['Мир всегда говорит «да».',29.9],['Право выбора всегда за тобой.',33.2]]],
+ [49.9,999,[['Каким будет твой путь,',49.9],['твоя вера и твой выбор,',52.28],['зависит от тебя.',55.0]]]
 ];
 var v=document.getElementById('v'),tx=document.getElementById('tx'),st=document.getElementById('st'),nx=document.getElementById('nx'),cur=-1,ps=[],started=false,leaving=false;
 function setGroup(i){
  if(i===cur)return;cur=i;
- if(i<0){tx.classList.add('out');return}
- tx.classList.remove('out');tx.innerHTML=CAP[i][2].map(function(l){return '<p>'+l[0]+'</p>'}).join('');ps=tx.querySelectorAll('p');
+ if(i<0){tx.classList.add('out');tx.classList.remove('has');return}
+ tx.classList.remove('out');tx.classList.add('has');tx.innerHTML=CAP[i][2].map(function(l){return '<p>'+l[0]+'</p>'}).join('');ps=tx.querySelectorAll('p');
 }
 function tick(){
  var t=v.currentTime,g=-1;
  for(var i=0;i<CAP.length;i++)if(t>=CAP[i][0]&&t<CAP[i][1]){g=i;break}
  setGroup(g);
  if(g>=0)CAP[g][2].forEach(function(l,k){if(t>=l[1]&&ps[k])ps[k].classList.add('on')});
- if(t>=40.6)nx.classList.add('on');
+ if(t>=56.5)nx.classList.add('on');
  if(!v.paused&&!v.ended)requestAnimationFrame(tick);
 }
 function go(){
