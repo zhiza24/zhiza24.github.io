@@ -57,10 +57,14 @@
   .sov.on .spp{height:100%}
   .spp-art{position:absolute;left:0;top:0;width:100%;height:var(--sov-h);pointer-events:none}
   .spp-top{position:absolute;left:0;top:0;width:100%;height:auto;display:block;z-index:1;-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 52px),transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 52px),transparent 100%)}
-  .spp-bot{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block;z-index:1}
-  .spp-mid{position:absolute;left:0;right:0;top:calc(var(--scroll-cap-top) * .45);bottom:calc(var(--scroll-cap-bot) * .48);background:url(img/scroll_open_mid.png?v=h7) center top / 100% auto repeat-y;z-index:0;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 72px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 72px),transparent 100%)}
-  .sbd{position:absolute;left:14%;right:14%;top:calc(var(--scroll-cap-top) + 8px);bottom:calc(var(--scroll-cap-bot) + 8px);overflow:auto;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .4s .4s}
+  .spp-bot{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block;z-index:1;-webkit-mask-image:linear-gradient(to top,#000 0,#000 calc(100% - 52px),transparent 100%);mask-image:linear-gradient(to top,#000 0,#000 calc(100% - 52px),transparent 100%)}
+  .spp-mid{position:absolute;left:0;right:0;top:calc(var(--scroll-cap-top) * .45);bottom:calc(var(--scroll-cap-bot) * .48);background:url(img/scroll_open_mid.png?v=h9) center top / 100% auto repeat-y;z-index:0;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 20px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 28px,#000 calc(100% - 20px),transparent 100%)}
+  .sbd{position:absolute;left:11%;right:11%;top:calc(var(--scroll-cap-top) * .36 + 44px);bottom:calc(var(--scroll-cap-bot) * .36 + 66px);overflow:auto;overscroll-behavior:contain;z-index:2;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);padding:12px 0 16px;-webkit-overflow-scrolling:touch;font:500 16px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .4s .4s}
   .sov.on .sbd{opacity:1}
+  .sclose{position:absolute;z-index:2;left:50%;bottom:calc(var(--scroll-cap-bot) * .36 + 12px);transform:translateX(-50%);min-width:176px;height:42px;padding:0 22px;border-radius:21px;border:1.5px solid #a8742a;background:linear-gradient(180deg,#fff3cf 0%,#efd08a 55%,#d6a54e 100%);box-shadow:0 0 0 1px rgba(255,240,200,.7) inset,0 3px 10px rgba(90,52,16,.35);color:#4a2a0a;font:700 18px/1 "Cormorant Garamond",serif;letter-spacing:.02em;white-space:nowrap;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .4s .4s}
+  .sclose:before{content:"";position:absolute;inset:3px;border-radius:18px;border:1px dashed rgba(122,74,22,.45);pointer-events:none}
+  .sov.on .sclose{opacity:1;pointer-events:auto}
+  .sclose:focus-visible{outline:3px solid #8a5420;outline-offset:3px}
   .sbd h3{margin:0 0 8px;font:700 26px/1.1 "Cormorant Garamond",serif;color:#6a3e10;text-align:center}
   .sbd p{margin:0 0 10px}
   .sbd .ft{font-style:italic;color:#8a5a20}
@@ -87,20 +91,21 @@
   .status-note{margin-top:12px;color:#887f70;font:10px/1.5 Arial,sans-serif}
   @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
-<link rel="stylesheet" href="nav.css?v=h3"></head>
+<link rel="stylesheet" href="nav.css?v=h9"></head>
 <body data-page="map">
 <h1 class="vh">Карта путешествия</h1>
 <button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll_closed.png?v=h8" alt=""></button>
 <div class="sov" id="sov">
   <div class="spp" id="spp">
     <div class="spp-art" aria-hidden="true">
-      <img class="spp-top" src="img/scroll_open_top.png?v=h6" alt="">
+      <img class="spp-top" src="img/scroll_open_top.png?v=h9" alt="">
       <div class="spp-mid"></div>
-      <img class="spp-bot" src="img/scroll_open_bot.png?v=h6" alt="">
+      <img class="spp-bot" src="img/scroll_open_bot.png?v=h9" alt="">
     </div>
     <button class="sx" id="sx" type="button" aria-label="Свернуть">×</button>
     <button class="sau" id="sau" type="button" aria-label="Слушать">♪</button>
     <div class="sbd" id="sbd"></div>
+    <button class="sclose" id="sclose" type="button">Свернуть свиток</button>
   </div>
 </div>
 <div class="map-screen">
@@ -140,7 +145,7 @@
     <div class="status-note" id="statusNote">Демонстрационное состояние. Кнопка не запускает игровые экраны.</div>
   </section>
 </div>
-<script src="engine.js?v=p1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=h3"></script>
+<script src="engine.js?v=p1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=h9"></script>
 <script>
 (() => {
   const medalAt={1:[25,87],2:[52,73],3:[50,67.5],4:[49,57.5],5:[56,50.5],6:[47,42.5],7:[53,35],8:[49.5,28]};
@@ -271,6 +276,7 @@ var SCROLL_AUDIO='snd/author.mp3';
   }
   scl.onclick=function(){o.classList.contains('on')||o.classList.contains('ready')?cl():op()};
   document.getElementById('sx').onclick=cl;
+  document.getElementById('sclose').onclick=cl;
   o.onclick=function(e){if(e.target==o)cl()};
 })();
 </script>
