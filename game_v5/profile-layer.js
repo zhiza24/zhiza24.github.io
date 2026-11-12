@@ -40,7 +40,8 @@
     archB: { field: 'archB' },
     archV: { field: 'archV' },
     archP: { field: 'archP' },
-    archD: { field: 'archD' }
+    archD: { field: 'archD' },
+    finalConfirm: { field: 'finalConfirm' }
   };
 
   var ALIAS = {};
