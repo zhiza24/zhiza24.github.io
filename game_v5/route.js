@@ -66,7 +66,10 @@ function complete(u,p){
  if(at>=checkpoint.index){const next=GFLOW[at+1];f.current=next?next.u:u;f.last=f.current;}
  f.version=2;recordVisit(u,p);save(p);return true;
 }
-function advance(){const u=currentUrl(),repeat=window.GOpening&&GOpening.active;if(!(repeat&&status(u)==='done')&&!complete(u))return 'tasks.html';const i=index(u),next=i>=0&&GFLOW[i+1]?GFLOW[i+1].u:'tasks.html';return repeat?GOpening.url(next):next;}
+const ADV_KEY='alch_v5_justAdvanced',ADV_MS=1500;
+function markAdvance(){try{sessionStorage.setItem(ADV_KEY,String(Date.now()))}catch(e){}}
+function justAdvanced(ms){try{const t=+sessionStorage.getItem(ADV_KEY)||0;return !!t&&(Date.now()-t)<(ms==null?ADV_MS:ms)}catch(e){return false}}
+function advance(){const u=currentUrl(),repeat=window.GOpening&&GOpening.active;if(!(repeat&&status(u)==='done')&&!complete(u))return 'tasks.html';const i=index(u),next=i>=0&&GFLOW[i+1]?GFLOW[i+1].u:'tasks.html';markAdvance();return repeat?GOpening.url(next):next;}
 function recordVisit(u,p){
  const passed=arguments.length>1&&!!p;
  u=u||currentUrl();p=p||load();
@@ -101,5 +104,5 @@ function snapshot(u,p){
  const logs=(p.log||[]).slice(-3);return JSON.parse(JSON.stringify({data,logs}));
 }
 function reading(u){if(isVisualReview())return false;return u==='elder.html'||u==='hero.html'||u==='sum.html'||u==='fin.html'||u.startsWith('scene.html')||['pa_end','pb_intro','pc_intro','compare'].some(k=>u==='slot.html?id='+k)}
-window.GRoute={load,resume,complete,advance,init,recordVisit,currentUrl,ready,reading,state,status,reviewUrl,snapshot,visualReview,isVisualReview};
+window.GRoute={load,resume,complete,advance,markAdvance,justAdvanced,init,recordVisit,currentUrl,ready,reading,state,status,reviewUrl,snapshot,visualReview,isVisualReview};
 })();
