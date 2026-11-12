@@ -19,12 +19,12 @@
   <div class="cw-actions"><button class="cw-btn" id="prev" type="button">Назад</button><button class="cw-btn primary" id="next" type="button" disabled>Далее</button></div>
 </div>
 <div id="results" hidden>
-  <section class="cw-result"><h2>Карта внутренних правил</h2><p class="cw-note">Баллы показывают, насколько часто Вы соглашаетесь с формулировками каждой шкалы. Это материал для наблюдения, а не диагноз и не оценка личности.</p><div id="scales"></div><p id="summary" class="cw-note"></p></section>
+  <section class="cw-result"><h2>Карта внутренних правил</h2><p class="cw-note">Баллы показывают, насколько часто Вы соглашаетесь с формулировками каждой шкалы. Это материал для наблюдения, а не диагноз и не оценка личности.</p><div id="scales"></div><div id="interpretations"></div><p id="summary" class="cw-note"></p></section>
   <div class="cw-actions"><button class="cw-btn" id="restart" type="button">Пройти заново</button><a class="cw-btn primary" href="research.html" style="text-align:center;text-decoration:none">К исследовательскому разделу</a></div>
 </div>
 <p class="cw-muted" id="save-status" aria-live="polite">Ответы сохраняются в едином профиле этого браузера.</p>
 </main>
-<script src="js/profile.js"></script><script src="data/crooked_world_questions.js"></script>
+<script src="js/profile.js"></script><script src="data/crooked_world_questions.js"></script><script src="data/research_interpretations.js"></script>
 <script>
 (function(){
 'use strict';
@@ -57,7 +57,7 @@ function finish(){
   AlchemistProfile.setResearchResult('crookedWorld',{scores:result,maxPerScale:12,scaleLabels:labels,questionCount:questions.length},answers);
   AlchemistProfile.update(p=>{p.research.crookedWorld.currentIndex=questions.length-1;});
   $('quiz').hidden=true;$('results').hidden=false;
-  const wrap=$('scales');wrap.replaceChildren();
+  const wrap=$('scales');wrap.replaceChildren();const host=$('interpretations');host.replaceChildren();const copy=window.RESEARCH_INTERPRETATIONS.crookedWorld;const max=Math.max(...Object.values(result));const leaders=Object.keys(result).filter(k=>result[k]===max);
   Object.keys(labels).forEach(key=>{
     const val=result[key],row=document.createElement('div');row.className='cw-scale';
     const head=document.createElement('div');head.className='cw-scale-head';
@@ -65,8 +65,9 @@ function finish(){
     const score=document.createElement('span');score.textContent=val+' / 12';head.append(name,score);
     const track=document.createElement('div');track.className='cw-track';
     const fill=document.createElement('div');fill.className='cw-fill';fill.style.width=(val/12*100)+'%';track.append(fill);
-    row.append(head,track);wrap.append(row);
+    row.append(head,track);wrap.append(row);const val=result[key],level=val<=3?1:val<=6?2:val<=9?3:4,item=copy.dimensions[key].levels[level];const card=document.createElement('section');card.className='cw-scale';const h=document.createElement('h3');h.textContent=item.title;const p=document.createElement('p');p.textContent=item.text;const f=document.createElement('p');f.textContent='Что можно проверить: '+item.focus;card.append(h,p,f);if(level===3){const mid=document.createElement('p');mid.textContent=copy.midLevel.text;card.append(mid);}host.append(card);
   });
+  if(leaders.length>1){const h=document.createElement('h3');h.textContent=copy.tiedLead.title;const p=document.createElement('p');p.textContent=copy.tiedLead.text;host.prepend(h,p);}
   $('summary').textContent='Посмотрите, какие правила сейчас звучат для Вас сильнее. Их влияние может различаться в разных обстоятельствах; результаты можно будет сопоставить с другими разделами исследования.';
   $('save-status').textContent='Результат сохранен в едином профиле героя.';
 }
