@@ -7,7 +7,7 @@ function relocate(p){p=p||{};const f=p.flow;if(!f)return p;let ch=false;if(f.cur
     Заставка «Я есмь» стала шагом маршрута после дыхания; уже просмотренная считается пройденной. */
  const B='breath.html?at=p0',C='cutscene.html';f.completed=f.completed||{};if(f.current==='lanterns.html'){f.current=B;ch=true}if(f.last==='lanterns.html'){f.last=B;ch=true}if(f.completed['lanterns.html']&&!f.completed[B]){f.completed[B]=f.completed['lanterns.html'];ch=true}
  let seen=null;try{seen=localStorage.getItem('alch_v5_cutscene_iam')}catch(e){}if(seen&&f.completed[B]&&!f.completed[C]&&f.current!==B&&f.current!==C){f.completed[C]=+seen||Date.now();ch=true}/* Новые шаги большого теста: если игрок уже прошел что-то дальше по маршруту, шаг не возвращает его назад. */
- const FL=window.GFLOW||[];['slot.html?id=arch_b','slot.html?id=arch_v','slot.html?id=arch_p','slot.html?id=arch_d'].forEach(u=>{const i=FL.findIndex(x=>x.u===u);if(i<0||f.completed[u])return;if(FL.slice(i+1).some(x=>f.completed[x.u])){f.completed[u]=Date.now();f.archSkipped=f.archSkipped||{};f.archSkipped[u]=1;ch=true}});
+ const FL=window.GFLOW||[];['slot.html?id=arch_b','slot.html?id=arch_v','slot.html?id=arch_p','slot.html?id=arch_d','slot.html?id=km','slot.html?id=fs','slot.html?id=lab_d','slot.html?id=pi','slot.html?id=rs','slot.html?id=ct','slot.html?id=sv','slot.html?id=vsort'].forEach(u=>{const i=FL.findIndex(x=>x.u===u);if(i<0||f.completed[u])return;if(FL.slice(i+1).some(x=>f.completed[x.u])){f.completed[u]=Date.now();f.archSkipped=f.archSkipped||{};f.archSkipped[u]=1;ch=true}});
  if(ch){try{localStorage.setItem(K,JSON.stringify(p))}catch(e){}}return p}
 function load(){try{return relocate(JSON.parse(localStorage.getItem(K))||{})}catch(e){return {}}}
 function save(p){localStorage.setItem(K,JSON.stringify(p))}
@@ -38,6 +38,7 @@ function ready(u,p){
  if(u==='slot.html?id=arch_v')return !!p.archV;
  if(u==='slot.html?id=arch_p')return !!p.archP;
  if(u==='slot.html?id=arch_d')return !!p.archD;
+ {const NT={km:'kmTest',fs:'firstSet',lab_d:'desireLab',pi:'interact',rs:'respTest',ct:'ctTest',sv:'selfWorth',vsort:'valuesCore'},m=/^slot\.html\?id=(\w+)$/.exec(u);if(m&&NT[m[1]])return !!(p[NT[m[1]]]&&p[NT[m[1]]].v);}
  return false;
 }
 /* A cursor is a checkpoint only when its preceding step was actually completed.
@@ -97,7 +98,9 @@ function snapshot(u,p){
   'slot.html?id=evidence':['fractal'], 'slot.html?id=sort':['lab'], 'slot.html?id=found':['lab'],
   'slot.html?id=pb_end':['lab'], 'slot.html?id=fractal':['fractal'], 'slot.html?id=leverage':['fractal'],
   'slot.html?id=guard':['guard'], 'reactor.html':['reactor'], 'slot.html?id=retest':['retest'],
-  'slot.html?id=compare':['wheel','retest'], 'slot.html?id=end':['reactor','retest','arts']};
+  'slot.html?id=compare':['wheel','retest'], 'slot.html?id=end':['reactor','retest','arts'],
+  'slot.html?id=km':['kmTest'], 'slot.html?id=fs':['firstSet'], 'slot.html?id=lab_d':['desireLab'], 'slot.html?id=pi':['interact'],
+  'slot.html?id=rs':['respTest'], 'slot.html?id=ct':['ctTest'], 'slot.html?id=sv':['selfWorth'], 'slot.html?id=vsort':['valuesCore','reactorIn']};
  const arch={'ego.html':'ego','slot.html?id=arch_b':'archB','slot.html?id=arch_v':'archV','slot.html?id=arch_p':'archP','slot.html?id=arch_d':'archD'}[u],ar=arch&&p[arch];
  if(ar&&ar.v&&(arch!=='ego'||ar.v===2)){const t={archResult:ar.top||''};if(ar.map)t.archMap=ar.map;return JSON.parse(JSON.stringify({data:t,logs:(p.log||[]).slice(-3)}));}
  const data={};(keys[u]||['arts']).forEach(k=>{if(p[k]!==undefined)data[k]=p[k]});

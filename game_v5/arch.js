@@ -133,7 +133,7 @@ Runner.prototype.draw=function(){var it=this.items()[this.i];if(!it){this.o.done
 Runner.prototype.raw=function(it,c){if(preview||!window.GProfile||!this.o.module)return;try{GProfile.recordRaw(this.o.module,it.id,c,{})}catch(e){}};
 
 /* ---------- части ---------- */
-function resultScreen(box,skin,html,part,save){var k=SKIN[skin];save();box.innerHTML=html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="'+k.go+'" id="arNext">'+(preview&&part==='d'?'Закончить просмотр':preview?'Дальше':({a:'Дальше: Эхо',b:'Дальше: свайп хорошего',v:'Дальше: итог Точки А',p:'Дальше: основание установки'})[part]||'Дальше')+'</button>';box.querySelector('#arNext').onclick=function(){go(part)};if(window.GQuote)GQuote.add(box,{a:'ego.html',b:'slot.html?id=arch_b',v:'slot.html?id=arch_v',p:'slot.html?id=arch_p',d:'slot.html?id=arch_d'}[part],box.querySelector('#arNext'));scrollTo(0,0)}
+function resultScreen(box,skin,html,part,save){var k=SKIN[skin];save();box.innerHTML=html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="'+k.go+'" id="arNext">'+(preview&&part==='d'?'Закончить просмотр':preview?'Дальше':({a:'Дальше: Эхо',b:'Дальше: Первые настройки',v:'Дальше: итог Точки А',p:'Дальше: основание установки'})[part]||'Дальше')+'</button>';box.querySelector('#arNext').onclick=function(){go(part)};if(window.GQuote)GQuote.add(box,{a:'ego.html',b:'slot.html?id=arch_b',v:'slot.html?id=arch_v',p:'slot.html?id=arch_p',d:'slot.html?id=arch_d'}[part],box.querySelector('#arNext'));scrollTo(0,0)}
 function partA(box,skin,hooks){var items=[{kind:'intro',key:'a'},{kind:'one',id:'S1',t:D.period.t,o:D.period.o}];
  D.A.forEach(function(q){items.push({kind:'one',id:q.id,h:q.h,t:q.t,o:q.o,shuffle:true})});
  items.push({kind:'multi',id:'A11',h:D.A11.h,t:D.A11.t,hint:D.A11.hint,o:D.A11.o,shuffle:true});
@@ -185,6 +185,6 @@ function partD(box){var items=[{kind:'intro',key:'d'},{kind:'one',id:'D01',t:D.D
   var cp=document.createElement('button');cp.type='button';cp.id='arCopy';cp.className='ar-quiet';cp.textContent='Скопировать мою карту';if(nx&&nx.parentNode)nx.after(cp);else box.append(cp);
   cp.onclick=function(){var t='Моя карта\n\n'+res.map;function ok(){cp.textContent='Скопировано'}if(navigator.clipboard)navigator.clipboard.writeText(t).then(ok,function(){fb(t);ok()});else{fb(t);ok()}}}}).start()}
 function fb(t){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
-window.GArch={preview:preview,g:g,finalize:finalize,blocks:blocks,scoreA:scoreA,scoreB:scoreB,modeOf:modeOf,
+window.GArch={css:addCss,preview:preview,g:g,finalize:finalize,blocks:blocks,scoreA:scoreA,scoreB:scoreB,modeOf:modeOf,
  mount:function(part,box,skin,hooks){addCss();if(skin==='slot')box.classList.add('ar-slot');({a:partA,b:partB,v:partV,p:partP,d:partD})[part](box,skin||'slot',hooks)}};
 })();

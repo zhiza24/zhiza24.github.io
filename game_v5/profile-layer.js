@@ -41,7 +41,16 @@
     archV: { field: 'archV' },
     archP: { field: 'archP' },
     archD: { field: 'archD' },
-    finalConfirm: { field: 'finalConfirm' }
+    finalConfirm: { field: 'finalConfirm' },
+    km: { field: 'kmTest' },
+    firstSet: { field: 'firstSet' },
+    desireLab: { field: 'desireLab' },
+    interact: { field: 'interact' },
+    respTest: { field: 'respTest' },
+    ctTest: { field: 'ctTest' },
+    selfWorth: { field: 'selfWorth' },
+    valuesCore: { field: 'valuesCore' },
+    reactorIn: { field: 'reactorIn' }
   };
 
   var ALIAS = {};

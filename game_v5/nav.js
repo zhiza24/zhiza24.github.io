@@ -50,10 +50,10 @@ if(card){var released=false;function relCard(){if(released)return;released=true;
 card.addEventListener('animationend',function(e){if(!e.animationName||e.animationName==='up')relCard()});
 try{var an=card.getAnimations&&card.getAnimations();if(an&&an.length&&an.every(function(a){return a.playState==='finished'}))relCard()}catch(e){}
 setTimeout(relCard,2800)}
-if(!window.GBook){var gbs=document.createElement('script');gbs.src='book.js?v=b5';document.body.appendChild(gbs)}
+if(!window.GBook){var gbs=document.createElement('script');gbs.src='book.js?v=b6';document.body.appendChild(gbs)}
 function P(){try{return JSON.parse(localStorage.getItem('alch_v5_profile'))||{}}catch(e){return{}}}
 function ok(){if(window.GOpening&&i===1)return false;var u=i>=0?GFLOW[i].u:'';return !!(u&&window.GRoute&&(GRoute.reading(u)||GRoute.ready(u,P())))}
 function nxt(){var n=flowNext();return n&&window.GOpening?GOpening.url(n):n}
 setInterval(function(){fw.classList.toggle('off',!nxt()||!ok())},500);
 b.onclick=function(){if(b.dataset.cardWait==='1')return;if(window.GRoute&&GRoute.justAdvanced&&GRoute.justAdvanced())return;if(window.gBack&&window.gBack())return;if(i>0)location.href=window.GOpening?GOpening.url(GFLOW[i-1].u):GFLOW[i-1].u;else history.back()};
-fw.onclick=function(){var n=nxt();if(!n)return;if(!ok()){if(window.gToast){var tt=document.querySelector('.gtoast');if(tt){tt.textContent='Сначала заполните этот шаг';gToast();setTimeout(function(){tt.textContent='Скоро откроется'},1700)}}return}if(window.GRoute&&!(window.GOpening&&GRoute.status(GFLOW[i].u)==='done')&&!GRoute.complete())return;if(window.GRoute&&GRoute.markAdvance)GRoute.markAdvance();location.href=n}})();
+fw.onclick=function(){var n=nxt();if(!n)return;if(!ok()){if(window.gToast){var tt=document.querySelector('.gtoast');if(tt){tt.textContent='Сначала заверши этот шаг';gToast();setTimeout(function(){tt.textContent='Скоро откроется'},1700)}}return}if(window.GRoute&&!(window.GOpening&&GRoute.status(GFLOW[i].u)==='done')&&!GRoute.complete())return;if(window.GRoute&&GRoute.markAdvance)GRoute.markAdvance();location.href=n}})();

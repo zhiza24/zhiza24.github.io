@@ -29,7 +29,7 @@ var MAP={
 'slot.html?id=mirage':[4,-1],'slot.html?id=arch_b':[7,-1],'slot.html?id=arch_v':[4,1],'slot.html?id=arch_p':[5,2],'slot.html?id=arch_d':[8,-1],
 'slot.html?id=found':[3,2],
 'slot.html?id=pb_end':[8,-1],
-'slot.html?id=fractal':[4,2],
+'slot.html?id=fractal':[4,2],'slot.html?id=sv':[6,-1],'slot.html?id=vsort':[6,-1],'slot.html?id=km':[3,-1],'slot.html?id=fs':[3,-1],'slot.html?id=lab_d':[3,-1],'slot.html?id=ct':[4,-1],'slot.html?id=rs':[4,-1],'slot.html?id=pi':[3,-1],
 'slot.html?id=leverage':[5,2],
 'slot.html?id=guard':[6,-1],
 'slot.html?id=pc_intro':[10,-1],
