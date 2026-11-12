@@ -214,3 +214,7 @@ ul.list li{font-size:17px;line-height:1.5;margin-bottom:6px;font-weight:500}
   .hero__img{flex:0 0 auto;width:440px;padding:0;margin:0}
   .hero__text{flex:0 1 520px;margin:0;padding:0}
 }
+
+.sheet__panel--full{top:10px;max-height:none;overflow:auto;-webkit-overflow-scrolling:touch}
+.search{font-size:18px;-webkit-appearance:none;appearance:none;background:#fff}
+@media (min-width:760px){.sheet__panel--full{top:80px;bottom:auto;max-height:80vh}}

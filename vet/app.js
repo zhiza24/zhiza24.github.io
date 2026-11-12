@@ -237,7 +237,7 @@
 
   /* sheet: menu + search */
   const sheet = $("#sheet"), panel = $("#sheetPanel");
-  function openSheet(html) { panel.innerHTML = `<div class="sheet__grab"></div>${html}`; sheet.hidden = false; document.body.style.overflow = "hidden"; }
+  function openSheet(html, cls) { panel.className = "sheet__panel" + (cls ? " " + cls : ""); panel.innerHTML = `<div class="sheet__grab"></div>${html}`; sheet.hidden = false; document.body.style.overflow = "hidden"; }
   function closeSheet() { sheet.hidden = true; document.body.style.overflow = ""; }
   function openMenu() {
     const item = (act, title, sub, ico) => `<button class="mitem" type="button" data-act="${act}">${ico}<span>${title}<small>${sub}</small></span></button>`;
@@ -263,14 +263,16 @@
   }
   function openSearch() {
     openSheet(`<div class="sheet__head"><div class="h">Найти симптом</div><button class="x" type="button" data-act="close" aria-label="Закрыть">×</button></div>
-      <input class="search" id="q" type="search" placeholder="Например, рвота или кашель" autocomplete="off">
-      <div class="rows" id="hits" style="margin-top:0"></div>`);
+      <input class="search" id="q" type="search" enterkeyhint="search" autocapitalize="off" spellcheck="false" placeholder="Опишите: блюет, хромает, чешет ухо" autocomplete="off">
+      <div class="rows" id="hits" style="margin-top:0"></div>`, "sheet__panel--full");
     const input = $("#q"); const hits = $("#hits");
+    const row = (s) => `<button type="button" class="row" data-act="hit" data-id="${s.id}"><span>${s.title}<small style="display:block;font-size:14px;color:#667085;font-weight:600">${ZONES.find((z) => z.id === s.zoneId).title}</small></span>${CHEV}</button>`;
     const draw = () => {
-      const v = input.value.trim().toLowerCase();
-      const seen = new Set();
-      const list = SYMPTOMS.filter((s) => (!v || s.title.toLowerCase().includes(v)) && !seen.has(s.title) && seen.add(s.title)).slice(0, 30);
-      hits.innerHTML = list.length ? list.map((s) => `<button type="button" class="row" data-act="hit" data-id="${s.id}"><span>${s.title}<small style="display:block;font-size:14px;color:#667085;font-weight:600">${ZONES.find((z) => z.id === s.zoneId).title}</small></span>${CHEV}</button>`).join("") : `<p class="sub">Ничего не нашли. Попробуйте другое слово или выберите зону на схеме.</p>`;
+      const r = window.searchSymptoms(input.value);
+      if (r.exact) hits.innerHTML = r.list.map(row).join("");
+      else hits.innerHTML = `<p class="sub" style="margin:0 0 4px">Точного совпадения нет. Возможно, подойдет одно из этих:</p>${r.list.map(row).join("")}
+        <button class="primary ghost" type="button" data-act="sos" style="margin-top:8px">Когда ехать сразу</button>
+        <button class="primary" type="button" data-act="start" style="margin-top:8px">Выбрать зону на схеме <span aria-hidden="true">→</span></button>`;
     };
     input.addEventListener("input", draw); draw();
     setTimeout(() => input.focus(), 50);
