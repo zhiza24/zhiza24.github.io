@@ -133,7 +133,7 @@ Runner.prototype.draw=function(){var it=this.items()[this.i];if(!it){this.o.done
 Runner.prototype.raw=function(it,c){if(preview||!window.GProfile||!this.o.module)return;try{GProfile.recordRaw(this.o.module,it.id,c,{})}catch(e){}};
 
 /* ---------- части ---------- */
-function resultScreen(box,skin,html,part,save){var k=SKIN[skin];save();box.innerHTML=html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="'+k.go+'" id="arNext">'+(preview&&part==='d'?'Закончить просмотр':'Дальше')+'</button>';box.querySelector('#arNext').onclick=function(){go(part)};scrollTo(0,0)}
+function resultScreen(box,skin,html,part,save){var k=SKIN[skin];save();box.innerHTML=html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="'+k.go+'" id="arNext">'+(preview&&part==='d'?'Закончить просмотр':'Дальше')+'</button>';box.querySelector('#arNext').onclick=function(){go(part)};if(window.GQuote)GQuote.add(box,{a:'ego.html',b:'slot.html?id=arch_b',v:'slot.html?id=arch_v',p:'slot.html?id=arch_p',d:'slot.html?id=arch_d'}[part],box.querySelector('#arNext'));scrollTo(0,0)}
 function partA(box,skin,hooks){var items=[{kind:'intro',key:'a'},{kind:'one',id:'S1',t:D.period.t,o:D.period.o}];
  D.A.forEach(function(q){items.push({kind:'one',id:q.id,h:q.h,t:q.t,o:q.o,shuffle:true})});
  items.push({kind:'multi',id:'A11',h:D.A11.h,t:D.A11.t,hint:D.A11.hint,o:D.A11.o,shuffle:true});
