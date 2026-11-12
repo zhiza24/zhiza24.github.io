@@ -5,7 +5,7 @@
 (function(){
 'use strict';
 var D=window.GARCH,K='alch_v5_profile',PV='alch_v5_arch_preview';
-var Q=new URLSearchParams(location.search),preview=Q.get('preview')==='1';
+var Q=new URLSearchParams(location.search),preview=Q.get('preview')==='1',retakeMode=!preview&&Q.get('retake')==='1';
 var NEXT_PV={a:'slot.html?id=arch_b&preview=1',b:'slot.html?id=arch_v&preview=1',v:'slot.html?id=arch_p&preview=1',p:'slot.html?id=arch_d&preview=1',d:'tasks.html'};
 var FIELD={a:'ego',b:'archB',v:'archV',p:'archP',d:'archD'};
 function prof(){try{return JSON.parse(localStorage.getItem(K))||{}}catch(e){return {}}}
@@ -19,7 +19,7 @@ function store(part,val,raw,logText,extra){var f=FIELD[part];
  if(preview){var o=pvs();o[f]=val;sessionStorage.setItem(PV,JSON.stringify(o));return}
  var P=prof();(P.log=P.log||[]).push({t:Date.now(),x:logText});if(extra)extra(P);
  if(window.GProfile)GProfile.saveResult(f,val,raw,{profile:P});else{P[f]=val;localStorage.setItem(K,JSON.stringify(P))}}
-function go(part){if(preview){location.href=NEXT_PV[part];return}location.href=window.GRoute?GRoute.advance():'tasks.html'}
+function go(part){if(preview){location.href=NEXT_PV[part];return}if(retakeMode){location.href='tasks.html#skipped';return}location.href=window.GRoute?GRoute.advance():'tasks.html'}
 /* устойчивое перемешивание вариантов: seed от имени и даты игрока */
 function seedOf(id){var P=prof(),s=String(P.name||'')+'|'+String(P.birth||'')+'|'+id,x=2166136261;for(var i=0;i<s.length;i++){x^=s.charCodeAt(i);x=Math.imul(x,16777619)}return x>>>0}
 function shuffle(list,id){var a=list.slice(),x=seedOf(id)||1;for(var i=a.length-1;i>0;i--){x^=x<<13;x>>>=0;x^=x>>>17;x^=x<<5;x>>>=0;var j=x%(i+1),t=a[i];a[i]=a[j];a[j]=t}return a}
@@ -133,7 +133,7 @@ Runner.prototype.draw=function(){var it=this.items()[this.i];if(!it){this.o.done
 Runner.prototype.raw=function(it,c){if(preview||!window.GProfile||!this.o.module)return;try{GProfile.recordRaw(this.o.module,it.id,c,{})}catch(e){}};
 
 /* ---------- части ---------- */
-function resultScreen(box,skin,html,part,save){var k=SKIN[skin];save();box.innerHTML=html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="'+k.go+'" id="arNext">'+(preview&&part==='d'?'Закончить просмотр':preview?'Дальше':({a:'Дальше: Эхо',b:'Дальше: Первые настройки',v:'Дальше: итог Точки А',p:'Дальше: основание установки'})[part]||'Дальше')+'</button>';box.querySelector('#arNext').onclick=function(){go(part)};if(window.GQuote)GQuote.add(box,{a:'ego.html',b:'slot.html?id=arch_b',v:'slot.html?id=arch_v',p:'slot.html?id=arch_p',d:'slot.html?id=arch_d'}[part],box.querySelector('#arNext'));scrollTo(0,0)}
+function resultScreen(box,skin,html,part,save){var k=SKIN[skin];save();box.innerHTML=html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="'+k.go+'" id="arNext">'+(retakeMode?'Дальше: Задания':preview&&part==='d'?'Закончить просмотр':preview?'Дальше':({a:'Дальше: Эхо',b:'Дальше: Первые настройки',v:'Дальше: итог Точки А',p:'Дальше: основание установки'})[part]||'Дальше')+'</button>';box.querySelector('#arNext').onclick=function(){go(part)};if(window.GQuote)GQuote.add(box,{a:'ego.html',b:'slot.html?id=arch_b',v:'slot.html?id=arch_v',p:'slot.html?id=arch_p',d:'slot.html?id=arch_d'}[part],box.querySelector('#arNext'));scrollTo(0,0)}
 function partA(box,skin,hooks){var items=[{kind:'intro',key:'a'},{kind:'one',id:'S1',t:D.period.t,o:D.period.o}];
  D.A.forEach(function(q){items.push({kind:'one',id:q.id,h:q.h,t:q.t,o:q.o,shuffle:true})});
  items.push({kind:'multi',id:'A11',h:D.A11.h,t:D.A11.t,hint:D.A11.hint,o:D.A11.o,shuffle:true});
@@ -181,7 +181,7 @@ function partD(box){var items=[{kind:'intro',key:'d'},{kind:'one',id:'D01',t:D.D
   var P2=data();P2.archD=res;var r=blocks(P2,'d');res.map=blocksText(r);
   var html='<span class="tag">Точка С</span><span class="tag">Архитектор</span><div class="al">Моя карта</div>'+blocksHTML(r)+(D.ui.reactorRes?'<p class="ar-pt">'+h(D.ui.reactorRes)+'</p>':'');
   resultScreen(box,'slot',html,'d',function(){store('d',res,{answers:ans},'Выбрано состояние: '+res.top)});
-  var nx=box.querySelector('#arNext');if(nx&&!(typeof preview!=='undefined'&&preview))nx.textContent='Дальше: Реактор';
+  var nx=box.querySelector('#arNext');if(nx&&!(typeof preview!=='undefined'&&preview)&&!retakeMode)nx.textContent='Дальше: Реактор';
   var cp=document.createElement('button');cp.type='button';cp.id='arCopy';cp.className='ar-quiet';cp.textContent='Скопировать мою карту';if(nx&&nx.parentNode)nx.after(cp);else box.append(cp);
   cp.onclick=function(){var t='Моя карта\n\n'+res.map;function ok(){cp.textContent='Скопировано'}if(navigator.clipboard)navigator.clipboard.writeText(t).then(ok,function(){fb(t);ok()});else{fb(t);ok()}}}}).start()}
 function fb(t){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}

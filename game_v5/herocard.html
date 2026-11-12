@@ -1,0 +1,58 @@
+<!doctype html><html lang="ru"><head><script src="theme.js?v=8"></script><script src="sound.js?v=1"></script><script src="flow.js?v=kit2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=kit2"></script><script src="profile-layer.js?v=kit2"></script><script src="route-gate.js?v=hm1"></script><script src="gender.js?v=2"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Герой</title><script src="upd.js?v=1794512684"></script><link rel="stylesheet" href="nav.css?v=h9f19"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box}body{margin:0;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;font-size:18px}
+#hc{max-width:560px;margin:auto;padding:calc(64px + env(safe-area-inset-top)) 14px 150px}
+#hc .top{display:flex;gap:14px;align-items:center;margin-bottom:6px}
+#hc .ph{width:96px;height:96px;border-radius:50%;object-fit:cover;object-position:50% 20%;border:2px solid #e8c16c;box-shadow:0 0 18px rgba(232,193,108,.35);background:#20170e;flex:none}
+#hc h1{font:700 30px "Cormorant Garamond",serif;color:#f0c870!important;margin:0}
+#hc .sub{font-size:15px;color:#cbb89a!important;margin:2px 0 0}
+#hc h2{font:700 13px Manrope,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#e8c16c!important;margin:22px 0 8px;border-bottom:1px solid #3c2c18;padding-bottom:6px}
+#hc .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:14px 0 4px}
+#hc .tabs a{display:flex;align-items:center;justify-content:center;text-align:center;min-height:42px;padding:4px;border-radius:12px;border:1px solid #a98954;background:#392a18;color:#fff3da!important;font:700 13px Manrope,sans-serif;text-decoration:none;line-height:1.15}
+#hc .pr{background:#1c140b;border:1px solid #5a4325;border-radius:14px;padding:6px 14px}
+#hc .pr .r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #2e2213;font-size:16px;line-height:1.4}#hc .pr .r:last-child{border-bottom:0}
+#hc .pr .r span{flex:0 0 42%;color:#cbb89a!important;font-size:14px}#hc .pr .r b{color:#f4ecdf!important;font-weight:600}
+#hc p,#hc li{color:#f4ecdf!important}#hc .muted{color:#a8977c!important;font-size:16px}
+#hc .now{background:#241a0c;border:1px solid #9e783a;border-radius:14px;padding:12px 14px}#hc .now p{margin:4px 0}
+#hc .go{display:block;width:100%;margin-top:12px;padding:14px;border:0;border-radius:14px;background:linear-gradient(180deg,#f3d27e,#c9953c);color:#26190b!important;font:800 18px Manrope,sans-serif;text-align:center;text-decoration:none}
+#hc .arts{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+#hc .art{background:#1c140b;border:1px solid #5a4325;border-radius:12px;padding:10px 6px;text-align:center;font-size:14px;color:#f4ecdf!important;line-height:1.3}
+#hc .art img{width:44px;height:44px;object-fit:contain;display:block;margin:0 auto 4px}#hc .art .ic{font-size:30px;display:block}
+#hc .ql{display:block;margin-top:14px;color:#c9a46a!important;font-size:16px}
+</style></head><body data-page="hero"><main id="hc"><div class="top"><img class="ph" data-hero-img="portrait" alt=""><div><h1 id="nm">Герой</h1><p class="sub" id="sb"></p></div></div>
+<nav class="tabs"><a href="#portrait">Мой портрет</a><a href="#map">Мои открытия</a><a href="#now">Мой путь сейчас</a><a href="#arts">Артефакты</a></nav>
+<h2 id="portrait">Мой портрет</h2><div id="pr"></div>
+<h2 id="map">Мои открытия · Карта героя</h2><div id="hm"></div>
+<h2 id="now">Мой путь сейчас</h2><div id="nw"></div>
+<h2 id="arts">Артефакты</h2><div id="ar"></div>
+<a class="ql" href="hero.html?v=h3">Лист героя и паспорт</a>
+</main>
+<script src="engine.js?v=arch1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=bar7"></script><script src="heromap.js?v=hm1"></script>
+<script>
+(function(){var P={};try{P=JSON.parse(localStorage.getItem('alch_v5_profile'))||{}}catch(e){}
+var E=GEsc,f=GGender(P)==='f';if(window.GHeroApply)GHeroApply();
+document.getElementById('nm').textContent=P.name||'Герой';
+var C=(P.flow&&P.flow.completed)||{},n=Object.keys(C).length;
+document.getElementById('sb').textContent=n?('Пройдено шагов: '+n+' из '+(GFLOW.length-1)):'Путь только начинается';
+GHM.ready(function(){
+ /* портрет: короткие строки из пройденных результатов */
+ var L=[],D=window.POCHERK_DIRS||{},CARDS={s:'Тропа молний',n:'Туманная долина',str:'Горный перевал',z:'Река попутчиков',f:'Пусть выберет судьба'};
+ if(CARDS[P.mapStyle])L.push(['Мой путь',CARDS[P.mapStyle]]);
+ if(P.pocherk&&P.pocherk.lead)L.push(['Мой почерк',P.pocherk.mixed&&P.pocherk.leads?P.pocherk.leads.map(function(k){return D[k]}).join(' и '):D[P.pocherk.lead]]);
+ if(P.ego&&P.ego.lead)L.push(['Знакомое состояние','«'+P.ego.top+'»']);
+ if(P.archB&&P.archB.lead)L.push(['Привычный ход',P.archB.top]);
+ if(P.lab&&P.lab.lead&&window.GPAT&&GPAT[P.lab.lead])L.push(['Установка в работе',GPAT[P.lab.lead].n]);
+ var v=(P.valuesCore&&P.valuesCore.top3)||[];if(v.length)L.push(['Три ориентира',v.join(', ')]);
+ if(P.fractal&&P.fractal.lever&&P.fractal.lever.title)L.push(['Точка влияния',P.fractal.lever.title]);
+ if(P.archD&&P.archD.top&&P.archD.d1t)L.push(['Выбранное состояние',P.archD.top]);
+ document.getElementById('pr').innerHTML=L.length?'<div class="pr">'+L.map(function(x){return '<div class="r"><span>'+E(x[0])+'</span><b>'+E(x[1])+'</b></div>'}).join('')+'</div>':'<p class="muted">Портрет появится, когда ты '+'пройдешь'+' первые испытания.</p>';
+ GHM.render(document.getElementById('hm'),{});
+ /* путь сейчас */
+ var s=GRoute.state(P),st=GFLOW[s.index]||{},PT={'0':'Точка 0','А':'Точка А','Б':'Точка Б','С':'Точка С','Финал':'Финал'};
+ document.getElementById('nw').innerHTML='<div class="now">'+(s.finished?'<p>Путь этого круга пройден.</p><a class="go" href="tasks.html">Дальше: Задания</a>':'<p class="muted">'+E(PT[st.pt]||'')+'</p><p><b>'+E(st.t||'')+'</b></p><a class="go" href="'+E(s.url)+'">Дальше: '+E(st.t||'Продолжить')+'</a>')+'</div>';
+ /* артефакты */
+ var A=window.GArts?GArts.list(P):[];
+ document.getElementById('ar').innerHTML=A.length?'<div class="arts">'+A.map(function(a){var ic=a.icon||'';return '<div class="art">'+(/\.(png|jpe?g|webp|svg)/.test(ic)?'<img src="'+E(ic)+'" alt="">':'<span class="ic">'+E(ic)+'</span>')+E(a.name)+'</div>'}).join('')+'</div>':'<p class="muted">Артефакты появятся по мере пути.</p>';
+ if(location.hash){var t=document.querySelector(location.hash);if(t)setTimeout(function(){t.scrollIntoView()},50)}
+});
+})();
+</script></body></html>
