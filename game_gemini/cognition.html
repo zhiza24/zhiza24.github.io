@@ -30,7 +30,7 @@
 </section>
 <p class="muted" id="save-status">Ответы сохраняются в едином профиле этого браузера.</p>
 </main>
-<script src="js/profile.js"></script><script src="data/cognition_questions.js"></script>
+<script src="js/profile.js"></script><script src="data/cognition_questions.js"></script><script src="data/research_interpretations.js"></script>
 <script>
 (function(){
 'use strict';
@@ -42,6 +42,7 @@ const axes={
  RP:{name:'Взаимодействие с внешним миром',left:'Структура и план (R)',right:'Гибкость и открытые возможности (P)',strength:'Структура помогает распределять усилия и завершать начатое; гибкость позволяет адаптироваться к новым вводным и сохранять пространство для вариантов.'}
 };
 let profile=AlchemistProfile.load(), currentIdx=0, answers={};
+const interpretationCopy=window.RESEARCH_INTERPRETATIONS&&window.RESEARCH_INTERPRETATIONS.cognition;
 const $=id=>document.getElementById(id);
 function moduleData(){return AlchemistProfile.load().research.cognitive||{};}
 function saveProgress(){
@@ -90,7 +91,7 @@ function renderResults(scores){
 }
 function finish(){
  if(questions.some(q=>!answers[q.id])){alert('Ответьте, пожалуйста, на все вопросы.');return;}
- const scores=calculate(),result={scores,axes:Object.fromEntries(Object.entries(scores).map(([k,v])=>[k,{...v,preference:Math.abs(v[k[0]]-v[k[1]])<=2?'mixed':(v[k[0]]>v[k[1]]?k[0]:k[1])}]))};
+ const scores=calculate(),result={scores,axes:Object.fromEntries(Object.entries(scores).map(([k,v])=>[k,{...v,preference:(v[k[0]]+v[k[1]]<4?'insufficient':Math.abs(v[k[0]]-v[k[1]])<=2?'mixed':(v[k[0]]>v[k[1]]?k[0]:k[1]))}]))};
  AlchemistProfile.setResearchResult('cognitive',result,answers);
  AlchemistProfile.update(p=>{p.research.cognitive.currentIndex=questions.length-1;});
  renderResults(scores);
