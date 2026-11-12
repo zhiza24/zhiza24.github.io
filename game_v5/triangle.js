@@ -15,7 +15,7 @@ function css(){if(document.getElementById('tri-css'))return;var s=document.creat
 '.tri-img .lR{right:0;background:radial-gradient(ellipse 85% 60% at 70% 52%,rgba(255,228,155,.62),rgba(255,210,120,.2) 55%,transparent 75%);mix-blend-mode:screen}'+
 '.tri-img .dL{left:0;background:linear-gradient(90deg,rgba(6,4,2,.72),rgba(6,4,2,.35))}'+
 '.tri-img .dR{right:0;background:linear-gradient(270deg,rgba(6,4,2,.72),rgba(6,4,2,.35))}'+
-'.tri-img.drag i{transition:none}'+
+'.tri-img.drag i{transition:none}.tri-img .lH{left:20%;width:60%;background:radial-gradient(ellipse 70% 42% at 50% 24%,rgba(255,226,160,.55),transparent 72%);mix-blend-mode:screen}.tri-q{font:700 12px Manrope,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#8a5a22;margin-bottom:6px}'+
 '.tri-p{position:relative;margin-top:-24%;padding:22px 18px 18px;background:linear-gradient(rgba(13,9,5,0),rgba(13,9,5,.82) 18%,#0d0905 40%);min-height:34%}'+
 'body.tri-on,body.tri-on .wrap{background:#0d0905!important}.tri,.tri *{border-color:#c99a45}'+'.tri-p h2{margin:0 0 8px;color:#f0c870!important;font-size:24px}.tri-p p,.tri-p li,.tri-sp,.tri-p summary+*{line-height:1.45;color:#f4ecdf!important}.tri-p p{margin:0 0 10px;font-size:17px}'+
 '.tri-lb{font:800 12px Manrope,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#e0b860;margin:0 0 6px}'+
@@ -34,41 +34,42 @@ function run(box,src){css();document.body.classList.add('tri-on');var D=GTXT.dia
  L.forEach(function(l,n){l.options.forEach(function(o,j){cards.push({n:n+1,j:j,text:T(o.text),key:o.state,outcome:T(o.outcome)})})});
  var seq=[{k:'intro'}];L.forEach(function(l,n){seq.push({k:'say',n:n});l.options.forEach(function(o,j){seq.push({k:'card',c:n*3+j})})});
  var pos=0,ans={},hist=[];
- box.innerHTML='<div class="tri"><div class="tri-img" id="triImg" style="background-image:url('+src+')" role="img" aria-label="Герой между Эго и Самостью"><i class="lL"></i><i class="lR"></i><i class="dL"></i><i class="dR"></i></div><div class="tri-p" id="triP"></div></div>';
- var img=box.querySelector('#triImg'),pan=box.querySelector('#triP'),I={lL:img.querySelector('.lL'),lR:img.querySelector('.lR'),dL:img.querySelector('.dL'),dR:img.querySelector('.dR')};
+ box.innerHTML='<div class="tri"><div class="tri-img" id="triImg" style="background-image:url('+src+')" role="img" aria-label="Герой между Эго и Самостью"><i class="lH"></i><i class="lL"></i><i class="lR"></i><i class="dL"></i><i class="dR"></i></div><div class="tri-p" id="triP"></div></div>';
+ var img=box.querySelector('#triImg'),pan=box.querySelector('#triP'),I={lH:img.querySelector('.lH'),lL:img.querySelector('.lL'),lR:img.querySelector('.lR'),dL:img.querySelector('.dL'),dR:img.querySelector('.dR')};
+ function glow(v){I.lH.style.opacity=Math.max(0,Math.min(1,v||0))}
  /* фокус: -1 свет на Эго (слева), +1 свет на Самость (справа), 0 ровно */
  function focus(x){x=Math.max(-1,Math.min(1,x||0));I.lL.style.opacity=Math.max(0,-x);I.dR.style.opacity=Math.max(0,-x);I.lR.style.opacity=Math.max(0,x);I.dL.style.opacity=Math.max(0,x);img.dataset.focus=x<-.3?'ego':x>.3?'self':'none'}
  window.gBack=function(){if(hist.length){pos=hist.pop();var s=seq[pos];if(s.k==='card')delete ans[s.c];draw();return true}return false};
  function go(){hist.push(pos);pos++;draw()}
- function draw(){var s=seq[pos];if(!s){finish();return}window.scrollTo(0,0);
-  if(s.k==='intro'){focus(0);pan.innerHTML='<h2>'+esc(D.title)+'</h2>'+(D.paragraphs||[]).map(function(p){return '<p>'+esc(T(p))+'</p>'}).join('')+'<p class="tri-lb">Влево: голос Эго (Защитник) · Вправо: голос Самости</p><button class="next" id="triGo">Начать</button>';pan.querySelector('#triGo').onclick=go;return}
+ function draw(){var s=seq[pos];if(!s){finish();return}window.scrollTo(0,0);glow(0);
+  if(s.k==='intro'){focus(0);pan.innerHTML='<h2>'+esc(D.title)+'</h2>'+(D.paragraphs||[]).map(function(p){return '<p>'+esc(T(p))+'</p>'}).join('')+'<p class="tri-lb">Влево: не про меня · Вправо: про меня</p><button class="next" id="triGo">Начать</button>';pan.querySelector('#triGo').onclick=go;return}
   if(s.k==='say'){var l=L[s.n],ego=/Защитник/.test(T(l.speaker));focus(ego?-1:1);
    pan.innerHTML='<div class="tri-lb">'+esc(T(l.speaker))+' · '+(s.n+1)+' из '+L.length+'</div><div class="tri-sp">'+esc(T(l.text))+'</div><button class="next" id="triGo">Дальше</button>';pan.querySelector('#triGo').onclick=go;return}
-  var c=cards[s.c];focus(0);
-  pan.innerHTML='<div class="tri-lb">Чей это голос в тебе? · '+(s.c+1)+' из '+cards.length+'</div><div class="tri-hint"><span>← Эго</span><span>Самость →</span></div><div class="tri-card" id="triCd">'+esc(c.text)+'</div><div class="tri-bt"><button id="triE" type="button">← Эго</button><button id="triS" type="button">Самость →</button></div>';
+  var c=cards[s.c];focus(0);glow(0);
+  pan.innerHTML='<div class="tri-lb">Звучит во мне? · '+(s.c+1)+' из '+cards.length+'</div><div class="tri-card" id="triCd"><div class="tri-q">Это звучит во мне?</div>'+esc(c.text)+'</div><div class="tri-bt"><button id="triN" type="button">← Не про меня</button><button id="triY" type="button">Про меня →</button></div>';
   var cd=pan.querySelector('#triCd'),sx=null,dx=0,busy=false;
-  function pick(side){if(busy)return;busy=true;ans[s.c]=side;focus(side==='ego'?-1:1);cd.style.transform='translateX('+(side==='ego'?-420:420)+'px) rotate('+(side==='ego'?-18:18)+'deg)';cd.style.opacity=0;try{navigator.vibrate&&navigator.vibrate(20)}catch(e){}setTimeout(go,380)}
+  function pick(a){if(busy)return;busy=true;ans[s.c]=a;var lf=a==='notme';glow(.6);cd.style.transform='translateX('+(lf?-420:420)+'px) rotate('+(lf?-18:18)+'deg)';cd.style.opacity=0;try{navigator.vibrate&&navigator.vibrate(20)}catch(e){}setTimeout(go,380)}
   cd.addEventListener('pointerdown',function(e){sx=e.clientX;dx=0;cd.style.transition='none';img.classList.add('drag');try{cd.setPointerCapture(e.pointerId)}catch(_){}});
-  cd.addEventListener('pointermove',function(e){if(sx==null)return;dx=e.clientX-sx;cd.style.transform='translateX('+dx+'px) rotate('+dx/18+'deg)';focus(dx/110)});
-  function up(){if(sx==null)return;sx=null;cd.style.transition='';img.classList.remove('drag');if(dx<-70)pick('ego');else if(dx>70)pick('self');else{cd.style.transform='';focus(0)}dx=0}
+  cd.addEventListener('pointermove',function(e){if(sx==null)return;dx=e.clientX-sx;cd.style.transform='translateX('+dx+'px) rotate('+dx/18+'deg)';glow(Math.abs(dx)/110*.7)});
+  function up(){if(sx==null)return;sx=null;cd.style.transition='';img.classList.remove('drag');if(dx<-70)pick('notme');else if(dx>70)pick('me');else{cd.style.transform='';glow(0)}dx=0}
   cd.addEventListener('pointerup',up);cd.addEventListener('pointercancel',up);
-  pan.querySelector('#triE').onclick=function(){pick('ego')};pan.querySelector('#triS').onclick=function(){pick('self')}}
- function finish(){var A=cards.map(function(c,i){return {n:c.n,j:c.j,state:ans[i]||null,key:c.key}}),e=A.filter(function(a){return a.state==='ego'}).length,sf=A.filter(function(a){return a.state==='self'}).length,match=A.filter(function(a){return a.state===a.key}).length;
-  var res={v:2,mode:'triangle',answers:A,ego:e,self:sf,match:match,at:Date.now()};
-  if(!preview){var P=load();P.dialog=res;if(window.GProfile){try{P=GProfile.saveResult('dialog',res,{answers:A,version:2},{profile:P,save:false})}catch(err){}}P.dialog=res;(P.log=P.log||[]).push({t:Date.now(),x:'Кто сейчас выбирает: голос Эго в '+e+' фразах, голос Самости в '+sf});try{localStorage.setItem(KEY,JSON.stringify(P))}catch(err){}}
+  pan.querySelector('#triN').onclick=function(){pick('notme')};pan.querySelector('#triY').onclick=function(){pick('me')}}
+ function finish(){glow(0);var A=cards.map(function(c,i){return {n:c.n,j:c.j,answer:ans[i]||null,key:c.key}}),e=A.filter(function(a){return a.answer==='me'&&a.key==='ego'}).length,sf=A.filter(function(a){return a.answer==='me'&&a.key==='self'}).length;
+  var res={v:3,mode:'triangle',answers:A,egoCount:e,selfCount:sf,ego:e,self:sf,at:Date.now()};
+  if(!preview){var P=load();P.dialog=res;if(window.GProfile){try{P=GProfile.saveResult('dialog',res,{answers:A,version:3},{profile:P,save:false})}catch(err){}}P.dialog=res;(P.log=P.log||[]).push({t:Date.now(),x:e+sf?'Кто сейчас выбирает: среди фраз «про меня» голос Эго '+e+', голос Самости '+sf:'Кто сейчас выбирает: ни одна фраза пока не отмечена как своя'});try{localStorage.setItem(KEY,JSON.stringify(P))}catch(err){}}
   result(res)}
- function result(res){var A=res.answers,n=nextOf();focus(res.ego>res.self?-1:res.self>res.ego?1:0);hist=[];window.gBack=null;
-  function list(side){var l=A.map(function(a,i){return a.state===side?cards[i].text:null}).filter(Boolean);return l.length?'<ul>'+l.map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ul>':'<p><small>Ни одной фразы.</small></p>'}
-  var diff=A.map(function(a,i){return a.state&&a.state!==a.key?'<li>'+esc(cards[i].text)+'<br><small>'+esc(cards[i].outcome)+'</small></li>':''}).join('');
+ function result(res){var A=res.answers,n=nextOf(),e=res.egoCount,sf=res.selfCount,none=!(e+sf);focus(e>sf?-1:sf>e?1:0);glow(0);hist=[];window.gBack=null;
+  function list(side,lab){var l=[];A.forEach(function(a,i){if(a.answer==='me'&&a.key===side)l.push(i)});return l.length?'<ul>'+l.map(function(i){return '<li><small>'+lab+'</small><br>'+esc(cards[i].text)+'<br><small>'+esc(cards[i].outcome)+'</small></li>'}).join('')+'</ul>':'<p><small>Среди отмеченных фраз таких нет.</small></p>'}
   var r=D.result_rules||{},par=(r.result_paragraphs||[])[1];
-  pan.innerHTML='<div class="tri-res"><div class="tri-lb">Кто сейчас выбирает?</div><h2>Эго: '+res.ego+' · Самость: '+res.self+'</h2><p>Голос Эго (Защитника) ты слышишь в '+res.ego+' из '+A.length+' фраз, голос Самости в '+res.self+'. Куда направлен фокус внимания, там сила и выбор.</p>'+(par?'<p>'+esc(T(par))+'</p>':'')+
-   '<details><summary>Голос Эго: '+res.ego+'</summary>'+list('ego')+'</details><details><summary>Голос Самости: '+res.self+'</summary>'+list('self')+'</details>'+(diff?'<details><summary>Где ты слышишь иначе, чем подсказка игры</summary><ul>'+diff+'</ul></details>':'')+
+  var head=none?'<p>Сейчас ни одна фраза не откликнулась как своя. Это тоже ответ. Можно вернуться к этим словам позже и заметить, какие из них звучат в обычный день.</p>':'<p>Среди фраз, которые звучат в тебе, голос Эго (Защитника): '+e+', голос Самости: '+sf+'. Это не оценка: так видно, чей голос чаще выбирает в тебе сейчас. Куда направлен фокус внимания, там сила и выбор.</p>';
+  pan.innerHTML='<div class="tri-res"><div class="tri-lb">Кто сейчас выбирает?</div><h2>'+(none?'Пока без отклика':'Эго: '+e+' · Самость: '+sf)+'</h2>'+head+(par?'<p>'+esc(T(par))+'</p>':'')+
+   (none?'':'<details><summary>Голос Эго в тебе: '+e+'</summary>'+list('ego','Эго · Защитник')+'</details><details><summary>Голос Самости в тебе: '+sf+'</summary>'+list('self','Самость')+'</details>')+
    (preview?'<p><small>Просмотр: ответы не сохраняются в твой путь.</small></p>':'')+'<button class="next" id="nx">'+(n?'Дальше: '+esc(n.t):'Дальше')+'</button><div class="tri-links"><button type="button" id="triRe">Пройти заново</button><a href="diary.html">В дневник</a></div></div>';
   var nx=pan.querySelector('#nx');window.nx=nx;if(window.GQuote)GQuote.add(pan.querySelector('.tri-res'),'slot.html?id=dialog',nx);
   nx.onclick=function(){if(preview){location.href='tasks.html';return}if(window.GReview){location.href='tasks.html';return}var u=GRoute.advance();if(u)location.href=u};
   pan.querySelector('#triRe').onclick=function(){ans={};pos=0;hist=[];draw();scrollTo(0,0)};
   window.scrollTo(0,0)}
- if(P.dialog&&P.dialog.v===2&&P.dialog.answers&&!preview){result(P.dialog);return}
+ if(P.dialog&&P.dialog.v===3&&P.dialog.answers&&!preview){result(P.dialog);return}
  draw()}
 window.GTri={mount:mount};
 })();
