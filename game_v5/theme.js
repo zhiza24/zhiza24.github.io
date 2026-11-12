@@ -14,7 +14,7 @@ var L='html.th-on[data-theme=light] ',DK='html.th-on[data-theme=dark] ',BL='html
 var css=
 /* ----- светлая: общие экраны ----- */
 L+'body{background:#f4e8cf linear-gradient(180deg,#f8efdc,#ecdcbb) fixed!important;color:#3a2410!important}'+
-L+'.gtop{background:linear-gradient(#f6ecd6f2,#f6ecd600)!important}'+L+'.gtop .gpt,'+L+'.gbk-t1{color:#6a3a12!important;text-shadow:none!important}'+L+'.gbk-t2{color:#9a5a2a!important}'+
+L+'.gtop .gpt,'+L+'.gbk-t1{color:#6a3a12!important;text-shadow:none!important}'+L+'.gbk-t2{color:#9a5a2a!important}'+
 L+'h1,'+L+'h2,'+L+'.aq,'+L+'.ar-title{color:#7a4512!important}'+L+'p{color:#4a3018}'+L+'b{color:inherit}'+
 L+'.pt{background:#fffaf0!important;border-color:#d9bf8c!important;color:#3a2410}'+L+'.pt small,'+L+'.al,'+L+'.ar-ctx,'+L+'.muted,'+L+'.dt{color:#6e5028!important}'+L+'.pt.ok{border-color:#6e9e58!important}'+
 L+'.ao,'+L+'.row button,'+L+'button[style*="#20170e"],'+L+'a.st{background:#fffaf0!important;color:#3a2410!important;border-color:#c9a46a!important}'+

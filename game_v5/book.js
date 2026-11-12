@@ -2,7 +2,7 @@
    Тексты в tochka-book.js (дословно), грузятся по нажатию. Кнопка в верхней панели .gtop. */
 (function(){
 if(window.GBook)return;
-var V='b2';
+var V='b4';
 /* шаг GFLOW (u) -> [глава 0..11, раздел или -1] */
 var MAP={
 'index.html':[0,-1],'form.html':[0,-1],'elder.html':[0,-1],
