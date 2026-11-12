@@ -10,79 +10,136 @@
 <body>
 <main class="quiz-shell">
 <section class="quiz-panel" id="quiz-panel">
-<div class="eyebrow">Территория I · Долина Истоков</div><h1>Детские адаптации</h1>
-<p class="muted">Исследование способов, которыми Вы могли приспосабливаться к сложным обстоятельствам в раннем опыте. Это не диагноз и не попытка оценить Ваше детство. Выбирайте вариант, который чаще всего похож на Вашу привычную реакцию.</p>
+<div class="eyebrow">Территория I · Долина Истоков</div><h1>Первые настройки</h1>
+<p class="muted">Сравним привычные способы реагирования в детстве и сейчас. Вспоминай не отдельный яркий случай, а то, что чаще повторялось. Здесь нет правильных ответов и оценки твоего детства.</p>
 <div class="meter"><span id="progress" style="width:0%"></span></div><p class="muted" id="counter">Вопрос 1 из 24</p>
 <h2 id="question" style="font-size:19px;line-height:1.5;font-weight:600">Загрузка…</h2><div id="options"></div>
 <div class="actions"><button class="btn-secondary" id="back" type="button">Назад</button><button class="btn-primary" id="next" type="button" disabled>Далее</button></div>
 <p class="muted" id="save-status" aria-live="polite">Ответы сохраняются в профиле этого браузера.</p>
 </section>
 <section class="quiz-panel hidden" id="result-panel" aria-live="polite">
-<div class="eyebrow">Территория I · Исследование завершено</div><h1>Карта первых стратегий</h1>
-<p class="muted">Результат показывает, какие варианты Вы чаще выбирали в предложенных ситуациях. Это ориентир для дальнейшего исследования, а не фиксированная характеристика личности.</p>
+<div class="eyebrow">Территория I · Исследование завершено</div><h1>Карта первых настроек</h1>
+<p class="muted">Результат показывает, какие способы реагирования чаще встречались в каждом периоде и что изменилось со временем. Это ориентир для самонаблюдения, а не фиксированная характеристика личности.</p>
 <div id="result-summary"></div><div class="result-grid" id="scores"></div>
 <div class="actions"><button class="btn-secondary" id="redo" type="button">Пересмотреть ответы</button><a class="btn-primary primary" href="world_map.html" style="text-align:center;text-decoration:none;padding:12px;border-radius:10px">Вернуться на карту</a></div>
 </section>
 </main>
-<script src="js/profile.js"></script><script src="data/adaptations_questions.js"></script>
+<script src="js/profile.js"></script><script src="data/adaptations_questions.js"></script><script src="data/research_interpretations.js"></script>
 <script>
 (function(){
 'use strict';
 const questions=window.adaptationsQuestions||[];
-const labels={A:'Замирание',B:'Контроль и действие',C:'Сокрытие и подстройка',D:'Поиск опоры'};
+const copy=window.RESEARCH_INTERPRETATIONS.firstSettings;
+const labels=copy.strategyLabels;
 const $=id=>document.getElementById(id);
-let index=0,answers={};
-function selectedStrategy(q){return answers[q.id]||null;}
-function persist(q){
- AlchemistProfile.recordAnswer('adaptations',q.id,answers[q.id],{questionText:q.text});
- $('save-status').textContent='Ответ сохранен. Можно продолжить позже.';
+let period='childhood',index=0,answers={childhood:{},current:{}};
+const special=[
+ {value:'NR',text:copy.responseOptions.notRemember.label},
+ {value:'NH',text:copy.responseOptions.notHappen.label}
+];
+function persist(){
+ AlchemistProfile.update(p=>{
+  p.research.adaptations=p.research.adaptations||{};
+  p.research.adaptations.status='in_progress';
+  p.research.adaptations.rawAnswers={childhood:{...answers.childhood},current:{...answers.current}};
+  p.research.adaptations.currentIndex=index;
+  p.research.adaptations.currentPeriod=period;
+ });
+ $('save-status').textContent='Ответы сохранены. Можно продолжить позже.';
 }
+function chosen(q){return answers[period][q.id]||null;}
 function render(){
  if(!questions.length){$('question').textContent='Не удалось загрузить вопросы.';return;}
- const q=questions[index],chosen=selectedStrategy(q);
- $('counter').textContent='Вопрос '+(index+1)+' из '+questions.length;
- $('progress').style.width=(Object.keys(answers).length/questions.length*100)+'%';
- $('question').textContent=q.text;$('options').replaceChildren();
+ const q=questions[index],value=chosen(q),isChild=period==='childhood';
+ $('counter').textContent=(isChild?'Детство':'Сейчас')+' · вопрос '+(index+1)+' из '+questions.length;
+ $('progress').style.width=(((isChild?0:questions.length)+index+1)/(questions.length*2)*100)+'%';
+ $('question').textContent=(isChild?copy.periodPrompts.childhood:copy.periodPrompts.current)+'\n\n'+q.text;
+ $('options').replaceChildren();
  q.options.forEach(opt=>{
-  const b=document.createElement('button');b.type='button';b.className='option'+(chosen===opt.strategy?' selected':'');b.textContent=opt.text;
-  b.addEventListener('click',()=>{answers[q.id]=opt.strategy;persist(q);render();});
+  const b=document.createElement('button');b.type='button';b.className='option'+(value===opt.strategy?' selected':'');b.textContent=opt.text;
+  b.addEventListener('click',()=>{answers[period][q.id]=opt.strategy;persist();render();});
   $('options').append(b);
  });
- $('back').disabled=index===0;$('next').disabled=!chosen;
- $('next').textContent=index===questions.length-1?'Завершить исследование':'Далее';
+ special.forEach(opt=>{
+  const b=document.createElement('button');b.type='button';b.className='option'+(value===opt.value?' selected':'');b.textContent=opt.text;
+  b.addEventListener('click',()=>{answers[period][q.id]=opt.value;persist();render();});
+  $('options').append(b);
+ });
+ $('back').disabled=period==='childhood'&&index===0;
+ $('next').disabled=!value;
+ $('next').textContent=index===questions.length-1?(period==='childhood'?'Перейти к настоящему':'Завершить исследование'):'Далее';
 }
-function calculate(){
- const scores={A:0,B:0,C:0,D:0};
- questions.forEach(q=>{const s=selectedStrategy(q);if(scores[s]!==undefined)scores[s]++;});
- const max=Math.max(...Object.values(scores)),leaders=Object.keys(scores).filter(k=>scores[k]===max);
- return {scores,dominantStrategy:leaders.length===1?leaders[0]:null,dominantStrategies:leaders,strategyLabels:labels,questionCount:questions.length,interpretation:leaders.length===1?labels[leaders[0]]:'Несколько стратегий набрали одинаковое количество ответов'};
+function calculatePeriod(which){
+ const scores={A:0,B:0,C:0,D:0},valid=0;
+ let notRemember=0,notHappen=0;
+ questions.forEach(q=>{
+  const v=answers[which][q.id];
+  if(v==='NR'){notRemember++;return;}
+  if(v==='NH'){notHappen++;return;}
+  if(scores[v]!==undefined){scores[v]++;valid++;}
+ });
+ const max=Math.max(...Object.values(scores)),leaders=Object.keys(scores).filter(k=>scores[k]===max&&max>0);
+ return {scores,valid,notRemember,notHappen,leaders,dominant:valid>=copy.rules.minResponses&&leaders.length===1?leaders[0]:null};
 }
-function finish(){
- const result=calculate();
- AlchemistProfile.setResearchResult('adaptations',result);
+function makeCard(title,periodResult){
+ const card=document.createElement('section');card.className='result-item';
+ const h=document.createElement('strong');h.textContent=title;card.append(h);
+ Object.keys(labels).forEach(k=>{
+  const p=document.createElement('p');p.textContent=labels[k]+': '+periodResult.scores[k]+' из '+periodResult.valid+' содержательных ответов';card.append(p);
+ });
+ const note=document.createElement('p');note.className='muted';
+ note.textContent='Не помню: '+periodResult.notRemember+'. Такого не было: '+periodResult.notHappen+'.';
+ card.append(note);return card;
+}
+function show(result){
  $('quiz-panel').classList.add('hidden');$('result-panel').classList.remove('hidden');
  const summary=$('result-summary');summary.replaceChildren();
- const lead=document.createElement('h2');lead.textContent=result.dominantStrategy?'Чаще выбиралась стратегия «'+labels[result.dominantStrategy]+'»':'Выраженного единственного ведущего варианта нет';
- const note=document.createElement('p');note.className='muted';note.textContent=result.dominantStrategy?'В ответах чаще встречался этот способ реагирования. Другие стратегии также могут включаться в зависимости от ситуации.':'Две или несколько стратегий набрали одинаковый результат. Это не ошибка: реакции могут меняться в зависимости от обстоятельств.';
- summary.append(lead,note);
- const host=$('scores');host.replaceChildren();
- Object.keys(labels).forEach(key=>{const card=document.createElement('div');card.className='result-item';const title=document.createElement('strong');title.textContent=labels[key];const score=document.createElement('span');score.textContent=result.scores[key]+' из 24';card.append(title,score);host.append(card);});
- $('progress').style.width='100%';$('save-status').textContent='Результат сохранен в едином профиле.';
+ const heading=document.createElement('h2');heading.textContent='Сравнение двух периодов';summary.append(heading);
+ const child=makeCard('Детство',result.childhood),now=makeCard('Сейчас',result.current);
+ $('scores').replaceChildren(child,now);
+ let outcome;
+ if(result.childhood.valid<copy.rules.minResponses&&result.current.valid<copy.rules.minResponses)outcome=copy.missing.both;
+ else if(result.childhood.valid<copy.rules.minResponses)outcome=copy.missing.childhood;
+ else if(result.current.valid<copy.rules.minResponses)outcome=copy.missing.current;
+ else if(!result.childhood.dominant||!result.current.dominant)outcome=copy.mixed;
+ else outcome=copy.transitions[result.childhood.dominant+result.current.dominant];
+ const title=document.createElement('h3');title.textContent=outcome.title;
+ const text=document.createElement('p');text.textContent=outcome.text;
+ const focus=document.createElement('p');focus.textContent=outcome.focus||'Посмотри, в каких ситуациях этот способ помогает, а где ограничивает выбор.';
+ summary.append(title,text,focus);
+ const foot=document.createElement('p');foot.className='muted';foot.textContent='Ответы «Не помню» и «Такого не было» не добавляют баллы. Они учитываются отдельно и не трактуются как отсутствие реакции.';summary.append(foot);
 }
-$('back').addEventListener('click',()=>{if(index>0){index--;render();}});
-$('next').addEventListener('click',()=>{if(!selectedStrategy(questions[index]))return;if(index<questions.length-1){index++;render();}else finish();});
-$('redo').addEventListener('click',()=>{index=0;render();$('result-panel').classList.add('hidden');$('quiz-panel').classList.remove('hidden');});
+function finish(){
+ const childhood=calculatePeriod('childhood'),current=calculatePeriod('current');
+ const result={childhood,current,questionCount:questions.length,comparison:childhood.dominant&&current.dominant?childhood.dominant+current.dominant:null};
+ AlchemistProfile.setResearchResult('adaptations',result,answers);
+ show(result);
+}
+function next(){
+ if(!chosen(questions[index]))return;
+ if(index<questions.length-1){index++;persist();render();return;}
+ if(period==='childhood'){period='current';index=0;persist();render();return;}
+ finish();
+}
+function back(){
+ if(index>0){index--;persist();render();return;}
+ if(period==='current'){period='childhood';index=questions.length-1;persist();render();}
+}
 function init(){
- const module=AlchemistProfile.load().research.adaptations||{};
- answers={};
- if(module.rawAnswers&&typeof module.rawAnswers==='object'){
-  questions.forEach(q=>{const saved=module.rawAnswers[q.id];if(saved&&typeof saved.answer==='string')answers[q.id]=saved.answer;});
+ const m=AlchemistProfile.load().research.adaptations||{},raw=m.rawAnswers||{};
+ if(raw.childhood||raw.current){answers={childhood:{...(raw.childhood||{})},current:{...(raw.current||{})}};}
+ else{
+  // Совместимость со старым сохранением: прежние ответы считаются ответами за текущий период.
+  questions.forEach(q=>{const v=raw[q.id];if(v&&typeof v.answer==='string')answers.current[q.id]=v.answer;});
  }
- const firstMissing=questions.findIndex(q=>!selectedStrategy(q));
- index=firstMissing<0?questions.length-1:Math.max(0,firstMissing);
- if(module.status==='completed'&&firstMissing<0){finish();return;}
+ period=m.currentPeriod==='current'?'current':'childhood';
+ index=Math.min(Math.max(Number(m.currentIndex)||0,0),questions.length-1);
+ if(m.status==='completed'&&questions.every(q=>answers.childhood[q.id])&&questions.every(q=>answers.current[q.id])){finish();return;}
  render();
 }
+$('back').addEventListener('click',back);
+$('next').addEventListener('click',next);
+$('redo').addEventListener('click',()=>{period='childhood';index=0;answers={childhood:{},current:{}};AlchemistProfile.update(p=>{p.research.adaptations={status:'in_progress',rawAnswers:answers,currentPeriod:period,currentIndex:0};});$('result-panel').classList.add('hidden');$('quiz-panel').classList.remove('hidden');render();});
 init();
 })();
 </script><script src="js/navigation.js"></script>
