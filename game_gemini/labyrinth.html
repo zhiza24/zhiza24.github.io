@@ -52,7 +52,7 @@
   </div>
   <section id="results-area" hidden>
     <div class="results-box">
-      <h2 style="color:#a8874d;margin-top:0">Ваш путеводитель по Лабиринту желаний</h2>
+      <h2 style="color:#a8874d;margin-top:0">Твоя карта Лабиринта желаний</h2>
       <div id="summary-container"></div>
     </div>
     <div class="actions">
@@ -62,168 +62,157 @@
   </section>
 </main>
 <script src="js/profile.js"></script>
-<script src="data/labyrinth_data.js"></script>
+<script src="data/labyrinth_data.js"></script><script src="data/research_interpretations.js"></script>
 <script>
 (function(){
-  'use strict';
-  const steps = window.labyrinthData.steps;
-  const moduleKey = 'labyrinth';
-  let currentStepIdx = 0;
-  let userAnswers = { reflections: {}, multi: {} };
-  const $ = id => document.getElementById(id);
-
-  function normalizeAnswers(value) {
-    const source = value && typeof value === 'object' ? value : {};
-    return {
-      reflections: source.reflections && typeof source.reflections === 'object' ? source.reflections : {},
-      multi: source.multi && typeof source.multi === 'object' ? source.multi : {}
-    };
+'use strict';
+const steps=window.labyrinthData.steps;
+const copy=window.RESEARCH_INTERPRETATIONS.labyrinth;
+const moduleKey='labyrinth';
+let currentStepIdx=0,noDesireMode=false,pathIndex=0;
+let userAnswers={reflections:{},multi:{},noDesire:{},noDesirePathActive:false,noDesirePathComplete:false};
+const $=id=>document.getElementById(id);
+function normalizeAnswers(value){
+ const source=value&&typeof value==='object'?value:{};
+ return {
+  reflections:source.reflections&&typeof source.reflections==='object'?source.reflections:{},
+  multi:source.multi&&typeof source.multi==='object'?source.multi:{},
+  noDesire:source.noDesire&&typeof source.noDesire==='object'?source.noDesire:{},
+  noDesirePathActive:!!source.noDesirePathActive,
+  noDesirePathComplete:!!source.noDesirePathComplete
+ };
+}
+function saveProgress(){
+ AlchemistProfile.update(profile=>{
+  profile.research[moduleKey]={
+   ...(profile.research[moduleKey]||{}),currentStepIdx,noDesireMode,pathIndex,
+   rawAnswers:userAnswers,status:'in_progress'
+  };
+ });
+ $('save-status').textContent='Ответы сохранены в профиле этого браузера.';
+}
+function addTextarea(container,prompt,placeholder,value,onInput){
+ const textarea=document.createElement('textarea');textarea.className='textarea-field';textarea.placeholder=placeholder||'';textarea.value=value||'';textarea.setAttribute('aria-label',prompt||'Твой ответ');
+ textarea.addEventListener('input',()=>onInput(textarea.value));container.appendChild(textarea);
+}
+function renderStep(){
+ const container=$('step-input-container');container.replaceChildren();
+ if(noDesireMode){
+  const p=copy.noDesirePath.steps[pathIndex];
+  $('q-counter').textContent='Если пока не знаешь, чего хочешь · '+(pathIndex+1)+' из '+copy.noDesirePath.steps.length;
+  $('main-title').textContent=copy.noDesirePath.title;
+  $('progress-subtitle').textContent='Не нужно придумывать большую цель. Ищем первый честный ориентир.';
+  $('step-prompt').textContent=p.title+'\n\n'+p.prompt;
+  $('progress-fill').style.width=((pathIndex+1)/(steps.length+copy.noDesirePath.steps.length)*100)+'%';
+  addTextarea(container,p.prompt,p.placeholder,userAnswers.noDesire[p.id],value=>{userAnswers.noDesire[p.id]=value;saveProgress();});
+  $('prev-btn').disabled=pathIndex===0;
+  $('next-btn').textContent=pathIndex===copy.noDesirePath.steps.length-1?'Перейти к препятствиям':'Далее';
+  return;
+ }
+ const step=steps[currentStepIdx];
+ $('q-counter').textContent='Шаг '+(currentStepIdx+1)+' из '+steps.length;
+ $('main-title').textContent=step.title;
+ $('progress-subtitle').textContent=step.subtitle;
+ $('step-prompt').textContent=step.prompt;
+ $('progress-fill').style.width=((copy.noDesirePath.steps.length+currentStepIdx+1)/(steps.length+copy.noDesirePath.steps.length)*100)+'%';
+ if(step.type==='input_reflection'){
+  addTextarea(container,step.prompt,step.placeholder,userAnswers.reflections[step.id],value=>{userAnswers.reflections[step.id]=value;saveProgress();});
+  if(currentStepIdx===0){
+   const button=document.createElement('button');button.type='button';button.className='btn-secondary';button.textContent='Пока не знаю, чего хочу';
+   button.addEventListener('click',()=>{noDesireMode=true;pathIndex=0;userAnswers.noDesirePathActive=true;saveProgress();renderStep();});
+   container.appendChild(button);
   }
-
-  function saveProgress() {
-    AlchemistProfile.update(profile => {
-      profile.research[moduleKey] = {
-        ...(profile.research[moduleKey] || {}),
-        currentStepIdx,
-        rawAnswers: userAnswers,
-        status: 'in_progress'
-      };
-    });
-    $('save-status').textContent = 'Изменения сохранены в едином профиле героя.';
-  }
-
-  function initLabyrinth() {
-    const profile = AlchemistProfile.load();
-    const saved = profile.research && profile.research[moduleKey];
-    if (saved && saved.rawAnswers) userAnswers = normalizeAnswers(saved.rawAnswers);
-    if (saved && saved.status === 'completed') {
-      finishQuiz(false);
-      return;
-    }
-    if (saved && Number.isInteger(saved.currentStepIdx)) {
-      currentStepIdx = Math.min(Math.max(saved.currentStepIdx, 0), steps.length - 1);
-    }
-    renderStep();
-  }
-
-  function renderStep() {
-    const step = steps[currentStepIdx];
-    $('q-counter').textContent = 'Шаг ' + (currentStepIdx + 1) + ' из ' + steps.length;
-    $('main-title').textContent = step.title;
-    $('progress-subtitle').textContent = step.subtitle;
-    $('step-prompt').textContent = step.prompt;
-    $('progress-fill').style.width = ((currentStepIdx + 1) / steps.length * 100) + '%';
-    const container = $('step-input-container');
-    container.replaceChildren();
-
-    if (step.type === 'input_reflection') {
-      const textarea = document.createElement('textarea');
-      textarea.className = 'textarea-field';
-      textarea.placeholder = step.placeholder || '';
-      textarea.value = userAnswers.reflections[step.id] || '';
-      textarea.setAttribute('aria-label', step.prompt);
-      textarea.addEventListener('input', () => {
-        userAnswers.reflections[step.id] = textarea.value;
-        saveProgress();
-      });
-      container.appendChild(textarea);
-    } else if (step.type === 'multi_choice') {
-      if (!Array.isArray(userAnswers.multi[step.id])) userAnswers.multi[step.id] = [];
-      step.options.forEach(option => {
-        const label = document.createElement('label');
-        label.className = 'checkbox-option' + (userAnswers.multi[step.id].includes(option.id) ? ' selected' : '');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = option.id;
-        checkbox.checked = userAnswers.multi[step.id].includes(option.id);
-        checkbox.addEventListener('change', () => {
-          const selected = new Set(userAnswers.multi[step.id]);
-          if (checkbox.checked) selected.add(option.id); else selected.delete(option.id);
-          userAnswers.multi[step.id] = Array.from(selected);
-          label.classList.toggle('selected', checkbox.checked);
-          saveProgress();
-        });
-        const text = document.createElement('span');
-        text.textContent = option.text;
-        label.append(checkbox, text);
-        container.appendChild(label);
-      });
-    }
-
-    $('prev-btn').disabled = currentStepIdx === 0;
-    $('next-btn').textContent = currentStepIdx === steps.length - 1 ? 'Завершить исследование' : 'Далее';
-  }
-
-  function finishQuiz(save = true) {
-    if (save) {
-      AlchemistProfile.setResearchResult(moduleKey, { summary: userAnswers }, userAnswers);
-      AlchemistProfile.update(profile => {
-        profile.research[moduleKey].currentStepIdx = steps.length - 1;
-        profile.research[moduleKey].status = 'completed';
-        profile.research[moduleKey].rawAnswers = userAnswers;
-      });
-    }
-    $('quiz-area').hidden = true;
-    $('results-area').hidden = false;
-    renderSummary();
-  }
-
-  function renderSummary() {
-    const container = $('summary-container');
-    container.replaceChildren();
-    steps.forEach(step => {
-      const item = document.createElement('div');
-      item.className = 'summary-item';
-      const title = document.createElement('div');
-      title.className = 'summary-title';
-      title.textContent = step.title;
-      const content = document.createElement('div');
-      content.className = 'summary-content';
-      let value = 'Не заполнено';
-      if (step.type === 'input_reflection') {
-        value = userAnswers.reflections[step.id] || 'Нет ответа';
-      } else if (step.type === 'multi_choice') {
-        const selected = userAnswers.multi[step.id] || [];
-        const texts = step.options.filter(option => selected.includes(option.id)).map(option => '• ' + option.text);
-        value = texts.length ? texts.join('\n') : 'Ничего не выбрано';
-      }
-      content.textContent = value;
-      item.append(title, content);
-      container.appendChild(item);
-    });
-  }
-
-  function restartQuiz() {
-    if (!window.confirm('Хотите пройти Лабиринт желаний заново? Сохраненные ответы этого модуля будут сброшены.')) return;
-    userAnswers = { reflections: {}, multi: {} };
-    currentStepIdx = 0;
-    AlchemistProfile.update(profile => {
-      profile.research[moduleKey] = {
-        status: 'in_progress', currentStepIdx: 0,
-        rawAnswers: userAnswers, results: {}, completedAt: null
-      };
-    });
-    $('results-area').hidden = true;
-    $('quiz-area').hidden = false;
-    $('save-status').textContent = 'Начато повторное прохождение.';
-    renderStep();
-  }
-
-  $('prev-btn').addEventListener('click', () => {
-    if (currentStepIdx > 0) { currentStepIdx--; saveProgress(); renderStep(); }
+ }else if(step.type==='multi_choice'){
+  if(!Array.isArray(userAnswers.multi[step.id]))userAnswers.multi[step.id]=[];
+  step.options.forEach(option=>{
+   const label=document.createElement('label');label.className='checkbox-option'+(userAnswers.multi[step.id].includes(option.id)?' selected':'');
+   const checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.value=option.id;checkbox.checked=userAnswers.multi[step.id].includes(option.id);
+   checkbox.addEventListener('change',()=>{const selected=new Set(userAnswers.multi[step.id]);if(checkbox.checked)selected.add(option.id);else selected.delete(option.id);userAnswers.multi[step.id]=Array.from(selected);label.classList.toggle('selected',checkbox.checked);saveProgress();});
+   const text=document.createElement('span');text.textContent=option.text;label.append(checkbox,text);container.appendChild(label);
   });
-  $('next-btn').addEventListener('click', () => {
-    if (currentStepIdx < steps.length - 1) {
-      currentStepIdx++;
-      saveProgress();
-      renderStep();
-    } else {
-      finishQuiz(true);
-    }
-  });
-  $('restart-btn').addEventListener('click', restartQuiz);
-  $('research-btn').addEventListener('click', () => { window.location.href = 'research.html'; });
-  initLabyrinth();
+ }
+ $('prev-btn').disabled=currentStepIdx===0;
+ $('next-btn').textContent=currentStepIdx===steps.length-1?'Завершить исследование':'Далее';
+}
+function buildOutcome(){
+ const desire=(userAnswers.reflections.desire_definition||'').trim();
+ const obstacles=userAnswers.multi.obstacles_mapping||[];
+ const selected=steps[1].options.filter(o=>obstacles.includes(o.id));
+ const categories=selected.map(o=>o.category);
+ const hasExternal=categories.some(c=>c==='resource'||c==='external');
+ const hasInternal=categories.some(c=>c==='social'||c==='internal'||c==='clarity'||c==='behavioral');
+ const sections=[];
+ if(userAnswers.noDesirePathActive)sections.push(copy.noDesirePath.result);
+ else sections.push(desire.length>=18?copy.outcomes.clear:desire.length>0?copy.outcomes.emerging:copy.outcomes.unknown);
+ if(selected.length)sections.push(hasExternal&&hasInternal?copy.outcomes.mixedBarriers:hasExternal?copy.outcomes.barriersExternal:copy.outcomes.barriersInternal);
+ const gain=(userAnswers.reflections.secondary_gain||'').trim();
+ const price=(userAnswers.reflections.price_of_change||'').trim();
+ sections.push(gain?copy.outcomes.secondaryGain:{title:copy.insufficient.title,text:'Пока нет твоего описания того, что сохраняет привычное положение. Мы не будем придумывать скрытую выгоду за тебя.'});
+ sections.push(price?copy.outcomes.price:{title:copy.insufficient.title,text:'Пока не описана цена перемен. Это поле можно заполнить позже; отсутствие ответа не означает, что ты не готов к изменениям.'});
+ const completedFields=[desire.length>0,userAnswers.noDesirePathComplete,selected.length>0,gain.length>0,price.length>0].filter(Boolean).length;
+ return {sections,insufficient:completedFields<2?copy.insufficient:null};
+}
+function finishQuiz(save=true){
+ const outcome=buildOutcome();
+ if(save){
+  const result={summary:userAnswers,interpretation:outcome};
+  AlchemistProfile.setResearchResult(moduleKey,result,userAnswers);
+  AlchemistProfile.update(profile=>{profile.research[moduleKey].currentStepIdx=steps.length-1;profile.research[moduleKey].status='completed';profile.research[moduleKey].rawAnswers=userAnswers;});
+ }
+ $('quiz-area').hidden=true;$('results-area').hidden=false;renderSummary(outcome);
+}
+function renderSummary(outcome){
+ const container=$('summary-container');container.replaceChildren();
+ const title=document.createElement('h3');title.textContent='Твои ответы';container.appendChild(title);
+ steps.forEach(step=>{
+  const item=document.createElement('div');item.className='summary-item';
+  const h=document.createElement('div');h.className='summary-title';h.textContent=step.title;
+  const content=document.createElement('div');content.className='summary-content';
+  let value='Пока нет ответа';
+  if(step.type==='input_reflection')value=userAnswers.reflections[step.id]||'Пока нет ответа';
+  else if(step.type==='multi_choice'){const selected=userAnswers.multi[step.id]||[];const texts=step.options.filter(o=>selected.includes(o.id)).map(o=>'• '+o.text);value=texts.length?texts.join('\n'):'Пока ничего не выбрано';}
+  content.textContent=value;item.append(h,content);container.appendChild(item);
+ });
+ if(userAnswers.noDesirePathActive){
+  const h=document.createElement('h3');h.textContent=copy.noDesirePath.title;container.appendChild(h);
+  copy.noDesirePath.steps.forEach(p=>{const item=document.createElement('div');item.className='summary-item';const t=document.createElement('div');t.className='summary-title';t.textContent=p.title;const c=document.createElement('div');c.className='summary-content';c.textContent=userAnswers.noDesire[p.id]||'Пока нет ответа';item.append(t,c);container.appendChild(item);});
+ }
+ const heading=document.createElement('h3');heading.textContent='Что показывают ответы';container.appendChild(heading);
+ outcome.sections.forEach(section=>{const item=document.createElement('section');item.className='results-box';const h=document.createElement('h4');h.textContent=section.title;const p=document.createElement('p');p.textContent=section.text;item.append(h,p);if(section.next){const n=document.createElement('p');n.textContent='Следующий шаг: '+section.next;item.appendChild(n);}container.appendChild(item);});
+ if(outcome.insufficient){const item=document.createElement('p');item.className='muted';item.textContent=outcome.insufficient.text;container.appendChild(item);}
+}
+function next(){
+ if(noDesireMode){
+  if(pathIndex<copy.noDesirePath.steps.length-1){pathIndex++;saveProgress();renderStep();}
+  else{userAnswers.noDesirePathComplete=true;noDesireMode=false;currentStepIdx=1;saveProgress();renderStep();}
+  return;
+ }
+ if(currentStepIdx<steps.length-1){currentStepIdx++;saveProgress();renderStep();}
+ else finishQuiz(true);
+}
+function previous(){
+ if(noDesireMode){if(pathIndex>0)pathIndex--;else noDesireMode=false;saveProgress();renderStep();return;}
+ if(currentStepIdx>0){currentStepIdx--;saveProgress();renderStep();}
+}
+function restartQuiz(){
+ if(!window.confirm('Пройти Лабиринт желаний заново? Сохраненные ответы этого модуля будут заменены.'))return;
+ userAnswers={reflections:{},multi:{},noDesire:{},noDesirePathActive:false,noDesirePathComplete:false};currentStepIdx=0;noDesireMode=false;pathIndex=0;
+ AlchemistProfile.update(profile=>{profile.research[moduleKey]={status:'in_progress',currentStepIdx:0,noDesireMode:false,pathIndex:0,rawAnswers:userAnswers,results:{},completedAt:null};});
+ $('results-area').hidden=true;$('quiz-area').hidden=false;$('save-status').textContent='Начато новое прохождение.';renderStep();
+}
+$('prev-btn').addEventListener('click',previous);
+$('next-btn').addEventListener('click',next);
+$('restart-btn').addEventListener('click',restartQuiz);
+$('research-btn').addEventListener('click',()=>{window.location.href='research.html';});
+function initLabyrinth(){
+ const saved=AlchemistProfile.load().research&&AlchemistProfile.load().research[moduleKey];
+ if(saved&&saved.rawAnswers)userAnswers=normalizeAnswers(saved.rawAnswers);
+ if(saved&&saved.status==='completed'){finishQuiz(false);return;}
+ if(saved&&Number.isInteger(saved.currentStepIdx))currentStepIdx=Math.min(Math.max(saved.currentStepIdx,0),steps.length-1);
+ if(saved){noDesireMode=!!saved.noDesireMode;pathIndex=Math.min(Math.max(Number(saved.pathIndex)||0,0),copy.noDesirePath.steps.length-1);}
+ renderStep();
+}
+initLabyrinth();
 })();
 </script>
 <script src="js/navigation.js"></script>
