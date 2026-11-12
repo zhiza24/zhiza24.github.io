@@ -74,7 +74,7 @@ function renderResults(scores){
  $('quiz-area').classList.add('hidden');$('results-area').classList.remove('hidden');
  const host=$('profile-axes-container');host.innerHTML='';let paragraphs=[];
  Object.entries(axes).forEach(([key,meta])=>{
-  const a=scores[key]||{};const l=a[key[0]]||0,r=a[key[1]]||0,total=l+r||1,diff=Math.abs(l-r),pct=Math.round(l/total*100);
+  const a=scores[key]||{};const l=a[key[0]]||0,r=a[key[1]]||0,total=l+r,diff=Math.abs(l-r),pct=total?Math.round(l/total*100):50;const neutralCount=questions.filter(q=>q.axis===key&&answers[q.id]&&answers[q.id].pole==='N').length;
   const block=document.createElement('div');block.className='axis';
   const head=document.createElement('div');head.className='axis-head';
   const left=document.createElement('strong');left.textContent=meta.left+' · '+l;
@@ -84,8 +84,9 @@ function renderResults(scores){
   const fill=document.createElement('div');fill.className='axis-fill';fill.style.width=pct+'%';track.append(fill);
   const title=document.createElement('div');title.innerHTML='<strong>'+meta.name+'</strong>';
   block.append(title,head,track);host.append(block);
-  let tendency=diff<=2?'Смешанный результат: выраженного перевеса нет.':(l>r?'Более заметно предпочтение '+meta.left+'.':'Более заметно предпочтение '+meta.right+'.');
-  paragraphs.push('<p class="result-note"><strong>'+meta.name+'.</strong> '+tendency+' '+meta.strength+'</p>');
+  let tendency=total<4?'Недостаточно содержательных ответов, чтобы определить предпочтение по этой оси.':(diff<=2?'Выраженного перевеса нет.':(l>r?'Более заметно предпочтение '+meta.left+'.':'Более заметно предпочтение '+meta.right+'.'));
+  let detail=total<4?interpretationCopy.neutralHandling.text:(diff<=2?interpretationCopy.balance[key].text:meta.strength);
+  paragraphs.push('<p class="result-note"><strong>'+meta.name+'.</strong> '+tendency+' '+detail+' Нейтральных ответов: '+neutralCount+'.</p>');
  });
  $('results-description').innerHTML=paragraphs.join('');
 }
