@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794444445"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9f19"><link rel="stylesheet" href="scroll.css?v=s5"><title>Выбери карту</title>
+<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794444679"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9f19"><link rel="stylesheet" href="scroll.css?v=s5"><title>Выбери карту</title>
 <style>html,body{margin:0;min-height:100%;background:#120c07;color:#f4ecdf;font-family:Manrope,sans-serif;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;-webkit-tap-highlight-color:transparent}
 *{-webkit-tap-highlight-color:transparent}
 html:not(.gsc-deck-focus),html:not(.gsc-deck-focus) body,body.gsc-open,body.gsc-first{overflow:hidden;height:100%;height:100dvh}
@@ -22,13 +22,13 @@ html.gsc-deck-focus,html.gsc-deck-focus body{overflow:hidden;height:100%;height:
 .dsc.over.end{-webkit-mask-image:none;mask-image:none}
 .dsc>*{flex:none}
 .dsc h2{margin:0 0 .45em;font:700 1.3em/1.1 'Cormorant Garamond',serif;color:#ffe9a8;letter-spacing:.06em;text-transform:uppercase;text-shadow:0 1px 4px #000}
-.dsc .p,.dsc .m{line-height:1.38;font-weight:500;color:#f4ecdf}
+.dsc .p,.dsc .m{line-height:1.36;font-weight:500;color:#f4ecdf}
 .dsc .p{margin-bottom:.55em;padding-bottom:.55em;border-bottom:1px solid rgba(255,216,119,.22)}
 .dsc b{display:block;font-size:.8em;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.2em;font-weight:800}
 .p b{color:#9fe0a0}.m b{color:#f0a090}
 .dsc .txt{animation:txtIn .35s ease both}
 @keyframes txtIn{from{opacity:0}to{opacity:1}}
-.gow{margin-top:auto;padding-top:14px;padding-bottom:4px}
+.gow{flex:none;padding:10px 0 4px}
 html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none}
 .nxs{display:flex;align-items:center;justify-content:center;box-sizing:border-box;position:relative;width:calc(100% - 6px);margin:0 3px;min-height:52px;padding:8px 12px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 16px/1.15 Manrope,sans-serif;letter-spacing:.04em;text-transform:uppercase;text-align:center;cursor:pointer;box-shadow:0 0 0 3px #ffd877,0 6px 20px rgba(255,200,90,.5);animation:nxp 1.8s 1s infinite;outline:none}
 body.gsc-open .nxs,body.gsc-first .nxs{opacity:0;pointer-events:none}
@@ -55,7 +55,7 @@ body.gsc-open .nxs,body.gsc-first .nxs{opacity:0;pointer-events:none}
 }
 </style></head>
 <body data-page="task"><div class="w">
-<div class="deck" id="deck"><div class="th" id="th"></div><div class="desc"><div class="dsc" id="big"><div class="txt" id="txt"></div><div class="gow"><button type="button" class="nxs" id="go" aria-label="Выбрать эту карту">ВЫБРАТЬ ЭТУ КАРТУ</button></div></div></div></div></div>
+<div class="deck" id="deck"><div class="th" id="th"></div><div class="desc"><div class="dsc" id="big"><div class="txt" id="txt"></div></div><div class="gow"><button type="button" class="nxs" id="go" aria-label="Выбрать эту карту">ВЫБРАТЬ ЭТУ КАРТУ</button></div></div></div></div>
 
 <div class="fx" id="fx"></div><div class="fx" id="fq" style="font:600 19px Manrope;flex-direction:column"></div>
 <script src="stages.js?v=4"></script><script src="scroll.js?v=s6"></script><script>
@@ -70,7 +70,7 @@ var SPARK='<span class="spark" aria-hidden="true"><svg viewBox="0 0 24 24"><path
 function thumbs(){th.innerHTML=C.map(function(x,j){return '<button type="button" class="'+(j==i?'on':'')+(READ[j]?' read':'')+'" aria-label="'+x.n+'" aria-pressed="'+(j==i?'true':'false')+'"><img src="img/'+x.img+'" alt="">'+SPARK+'</button>'}).join('');th.querySelectorAll('button').forEach(function(b,j){b.onclick=function(){if(i===j)return;i=j;dr()}})}
 function descHtml(c){return '<h2>'+c.n+'</h2><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div>'}
 function edge(){var b=big;b.classList.toggle('end',b.scrollTop+b.clientHeight>=b.scrollHeight-4)}
-function fit(){var b=big,fs=19;b.classList.remove('over');b.style.fontSize=fs+'px';while(fs>17&&b.scrollHeight>b.clientHeight+1){fs-=.5;b.style.fontSize=fs+'px'}b.classList.toggle('over',b.scrollHeight>b.clientHeight+1);edge()}
+function fit(){var b=big,fs=19;b.classList.remove('over');b.style.fontSize=fs+'px';while(fs>15&&b.scrollHeight>b.clientHeight+1){fs-=.5;b.style.fontSize=fs+'px'}b.classList.toggle('over',b.scrollHeight>b.clientHeight+1);edge()}
 function markRead(){READ[i]=true;var b=th.children[i];if(b)b.classList.add('read')}
 function scheduleRead(){clearTimeout(readT);if(deckOn)readT=setTimeout(markRead,900)}
 function dr(){var c=C[i],t=document.getElementById('txt'),n=t.cloneNode(false);n.innerHTML=descHtml(c);t.parentNode.replaceChild(n,t);big.scrollTop=0;fit();th.querySelectorAll('button').forEach(function(b,j){b.classList.toggle('on',j==i);b.setAttribute('aria-pressed',j==i?'true':'false')});scheduleRead()}
