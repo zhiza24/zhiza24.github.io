@@ -4,7 +4,8 @@
        id: 'choose',                 // storage flag: alch_v5_scroll_<id>
        title: 'Как выбрать карту',
        html: '<p>Текст инструкции.</p>',
-       onClose: function () {}       // after the roll-up animation
+       onClose: function () {},      // after the roll-up animation
+       noIcon: true                  // optional: no header scroll icon
      });
    To avoid a flash of hidden task content for a returning player, put this in <head>:
      <script>try{if(localStorage.getItem('alch_v5_scroll_ID'))document.documentElement.classList.add('gsc-seen')}catch(e){}</script>
@@ -13,7 +14,7 @@
   'use strict';
   var KEY_PREFIX = 'alch_v5_scroll_';
   var root, ov, bodyEl, scrollEl, titleEl, icon, closeBtn, xBtn, auBtn, hideT, autoT, au;
-  var state = { id: '', onClose: null, closing: false, open: false, seen: false };
+  var state = { id: '', onClose: null, closing: false, open: false, seen: false, noIcon: false };
 
   function assetBase() {
     var s = document.querySelector('script[src*="scroll.js"]');
@@ -124,7 +125,7 @@
     state.open = false;
     ov.classList.remove('ready', 'on', 'closing', 'gone');
     document.body.classList.remove('gsc-open', 'gsc-first');
-    icon.hidden = false;
+    icon.hidden = state.noIcon;
     if (cb) cb();
   }
   function close() {
@@ -154,6 +155,7 @@
     state.closing = false;
     state.open = false;
     state.seen = isSeen(state.id);
+    state.noIcon = !!opts.noIcon; // Точка 0: без значка свитка в шапке
     titleEl.textContent = opts.title || '';
     closeBtn.textContent = opts.closeLabel || 'Закрыть';
     bodyEl.innerHTML = opts.html || '';
@@ -164,7 +166,7 @@
     if (opts.fast) document.body.classList.add('gsc-fast');
     else document.body.classList.remove('gsc-fast');
     if (state.seen && !every) {
-      icon.hidden = false;
+      icon.hidden = state.noIcon;
       document.documentElement.classList.add('gsc-seen');
       document.body.classList.remove('gsc-first');
       return;

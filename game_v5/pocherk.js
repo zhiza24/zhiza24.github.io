@@ -91,7 +91,7 @@ function showScroll(s,then){
  var S=STG[s],answered=D.answers.some(function(a){return a.stage===s}),fired=false;
  function go(){if(fired)return;fired=true;then()}
  if(!window.Scroll){go();return}
- Scroll.show({id:'pocherk_'+s,title:S.title,html:'<p class="pc-sub">'+S.sub+'</p>'+S.html,closeLabel:'Начать',everyTime:!answered,delay:700,onClose:go});
+ Scroll.show({id:'pocherk_'+s,noIcon:true,title:S.title,html:'<p class="pc-sub">'+S.sub+'</p>'+S.html,closeLabel:'Начать',everyTime:!answered,delay:700,onClose:go});
  if(answered)go();
 }
 function ask(){
