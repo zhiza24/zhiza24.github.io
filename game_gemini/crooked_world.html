@@ -57,7 +57,7 @@ function finish(){
   AlchemistProfile.setResearchResult('crookedWorld',{scores:result,maxPerScale:12,scaleLabels:labels,questionCount:questions.length},answers);
   AlchemistProfile.update(p=>{p.research.crookedWorld.currentIndex=questions.length-1;});
   $('quiz').hidden=true;$('results').hidden=false;
-  const wrap=$('scales');wrap.replaceChildren();const host=$('interpretations');host.replaceChildren();const copy=window.RESEARCH_INTERPRETATIONS.crookedWorld;const max=Math.max(...Object.values(result));const leaders=Object.keys(result).filter(k=>result[k]===max);
+  const wrap=$('scales');wrap.replaceChildren();const host=$('interpretations');host.replaceChildren();const copy=window.RESEARCH_INTERPRETATIONS.crookedWorld;const max=Math.max(...Object.values(result));const leaders=max>0?Object.keys(result).filter(k=>result[k]===max):[];
   Object.keys(labels).forEach(key=>{
     const val=result[key],row=document.createElement('div');row.className='cw-scale';
     const head=document.createElement('div');head.className='cw-scale-head';
