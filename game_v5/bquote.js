@@ -17,7 +17,7 @@ var TT=['Приветствие','Возвращение к себе','Карт�
 function css(){if(document.getElementById('gq-css'))return;var s=document.createElement('style');s.id='gq-css';s.textContent=
 '.gq{margin:22px 0 14px;padding:12px 14px 12px 16px;border-left:2px solid #c99a45;text-align:left}'+
 '.gq-c{font:700 11px Manrope,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#a8762f;margin:0 0 6px}'+
-'.gq-t{font:italic 600 19px/1.35 "Cormorant Garamond",Georgia,serif;color:inherit;margin:0 0 10px}'+
+'.gq-t{font:500 18.5px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,"Segoe UI",Roboto,sans-serif;font-style:normal;color:inherit;margin:0 0 10px}'+
 '.gq-b{display:inline-flex;align-items:center;gap:6px;background:transparent!important;border:1px solid rgba(201,154,69,.7)!important;color:#a8762f!important;border-radius:18px;padding:7px 14px;font:700 13px Manrope,sans-serif;cursor:pointer;width:auto!important;margin:0!important;box-shadow:none!important}'+
 '[data-theme=dark] .gq-c,[data-theme=dark] .gq-b{color:#e0b860!important}';
 document.head.appendChild(s)}

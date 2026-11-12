@@ -36,7 +36,7 @@ var RDEF='c';
  /* шрифт: B — проба 17.5px/500; C — 18.5px, плотнее, заголовки тем же шрифтом жирно */
  c+=S(B1,BODY)+'{font-family:'+SANS+'!important;font-weight:500!important;font-style:normal!important;line-height:1.5!important}'+
   S(B1,'p,.ar-ph,.ar-draft,.ar-ctx,.ar-blk p,.ao,.e,li,.gq-t')+'{font-size:17.5px!important}'+S(B1,'small,.ar-ph small,.muted,.dt,.al,.l')+'{font-size:15.5px!important}';
- c+=S(B2,BODY)+'{font-family:'+SANS+'!important;font-weight:550!important;font-style:normal!important;line-height:1.5!important;letter-spacing:0!important}'+
+ c+=S(B2,BODY)+'{font-family:'+SANS+'!important;font-weight:500!important;font-style:normal!important;line-height:1.5!important;letter-spacing:0!important}'+
   S(B2,'p,.ar-ph,.ar-draft,.ar-ctx,.ar-blk p,.ao,.e,li,.gq-t,blockquote,textarea')+'{font-size:18.5px!important}'+
   S(B2,'small,.ar-ph small,.muted,.dt,.al,.l')+'{font-size:16px!important}'+
   S(B2,HEAD)+'{font-family:'+SANS+'!important;font-weight:700!important;font-style:normal!important;letter-spacing:-.01em!important;line-height:1.25!important}'+
@@ -47,7 +47,31 @@ var RDEF='c';
  c+=K+'.gbk-txt p,'+K+'.gbk-txt li,'+K+'.gbk-txt .key,'+K+'.gbk-txt .flow,'+K+'.gbk-txt .li2{font-family:'+SANS+'!important;font-weight:500!important;font-style:normal!important;font-size:18.5px!important;line-height:1.55!important;letter-spacing:0!important}'+
   K+'.gbk-hero h2,'+K+'.gbk-sh,'+K+'.gbk-txt h4,'+K+'.dbk-cover h2,'+K+'.dbk-item .dbk-it{font-family:'+SANS+'!important;font-weight:700!important;font-style:normal!important;letter-spacing:-.01em!important}'+
   K+'.gbk-hero h2,'+K+'.dbk-cover h2{font-size:26px!important}'+K+'.gbk-sh{font-size:22px!important}'+K+'.gbk-txt h4{font-size:20px!important}'+K+'.dbk-item .dbk-it{font-size:18px!important}';
- var st=document.createElement('style');st.id='gread';st.textContent=c;(document.head||H).appendChild(st)})();
+ /* Все остальные страницы: тот же шрифт без засечек и курсива. Цвет: темный текст на светлом -> почти черный; светлый текст на темном (сюжет, свитки) остается светлым. */
+ c+='[data-rdf]{font-family:'+SANS+'!important;font-style:normal!important;letter-spacing:0!important}'+
+  '[data-rdf=h]{font-weight:700!important;letter-spacing:-.01em!important;line-height:1.25!important}'+
+  '[data-rdb]{font-weight:500!important}'+'[data-rdb=s]{font-size:18.5px!important;line-height:1.5!important}'+
+  '[data-rdc=d]{color:#2a2118!important}'+'[data-rdc=h]{color:#3a1f08!important}';
+ var st=document.createElement('style');st.id='gread';st.textContent=c;(document.head||H).appendChild(st);
+ if(r!=='c'||/^(index|cover_v1|birth-preview)\.html$/.test(f))return;/* обложка — логотип, не трогаем */
+ var SKIP='#scr.sh,.gtop,.gnav,.gbk,.cap,.tag,.gq-b,button,select,input,svg,canvas,script,style,[class*=pyth],[class*=arcan],[class*=passport],[class*=psq],[data-rdskip]';
+ var HT=/^(H1|H2|H3|H4)$/;
+ function lum(cs){var m=/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(cs);if(!m)return 1;if(m[4]!=null&&+m[4]<.35)return 1;
+  function f(v){v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)}return .2126*f(+m[1])+.7152*f(+m[2])+.0722*f(+m[3])}
+ function own(e){for(var n=e.firstChild;n;n=n.nextSibling)if(n.nodeType===3&&n.nodeValue.trim())return n.nodeValue.trim();return ''}
+ function fix(){var all=document.body?document.body.getElementsByTagName('*'):[];
+  for(var i=0;i<all.length;i++){var e=all[i];if(e.hasAttribute('data-rdx'))continue;var t=own(e);if(!t)continue;e.setAttribute('data-rdx','1');
+   if(e.closest(SKIP))continue;var cs=getComputedStyle(e),fs=parseFloat(cs.fontSize)||16,ff=cs.fontFamily,serif=/Cormorant|Garamond|Georgia|serif/i.test(ff.replace(/sans-serif/ig,''));
+   if(t.length<=3&&fs>=24)continue;/* крупные цифры и знаки — часть картинки */
+   var head=HT.test(e.tagName)||(serif&&fs>=20);
+   e.setAttribute('data-rdf',head?'h':'b');
+   if(head&&serif)e.style.setProperty('font-size',Math.round(fs*.88*10)/10+'px','important');
+   if(!head){var w=parseInt(cs.fontWeight,10)||400;if(w<=500){e.setAttribute('data-rdb',(t.length>=50&&fs>=14.5&&fs<18.5&&/block|list-item/.test(cs.display))?'s':'w')}}
+   var L=lum(cs.color);if(L<.2)e.setAttribute('data-rdc',head?'h':'d')}}
+ var tm=0;function later(){clearTimeout(tm);tm=setTimeout(fix,60)}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){fix();new MutationObserver(later).observe(document.body,{childList:true,subtree:true,characterData:true})});
+ else{fix();new MutationObserver(later).observe(document.body,{childList:true,subtree:true,characterData:true})}
+ addEventListener('load',later)})();
 
 var L='html.th-on[data-theme=light] ',DK='html.th-on[data-theme=dark] ',BL='html[data-theme=light] ',BD='html[data-theme=dark] ';
 var css=
