@@ -6,35 +6,47 @@
 'use strict';
 if(window.GTheme)return;
 var KEY='alch_v5_theme',H=document.documentElement;
-function get(){try{return localStorage.getItem(KEY)==='dark'?'dark':'light'}catch(e){return 'light'}}
+/* Переключатель темы снят по решению владельца: всегда светлая, сохраненный выбор игнорируется. Код темной темы оставлен спящим (ALLOW_DARK). */
+var ALLOW_DARK=false;
+function get(){if(!ALLOW_DARK)return 'light';try{return localStorage.getItem(KEY)==='dark'?'dark':'light'}catch(e){return 'light'}}
 var f=location.pathname.split('/').pop()||'index.html',q=new URLSearchParams(location.search);
 var on=f==='ego.html'||f==='diary.html'||(f==='slot.html'&&q.get('id')!=='mirrors');
 H.setAttribute('data-theme',get());if(on)H.classList.add('th-on');
-/* Читабельность (проба): ?read=a|b|c включает вариант, ?read=off выключает; выбор держится в sessionStorage.
-   a — темнее текст и чище фон; b — плотный системный шрифт без курсива; c — a+b. RDEF — вариант по умолчанию для всех ('' = как сейчас). */
-var RDEF='';
-(function(){var r=q.get('read'),RK='alch_v5_read';try{if(r==='off'){sessionStorage.removeItem(RK);r=''}else if(/^[abc]$/.test(r||''))sessionStorage.setItem(RK,r);else r=sessionStorage.getItem(RK)||RDEF}catch(e){r=/^[abc]$/.test(r||'')?r:RDEF}
- if(!r||!on)return;H.setAttribute('data-read',r);
- var X=':not(.gtop *):not(.gnav *):not(.gbk *)';
+/* Читабельность: по умолчанию вариант 'c' — чистый светлый фон, темный текст, системный шрифт без засечек и курсива (выбор владельца).
+   ?read=a|b|c — проба другого варианта, ?read=off — старый вид; проба держится в sessionStorage. RDEF — вариант для всех. */
+var RDEF='c';
+(function(){var r=q.get('read'),RK='alch_v5_read';try{if(r==='off'){sessionStorage.setItem(RK,'off');r=''}else if(/^[abc]$/.test(r||''))sessionStorage.setItem(RK,r);else{r=sessionStorage.getItem(RK)||RDEF;if(r==='off')r=''}}catch(e){r=/^[abc]$/.test(r||'')?r:(r==='off'?'':RDEF)}
+ if(!r)return;H.setAttribute('data-read',r);
+ var SANS='-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+ var X=':not(.gtop *):not(.gnav *):not(.gbk *):not(.cap):not(.cap *)';
  function S(pre,list){return list.split(',').map(function(x){return pre+x+X}).join(',')}
- var BODY='p,small,li,.ar-ph,.ar-ph small,.ar-draft,.ar-ctx,.ar-blk p,.al,.l,.muted,.pt,.ao,.e,.dt,label';
- var HEAD='h1,h2,h3,.q,.aq,.ar-title,.ar-ph b';
+ var BODY='p,small,li,.ar-ph,.ar-ph small,.ar-draft,.ar-ctx,.ar-blk p,.al,.l,.muted,.pt,.ao,.e,.dt,label,.gq-t,blockquote,textarea';
+ var HEAD='h1,h2,h3,h4,.q,.aq,.ar-title,.ar-ph b,[style*="Cormorant"]';
  var c='';
  var LA='html.th-on[data-theme=light][data-read=a] ',LC='html.th-on[data-theme=light][data-read=c] ',DC='html.th-on[data-theme=dark][data-read=c] ';
  var B1='html.th-on[data-read=b] ',B2='html.th-on[data-read=c] ';
- /* A и C (цвет, светлая) */
+ /* цвет: A и C, светлая */
  [LA,LC].forEach(function(P){c+=P+'body{background:#faf5ea linear-gradient(180deg,#fdf9f1,#f5ecda) fixed!important;color:#2a2118!important}'+
   P+'.sc,'+P+'.ar-slot,'+P+'main.wrap .card{background:#fffaf0!important;background-image:none!important}'+
   P+'.ar-ph{background:#fffdf8!important}'+
   S(P,BODY)+'{color:#2a2118!important}'+S(P,HEAD)+'{color:#3a1f08!important}'+
   P+'.ao{background:#fffdf8!important;border-color:#c9a36a!important}'});
- /* C (цвет, темная) */
+ /* цвет: C, темная */
  c+=DC+'body{color:#efe6d6!important}'+S(DC,BODY)+'{color:#efe6d6!important}'+S(DC,HEAD)+'{color:#f3d48a!important}';
- /* B и C (шрифт) */
- [B1,B2].forEach(function(P){c+=S(P,BODY)+'{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif!important;font-weight:500!important;font-style:normal!important;line-height:1.5!important}'+
-  S(P,'p,.ar-ph,.ar-draft,.ar-ctx,.ar-blk p,.ao,.e,li')+'{font-size:17.5px!important}'+
-  S(P,'small,.ar-ph small,.muted,.dt,.al,.l')+'{font-size:15.5px!important}'+
-  S(P,'.ar-draft span')+'{font-style:normal!important}'});
+ /* шрифт: B — проба 17.5px/500; C — 18.5px, плотнее, заголовки тем же шрифтом жирно */
+ c+=S(B1,BODY)+'{font-family:'+SANS+'!important;font-weight:500!important;font-style:normal!important;line-height:1.5!important}'+
+  S(B1,'p,.ar-ph,.ar-draft,.ar-ctx,.ar-blk p,.ao,.e,li,.gq-t')+'{font-size:17.5px!important}'+S(B1,'small,.ar-ph small,.muted,.dt,.al,.l')+'{font-size:15.5px!important}';
+ c+=S(B2,BODY)+'{font-family:'+SANS+'!important;font-weight:550!important;font-style:normal!important;line-height:1.5!important;letter-spacing:0!important}'+
+  S(B2,'p,.ar-ph,.ar-draft,.ar-ctx,.ar-blk p,.ao,.e,li,.gq-t,blockquote,textarea')+'{font-size:18.5px!important}'+
+  S(B2,'small,.ar-ph small,.muted,.dt,.al,.l')+'{font-size:16px!important}'+
+  S(B2,HEAD)+'{font-family:'+SANS+'!important;font-weight:700!important;font-style:normal!important;letter-spacing:-.01em!important;line-height:1.25!important}'+
+  S(B2,'.q,.aq,.ar-title')+'{font-size:23px!important}'+
+  S(B2,'.ar-draft span,.ar-draft *')+'{font-style:normal!important}';
+ /* Книга (читалка и оглавление в Дневнике) — тот же шрифт на любой странице */
+ var K='html[data-read=c] ';
+ c+=K+'.gbk-txt p,'+K+'.gbk-txt li,'+K+'.gbk-txt .key,'+K+'.gbk-txt .flow,'+K+'.gbk-txt .li2{font-family:'+SANS+'!important;font-weight:500!important;font-style:normal!important;font-size:18.5px!important;line-height:1.55!important;letter-spacing:0!important}'+
+  K+'.gbk-hero h2,'+K+'.gbk-sh,'+K+'.gbk-txt h4,'+K+'.dbk-cover h2,'+K+'.dbk-item .dbk-it{font-family:'+SANS+'!important;font-weight:700!important;font-style:normal!important;letter-spacing:-.01em!important}'+
+  K+'.gbk-hero h2,'+K+'.dbk-cover h2{font-size:26px!important}'+K+'.gbk-sh{font-size:22px!important}'+K+'.gbk-txt h4{font-size:20px!important}'+K+'.dbk-item .dbk-it{font-size:18px!important}';
  var st=document.createElement('style');st.id='gread';st.textContent=c;(document.head||H).appendChild(st)})();
 
 var L='html.th-on[data-theme=light] ',DK='html.th-on[data-theme=dark] ',BL='html[data-theme=light] ',BD='html[data-theme=dark] ';
