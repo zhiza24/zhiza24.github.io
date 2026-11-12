@@ -119,7 +119,7 @@ function renderStep(){
   addTextarea(container,step.prompt,step.placeholder,userAnswers.reflections[step.id],value=>{userAnswers.reflections[step.id]=value;saveProgress();});
   if(currentStepIdx===0){
    const button=document.createElement('button');button.type='button';button.className='btn-secondary';button.textContent='Пока не знаю, чего хочу';
-   button.addEventListener('click',()=>{noDesireMode=true;pathIndex=0;userAnswers.noDesirePathActive=true;saveProgress();renderStep();});
+   button.addEventListener('click',()=>{noDesireMode=true;pathIndex=0;userAnswers.noDesirePathActive=true;userAnswers.noDesirePathComplete=false;saveProgress();renderStep();});
    container.appendChild(button);
   }
  }else if(step.type==='multi_choice'){
