@@ -9,7 +9,7 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){retur
 function T(v){return window.GT?GT(v):(v&&v.m)||v}
 function css(){if(document.getElementById('tri-css'))return;var s=document.createElement('style');s.id='tri-css';s.textContent=
 '.tri{margin:-8px -16px 0;position:relative;color:#f4ecdf}'+
-'.tri-img{position:relative;width:100%;height:min(148.7vw,714px,calc(100svh - 230px));min-height:360px;background:#0d0905 center top/cover no-repeat;overflow:hidden}'+
+'.tri-img{position:relative;width:100%;height:clamp(300px,calc(100svh - 330px),min(148.7vw,714px));background:#0d0905 center top/cover no-repeat;overflow:hidden}'+
 '.tri-img i{position:absolute;top:0;bottom:0;width:50%;pointer-events:none;opacity:0;transition:opacity .45s ease}'+
 '.tri-img .lL{left:0;background:radial-gradient(ellipse 85% 60% at 30% 52%,rgba(255,200,125,.62),rgba(255,170,90,.2) 55%,transparent 75%);mix-blend-mode:screen}'+
 '.tri-img .lR{right:0;background:radial-gradient(ellipse 85% 60% at 70% 52%,rgba(255,228,155,.62),rgba(255,210,120,.2) 55%,transparent 75%);mix-blend-mode:screen}'+
@@ -23,7 +23,7 @@ function css(){if(document.getElementById('tri-css'))return;var s=document.creat
 '.tri-card{position:relative;margin:4px 0 12px;padding:18px 16px;border-radius:16px;background:linear-gradient(#f6e6bf,#e2c78e);color:#3a2410;font:700 20px/1.35 Manrope,sans-serif;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .3s,opacity .3s;box-shadow:0 8px 24px rgba(0,0,0,.55)}'+
 '.tri-bt{display:flex;gap:10px}.tri-bt button{flex:1;min-height:48px;border-radius:999px;font:800 17px Manrope,sans-serif;border:1px solid #c99a45;background:#20170e;color:#f4ecdf;cursor:pointer}'+
 '.tri-hint{display:flex;justify-content:space-between;font-size:13px;color:#cdb68c;margin:0 2px 8px}'+
-'.tri .next{margin-top:12px}.tri-res{padding:4px 0 0}.tri-res details{margin:10px 0;border-top:1px solid rgba(201,154,69,.4);padding-top:8px}.tri-res summary{cursor:pointer;font-weight:700;color:#f0c870}'+
+'@media (max-height:720px){.tri-img{height:clamp(300px,calc(100svh - 285px),min(148.7vw,714px))}.tri-p{padding-top:16px}.tri-card{padding:14px 14px;font-size:18px;margin-bottom:10px}.tri-hint{margin-bottom:6px}}'+'.tri .next{margin-top:12px}.tri-res{padding:4px 0 0}.tri-res details{margin:10px 0;border-top:1px solid rgba(201,154,69,.4);padding-top:8px}.tri-res summary{cursor:pointer;font-weight:700;color:#f0c870}'+
 '.tri-res li{margin:6px 0;line-height:1.4}.tri-res small{color:#cdb68c}.tri-links{margin-top:12px;display:flex;gap:18px}.tri-links a,.tri-links button{background:none;border:0;padding:0;color:#e0b860;font:500 15px Manrope,sans-serif;text-decoration:underline;cursor:pointer;width:auto;min-height:0}'+
 '#m .tri p,#m .tri li,#m .tri .tri-sp,#m .tri .gq-t,#m .tri .tri-p{color:#f4ecdf!important}#m .tri small{color:#cdb68c!important}#m .tri h2,#m .tri summary{color:#f0c870!important}#m .tri .gq-c,#m .tri .gq-b{color:#e0b860!important}#m .tri .tri-card{color:#3a2410!important}';document.head.appendChild(s)}
 function nextOf(){var F=window.GFLOW||[],i=F.findIndex(function(x){return x.u==='slot.html?id=dialog'}),n=F[i+1];return n?{u:n.u,t:String(n.t).replace(/^Тест:\s*/,'')}:null}
@@ -40,7 +40,7 @@ function run(box,src){css();document.body.classList.add('tri-on');var D=GTXT.dia
  function focus(x){x=Math.max(-1,Math.min(1,x||0));I.lL.style.opacity=Math.max(0,-x);I.dR.style.opacity=Math.max(0,-x);I.lR.style.opacity=Math.max(0,x);I.dL.style.opacity=Math.max(0,x);img.dataset.focus=x<-.3?'ego':x>.3?'self':'none'}
  window.gBack=function(){if(hist.length){pos=hist.pop();var s=seq[pos];if(s.k==='card')delete ans[s.c];draw();return true}return false};
  function go(){hist.push(pos);pos++;draw()}
- function draw(){var s=seq[pos];if(!s){finish();return}
+ function draw(){var s=seq[pos];if(!s){finish();return}window.scrollTo(0,0);
   if(s.k==='intro'){focus(0);pan.innerHTML='<h2>'+esc(D.title)+'</h2>'+(D.paragraphs||[]).map(function(p){return '<p>'+esc(T(p))+'</p>'}).join('')+'<p class="tri-lb">Влево: голос Эго (Защитник) · Вправо: голос Самости</p><button class="next" id="triGo">Начать</button>';pan.querySelector('#triGo').onclick=go;return}
   if(s.k==='say'){var l=L[s.n],ego=/Защитник/.test(T(l.speaker));focus(ego?-1:1);
    pan.innerHTML='<div class="tri-lb">'+esc(T(l.speaker))+' · '+(s.n+1)+' из '+L.length+'</div><div class="tri-sp">'+esc(T(l.text))+'</div><button class="next" id="triGo">Дальше</button>';pan.querySelector('#triGo').onclick=go;return}
