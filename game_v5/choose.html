@@ -1,69 +1,69 @@
-<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794442899"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9f19"><link rel="stylesheet" href="scroll.css?v=s5"><title>Выбери карту</title>
-<style>html,body{margin:0;min-height:100%;background:#120c07;color:#f4ecdf;font-family:Manrope,sans-serif;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
+<!doctype html><html lang="ru"><head><style>html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none!important}</style><script src="flow.js?v=r2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=r2"></script><script src="profile-layer.js?v=1"></script><script src="route-gate.js?v=r2"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794443960"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="nav.css?v=h9f19"><link rel="stylesheet" href="scroll.css?v=s5"><title>Выбери карту</title>
+<style>html,body{margin:0;min-height:100%;background:#120c07;color:#f4ecdf;font-family:Manrope,sans-serif;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;-webkit-tap-highlight-color:transparent}
+*{-webkit-tap-highlight-color:transparent}
 html:not(.gsc-deck-focus),html:not(.gsc-deck-focus) body,body.gsc-open,body.gsc-first{overflow:hidden;height:100%;height:100dvh}
-.w{max-width:520px;margin:0 auto;min-height:100dvh;box-sizing:border-box;padding:calc(58px + env(safe-area-inset-top)) 8px calc(100px + env(safe-area-inset-bottom)) 8px;display:flex;flex-direction:column;overflow:visible;transition:filter .55s ease,-webkit-filter .55s ease}
-.cap{flex:none;display:table;margin:0 auto 12px;padding:7px 18px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 17px Manrope;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 18px rgba(255,200,90,.4)}
-@keyframes in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.w{max-width:520px;margin:0 auto;height:100vh;height:100dvh;min-height:540px;box-sizing:border-box;padding:calc(58px + env(safe-area-inset-top)) 8px calc(96px + env(safe-area-inset-bottom)) 8px;display:flex;flex-direction:column;overflow:visible;transition:filter .55s ease,-webkit-filter .55s ease}
+.cap{flex:none;display:table;margin:0 auto 10px;padding:6px 18px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 17px Manrope;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 18px rgba(255,200,90,.4)}
 .go{display:block;width:100%;margin-top:10px;padding:13px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 19px Manrope;cursor:pointer}
 .fx{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(10,6,3,.85);font:700 26px/1.3 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;padding:30px 24px}
 .fx small{display:block;margin-top:12px;font:600 19px/1.45 Manrope,sans-serif;color:#e8d2a0;max-width:320px;text-transform:none}
-.deck{display:flex;flex-direction:column;width:100%;overflow:visible;container-type:inline-size;container-name:deck}
-.head{flex:none;display:flex;flex-direction:row;align-items:flex-start;justify-content:flex-start;position:relative;width:100%;container-type:normal;box-sizing:content-box;gap:8px;padding:0 0 6px;--th-w:min(56px,calc((0.95 * (100cqi - 8px) - 8px) / 5.95));--card-h:calc((100cqi - var(--th-w) - 8px) * 0.95);height:var(--card-h)}
-.th{flex:none;width:var(--th-w);height:var(--card-h);display:flex;flex-direction:column;justify-content:space-between;align-items:center;min-height:0;overflow:visible;z-index:2}
-.th button{box-sizing:border-box;position:relative;flex:none;width:var(--th-w);height:var(--th-w);aspect-ratio:1/1;padding:0;border:1.5px solid #c9a46a;border-radius:7px;overflow:visible;background:#0c0804;cursor:pointer;opacity:.85;transition:opacity .25s,border-color .25s,box-shadow .25s;line-height:0;-webkit-tap-highlight-color:transparent;box-shadow:0 0 6px rgba(255,200,90,.4),0 0 0 1px rgba(255,216,119,.25)}
-.th button img{display:block;width:100%;height:100%;object-fit:cover;background:#0c0804;border-radius:5px;overflow:hidden}
+.deck{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;width:100%;overflow:visible}
+.head{flex:1 1 auto;min-height:0;display:flex;flex-direction:row;align-items:stretch;position:relative;width:100%;gap:8px;--th-w:56px}
+.th{flex:none;width:var(--th-w);display:flex;flex-direction:column;justify-content:space-between;align-items:center;min-height:0;overflow:visible;z-index:2}
+.th button{box-sizing:border-box;position:relative;flex:none;width:var(--th-w);height:var(--th-w);padding:0;border:1.5px solid #c9a46a;border-radius:7px;overflow:visible;background:#0c0804;cursor:pointer;opacity:.85;transition:opacity .25s,border-color .25s,box-shadow .25s;line-height:0;box-shadow:0 0 6px rgba(255,200,90,.4),0 0 0 1px rgba(255,216,119,.25);outline:none}
+.th button img{display:block;width:100%;height:100%;object-fit:cover;background:#0c0804;border-radius:5px}
 .th button:not(.on):before{content:"";position:absolute;inset:0;border-radius:6px;background:linear-gradient(105deg,transparent 38%,rgba(255,230,170,.22) 50%,transparent 62%);background-size:240% 100%;background-position:120% 0;animation:thumbShimmer 3.8s ease-in-out infinite;pointer-events:none;z-index:1}
 @keyframes thumbShimmer{0%,30%{background-position:120% 0}60%,100%{background-position:-120% 0}}
-.th button:hover,.th button:active{opacity:1;box-shadow:0 0 10px rgba(255,200,90,.6)}
+.th button:active{opacity:1}
 .th button.on{border:2px solid #ffd877;opacity:1;box-shadow:0 0 0 1px #ffd877,0 0 10px rgba(255,200,90,.75);z-index:3}
-.card-stage{flex:1 1 auto;min-width:0;position:relative;height:var(--card-h);width:auto;z-index:1}
-.card-hero{position:absolute;inset:0;border-radius:8px;overflow:hidden;background:#0c0804;box-shadow:0 8px 22px rgba(0,0,0,.55)}
+.th .spark{position:absolute;top:-7px;right:-7px;width:18px;height:18px;z-index:4;pointer-events:none;opacity:0;transform:scale(.3);transition:opacity .35s ease,transform .45s cubic-bezier(.2,1.6,.4,1)}
+.th .spark svg{display:block;width:100%;height:100%}
+.th button.read .spark{opacity:1;transform:none}
+.card-stage{flex:1 1 auto;min-width:0;min-height:0;position:relative;z-index:1}
+.card-hero{position:absolute;inset:0;-webkit-perspective:1400px;perspective:1400px;cursor:pointer;-webkit-user-select:none;user-select:none;outline:none}
+.flip{position:absolute;inset:0;-webkit-transform-style:preserve-3d;transform-style:preserve-3d;-webkit-transition:-webkit-transform .6s cubic-bezier(.45,.05,.25,1);transition:transform .6s cubic-bezier(.45,.05,.25,1);-webkit-transform:rotateY(0deg);transform:rotateY(0deg)}
+.flip.back{-webkit-transform:rotateY(180deg);transform:rotateY(180deg)}
+.face{position:absolute;inset:0;box-sizing:border-box;border-radius:8px;overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden;background:#0c0804;-webkit-transform:rotateY(0deg) translateZ(1px);transform:rotateY(0deg) translateZ(1px)}
+.face--front{display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 42%,#2a1a0b 0%,#120b05 62%,#0a0603 100%)}
+.art{position:relative;flex:none;width:100%;aspect-ratio:1/1;max-height:calc(100% - 58px)}
+.art img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;opacity:1;transition:opacity .4s ease}
+.art img.incoming{opacity:0}.art img.incoming.show{opacity:1}.art img.out{opacity:0}
+.fname{flex:none;padding:12px 10px 4px;font:700 22px/1.15 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 1px 4px #000}
+.face--back{-webkit-transform:rotateY(180deg) translateZ(1px);transform:rotateY(180deg) translateZ(1px);background:radial-gradient(ellipse at 50% 30%,rgba(120,78,34,.35),transparent 70%),repeating-linear-gradient(17deg,rgba(255,225,170,.025) 0 2px,transparent 2px 6px),linear-gradient(#2b1c0e,#1a1009 60%,#140c06);box-shadow:inset 0 0 0 1px rgba(255,216,119,.35),inset 0 0 40px rgba(0,0,0,.6)}
+.bk{position:absolute;inset:0;box-sizing:border-box;padding:14px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;font-size:19px}
+.bk>*{flex:none}
+.bk.scroll{overflow-y:auto;-webkit-overflow-scrolling:touch;justify-content:flex-start;-webkit-mask-image:linear-gradient(#000 calc(100% - 26px),transparent);mask-image:linear-gradient(#000 calc(100% - 26px),transparent);padding-bottom:26px}
+.bk h2{margin:0 0 .5em;font:700 1.12em/1.1 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;letter-spacing:.08em;text-transform:uppercase}
+.bk .p,.bk .m{line-height:1.38;font-weight:500;color:#f4ecdf}
+.bk .p{margin-bottom:.6em;padding-bottom:.6em;border-bottom:1px solid rgba(255,216,119,.22)}
+.bk b{display:block;font-size:.8em;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.2em;font-weight:800}
+.p b{color:#9fe0a0}.m b{color:#f0a090}
 .join{position:absolute;inset:0;pointer-events:none;z-index:4;overflow:visible;filter:drop-shadow(0 0 3px #ffcf5a) drop-shadow(0 0 10px rgba(255,200,90,.7))}
 .join i{position:absolute;box-sizing:border-box;pointer-events:none;display:block}
 .join__card,.join__tab{border:2px solid #ffd877;border-radius:9px;background:transparent}
 .join__tab{border-radius:8px;transition:top .35s ease,height .35s ease,width .35s ease,left .35s ease}
 .join__card{transition:clip-path .35s ease}
 .join__neck{background:transparent;border:0 solid #ffd877;border-top-width:2px;border-bottom-width:2px;z-index:5;transition:top .35s ease,height .35s ease,left .35s ease,width .35s ease}
-.card-hero__art{position:absolute;inset:0}
-.card-hero__art img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;background:#0c0804;pointer-events:none;opacity:1;transition:opacity .4s ease}
-.card-hero__art img.incoming{opacity:0}
-.card-hero__art img.incoming.show{opacity:1}
-.card-hero__art img.out{opacity:0}
-.card-title{flex:none;margin:16px 0 8px;padding:0 8px;font:700 22px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 1px 4px #000;position:relative;z-index:1}
-#big{flex:none;width:100%;overflow:visible;position:relative;z-index:0;margin-top:0}
-.rt{display:flex;flex-direction:column;width:100%;overflow:visible;gap:8px;isolation:isolate}
-.rt-body{display:block;overflow:visible}
-.rt-body div{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.07);font-size:19px;line-height:1.45;font-weight:500}
-.rt-body .p{margin-bottom:0}
-.rt-body b{display:block;font-size:15px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;font-weight:800}
-.p b{color:#9fe0a0}.m b{color:#f0a090}
+.hint{flex:none;margin:8px 0 0;text-align:center;font:600 14px/1.2 Manrope,sans-serif;color:rgba(214,178,110,.78);letter-spacing:.02em}
 html:not(.gsc-deck-focus) .w,body.gsc-open .w{-webkit-filter:blur(3px) brightness(.45);filter:blur(3px) brightness(.45);pointer-events:none}
-@media(prefers-reduced-motion:reduce){.w{transition:none!important}.card-hero__art img,.join__tab,.join__neck,.join__card{transition:none!important}.th button:not(.on):before,.nxs{animation:none!important}}
-.nxs{display:flex;align-items:center;justify-content:center;box-sizing:border-box;flex:none;position:relative;width:100%;height:54px;margin:16px 0 0;padding:10px 16px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 19px Manrope,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;box-shadow:0 0 0 3px #ffd877,0 8px 24px rgba(255,200,90,.6);animation:nxp 1.8s 1s infinite;-webkit-tap-highlight-color:transparent;z-index:4}
+.nxs{display:flex;align-items:center;justify-content:center;box-sizing:border-box;flex:none;position:relative;width:100%;height:54px;margin:10px 0 0;padding:10px 16px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 19px Manrope,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;box-shadow:0 0 0 3px #ffd877,0 8px 24px rgba(255,200,90,.6);animation:nxp 1.8s 1s infinite;z-index:4;outline:none;transition:opacity .45s ease,transform .45s ease,visibility 0s}
+.nxs.wait{opacity:0;visibility:hidden;pointer-events:none;transform:translateY(8px);animation:none;transition:opacity .2s ease,transform .2s ease,visibility 0s .2s}
 body.gsc-open .nxs,body.gsc-first .nxs{opacity:0;pointer-events:none}
 @keyframes nxp{50%{box-shadow:0 0 0 3px #ffd877,0 0 34px 10px rgba(255,210,110,.8)}}
-.deck.is-enter .card-hero{animation:heroIn .55s cubic-bezier(.2,.8,.3,1) both}
-.deck.is-enter .rt .p{animation:deckIn .5s .16s cubic-bezier(.2,.8,.3,1) both}
-.deck.is-enter .rt .m{animation:deckIn .5s .28s cubic-bezier(.2,.8,.3,1) both}
+.deck.is-enter .card-stage{animation:heroIn .55s cubic-bezier(.2,.8,.3,1) both}
 .deck.is-enter .th button{animation:thumbIn .4s cubic-bezier(.2,.8,.3,1) both}
 .deck.is-enter .th button:nth-child(1){animation-delay:.4s}
 .deck.is-enter .th button:nth-child(2){animation-delay:.48s}
 .deck.is-enter .th button:nth-child(3){animation-delay:.56s}
 .deck.is-enter .th button:nth-child(4){animation-delay:.64s}
 .deck.is-enter .th button:nth-child(5){animation-delay:.72s}
-@keyframes heroIn{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
-@keyframes deckIn{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
+@keyframes heroIn{from{opacity:0}to{opacity:1}}
 @keyframes thumbIn{from{opacity:.4;transform:translateX(-10px)}to{opacity:.85;transform:none}}
 .deck.is-enter .th button.on{animation-name:thumbInOn}
 @keyframes thumbInOn{from{opacity:.35;transform:translateX(-10px)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.deck.is-enter .card-hero,.deck.is-enter .rt .p,.deck.is-enter .rt .m,.deck.is-enter .th button{animation:none;opacity:1;transform:none}.deck.is-enter .th button{opacity:.85}.deck.is-enter .th button.on{opacity:1}}
-@media(min-width:400px){
-  .w{padding-left:8px;padding-right:8px}
-  .head{gap:10px;--th-w:min(56px,calc((0.95 * (100cqi - 10px) - 8px) / 5.95));--card-h:calc((100cqi - var(--th-w) - 10px) * 0.95)}
-  .card-title{font-size:24px;margin:14px 0 10px;letter-spacing:.1em}
-  .rt-body div{padding:10px 12px}
-  .rt{gap:10px}
-}
+@media(prefers-reduced-motion:reduce){.w,.flip,.nxs{transition:none!important}.art img,.join__tab,.join__neck,.join__card{transition:none!important}.th button:not(.on):before,.nxs{animation:none!important}.deck.is-enter .card-stage,.deck.is-enter .th button{animation:none;opacity:1;transform:none}.deck.is-enter .th button{opacity:.85}.deck.is-enter .th button.on{opacity:1}}
+@media(min-width:400px){.head{gap:10px}.fname{font-size:24px;letter-spacing:.1em}.bk{padding:16px}}
+@media(max-height:700px){.cap{margin-bottom:8px;padding:5px 16px;font-size:16px}.head{--th-w:52px}.hint{margin-top:6px}.nxs{height:50px;margin-top:8px}}
 .gsc-html .lead{font-weight:800;font-size:19px;color:#4a280c;text-align:center;margin:0 0 12px}
 @media(max-height:700px){
   .gsc-body{font-size:17px;line-height:1.38;padding:8px 0 8px;top:calc(var(--gsc-cap-top) * .36 + 26px);bottom:calc(var(--gsc-cap-bot) * .36 + 40px)}
@@ -73,7 +73,7 @@ body.gsc-open .nxs,body.gsc-first .nxs{opacity:0;pointer-events:none}
 }
 </style></head>
 <body data-page="task"><div class="w"><div class="cap">Выбери карту</div>
-<div class="deck" id="deck"><div class="head"><div class="th" id="th"></div><div class="card-stage"><div class="card-hero" id="pic"></div></div><div class="join" id="join" aria-hidden="true"><i class="join__card"></i><i class="join__tab"></i><i class="join__neck"></i></div></div><div class="card-title" id="cname"></div><div id="big"></div><button type="button" class="nxs" id="go" aria-label="Выбрать эту карту">ВЫБРАТЬ ЭТУ КАРТУ</button></div></div>
+<div class="deck" id="deck"><div class="head"><div class="th" id="th"></div><div class="card-stage"><div class="card-hero" id="pic" role="button" tabindex="0" aria-label="Перевернуть карту"><div class="flip" id="flip"><div class="face face--front"><div class="art" id="art"></div><div class="fname" id="cname"></div></div><div class="face face--back"><div class="bk" id="big"></div></div></div></div></div><div class="join" id="join" aria-hidden="true"><i class="join__card"></i><i class="join__tab"></i><i class="join__neck"></i></div></div><div class="hint" id="hint">Коснись карты, чтобы перевернуть</div><button type="button" class="nxs wait" id="go" aria-label="Выбрать эту карту" disabled>ВЫБРАТЬ ЭТУ КАРТУ</button></div></div>
 
 <div class="fx" id="fx"></div><div class="fx" id="fq" style="font:600 19px Manrope;flex-direction:column"></div>
 <script src="stages.js?v=4"></script><script src="scroll.js?v=s5"></script><script>
@@ -83,22 +83,33 @@ var C=[
 {k:'str',img:'card_str.jpg',n:'Горный перевал',p:'Эта дорога ведет вверх, туда, откуда открывается широкий обзор. С высоты становятся заметны связи между событиями, скрытые маршруты и возможности, которые невозможно увидеть снизу. Здесь можно проложить собственный путь, не повторяя чужих маршрутов.',m:'Подъем требует усилий. Не на каждом участке встретятся указатели и проводники. Иногда придется самостоятельно искать проходы, принимать решения и нести ответственность за выбранное направление.'},
 {k:'z',img:'card_z.jpg',n:'Река попутчиков',p:'Эта дорога проходит по течению большой реки. На ее берегах встречаются проводники, союзники и случайные попутчики. Здесь одни возможности рождаются из встреч, другие — из общего движения. Иногда именно тот, кто оказывается рядом, помогает увидеть новый путь.',m:'Течение меняется, а вместе с ним могут меняться и направления движения. Не каждый попутчик знает, куда стремится река. Важно не потерять собственный ориентир среди чужих маршрутов.'},
 {k:'f',img:'wheel.webp',n:'Пусть выберет судьба',p:'Перед тобой все дороги. Ни одна еще не закрыта, и каждая может привести к неожиданным открытиям. Иногда случайная встреча или неожиданный поворот становятся началом самого важного путешествия. Позволь миру сделать первый ход.',m:GG('Когда направление выбирает случай, невозможно заранее знать, куда он приведет. Придется принять неизвестность и встретиться с дорогой, которую ты сам не выбирал.','Когда направление выбирает случай, невозможно заранее знать, куда он приведет. Придется принять неизвестность и встретиться с дорогой, которую ты сама не выбирала.')}];
-var i=0,fadeT=0,fadeGen=0;
-function thumbs(){th.innerHTML=C.map(function(x,j){return '<button type="button" class="'+(j==i?'on':'')+'" aria-label="'+x.n+'" aria-pressed="'+(j==i?'true':'false')+'"><img src="img/'+x.img+'" alt=""></button>'}).join('');th.querySelectorAll('button').forEach(function(b,j){b.onclick=function(){if(i===j)return;i=j;dr(true)}})}
-function setCard(c,swap){if(!pic.querySelector('.card-hero__art'))pic.innerHTML='<div class="card-hero__art"></div>';var art=pic.querySelector('.card-hero__art'),src='img/'+c.img,reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}var cur=art.querySelector('img.current');if(!swap||reduce||!cur||cur.getAttribute('src')===src){if(!cur||cur.getAttribute('src')!==src)art.innerHTML='<img class="current" src="'+src+'" alt="">';return}fadeGen++;var gen=fadeGen,incoming=document.createElement('img');incoming.className='incoming';incoming.alt='';incoming.src=src;art.appendChild(incoming);requestAnimationFrame(function(){requestAnimationFrame(function(){incoming.classList.add('show');cur.classList.add('out')})});clearTimeout(fadeT);fadeT=setTimeout(function(){if(gen!==fadeGen)return;if(cur.parentNode)cur.parentNode.removeChild(cur);incoming.className='current'},420)}
+var i=0,fadeT=0,fadeGen=0,READ={},isBack=false,flipT=0,textT=0,readT=0,deckOn=false;
+var SPARK='<span class="spark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 1.5l2.2 7.3 7.3 3.2-7.3 3.2L12 22.5l-2.2-7.3L2.5 12l7.3-3.2z" fill="#ffd877" stroke="#7a4a14" stroke-width=".8"/><circle cx="12" cy="12" r="2.2" fill="#fff6d8"/></svg></span>';
+function reduced(){try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}}
+function thumbs(){th.innerHTML=C.map(function(x,j){return '<button type="button" class="'+(j==i?'on':'')+(READ[j]?' read':'')+'" aria-label="'+x.n+'" aria-pressed="'+(j==i?'true':'false')+'"><img src="img/'+x.img+'" alt="">'+SPARK+'</button>'}).join('');th.querySelectorAll('button').forEach(function(b,j){b.onclick=function(){if(i===j)return;i=j;dr(true)}})}
+function setCard(c,swap){var src='img/'+c.img,cur=art.querySelector('img.current');if(!swap||reduced()||!cur||cur.getAttribute('src')===src){if(!cur||cur.getAttribute('src')!==src)art.innerHTML='<img class="current" src="'+src+'" alt="">';return}fadeGen++;var gen=fadeGen,incoming=document.createElement('img');incoming.className='incoming';incoming.alt='';incoming.src=src;art.appendChild(incoming);requestAnimationFrame(function(){requestAnimationFrame(function(){incoming.classList.add('show');cur.classList.add('out')})});clearTimeout(fadeT);fadeT=setTimeout(function(){if(gen!==fadeGen)return;art.querySelectorAll('img').forEach(function(x){if(x!==incoming&&x.parentNode)x.parentNode.removeChild(x)});incoming.className='current'},420)}
+function backHtml(c){return '<h2>'+c.n+'</h2><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div>'}
+function fitBack(){var b=big;b.classList.remove('scroll');var fs=19;b.style.fontSize=fs+'px';while(fs>17&&b.scrollHeight>b.clientHeight+1){fs-=.5;b.style.fontSize=fs+'px'}if(b.scrollHeight>b.clientHeight+1){b.classList.add('scroll');b.scrollTop=0}}
+function syncGo(){var ok=!!READ[i];go.classList.toggle('wait',!ok);go.disabled=!ok}
+function markRead(){if(!isBack)return;READ[i]=true;var b=th.children[i];if(b)b.classList.add('read');syncGo()}
+function setSide(back){clearTimeout(flipT);clearTimeout(readT);isBack=!!back;flip.classList.toggle('back',isBack);pic.setAttribute('aria-label',isBack?'Показать картинку':'Перевернуть карту');if(isBack){fitBack();big.scrollTop=0;readT=setTimeout(markRead,reduced()?0:450)}}
+function scheduleFlip(ms){clearTimeout(flipT);if(!deckOn)return;flipT=setTimeout(function(){setSide(true)},ms)}
 var joinT=0;function scheduleJoin(){requestAnimationFrame(function(){requestAnimationFrame(updateJoin)});clearTimeout(joinT);joinT=setTimeout(updateJoin,650)}
-function dr(swap){var c=C[i];setCard(c,swap);cname.textContent=c.n;big.innerHTML='<div class="rt"><div class="rt-body"><div class="p"><b>Дар</b>'+c.p+'</div><div class="m"><b>Трудность</b>'+c.m+'</div></div></div>';if(th.children.length){th.querySelectorAll('button').forEach(function(b,j){b.classList.toggle('on',j==i);b.setAttribute('aria-pressed',j==i?'true':'false')})}else thumbs();scheduleJoin()}
+function dr(swap){var c=C[i],wasBack=isBack;clearTimeout(textT);if(wasBack)setSide(false);else{clearTimeout(flipT);clearTimeout(readT)}setCard(c,swap);cname.textContent=c.n;var put=function(){big.innerHTML=backHtml(c);fitBack()};if(wasBack&&!reduced())textT=setTimeout(put,320);else put();if(th.children.length){th.querySelectorAll('button').forEach(function(b,j){b.classList.toggle('on',j==i);b.setAttribute('aria-pressed',j==i?'true':'false')})}else thumbs();syncGo();scheduleJoin();scheduleFlip(wasBack?1600:1000)}
 function updateJoin(){var head=document.querySelector('.head'),tab=document.querySelector('.join__tab'),neck=document.querySelector('.join__neck'),frame=document.querySelector('.join__card'),thumb=th.querySelector('button.on'),card=document.getElementById('pic');if(!head||!tab||!neck||!frame||!thumb||!card)return;var hr=head.getBoundingClientRect(),t=thumb.getBoundingClientRect(),c=card.getBoundingClientRect(),o=2,ov=4,d=3,near=4;frame.style.left=(c.left-hr.left-o)+'px';frame.style.top=(c.top-hr.top-o)+'px';frame.style.width=(c.width+o*2)+'px';frame.style.height=(c.height+o*2)+'px';tab.style.left=(t.left-hr.left-o)+'px';tab.style.top=(t.top-hr.top-o)+'px';tab.style.width=(t.width+o*2)+'px';tab.style.height=(t.height+o*2)+'px';neck.style.left=(t.right-hr.left-ov)+'px';neck.style.top=(t.top-hr.top-o)+'px';neck.style.width=(c.left-t.right+ov*2)+'px';neck.style.height=(t.height+o*2)+'px';var topFlush=Math.abs(t.top-c.top)<near,botFlush=Math.abs(t.bottom-c.bottom)<near;neck.style.borderTopWidth=topFlush?'0':'2px';neck.style.borderBottomWidth=botFlush?'0':'2px';var frameH=c.height+o*2,notchTop=Math.max(0,(t.top-c.top)),notchBot=Math.min(frameH,(t.bottom-c.top)+o*2);frame.style.clipPath='polygon(0 0,100% 0,100% 100%,0 100%,0 '+notchBot+'px,'+d+'px '+notchBot+'px,'+d+'px '+notchTop+'px,0 '+notchTop+'px)';tab.style.clipPath='inset(0 '+d+'px 0 0)'}
 thumbs();dr();
-document.getElementById('go').onclick=pick;
-if(window.ResizeObserver){try{new ResizeObserver(function(){updateJoin()}).observe(document.querySelector('.head'))}catch(e){}}
-window.addEventListener('resize',function(){updateJoin()});
-var sx=0,sy=0;function onSwipeStart(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY}function onSwipeEnd(e){var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){i=(i+(dx<0?1:C.length-1))%C.length;dr(true)}}document.querySelector('.head').addEventListener('touchstart',onSwipeStart);document.querySelector('.head').addEventListener('touchend',onSwipeEnd);
+document.getElementById('go').onclick=function(){if(!READ[i])return;pick()};
+var swiped=false;pic.addEventListener('click',function(){if(swiped){swiped=false;return}if(!deckOn)return;clearTimeout(flipT);setSide(!isBack)});
+pic.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();pic.click()}});
+function refit(){updateJoin();if(big.innerHTML)fitBack()}
+if(window.ResizeObserver){try{new ResizeObserver(refit).observe(document.querySelector('.head'))}catch(e){}}
+window.addEventListener('resize',refit);try{document.fonts&&document.fonts.ready.then(refit)}catch(e){}
+var sx=0,sy=0;function onSwipeStart(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY;swiped=false}function onSwipeEnd(e){var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.3){swiped=true;setTimeout(function(){swiped=false},400);i=(i+(dx<0?1:C.length-1))%C.length;dr(true)}}document.querySelector('.head').addEventListener('touchstart',onSwipeStart,{passive:true});document.querySelector('.head').addEventListener('touchend',onSwipeEnd);
 var FQ=[[GG('Почему ты не выбрал сам?','Почему ты не выбрала сама?'),[['Боюсь ошибиться','n'],['Все пути кажутся интересными','s'],['Пусть решит кто-то другой','z'],['Хочу проверить, что выпадет, а потом решу свое','str']]],['Если выпадет трудная карта, что сделаешь?',[['Пойду сразу, разберусь по дороге','s'],['Сначала изучу ее','n'],['Перестрою под себя','str'],['Найду, кто поможет','z']]],['Как ты чаще принимаешь решения в жизни?',[['Быстро, на импульсе','s'],['Долго взвешиваю','n'],['Делаю по-своему','str'],['Советуюсь с близкими','z']]]];
 function fate(){var sc={s:0,n:0,str:0,z:0},q=0;function sh(){if(q>=FQ.length){fq.style.display='none';var r=Math.floor(Math.random()*4);i=r;var top=Object.keys(sc).sort(function(a,b){return sc[b]-sc[a]})[0];fin(C[r],top,'выбор судьбы, ближе к типу '+top);return}var f=FQ[q];fq.style.display='flex';fq.innerHTML='<div style="max-width:420px;width:100%"><div style="font:700 26px Cormorant Garamond,serif;color:#ffe9a8;margin-bottom:14px">'+f[0]+'</div>'+f[1].map(function(a){return '<button class="go" style="background:#24160c;color:#f4ecdf;border:1.5px solid #c9a46a" data-k="'+a[1]+'">'+a[0]+'</button>'}).join('')+'</div>';fq.querySelectorAll('button').forEach(function(b){b.onclick=function(){sc[b.dataset.k]++;q++;sh()}})}sh()}
 function fin(c,k,r){var p=GP();p.done[2]=1;p.log.push({s:2,t:'Выбор карты пути',r:r||c.n,d:new Date().toLocaleDateString('ru')});SP(p);try{var P=JSON.parse(localStorage.getItem('alch_v5_profile'))||{};P.mapStyle=k;localStorage.setItem('alch_v5_profile',JSON.stringify(P))}catch(e){}fx.style.display='flex';fx.innerHTML='Твоя карта: «'+c.n+'»<small>Твой путь определен. Первая отметка появилась в Дневнике.</small><small>Впереди — новые открытия.</small>';setTimeout(function(){location.href=GRoute.advance()},3000)}
 function pick(){var c=C[i];if(c.k=='f'){fate();return}fin(c,c.k)}
 
-function revealDeck(animated){document.documentElement.classList.add('gsc-deck-focus');if(deck.dataset.ready)return;deck.dataset.ready='1';var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(animated&&!reduce){deck.classList.add('is-enter');setTimeout(function(){deck.classList.remove('is-enter')},1400)}scheduleJoin()}
+function revealDeck(animated){document.documentElement.classList.add('gsc-deck-focus');if(deck.dataset.ready)return;deck.dataset.ready='1';deckOn=true;scheduleFlip(animated&&!reduced()?1500:1000);var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(animated&&!reduce){deck.classList.add('is-enter');setTimeout(function(){deck.classList.remove('is-enter')},1400)}scheduleJoin()}
 Scroll.show({id:'choose',everyTime:true,delay:80,fast:true,closeLabel:'Выбрать карту',title:'ТВОЙ ПУТЬ НАЧИНАЕТСЯ',html:'<p class="lead">Перед тобой пять дорог.</p><p>У каждой свой характер, свои возможности и испытания. Одни открывают путь через стремительное движение, другие требуют терпения, самостоятельности или умения находить попутчиков.</p><p>Рассмотри карты и выбери ту дорогу, по которой тебе хочется отправиться.</p><p>Не ищи правильный ответ. Доверься своему выбору.</p>',onClose:function(){revealDeck(true)}});
 </script><script src="engine.js?v=p1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=bk1"></script></body></html>
