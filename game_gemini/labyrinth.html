@@ -116,10 +116,10 @@ function renderStep(){
  $('step-prompt').textContent=step.prompt;
  $('progress-fill').style.width=((copy.noDesirePath.steps.length+currentStepIdx+1)/(steps.length+copy.noDesirePath.steps.length)*100)+'%';
  if(step.type==='input_reflection'){
-  addTextarea(container,step.prompt,step.placeholder,userAnswers.reflections[step.id],value=>{userAnswers.reflections[step.id]=value;saveProgress();});
+  addTextarea(container,step.prompt,step.placeholder,userAnswers.reflections[step.id],value=>{userAnswers.reflections[step.id]=value;if(currentStepIdx===0&&value.trim()){userAnswers.noDesirePathActive=false;userAnswers.noDesirePathComplete=false;}saveProgress();});
   if(currentStepIdx===0){
    const button=document.createElement('button');button.type='button';button.className='btn-secondary';button.textContent='Пока не знаю, чего хочу';
-   button.addEventListener('click',()=>{noDesireMode=true;pathIndex=0;userAnswers.noDesirePathActive=true;userAnswers.noDesirePathComplete=false;saveProgress();renderStep();});
+   button.addEventListener('click',()=>{noDesireMode=true;pathIndex=0;userAnswers.reflections.desire_definition='';userAnswers.noDesirePathActive=true;userAnswers.noDesirePathComplete=false;saveProgress();renderStep();});
    container.appendChild(button);
   }
  }else if(step.type==='multi_choice'){
