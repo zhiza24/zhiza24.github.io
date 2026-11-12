@@ -7,31 +7,32 @@
 <script src="gender.js?v=2"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<script src="upd.js?v=1794441688"></script>
+<script src="upd.js?v=1794441991"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 <title>Дыхание</title>
 <style>
-html,body,a,button{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
-a:focus,button:focus,a:focus-visible,button:focus-visible{outline:none}
+html,body,a,button,.c{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
+a:focus,button:focus,.c:focus,a:focus-visible,button:focus-visible,.c:focus-visible{outline:none}
 html,body{margin:0;min-height:100%;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;font-size:17px;line-height:1.45;text-align:center}
 body{display:flex;align-items:center;justify-content:center;flex-direction:column;box-sizing:border-box;padding:calc(56px + env(safe-area-inset-top)) 16px calc(100px + env(safe-area-inset-bottom))}
-h2{font:700 26px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;margin:0 0 40px}
-.c{width:120px;height:120px;border-radius:50%;background:radial-gradient(#ffe9a8,#e0a940 60%,#a8692a);filter:drop-shadow(0 0 22px #ffcf5a) drop-shadow(0 0 48px rgba(255,207,90,.7));transition:transform linear;transform-origin:center center;-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
-.t{margin-top:50px;font:800 22px Manrope;color:#ffd877;min-height:30px}
-.n{font-size:44px;font-weight:800;color:#fff0c8;min-height:52px}
-.s{margin-top:24px;color:#c9a46a;font-size:17px}
+h2{font:700 26px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;margin:0 0 16px}
+.n{font-size:44px;font-weight:800;color:#fff0c8;min-height:52px;margin:0}
+.stage{width:252px;height:252px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin:0 auto}
+.c{width:120px;height:120px;border-radius:50%;background:radial-gradient(#ffe9a8,#e0a940 60%,#a8692a);filter:drop-shadow(0 0 22px #ffcf5a) drop-shadow(0 0 48px rgba(255,207,90,.7));transition:transform 4s ease-in-out;transform-origin:center center;cursor:pointer;-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
+.t{margin:0;font:800 22px Manrope;color:#ffd877;min-height:30px}
+.s{margin-top:12px;color:#c9a46a;font-size:17px;min-height:24px}
 </style>
 <link rel="stylesheet" href="nav.css?v=h9f19">
 </head>
 <body data-page="task">
-<h2>Кусочек пути пройден.<br>Переведи дыхание</h2>
-<div class="c" id="c"></div>
-<div class="t" id="t"></div>
+<h2>Часть пути пройдена.<br>Переведи дыхание</h2>
 <div class="n" id="n"></div>
-<div class="s" id="s">цикл 1 из 3</div>
+<div class="stage"><div class="c" id="c" role="button" aria-label="Коснись сферы"></div></div>
+<div class="t" id="t">Коснись сферы</div>
+<div class="s" id="s"></div>
 <script>
-/* Автосфера первой сборки e6702a2: вид и автозапуск сохранены, фаза «Пауза» убрана. Вдох 4 с (scale 1.7), выдох 6 с (scale 1), 3 цикла. */
-var P=[['Вдох',4,1.7],['Выдох',6,1]],cy=0,ph=0,doneF=false;
+/* Сфера e6702a2: запуск по касанию, дальше сама. Вдох 4 с (scale 1.7), выдох 6 с (scale 1), 3 цикла, без фазы паузы. Счет сверху, надпись снизу. */
+var P=[['Вдох',4,1.7],['Выдох',6,1]],cy=0,ph=0,doneF=false,started=false;
 function fin(){
   if(doneF)return;
   doneF=true;
@@ -51,6 +52,7 @@ function run(){
   }
   var p=P[ph],k=p[1];
   t.textContent=p[0];
+  c.style.transitionTimingFunction='ease-in-out';
   c.style.transitionDuration=k+'s';
   c.style.transform='scale('+p[2]+')';
   try{navigator.vibrate&&navigator.vibrate(25)}catch(e){}
@@ -60,7 +62,14 @@ function run(){
     else setTimeout(function(){ph++;run()},1000);
   })();
 }
-setTimeout(run,600);
+function start(e){
+  if(started||doneF)return;
+  if(e)e.preventDefault();
+  started=true;
+  s.textContent='цикл 1 из 3';
+  run();
+}
+c.addEventListener('pointerdown',start,{passive:false});
 </script>
 <script src="engine.js?v=p1"></script>
 <script src="passport-data.js?v=1"></script>
