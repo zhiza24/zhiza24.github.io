@@ -7,89 +7,60 @@
 <script src="gender.js?v=2"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<script src="upd.js?v=1794441350"></script>
+<script src="upd.js?v=1794441688"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 <title>Дыхание</title>
 <style>
-html,body,a,button,.hl,svg{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
-a:focus,button:focus,.hl:focus,a:focus-visible,button:focus-visible,.hl:focus-visible,svg:focus{outline:none}
-html,body{margin:0;min-height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;font-size:17px;line-height:1.45;text-align:center}
-.w{max-width:420px;margin:0 auto;padding:calc(64px + env(safe-area-inset-top)) 16px 120px}
-h2{font:700 26px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;margin:0 0 10px}
-.tri{width:260px;height:230px;overflow:visible}
-.ph{font:800 22px Manrope;color:#ffd877;min-height:30px;margin:6px 0}
-.hl{position:relative;z-index:70;width:130px;height:130px;margin:10px auto 0;border-radius:50%;border:3px solid #fff0b8;background:radial-gradient(circle at 35% 30%,#fff5d0,#e0a940 55%,#8a5420);color:#2a1606;font:800 19px Manrope;display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px #ffcf5a;touch-action:none;cursor:pointer;transition:transform .3s;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
-.hl.go{transform:scale(1.12)}
-.hint{color:#c9a46a;font-size:17px;margin-top:10px}
-@media (max-height:720px){
-  .w{padding-top:calc(58px + env(safe-area-inset-top));padding-bottom:110px}
-  h2{margin-bottom:6px}
-  .tri{width:228px;height:202px}
-  .hl{margin-top:6px}
-  .hint{margin-top:8px}
-}
+html,body,a,button{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
+a:focus,button:focus,a:focus-visible,button:focus-visible{outline:none}
+html,body{margin:0;min-height:100%;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;font-size:17px;line-height:1.45;text-align:center}
+body{display:flex;align-items:center;justify-content:center;flex-direction:column;box-sizing:border-box;padding:calc(56px + env(safe-area-inset-top)) 16px calc(100px + env(safe-area-inset-bottom))}
+h2{font:700 26px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;margin:0 0 40px}
+.c{width:120px;height:120px;border-radius:50%;background:radial-gradient(#ffe9a8,#e0a940 60%,#a8692a);filter:drop-shadow(0 0 22px #ffcf5a) drop-shadow(0 0 48px rgba(255,207,90,.7));transition:transform linear;transform-origin:center center;-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
+.t{margin-top:50px;font:800 22px Manrope;color:#ffd877;min-height:30px}
+.n{font-size:44px;font-weight:800;color:#fff0c8;min-height:52px}
+.s{margin-top:24px;color:#c9a46a;font-size:17px}
 </style>
 <link rel="stylesheet" href="nav.css?v=h9f19">
-</head><body data-page="task">
-<div class="w">
+</head>
+<body data-page="task">
 <h2>Кусочек пути пройден.<br>Переведи дыхание</h2>
-<svg class="tri" viewBox="0 0 260 230">
-  <path id="tr" d="M130 20 L240 200 L20 200 Z" fill="none" stroke="#c9a46a" stroke-width="3"/>
-  <text x="200" y="100" fill="#e8cf9a" font-size="17">Вдох 4</text>
-  <text x="130" y="222" fill="#e8cf9a" font-size="17" text-anchor="middle">Пауза 2</text>
-  <text x="10" y="100" fill="#e8cf9a" font-size="17">Выдох 6</text>
-  <circle id="dt" r="9" fill="#ffe9a8" style="filter:drop-shadow(0 0 6px #ffcf5a)" cx="130" cy="20"/>
-</svg>
-<div class="ph" id="ph">Зажми кнопку</div>
-<div class="hl" id="hl" role="button" aria-label="Зажми">Зажми</div>
-<div class="hint" id="hint">Держи, пока точка обходит треугольник</div>
-</div>
+<div class="c" id="c"></div>
+<div class="t" id="t"></div>
+<div class="n" id="n"></div>
+<div class="s" id="s">цикл 1 из 3</div>
 <script>
-var T=12,t=0,ti,last,V=[[130,20],[240,200],[20,200],[130,20]],D=[4,2,6];
-function pos(t){
-  var a=0;
-  for(var i=0;i<3;i++){
-    if(t<=a+D[i]||i==2){
-      var f=Math.min(1,(t-a)/D[i]),p=V[i],q=V[i+1];
-      return [p[0]+(q[0]-p[0])*f,p[1]+(q[1]-p[1])*f,i,Math.ceil(a+D[i]-t)];
-    }
-    a+=D[i];
+/* Автосфера первой сборки e6702a2: вид и автозапуск сохранены, фаза «Пауза» убрана. Вдох 4 с (scale 1.7), выдох 6 с (scale 1), 3 цикла. */
+var P=[['Вдох',4,1.7],['Выдох',6,1]],cy=0,ph=0,doneF=false;
+function fin(){
+  if(doneF)return;
+  doneF=true;
+  t.textContent='Я есмь';
+  n.textContent='';
+  s.textContent='';
+  try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}
+  setTimeout(function(){
+    location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance();
+  },1400);
+}
+function run(){
+  if(ph>=P.length){
+    ph=0;cy++;
+    if(cy>=3){fin();return}
+    s.textContent='цикл '+(cy+1)+' из 3';
   }
+  var p=P[ph],k=p[1];
+  t.textContent=p[0];
+  c.style.transitionDuration=k+'s';
+  c.style.transform='scale('+p[2]+')';
+  try{navigator.vibrate&&navigator.vibrate(25)}catch(e){}
+  (function tk(){
+    n.textContent=k;
+    if(--k>0)setTimeout(tk,1000);
+    else setTimeout(function(){ph++;run()},1000);
+  })();
 }
-function tick(){
-  var n=performance.now();
-  t+=(n-last)/1000;
-  last=n;
-  if(t>=T){
-    t=T;
-    clearInterval(ti);ti=null;
-    dt.setAttribute('cx',130);dt.setAttribute('cy',20);
-    ph.textContent='Я есмь';hl.textContent='✓';
-    try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}
-    setTimeout(function(){
-      location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance();
-    },1400);
-    return;
-  }
-  var p=pos(t);
-  dt.setAttribute('cx',p[0]);dt.setAttribute('cy',p[1]);
-  ph.textContent=['Вдох','Пауза','Выдох'][p[2]]+' · '+p[3];
-}
-hl.onpointerdown=function(e){
-  e.preventDefault();
-  if(t>=T)return;
-  if(hl.setPointerCapture)try{hl.setPointerCapture(e.pointerId)}catch(err){}
-  hl.classList.add('go');
-  last=performance.now();
-  if(!ti)ti=setInterval(tick,50);
-};
-function pause(){
-  clearInterval(ti);ti=null;
-  hl.classList.remove('go');
-  if(t<T)ph.textContent='Держи кнопку';
-}
-hl.onpointerup=hl.onpointercancel=pause;
-hl.onlostpointercapture=pause;
+setTimeout(run,600);
 </script>
 <script src="engine.js?v=p1"></script>
 <script src="passport-data.js?v=1"></script>
