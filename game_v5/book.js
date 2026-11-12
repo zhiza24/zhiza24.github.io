@@ -94,10 +94,10 @@ function init(){var bar=document.querySelector('.gtop'),c=cur();if(!bar||!c||btn
  ensureFont();
  var l=document.createElement('link');l.rel='stylesheet';l.href='book.css?v='+V;document.head.appendChild(l);
  var pt=bar.querySelector('.gpt');bar.classList.add('gbk-has');
- if(pt){var w=document.createElement('div');w.className='gpt gbk-tw';var a=document.createElement('div');a.className='gbk-t1';a.textContent=pt.textContent;var b=document.createElement('div');b.className='gbk-t2';b.textContent=label(c);w.append(a,b);pt.replaceWith(w)}
+ if(pt&&!bar.querySelector('.gtools')){var w=document.createElement('div');w.className='gpt gbk-tw';var a=document.createElement('div');a.className='gbk-t1';a.textContent=pt.textContent;var b=document.createElement('div');b.className='gbk-t2';b.textContent=label(c);w.append(a,b);pt.replaceWith(w)}
  btn=document.createElement('button');btn.className='gbk-btn';btn.type='button';btn.setAttribute('aria-label','Книга Алхимика: '+label(c));
  btn.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#FFF8EF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.5c3-1 5.6-.7 8.5 1.2 2.9-1.9 5.5-2.2 8.5-1.2v13c-3-1-5.6-.7-8.5 1.2-2.9-1.9-5.5-2.2-8.5-1.2z"/><path d="M12 6.7v13"/><path d="M6 9.3h3.3M6 12.3h3.3M14.7 9.3H18M14.7 12.3H18"/></svg>';
- var fw=bar.lastElementChild;bar.insertBefore(btn,fw);
+ var fw=bar.lastElementChild,grp=bar.querySelector('.gtools');if(grp)grp.append(btn);else bar.insertBefore(btn,fw);
  if(seen()!==String(c.n))btn.classList.add('gbk-glow');
  btn.onclick=function(e){e.preventDefault();e.stopPropagation();open()};
  document.addEventListener('keydown',function(e){if(e.key==='Escape')close()})}
