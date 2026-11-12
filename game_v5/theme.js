@@ -10,6 +10,33 @@ function get(){try{return localStorage.getItem(KEY)==='dark'?'dark':'light'}catc
 var f=location.pathname.split('/').pop()||'index.html',q=new URLSearchParams(location.search);
 var on=f==='ego.html'||f==='diary.html'||(f==='slot.html'&&q.get('id')!=='mirrors');
 H.setAttribute('data-theme',get());if(on)H.classList.add('th-on');
+/* Читабельность (проба): ?read=a|b|c включает вариант, ?read=off выключает; выбор держится в sessionStorage.
+   a — темнее текст и чище фон; b — плотный системный шрифт без курсива; c — a+b. RDEF — вариант по умолчанию для всех ('' = как сейчас). */
+var RDEF='';
+(function(){var r=q.get('read'),RK='alch_v5_read';try{if(r==='off'){sessionStorage.removeItem(RK);r=''}else if(/^[abc]$/.test(r||''))sessionStorage.setItem(RK,r);else r=sessionStorage.getItem(RK)||RDEF}catch(e){r=/^[abc]$/.test(r||'')?r:RDEF}
+ if(!r||!on)return;H.setAttribute('data-read',r);
+ var X=':not(.gtop *):not(.gnav *):not(.gbk *)';
+ function S(pre,list){return list.split(',').map(function(x){return pre+x+X}).join(',')}
+ var BODY='p,small,li,.ar-ph,.ar-ph small,.ar-draft,.ar-ctx,.ar-blk p,.al,.l,.muted,.pt,.ao,.e,.dt,label';
+ var HEAD='h1,h2,h3,.q,.aq,.ar-title,.ar-ph b';
+ var c='';
+ var LA='html.th-on[data-theme=light][data-read=a] ',LC='html.th-on[data-theme=light][data-read=c] ',DC='html.th-on[data-theme=dark][data-read=c] ';
+ var B1='html.th-on[data-read=b] ',B2='html.th-on[data-read=c] ';
+ /* A и C (цвет, светлая) */
+ [LA,LC].forEach(function(P){c+=P+'body{background:#faf5ea linear-gradient(180deg,#fdf9f1,#f5ecda) fixed!important;color:#2a2118!important}'+
+  P+'.sc,'+P+'.ar-slot,'+P+'main.wrap .card{background:#fffaf0!important;background-image:none!important}'+
+  P+'.ar-ph{background:#fffdf8!important}'+
+  S(P,BODY)+'{color:#2a2118!important}'+S(P,HEAD)+'{color:#3a1f08!important}'+
+  P+'.ao{background:#fffdf8!important;border-color:#c9a36a!important}'});
+ /* C (цвет, темная) */
+ c+=DC+'body{color:#efe6d6!important}'+S(DC,BODY)+'{color:#efe6d6!important}'+S(DC,HEAD)+'{color:#f3d48a!important}';
+ /* B и C (шрифт) */
+ [B1,B2].forEach(function(P){c+=S(P,BODY)+'{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif!important;font-weight:500!important;font-style:normal!important;line-height:1.5!important}'+
+  S(P,'p,.ar-ph,.ar-draft,.ar-ctx,.ar-blk p,.ao,.e,li')+'{font-size:17.5px!important}'+
+  S(P,'small,.ar-ph small,.muted,.dt,.al,.l')+'{font-size:15.5px!important}'+
+  S(P,'.ar-draft span')+'{font-style:normal!important}'});
+ var st=document.createElement('style');st.id='gread';st.textContent=c;(document.head||H).appendChild(st)})();
+
 var L='html.th-on[data-theme=light] ',DK='html.th-on[data-theme=dark] ',BL='html[data-theme=light] ',BD='html[data-theme=dark] ';
 var css=
 /* ----- светлая: общие экраны ----- */
