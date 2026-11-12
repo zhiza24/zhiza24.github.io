@@ -45,6 +45,8 @@ function calc(P){P=P||load();var K=['resp','err','appr','deval','others','avoid'
  var e=P.ego||{},sc=e.sc||{},md=e.md||{};
  var map={ct:'resp',st:'appr',sb:'others',df:'deval',ab:'appr'};
  Object.keys(sc).forEach(function(k){if(map[k])put('ego',map[k],(sc[k]||0)/6,'фоновый узор')});
+ if(e.v===2&&e.scores){var am={A1:'deval',A2:'appr',A3:'appr',A4:'resp',A5:'others',A6:'avoid',A7:'resp',A8:'deval',A9:'resp',A10:'others',A11:'resp'};Object.keys(am).forEach(function(k){put('ego',am[k],(e.scores[k]||0)/6,'фоновое состояние')})}
+ var bb=(P.archB&&P.archB.scores)||null;if(bb){var bm={B1:'appr',B2:'others',B3:'err',B4:'avoid',B5:'resp',B7:'avoid'};Object.keys(bm).forEach(function(k){put('mode',bm[k],(bb[k]||0)/4,'привычный ход')})}
  var mt=(md.vc||0)+(md.dp||0)+(md.cr||0)+(md.ha||0);if(mt){put('mode','err',(md.cr||0)/mt,'строгий критик');put('mode','avoid',(md.dp||0)/mt,'отстраненный защитник')}
  if(P.dq&&P.dq.accepted!=null&&P.dq.accepted<70)put('dq','deval',(70-P.dq.accepted)/70,'смахивает свое хорошее');
  if(P.egoSelf&&P.egoSelf.match!=null&&P.egoSelf.match<7)put('es','others',(7-P.egoSelf.match)/7,'путает Эго и Самость');
@@ -56,7 +58,7 @@ function calc(P){P=P||load();var K=['resp','err','appr','deval','others','avoid'
  var weak=!s[ord[0]];if(weak)ord=['appr','resp','others','deval','err','avoid'];
  var tie=!weak&&s[ord[1]]===s[ord[0]];
  return {lead:ord[0],queue:ord.slice(1),score:s,sources:n,why:why,weak:weak,tie:tie,ver:2}}
-function inKey(P){return JSON.stringify([P.ego&&P.ego.sc,P.ego&&P.ego.md,P.dq&&P.dq.accepted,P.egoSelf&&P.egoSelf.match,P.wheel])}
+function inKey(P){var k=[P.ego&&P.ego.sc,P.ego&&P.ego.md,P.dq&&P.dq.accepted,P.egoSelf&&P.egoSelf.match,P.wheel];if(P.ego&&P.ego.v===2||P.archB)k.push(P.ego&&P.ego.scores,P.archB&&P.archB.scores);return JSON.stringify(k)}
 window.GCalc=calc;
 window.GLead=function(){var P=load(),k=inKey(P);if(!P.lab||!P.lab.lead||(P.lab.agree==null&&(P.lab.cycle||1)<=1&&P.lab.key!==k)){var c=calc(P),L=P.lab||{};P.lab={lead:c.lead,queue:c.queue,score:c.score,sources:c.sources,weak:c.weak,tie:c.tie,key:k,cycle:L.cycle||1,agree:null,done:L.done};save(P)}return P.lab};
 
