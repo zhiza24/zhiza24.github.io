@@ -74,7 +74,7 @@ function renderResults(scores){
  $('quiz-area').classList.add('hidden');$('results-area').classList.remove('hidden');
  const host=$('profile-axes-container');host.innerHTML='';let paragraphs=[];
  Object.entries(axes).forEach(([key,meta])=>{
-  const a=scores[key]||{};const l=a[key[0]]||0,r=a[key[1]]||0,total=l+r,diff=Math.abs(l-r),pct=total?Math.round(l/total*100):50;const neutralCount=questions.filter(q=>q.axis===key&&answers[q.id]&&answers[q.id].pole==='N').length;
+  const a=scores[key]||{};const l=a[key[0]]||0,r=a[key[1]]||0,total=l+r,diff=Math.abs(l-r),pct=total?Math.round(l/total*100):0;const neutralCount=questions.filter(q=>q.axis===key&&answers[q.id]&&answers[q.id].pole==='N').length;
   const block=document.createElement('div');block.className='axis';
   const head=document.createElement('div');head.className='axis-head';
   const left=document.createElement('strong');left.textContent=meta.left+' · '+l;
