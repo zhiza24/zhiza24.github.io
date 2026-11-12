@@ -7,7 +7,7 @@
 <script src="gender.js?v=2"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<script src="upd.js?v=1794442150"></script>
+<script src="upd.js?v=1794442496"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
 <title>Дыхание</title>
 <style>
@@ -16,20 +16,20 @@ a:focus,button:focus,.c:focus,a:focus-visible,button:focus-visible,.c:focus-visi
 html,body{margin:0;min-height:100%;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;font-size:17px;line-height:1.45;text-align:center}
 body{display:flex;align-items:center;justify-content:center;flex-direction:column;box-sizing:border-box;padding:calc(56px + env(safe-area-inset-top)) 16px calc(100px + env(safe-area-inset-bottom))}
 h2{font:700 26px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;margin:10px 0 8px}
-.n{font-size:44px;font-weight:800;color:#fff0c8;min-height:52px;margin:0}
+.n{font-size:44px;font-weight:800;color:#fff0c8;min-height:52px;line-height:52px;margin:0}
 .stage{width:252px;height:252px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin:0 auto}
 .c{width:120px;height:120px;border-radius:50%;background:radial-gradient(#ffe9a8,#e0a940 60%,#a8692a);filter:drop-shadow(0 0 22px #ffcf5a) drop-shadow(0 0 48px rgba(255,207,90,.7));transition:transform 4s ease-in-out;transform-origin:center center;cursor:pointer;-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
-.t{margin:0;font:800 22px Manrope;color:#ffd877;min-height:30px}
+.t{margin:0 0 4px;font:800 22px/30px Manrope;color:#ffd877;min-height:30px}
 .s{margin-top:12px;color:#c9a46a;font-size:17px;min-height:24px}
 </style>
 <link rel="stylesheet" href="nav.css?v=h9f19">
 </head>
 <body data-page="task">
 <div class="n" id="n"></div>
+<div class="t" id="t"></div>
 <div class="stage"><div class="c" id="c" role="button" aria-label="Коснись сферы"></div></div>
 <h2>Часть пути пройдена.<br>Переведи дыхание</h2>
-<div class="t" id="t">Коснись сферы</div>
-<div class="s" id="s"></div>
+<div class="s" id="s">Коснись сферы</div>
 <script>
 /* Сфера e6702a2: запуск по касанию, дальше сама. Вдох 4 с (scale 1.7), выдох 6 с (scale 1), 3 цикла, без фазы паузы. Счет сверху, надпись снизу. */
 var P=[['Вдох',4,1.7],['Выдох',6,1]],cy=0,ph=0,doneF=false,started=false;
