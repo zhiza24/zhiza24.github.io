@@ -142,7 +142,7 @@ function buildOutcome(){
  const hasExternal=categories.some(c=>c==='resource'||c==='external');
  const hasInternal=categories.some(c=>c==='social'||c==='internal'||c==='clarity'||c==='behavioral');
  const sections=[];
- if(userAnswers.noDesirePathActive)sections.push(copy.noDesirePath.result);
+ if(userAnswers.noDesirePathComplete)sections.push(copy.noDesirePath.result);
  else sections.push(desire.length>=18?copy.outcomes.clear:desire.length>0?copy.outcomes.emerging:copy.outcomes.unknown);
  if(selected.length)sections.push(hasExternal&&hasInternal?copy.outcomes.mixedBarriers:hasExternal?copy.outcomes.barriersExternal:copy.outcomes.barriersInternal);
  const gain=(userAnswers.reflections.secondary_gain||'').trim();
