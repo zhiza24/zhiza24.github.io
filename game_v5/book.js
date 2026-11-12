@@ -2,7 +2,7 @@
    Тексты в tochka-book.js (дословно), грузятся по нажатию. Кнопка в верхней панели .gtop. */
 (function(){
 if(window.GBook)return;
-var V='b1';
+var V='b2';
 /* шаг GFLOW (u) -> [глава 0..11, раздел или -1] */
 var MAP={
 'index.html':[0,-1],'form.html':[0,-1],'elder.html':[0,-1],
@@ -58,12 +58,19 @@ function para(p,i,arr){if(p==='KEY')return'';if(arr[i-1]==='KEY')return'<div cla
  if(/^(—|–|●|•|\d+\))/.test(p))return'<p class="li2">'+esc(p.replace(/^[●•]\s*/,''))+'</p>';
  if(/→/.test(p)&&p.length<160)return'<p class="flow">'+esc(p)+'</p>';return'<p>'+esc(p)+'</p>'}
 function cur(){var i=window.gIdx?gIdx():-1;if(i<0||!window.GFLOW)return null;var m=MAP[GFLOW[i].u];return m?{n:m[0],s:m[1]}:null}
+function isPreview(){try{return new URLSearchParams(location.search).get('preview')==='1'}catch(e){return false}}
+function unlocked(n){if(isPreview())return true;if(!window.GRoute||!window.GFLOW)return n===0;
+ var ok=false;GFLOW.forEach(function(step){var m=MAP[step.u];if(!m||m[0]!==n)return;var st=GRoute.status(step.u);if(st==='done'||st==='current')ok=true});return ok}
+function unlockedSet(){var o={};for(var i=0;i<TT.length;i++)if(unlocked(i))o[i]=true;return o}
 function seen(){try{return localStorage.getItem(SK)}catch(e){return null}}
 function cap(x){x=x.toLowerCase();return x.charAt(0).toUpperCase()+x.slice(1)}
 function label(c){return SUBS[c.n]?cap(LVN[c.n][0])+' · '+cap(LVN[c.n][1]):TT[c.n]}
-var btn,ov,loaded=false;
-function load(cb){if(window.TBOOK)return cb();var s=document.createElement('script');s.src='tochka-book.js?v='+V;s.onload=cb;document.head.appendChild(s)}
-function open(){var c=cur();if(!c)return;try{localStorage.setItem(SK,String(c.n))}catch(e){}btn.classList.remove('gbk-glow');load(function(){render(c)})}
+var btn,ov,loaded=false,openSrc='path';
+function ensureFont(){if(document.getElementById('gbk-font'))return;var l=document.createElement('link');l.id='gbk-font';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap';document.head.appendChild(l)}
+function load(cb){if(window.TBOOK)return cb();var s=document.createElement('script');s.src='tochka-book.js?v='+V;s.onload=function(){cb&&cb()};s.onerror=function(){cb&&cb(new Error('book'))};document.head.appendChild(s)}
+function open(){var c=cur();if(!c)return;openAt(c,'path')}
+function openChapter(n,s,src){if(!unlocked(n))return false;openAt({n:n,s:s==null?-1:s},src||'path');return true}
+function openAt(c,src){openSrc=src||'path';try{localStorage.setItem(SK,String(c.n))}catch(e){}if(btn)btn.classList.remove('gbk-glow');ensureFont();load(function(){render(c)})}
 function close(){if(ov){ov.classList.remove('on');document.documentElement.classList.remove('gbk-lock')}}
 function render(c){var B=window.TBOOK,n=c.n,ch=B[n],L=SEC(n,B),H=ch.p.map(para);
  var tabs=L.length>1?'<nav class="gbk-bar" aria-label="Разделы">'+L.map(function(x,j){return'<button class="gbk-sp" data-s="'+j+'" aria-label="'+(j+1)+'. '+esc(x.t)+'"><b>'+(j+1)+'</b> '+esc(SL(x.t))+'</button>'}).join('')+'</nav>':'';
@@ -72,18 +79,19 @@ function render(c){var B=window.TBOOK,n=c.n,ch=B[n],L=SEC(n,B),H=ch.p.map(para);
  if(!ov){ov=document.createElement('div');ov.className='gbk';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');document.body.appendChild(ov)}
  ov.innerHTML='<div class="gbk-hdr"><div class="gbk-mid">'+esc(LVN[n][0].charAt(0)+LVN[n][0].slice(1).toLowerCase())+'</div><button class="gbk-x" aria-label="Закрыть">✕</button></div>'+
   '<div class="gbk-sc" id="gbk-sc"><section class="gbk-card gbk-hero"><div class="gbk-img" style="background-image:url(img/tochka/'+CHIMG[n]+'.webp)"></div><div class="gbk-in"><div class="gbk-k">Глава '+(n+1)+' · '+esc(LVN[n][0])+' · '+esc(LVN[n][1])+'</div><h2>'+esc(ch.t)+'</h2><div class="gbk-sub">'+esc(ch.s)+'</div></div></section>'+tabs+secs+
-  '<button class="gbk-back">Вернуться в игру</button><p class="gbk-small">Книга Алхимика · по методу «Архитектура личности»</p></div>';
+  '<button class="gbk-back">'+(openSrc==='diary'?'Вернуться в дневник':'Вернуться в путь')+'</button><p class="gbk-small">Книга Алхимика · по методу «Архитектура личности»</p></div>';
  document.documentElement.classList.add('gbk-lock');ov.classList.add('on');
  var sc=ov.querySelector('.gbk-sc'),nb=ov.querySelector('.gbk-bar'),S=[].slice.call(ov.querySelectorAll('.gbk-sect'));
  function off(){return nb?nb.offsetHeight+8:0}
  function Y(e){return e.getBoundingClientRect().top-sc.getBoundingClientRect().top+sc.scrollTop-off()}
  function spy(){if(!nb)return;var a=0;S.forEach(function(e,j){if(Y(e)<=sc.scrollTop+40)a=j});if(sc.scrollTop+sc.clientHeight>=sc.scrollHeight-4)a=S.length-1;
   [].forEach.call(nb.querySelectorAll('.gbk-sp'),function(b,j){var was=b.classList.contains('on');b.classList.toggle('on',j===a);if(j===a&&!was)nb.scrollTo({left:b.offsetLeft-nb.clientWidth/2+b.offsetWidth/2,behavior:'smooth'})})}
- function go(j,sm){var e=S[j];if(e)sc.scrollTo({top:Y(e),behavior:sm?'smooth':'auto'})}
+ function go(j,sm){var e=S[j];if(!e)return;if(nb){[].forEach.call(nb.querySelectorAll('.gbk-sp'),function(b,i){b.classList.toggle('on',i===j)})}sc.scrollTo({top:Y(e),behavior:sm?'smooth':'auto'})}
  [].forEach.call(ov.querySelectorAll('.gbk-sp'),function(b){b.onclick=function(){go(+b.dataset.s,1)}});
  ov.querySelector('.gbk-x').onclick=close;ov.querySelector('.gbk-back').onclick=close;
  sc.addEventListener('scroll',spy,{passive:true});sc.scrollTop=0;if(c.s>0)go(c.s,0);spy()}
 function init(){var bar=document.querySelector('.gtop'),c=cur();if(!bar||!c||btn)return;
+ ensureFont();
  var l=document.createElement('link');l.rel='stylesheet';l.href='book.css?v='+V;document.head.appendChild(l);
  var pt=bar.querySelector('.gpt');bar.classList.add('gbk-has');
  if(pt){var w=document.createElement('div');w.className='gpt gbk-tw';var a=document.createElement('div');a.className='gbk-t1';a.textContent=pt.textContent;var b=document.createElement('div');b.className='gbk-t2';b.textContent=label(c);w.append(a,b);pt.replaceWith(w)}
@@ -93,6 +101,6 @@ function init(){var bar=document.querySelector('.gtop'),c=cur();if(!bar||!c||btn
  if(seen()!==String(c.n))btn.classList.add('gbk-glow');
  btn.onclick=function(e){e.preventDefault();e.stopPropagation();open()};
  document.addEventListener('keydown',function(e){if(e.key==='Escape')close()})}
-window.GBook={open:open,close:close,map:MAP,cur:cur};
+window.GBook={open:open,close:close,map:MAP,cur:cur,load:load,SEC:SEC,SL:SL,TT:TT,LVN:LVN,SUBS:SUBS,CHIMG:CHIMG,unlocked:unlocked,isPreview:isPreview,unlockedSet:unlockedSet,openChapter:openChapter,para:para,esc:esc,label:label,ensureFont:ensureFont,V:V};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
