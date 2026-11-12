@@ -5,6 +5,7 @@ const D=window.GMirrorData, URL_SCENE='slot.html?id=mirrors';
 const copy=x=>JSON.parse(JSON.stringify(x));
 function load(){return JSON.parse(localStorage.getItem('alch_v5_profile')||'{}')||{};}
 function el(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;}
+function typ(s){return String(s==null?'':s).replace(/§([^§|]+)\|([^§]+)§/g,(_,m,f)=>window.GG?GG(m,f):m);}
 function button(parent,text,fn,cls=''){const b=el('button',text,cls);b.type='button';b.onclick=fn;parent.append(b);return b;}
 function paragraph(parent,text,cls){parent.append(el('p',text,cls));}
 function field(parent,label,value,oninput){const l=el('label',label,'mirror-field'),t=el('textarea');t.rows=3;t.maxLength=4000;t.value=value||'';t.oninput=()=>oninput(t.value);l.append(t);parent.append(l);return t;}
@@ -33,15 +34,16 @@ function mount(host){
  }
  window.gBack=()=>review||preview?(back(),true):back();
  function actions(nextText,nextFn,ready=true){const row=el('div',undefined,'mirror-actions');button(row,'Назад',back);const next=button(row,nextText,nextFn,'mirror-primary');next.disabled=!ready;host.append(row);return next;}
- function pairs(record,editable){
+ function pairs(record,editable,parent){
+  parent=parent||host;
   D.questions.forEach((q,i)=>{const details=el('details',undefined,'mirror-pair'),status=D.compare(record.self_image[q.id],record.actual_actions[q.id]);
-   details.append(el('summary',(i+1)+'. '+q.title));
+   details.append(el('summary',(i+1)+'. '+typ(q.title)));
    const grid=el('div',undefined,'mirror-pair-grid');
    [['Первое зеркало',record.self_image[q.id]],['Второе зеркало',record.actual_actions[q.id]]].forEach(([name,a])=>{const box=el('section');box.append(el('h3',name));paragraph(box,D.answerText(a));if(a&&a.example)paragraph(box,'Пример: '+a.example,'muted');grid.append(box);});
-   details.append(grid);paragraph(details,D.statuses[status],'mirror-status');
-   if(editable)field(details,'Как Вы понимаете эту пару? Необязательно.',record.pair_notes[q.id]||'',v=>{draft.pair_notes[q.id]=v;persist();});
+   details.append(grid);paragraph(details,typ(D.statuses[status]),'mirror-status');
+   if(editable)field(details,'Как ты понимаешь эту пару? Необязательно.',record.pair_notes[q.id]||'',v=>{draft.pair_notes[q.id]=v;persist();});
    else if((record.pair_notes||{})[q.id])paragraph(details,record.pair_notes[q.id]);
-   host.append(details);
+   parent.append(details);
   });
  }
  function header(){
@@ -53,7 +55,7 @@ function mount(host){
  function intro(){
   metaphor(host,-1);
   paragraph(host,'У каждого человека есть представление о себе. Но общее впечатление и реальные поступки не всегда одно и то же. Иногда мы строже оцениваем себя, чем показывают наши действия. Иногда обстоятельства меняют привычный способ поступать.');
-  paragraph(host,'Первое зеркало — каким Вы представляете свое поведение. Второе — как Вы действовали за последние 14 дней. Затем Вы увидите ответы рядом и сами выберете важное наблюдение.');
+  paragraph(host,'Первое зеркало — каким ты представляешь свое поведение. Второе — как складывались твои действия за последние 14 дней. Затем ты увидишь ответы рядом и выберешь важное наблюдение.');
   paragraph(host,'Здесь нет правильных ответов, баллов и оценки личности. Различие — не ошибка и не повод осуждать себя. Чужие оценки нам не нужны.');
   if(draft)button(host,'Посмотреть в первое зеркало',()=>go('self'),'mirror-primary');
   else if(!review)button(host,'Посмотреть в первое зеркало',()=>{draft=D.create(load().gender);draft.phase='self';if(persist())render();},'mirror-primary');
@@ -64,13 +66,13 @@ function mount(host){
   host.append(el('h2',phase==='self'?'Первое зеркало':'Второе зеркало'));
   paragraph(host,'Вопрос '+(i+1)+' из 6','mirror-counter');
   const progress=el('progress');progress.max=12;progress.value=(phase==='self'?0:6)+i;progress.setAttribute('aria-label','Пройденные вопросы');host.append(progress);
-  paragraph(host,phase==='self'?'Как Вы обычно представляете свое поведение? Не о желаемом образе и не о мнении окружающих.':'Вспомните обычные события за '+date(draft.period_start)+' — '+date(draft.period_end)+'. Не нужно угадывать или придумывать ситуации.','muted');
-  if(phase==='actions'){const usual=el('details');usual.append(el('summary','Тема первого зеркала'));paragraph(usual,q.self_prompt);host.append(usual);}
-  host.append(el('h3',phase==='self'?q.self_prompt:q.action_prompt,'mirror-question'));
+  paragraph(host,phase==='self'?'Как ты обычно представляешь свое поведение? Не о желаемом образе и не о мнении окружающих.':'Вспомни обычные события за '+date(draft.period_start)+' — '+date(draft.period_end)+'. Не нужно угадывать или придумывать ситуации.','muted');
+  if(phase==='actions'){const usual=el('details');usual.append(el('summary','Тема первого зеркала'));paragraph(usual,typ(q.self_prompt));host.append(usual);}
+  host.append(el('h3',typ(phase==='self'?q.self_prompt:q.action_prompt),'mirror-question'));
   const choices=el('div',undefined,'mirror-choices');choices.setAttribute('role','group');choices.setAttribute('aria-label','Варианты ответа');
   D.options(q,phase,draft.gender).forEach(o=>{const b=button(choices,o.text,()=>{D.answer(draft,phase,i,o.id,o.id===a?.option_id?a.custom_answer:'',a?.example||'');persist();render();},a?.option_id===o.id?'selected':'');b.dataset.option=o.id;b.setAttribute('aria-pressed',String(a?.option_id===o.id));});host.append(choices);
   let next;
-  if(a?.option_id==='custom')field(host,'Ваш ответ',a.custom_answer,v=>{D.answer(draft,phase,i,'custom',v,draft[key][q.id].example);persist();next.disabled=!D.valid(draft[key][q.id]);});
+  if(a?.option_id==='custom')field(host,'Твой ответ',a.custom_answer,v=>{D.answer(draft,phase,i,'custom',v,draft[key][q.id].example);persist();next.disabled=!D.valid(draft[key][q.id]);});
   if(phase==='actions'&&a&&!['no_event','unknown'].includes(a.option_id)){
    const more=el('details');more.append(el('summary','Конкретный пример (необязательно)'));
    field(more,'Что произошло?',a.example,v=>{const current=draft[key][q.id];D.answer(draft,phase,i,current.option_id,current.custom_answer,v);persist();});host.append(more);
@@ -79,31 +81,31 @@ function mount(host){
  }
  function transition(){
   metaphor(host,1);host.append(el('h2','Первое отражение сохранено'));
-  paragraph(host,'Вы зафиксировали представление о своем поведении. Теперь опирайтесь на реальные действия, а не на общее впечатление о себе. Ответы первого зеркала пока скрыты.');
-  paragraph(host,'Период наблюдения: '+date(draft.period_start)+' — '+date(draft.period_end)+'. Он не изменится при возвращении к сцене. Если события не было или Вы его не помните, для этого есть отдельные ответы.');
+  paragraph(host,'Представление о своем поведении сохранено. Теперь опирайся на реальные действия, а не на общее впечатление о себе. Ответы первого зеркала пока скрыты.');
+  paragraph(host,'Период наблюдения: '+date(draft.period_start)+' — '+date(draft.period_end)+'. Он не изменится при возвращении к сцене. Если события не было или ты его не помнишь, для этого есть отдельные ответы.');
   actions('Перейти ко второму зеркалу',()=>go('actions'));
  }
  function comparison(){
   host.append(el('h2','Что показали два зеркала?'));
-  paragraph(host,'Раскройте шесть пар ответов. Совпадение вариантов не доказывает постоянство поведения, а различие не означает внутренний конфликт. Важен Ваш смысл и обстоятельства.');
+  paragraph(host,'Раскрой шесть пар ответов. Совпадение вариантов не доказывает постоянство поведения, а различие не означает внутренний конфликт. Важен твой смысл и обстоятельства.');
   pairs(draft,true);actions('Что я замечаю',()=>go('observe'));
  }
  function observe(){
-  host.append(el('h2','Что Вы заметили?'));
-  paragraph(host,'Возможно, Вы заметили что-то неожиданное. Возможно, ответы подтвердили уже знакомое. Выберите наиболее важное наблюдение. Если нового открытия нет, это тоже допустимо.');
+  host.append(el('h2','Что удалось заметить?'));
+  paragraph(host,'Возможно, получилось заметить что-то неожиданное. Возможно, ответы подтвердили уже знакомое. Выбери наиболее важное наблюдение. Если нового открытия нет, это тоже допустимо.');
   const choices=el('div',undefined,'mirror-choices');
   D.observations(draft.gender).forEach(o=>{const selected=draft.main_observation?.option_id===o.id,b=button(choices,o.text,()=>{if(!selected){draft.main_observation={option_id:o.id,selected_text:o.text,custom_answer:'',saved_at:Date.now()};draft.clarification=[];draft.cause_note='';}persist();render();},selected?'selected':'');b.dataset.observation=o.id;b.setAttribute('aria-pressed',String(selected));});host.append(choices);
   let finish;
-  if(draft.main_observation?.option_id==='custom')field(host,'Ваш собственный вывод',draft.main_observation.custom_answer,v=>{draft.main_observation.custom_answer=v;draft.main_observation.saved_at=Date.now();persist();finish.disabled=!ready();});
+  if(draft.main_observation?.option_id==='custom')field(host,'Твой собственный вывод',draft.main_observation.custom_answer,v=>{draft.main_observation.custom_answer=v;draft.main_observation.saved_at=Date.now();persist();finish.disabled=!ready();});
   const obs=draft.main_observation?.option_id;
   if(['B','C','D','E','custom'].includes(obs)){
    host.append(el('h3','Что могло повлиять на замеченное?'));
-   paragraph(host,'Можно выбрать несколько причин или не выбирать ни одной. Это Ваше уточнение, а не объяснение от игры.','muted');
+   paragraph(host,'Можно выбрать несколько причин или не выбирать ни одной. Это твое уточнение, а не объяснение от игры.','muted');
    const list=el('div',undefined,'mirror-choices');
    D.causes(draft.gender).forEach(o=>{const selected=draft.clarification.some(x=>x.option_id===o.id),b=button(list,o.text,()=>{draft.clarification=selected?draft.clarification.filter(x=>x.option_id!==o.id):draft.clarification.concat({option_id:o.id,selected_text:o.text});if(o.id==='custom'&&selected)draft.cause_note='';persist();render();},selected?'selected':'');b.dataset.cause=o.id;b.setAttribute('aria-pressed',String(selected));});host.append(list);
    if(draft.clarification.some(x=>x.option_id==='custom'))field(host,'Другая причина (необязательно)',draft.cause_note,v=>{draft.cause_note=v;persist();});
   }
-  field(host,'Что Вы заметили о себе такого, чего раньше не замечали? Необязательно.',draft.personal_note,v=>{draft.personal_note=v;persist();});
+  field(host,typ('Что удалось заметить о себе такого, чего раньше не замечал§|а§? Необязательно.'),draft.personal_note,v=>{draft.personal_note=v;persist();});
   paragraph(host,'Достаточно выбранного наблюдения. Не нужно делать окончательный вывод о себе.');
   finish=actions('Сохранить наблюдение',finishScene,ready());
  }
@@ -127,21 +129,27 @@ function mount(host){
  function showResult(record){
   host.append(el('h2','Отражение собрано'));
   paragraph(host,'Сохранено '+stamp(record.completed_at)+'. Период: '+date(record.period_start)+' — '+date(record.period_end)+'.','muted');
-  paragraph(host,'Ни один из результатов не делает Вас лучше или хуже. Здесь сохранены Ваши ответы и собственное наблюдение. Просмотр их не меняет.');
+  paragraph(host,'Ни один из результатов не делает тебя лучше или хуже. Здесь сохранены твои ответы и собственное наблюдение. Просмотр их не меняет.');
   paragraph(host,D.observationText(record),'mirror-notice');
   if(record.personal_note)paragraph(host,record.personal_note);
-  if(record.clarification.length){host.append(el('h3','Возможные причины по Вашему ощущению'));record.clarification.forEach(c=>paragraph(host,c.selected_text));}
+  if(record.clarification.length){host.append(el('h3','Возможные причины по твоему ощущению'));record.clarification.forEach(c=>paragraph(host,c.selected_text));}
   if(record.cause_note)paragraph(host,record.cause_note);
-  pairs(record,false);
-  if(review){const resume=el('a','Вернуться в игру');resume.href=GRoute.resume();host.append(resume);}
-  if(!review){
-   if(!preview)button(host,'Продолжить к Источнику',()=>{location.href='slot.html?id=source';},'mirror-primary');
-   button(host,'Пройти еще раз',start);
-   paragraph(host,'Повторное прохождение сохранит прежнюю запись.','muted');
+  if(review){
+   const resume=el('a','Продолжить актуальный шаг','mirror-primary');resume.href=GRoute.resume();host.append(resume);
+  }else if(!preview){
+   button(host,'Дальше: Источник',()=>{location.href='slot.html?id=source';},'mirror-primary');
   }
-  const history=el('details');history.append(el('summary','Предыдущие прохождения ('+store.history.length+')'));
-  store.history.slice().reverse().forEach(r=>{if(preview)button(history,stamp(r.completed_at),()=>{view=r;render();});else{const a=el('a',stamp(r.completed_at));a.href=URL_SCENE+'&review='+encodeURIComponent(r.id);history.append(a);}});host.append(history);
-  const a=el('a','В дневник');a.href='diary.html?tab=tests';host.append(a);
+  if(window.GQuote)GQuote.add(host,URL_SCENE);
+  const answers=el('details',undefined,'mirror-answers');answers.append(el('summary','Мои ответы'));pairs(record,false,answers);host.append(answers);
+  const links=el('nav',undefined,'mirror-links');links.setAttribute('aria-label','Дополнительно');
+  if(!review){const again=el('button','Пройти еще раз','mirror-link');again.type='button';again.onclick=start;links.append(again);}
+  const hist=el('details',undefined,'mirror-hist');hist.append(el('summary','Предыдущие прохождения'));
+  const list=el('div',undefined,'mirror-hist-list');
+  store.history.slice().reverse().forEach(r=>{if(preview)button(list,stamp(r.completed_at),()=>{view=r;render();},'mirror-link');else{const a=el('a',stamp(r.completed_at),'mirror-link');a.href=URL_SCENE+'&review='+encodeURIComponent(r.id);list.append(a);}});
+  hist.append(list);links.append(hist);
+  const diary=el('a','В дневник','mirror-link');diary.href='diary.html?tab=tests';links.append(diary);
+  host.append(links);
+  if(!review)paragraph(host,'Повторное прохождение сохранит прежнюю запись.','muted');
  }
  function render(){header();if(review&&!view){paragraph(host,'Эта запись не найдена. Сохраненные ответы не изменены.');return;}
   if(view){showResult(view);return;}
@@ -150,6 +158,6 @@ function mount(host){
  }
  render();
 }
-function context(host){const p=load(),r=p.mirror_exercise;if(!r?.completed_at)return;const box=el('section',undefined,'pt');box.append(el('h2','Ваше наблюдение из двух зеркал'));paragraph(box,D.observationText(r));if(r.personal_note)paragraph(box,r.personal_note);const a=el('a','Посмотреть сохраненные ответы');a.href=URL_SCENE+'&review='+encodeURIComponent(r.id);a.style.color='#f0c870';box.append(a);host.insertBefore(box,host.querySelector('button.next'));}
+function context(host){const p=load(),r=p.mirror_exercise;if(!r?.completed_at)return;const box=el('section',undefined,'pt');box.append(el('h2','Твое наблюдение из двух зеркал'));paragraph(box,D.observationText(r));if(r.personal_note)paragraph(box,r.personal_note);const a=el('a','Посмотреть сохраненные ответы');a.href=URL_SCENE+'&review='+encodeURIComponent(r.id);a.style.color='#f0c870';box.append(a);host.insertBefore(box,host.querySelector('button.next'));}
 window.GMirrors={mount,context};
 })();

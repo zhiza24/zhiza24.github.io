@@ -49,7 +49,7 @@ with sync_playwright() as p:
     state=page.evaluate('JSON.parse(localStorage.alch_profile)');assert len(state['mirrors']['history'])==1
     assert state['flow']['current']=='slot.html?id=source';assert len(state['diary']['ins'])==1
     shot(page,'result-mobile.png')
-    click(page,'Продолжить к Источнику');page.wait_for_url('**/slot.html?id=source')
+    click(page,'Дальше: Источник');page.wait_for_url('**/slot.html?id=source')
     assert 'Я обнаружила' in page.locator('#m').inner_text()
     # Actual browser back and reload, then read-only review through diary.
     page.go_back();page.wait_for_url('**/tasks.html?review=**');assert 'Просмотр пройденного' in page.locator('#tasks').inner_text();page.reload();assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
