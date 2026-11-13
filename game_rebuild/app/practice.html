@@ -70,7 +70,7 @@ function render(){
   card.append(node('div','meta',date(item.createdAt)+' · '+(item.status==='done'?'выполнено':item.status==='paused'?'отложено':'выбрано')));
   if(item.status==='done'){
    card.append(node('div','donePhrase','У меня все легко получается.'));
-   var undo=node('button secondary','secondary','Вернуть в список');undo.type='button';undo.onclick=function(){item.status='chosen';item.doneAt=null;persist();render()};card.append(undo);
+   var undo=node('button','secondary','Вернуть в список');undo.type='button';undo.onclick=function(){item.status='chosen';item.doneAt=null;persist();render()};card.append(undo);
   }else{
    var actions=node('div','actions'),done=node('button','', 'Сделано');done.type='button';done.onclick=function(){item.status='done';item.doneAt=Date.now();persist();render()};
    var pause=node('button','secondary','Пока отложить');pause.type='button';pause.onclick=function(){item.status='paused';persist();render()};

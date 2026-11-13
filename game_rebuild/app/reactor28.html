@@ -45,37 +45,84 @@ textarea{width:100%;min-height:76px;resize:vertical;background:#0c1017;border:1p
 <div class="overlay" id="grounding"><b>Сначала вернись в настоящий момент.</b><p>Поставь стопы на опору. Назови про себя три предмета, которые видишь, два звука, которые слышишь, и одно ощущение в теле. Не нужно немедленно решать всю ситуацию. Спроси себя: что сейчас известно точно и какой самый небольшой безопасный шаг доступен?</p><button class="secondary" id="closeGrounding">Вернуться к дню</button></div>
 <p class="note" id="message">Пропуск не обнуляет предыдущие дни. Если сегодня нет ресурса, можно вернуться позже. День засчитывается после хотя бы одного отмеченного действия.</p>
 </section>
-<div class="actions"><a class="secondary" href="diary.html">Дневник</a><a class="secondary" href="map.html">Карта пути</a><a id="retest" class="secondary" href="slot.html?id=retest">К повторному исследованию</a></div>
+<div class="actions"><a class="secondary" href="diary.html">Дневник</a><a class="secondary" href="practice.html">Выбираю — делаю — сделано</a><a class="secondary" href="map.html">Карта пути</a><a id="retest" class="secondary" href="slot.html?id=retest">К повторному исследованию</a></div>
 </main>
 <script src="engine.js?v=arch1"></script><script src="nav.js?v=bar7"></script>
-<script>
-(function(){
+<script>(function(){
 'use strict';
-var P=window.GPro&&GPro.load?GPro.load():{},R=P.reactor28;
-if(!R||R.version!==28){if(P.reactor&&P.reactor.day)P.reactor21Archive=P.reactor;R={version:28,day:0,days:{},notes:{},last:null};P.reactor28=R;GPro.save(P);}
-R.days=R.days||{};R.notes=R.notes||{};
-var D=Math.min(28,Math.max(0,+R.day||0));
-var plan=[];
-(window.trackerProgramData&&window.trackerProgramData.weeks||[]).forEach(function(w){
- (w.days||[]).forEach(function(d){plan.push({title:d.title,type:d.type,explanation:d.explanation,action:d.action,journalPrompt:d.journalPrompt,expectedResult:d.expectedResult,weekTitle:w.title,weekTheme:w.theme})});
-});
+var P=GPro.load(),R=P.reactor28;
+if(!R||R.version!==28){if(P.reactor&&P.reactor.day)P.reactor21Archive=P.reactor;R={version:28,day:0,days:{},notes:{},last:null};P.reactor28=R;GPro.save(P)}
+R.days=R.days||{};R.notes=R.notes||{};R.weeklyReviews=R.weeklyReviews||{};R.dailyActions=R.dailyActions||{};
+var D=Math.min(28,Math.max(0,+R.day||0)),plan=[];
+(window.trackerProgramData&&window.trackerProgramData.weeks||[]).forEach(function(w){(w.days||[]).forEach(function(d){plan.push({title:d.title,type:d.type,explanation:d.explanation,action:d.action,journalPrompt:d.journalPrompt,expectedResult:d.expectedResult,weekTitle:w.title,weekTheme:w.theme})})});
 var weeks=['НЕДЕЛЯ I · ЗАМЕЧАТЬ','НЕДЕЛЯ II · ПАУЗА И ВЫБОР','НЕДЕЛЯ III · ЭКСПЕРИМЕНТ','НЕДЕЛЯ IV · ИНТЕГРАЦИЯ'];
+var BQ=['Я замечаю, когда включается моя установка','Я поступаю по-новому хотя бы иногда','Мне легче выбирать свое'];
 var $=function(id){return document.getElementById(id)};
 function save(){P.reactor28=R;GPro.save(P)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function directions(){var a=P.focuses||P.valuesCore&&P.valuesCore.top3||P.values&&P.values.order||[];return [0,1,2].map(function(i){return String(a[i]||'').trim()})}
+function button(id,text,cls){return '<button type="button" id="'+id+'" class="'+(cls||'')+'">'+text+'</button>'}
+function renderSetup(){
+ $('week').textContent='ПЕРЕД НАЧАЛОМ · ИСХОДНАЯ ТОЧКА';$('title').textContent='Настройка личного маршрута';
+ var dirs=directions(),acts=R.personalActions||[];
+ $('tasks').innerHTML='<p class="lead">Перед первой неделей зафиксируй отправную точку. Эти три вопроса повторятся после 28 дней — так можно будет сравнить собственные ответы. Здесь же запиши три небольших действия по выбранным направлениям. Их можно будет менять по ходу практики.</p>'+
+ '<h2 class="day-title">Три одинаковых вопроса до и после</h2>'+BQ.map(function(q,i){return '<div class="baseQ"><p>'+esc(q)+'</p><div class="row" data-base="'+i+'">'+[['0','Нет'],['1','Иногда'],['2','Да']].map(function(x){return '<button type="button" data-v="'+x[0]+'" class="'+(R.baselineBehavior&&R.baselineBehavior[i]===+x[0]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div></div>'}).join('')+
+ '<h2 class="day-title">Три направления и реальные действия</h2><p class="lead">Не ставь масштабную цель. Запиши действие, которое можно проверить, и его минимальную версию.</p>'+
+ [0,1,2].map(function(i){var a=acts[i]||{};return '<div class="pt"><label>Направление '+(i+1)+'</label><input id="dir'+i+'" maxlength="100" value="'+esc(a.direction||dirs[i])+'" placeholder="Например: финансы, отношения, здоровье"><label>Что конкретно выбираешь делать?</label><textarea id="act'+i+'" rows="2" maxlength="400" placeholder="Одно наблюдаемое действие">'+esc(a.action||'')+'</textarea><label>Когда или в какой ситуации?</label><input id="when'+i+'" maxlength="180" value="'+esc(a.when||'')+'" placeholder="Например: в ближайший рабочий день"><label>Минимальная версия, если ресурсов мало</label><input id="min'+i+'" maxlength="240" value="'+esc(a.minimum||'')+'" placeholder="Самый маленький выполнимый шаг"></div>'}).join('')+
+ button('setupSave','Сохранить отправную точку и три действия');
+ var base=[null,null,null];if(Array.isArray(R.baselineBehavior))base=R.baselineBehavior.slice();
+ $('tasks').querySelectorAll('[data-base]').forEach(function(row){row.querySelectorAll('button').forEach(function(b){b.onclick=function(){base[+row.dataset.base]=+b.dataset.v;row.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)})}})});
+ $('setupSave').onclick=function(){if(base.some(function(x){return x===null})){ $('message').textContent='Ответь на три вопроса об исходной точке.';return}
+ var actions=[0,1,2].map(function(i){return {direction:$('dir'+i).value.trim(),action:$('act'+i).value.trim(),when:$('when'+i).value.trim(),minimum:$('min'+i).value.trim()}});if(actions.some(function(x){return !x.direction||!x.action})){ $('message').textContent='Заполни направление и конкретное действие для каждого из трех пунктов. Минимальную версию можно оставить пустой.';return}
+ R.baselineBehavior=base;R.personalActions=actions;R.setupDone=true;R.baselineAt=Date.now();save();$('message').textContent='Исходная точка и три действия сохранены.';render();window.scrollTo(0,0)};
+}
+function renderWeekly(){
+ var w=+R.pendingWeeklyReview,program=window.trackerProgramData||{},prompt=(program.weeklyPrompts||[])[w-1]||'Что ты заметил за эту неделю?';
+ $('week').textContent='ИТОГ НЕДЕЛИ '+w+' ИЗ 4';$('title').textContent='Остановись и собери наблюдения';
+ var old=R.weeklyReviews[w]||{};
+ $('tasks').innerHTML='<p class="lead">'+esc(prompt)+'</p><label>Что стало заметнее?</label><textarea id="wkText" rows="3" maxlength="700">'+esc(old.text||'')+'</textarea><label>Что помогало, а что мешало?</label><textarea id="wkHelp" rows="2" maxlength="500">'+esc(old.help||'')+'</textarea><label>Что хочешь проверить на следующей неделе?</label><textarea id="wkNext" rows="2" maxlength="500">'+esc(old.next||'')+'</textarea>'+button('wkSave','Сохранить итог')+' '+button('wkSkip','Вернуться к маршруту','secondary');
+ $('reflection').value='';$('reflection').disabled=true;$('complete').style.display='none';
+ $('wkSave').onclick=function(){R.weeklyReviews[w]={text:$('wkText').value.trim(),help:$('wkHelp').value.trim(),next:$('wkNext').value.trim(),at:Date.now()};R.pendingWeeklyReview=null;save();$('complete').style.display='';render()};
+ $('wkSkip').onclick=function(){R.weeklyReviews[w]=R.weeklyReviews[w]||{text:'',help:'',next:'',skipped:true,at:Date.now()};R.pendingWeeklyReview=null;save();$('complete').style.display='';render()};
+}
+function renderFinal(){
+ $('week').textContent='ЦИКЛ ЗАВЕРШЕН';$('title').textContent='Ты собрал свой опыт';
+ var actions=R.personalActions||[],reviews=R.weeklyReviews||{};
+ $('tasks').innerHTML='<p class="lead">Четыре недели не обязаны менять все. Важно, что теперь у тебя есть записи, наблюдения и проверенные способы действовать. Посмотри на три направления, исходные ответы и недельные итоги. Затем перейди к повторному исследованию.</p>'+
+ '<h2 class="day-title">Три выбранных направления</h2>'+actions.map(function(a){return '<div class="pt"><b>'+esc(a.direction)+'</b><p>'+esc(a.action)+'</p><small>Когда: '+esc(a.when||'не задано')+' · Минимум: '+esc(a.minimum||'не задан')+'</small></div>'}).join('')+
+ '<h2 class="day-title">Недельные итоги</h2>'+[1,2,3,4].map(function(w){var x=reviews[w]||{};return '<div class="pt"><small>Неделя '+w+'</small><p>'+esc(x.text||'Итог не записан')+'</p><p>'+esc(x.help||'')+'</p><p>'+esc(x.next||'')+'</p></div>'}).join('')+
+ '<p class="note">Отметок о выполнении: '+(R.done||0)+' · Дней с полным набором действий: '+(R.full||0)+'</p>';
+ $('reflection').disabled=true;$('complete').textContent='Перейти к повторному исследованию';$('complete').style.display='';$('complete').onclick=function(){if(window.GRoute)GRoute.complete('reactor28.html');location.href='slot.html?id=retest'};
+}
+function saveDailyAction(){
+ var sel=$('personalPick'),text=$('dailyChoice'),done=$('dailyDone'),note=$('dailyNote');if(!sel)return;
+ var x={index:sel.value===''?null:+sel.value,text:text.value.trim(),done:!!done.checked,note:note.value.trim(),updatedAt:Date.now()};
+ R.dailyActions[D]=x;save();var phrase=$('dailyPhrase');if(phrase)phrase.textContent=x.done?'У меня все легко получается.':'';
+}
 function render(){
  $('bar').style.width=(D/28*100)+'%';$('counter').textContent=D>=28?'Цикл завершен · 28 из 28 дней':'День '+(D+1)+' из 28';
  $('days').innerHTML=Array.from({length:28},function(_,i){return '<span class="'+(i<D?'done':i===D?'current':'')+'">'+(i+1)+'</span>'}).join('');
- if(D>=28){$('week').textContent='ЦИКЛ ЗАВЕРШЕН';$('title').textContent='Ты собрал свой опыт';$('tasks').innerHTML='<p class="lead">Четыре недели не обязаны менять все. Важно, что теперь у тебя есть записи, наблюдения и проверенные способы действовать. Перейди к повторному исследованию и сравни результаты без требования получить идеальную картину.</p>';$('reflection').disabled=true;$('complete').textContent='Перейти к повторному исследованию';$('complete').onclick=function(){if(window.GRoute)GRoute.complete('reactor28.html');location.href='slot.html?id=retest'};return}
- var item=plan[D];$('week').textContent=(item.weekTitle||'ЧЕТЫРЕ НЕДЕЛИ').toUpperCase();$('title').textContent='День '+(D+1)+'. '+item.title;
- var saved=R.days[D]||[];$('tasks').innerHTML='<p class="lead">'+item.explanation+'</p><div class="week">'+item.type+'</div>'+[{label:'Действие',text:item.action},{label:'Ориентир результата',text:item.expectedResult}].map(function(t,i){return '<label class="task"><input type="checkbox" data-i="'+i+'" '+(saved[i]?'checked':'')+'><span><b>'+t.label+':</b> '+t.text+'</span></label>'}).join('');
- $('reflection').value=(R.notes[D]||'');$('reflection').placeholder=item.journalPrompt||'Запишите наблюдение';$('reflection').disabled=false;$('complete').textContent='Засчитать день';$('complete').onclick=completeDay;
- $('tasks').querySelectorAll('input').forEach(function(input){input.addEventListener('change',function(){var a=R.days[D]||[];a[+input.dataset.i]=input.checked?1:0;R.days[D]=a;save()})});
+ if(!R.setupDone){$('complete').style.display='';renderSetup();return}
+ if(R.pendingWeeklyReview){renderWeekly();return}
+ if(D>=28){renderFinal();return}
+ $('complete').style.display='';
+ var item=plan[D],saved=R.days[D]||[],choice=R.dailyActions[D]||{},actions=R.personalActions||[];
+ $('week').textContent=(item.weekTitle||weeks[Math.floor(D/7)]||'ЧЕТЫРЕ НЕДЕЛИ').toUpperCase();$('title').textContent='День '+(D+1)+'. '+item.title;
+ $('tasks').innerHTML='<p class="lead">'+esc(item.explanation)+'</p><div class="week">'+esc(item.type)+'</div>'+
+ [{label:'Действие',text:item.action},{label:'Ориентир результата',text:item.expectedResult}].map(function(t,i){return '<label class="task"><input type="checkbox" data-i="'+i+'" '+(saved[i]?'checked':'')+'><span><b>'+t.label+':</b> '+esc(t.text)+'</span></label>'}).join('')+
+ '<div class="pt"><h2 class="day-title">Мой выбранный шаг</h2><p class="lead">Выбери одно из трех направлений или запиши небольшой шаг самостоятельно. Здесь действует практика «Выбираю — делаю — сделано».</p><label>Направление</label><select id="personalPick"><option value="">Свой шаг</option>'+actions.map(function(a,i){return '<option value="'+i+'" '+(choice.index===i?'selected':'')+'>'+esc(a.direction)+'</option>'}).join('')+'</select><label>Выбираю сделать…</label><textarea id="dailyChoice" rows="2" maxlength="400">'+esc(choice.text||'')+'</textarea><label>Что поможет сделать шаг посильным?</label><input id="dailyNote" maxlength="240" value="'+esc(choice.note||'')+'"><label class="task"><input type="checkbox" id="dailyDone" '+(choice.done?'checked':'')+'><span><b>Сделано</b> — я выполнил выбранное действие</span></label><div class="donePhrase" id="dailyPhrase">'+(choice.done?'У меня все легко получается.':'')+'</div></div>';
+ $('reflection').value=R.notes[D]||'';$('reflection').placeholder=item.journalPrompt||'Запиши наблюдение';$('reflection').disabled=false;$('complete').textContent='Засчитать день';$('complete').onclick=completeDay;
+ $('tasks').querySelectorAll('input[data-i]').forEach(function(input){input.addEventListener('change',function(){var a=R.days[D]||[];a[+input.dataset.i]=input.checked?1:0;R.days[D]=a;save()})});
+ $('personalPick').onchange=function(){var n=+this.value;if(this.value!==''&&actions[n]&&!$('dailyChoice').value.trim()){$('dailyChoice').value=actions[n].action;$('dailyNote').value=actions[n].minimum||''}saveDailyAction()};
+ $('dailyChoice').addEventListener('input',saveDailyAction);$('dailyNote').addEventListener('input',saveDailyAction);$('dailyDone').onchange=function(){if(this.checked&&!$('dailyChoice').value.trim()){this.checked=false;$('message').textContent='Сначала запиши, какое действие ты выбираешь сделать.';return}saveDailyAction()};
 }
-function completeDay(){var count=(R.days[D]||[]).filter(Boolean).length;if(!count){$('message').textContent='Отметь хотя бы одно действие, которое ты действительно сделал. Маленького шага достаточно.';return}
+function completeDay(){
+ var count=(R.days[D]||[]).filter(Boolean).length,choice=R.dailyActions[D]||{};
+ if(!count&&!choice.done){$('message').textContent='Отметь хотя бы одно действие, которое действительно сделал, или заверши свой выбранный шаг.';return}
  var today=new Date().toDateString();if(R.last===today){$('message').textContent='Сегодняшний день уже засчитан. Продолжение откроется после смены календарного дня.';return}
- R.notes[D]=$('reflection').value;R.last=today;R.done=(R.done||0)+count;if(count===2)R.full=(R.full||0)+1;R.day=D+1;R.completedAt=R.day===28?Date.now():R.completedAt;D++;save();$('message').textContent='День сохранен. Никакой гонки: возвращайся, когда будет время.';render();window.scrollTo(0,0)}
+ R.notes[D]=$('reflection').value;R.last=today;R.done=(R.done||0)+count+(choice.done?1:0);if(count===2&&choice.done)R.full=(R.full||0)+1;R.day=D+1;R.completedAt=R.day===28?Date.now():R.completedAt;D++;if(D%7===0)R.pendingWeeklyReview=D/7;save();$('message').textContent='День сохранен. Никакой гонки: возвращайся, когда будет время.';render();window.scrollTo(0,0)
+}
 $('reflection').addEventListener('input',function(){R.notes[D]=$('reflection').value;save()});
 $('overwhelm').onclick=function(){$('grounding').classList.add('show')};$('closeGrounding').onclick=function(){$('grounding').classList.remove('show')};
 render();
-})();
-</script></body></html>
+})();</script></body></html>
