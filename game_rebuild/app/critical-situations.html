@@ -44,8 +44,8 @@ function showSummary(){
 }
 function finish(){
  saved.completed=true;saved.completedAt=Date.now();saved.score=counts();save();
- if(GRoute.status('slot.html?id=ct')==='current')GRoute.complete('slot.html?id=ct');
- location.href='slot.html?id=leverage';
+ if(GRoute.status('slot.html?id=ct')==='current'){GRoute.complete('slot.html?id=ct');location.href='slot.html?id=leverage';}
+ else location.href='atlas.html';
 }
 function render(){
  if(!data.length){app.textContent='Ситуации пока недоступны.';return}
