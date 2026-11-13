@@ -98,7 +98,7 @@ function render(){
 }
 function completeDay(){var count=(R.days[D]||[]).filter(Boolean).length;if(!count){$('message').textContent='Отметь хотя бы одно действие, которое ты действительно сделал. Маленького шага достаточно.';return}
  var today=new Date().toDateString();if(R.last===today){$('message').textContent='Сегодняшний день уже засчитан. Продолжение откроется после смены календарного дня.';return}
- R.notes[D]=$('reflection').value;R.last=today;R.day=D+1;R.completedAt=R.day===28?Date.now():R.completedAt;D++;save();$('message').textContent='День сохранен. Никакой гонки: возвращайся, когда будет время.';render();window.scrollTo(0,0)}
+ R.notes[D]=$('reflection').value;R.last=today;R.done=(R.done||0)+count;if(count===3)R.full=(R.full||0)+1;R.day=D+1;R.completedAt=R.day===28?Date.now():R.completedAt;D++;save();$('message').textContent='День сохранен. Никакой гонки: возвращайся, когда будет время.';render();window.scrollTo(0,0)}
 $('reflection').addEventListener('input',function(){R.notes[D]=$('reflection').value;save()});
 $('overwhelm').onclick=function(){$('grounding').classList.add('show')};$('closeGrounding').onclick=function(){$('grounding').classList.remove('show')};
 render();

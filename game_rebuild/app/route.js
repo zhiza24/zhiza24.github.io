@@ -98,7 +98,7 @@ function snapshot(u,p){
   'slot.html?id=evidence':['fractal'], 'slot.html?id=sort':['lab'], 'slot.html?id=found':['lab'],
   'slot.html?id=pb_end':['lab'], 'slot.html?id=fractal':['fractal'], 'slot.html?id=leverage':['fractal'],
   'slot.html?id=guard':['guard'], 'reactor28.html':['reactor28'], 'slot.html?id=retest':['retest'],
-  'slot.html?id=compare':['wheel','retest'], 'slot.html?id=end':['reactor','retest','arts'],
+  'slot.html?id=compare':['wheel','retest'], 'slot.html?id=end':['reactor28','retest','arts'],
   'slot.html?id=km':['kmTest'], 'slot.html?id=fs':['firstSet'], 'slot.html?id=lab_d':['desireLab'], 'slot.html?id=pi':['interact'],
   'slot.html?id=rs':['respTest'], 'slot.html?id=ct':['ctTest'], 'slot.html?id=sv':['selfWorth'], 'slot.html?id=vsort':['valuesCore','reactorIn']};
  const arch={'ego.html':'ego','slot.html?id=arch_b':'archB','slot.html?id=arch_v':'archV','slot.html?id=arch_p':'archP','slot.html?id=arch_d':'archD'}[u],ar=arch&&p[arch];
