@@ -9,7 +9,7 @@ g.renderAtlas=function(){
   var mark=document.createElement('div');mark.className='land-mark';mark.textContent=['✧','◈','⌑','⌘','✦','⌂'][i];
   var body=document.createElement('div');body.className='land-body';
   var state=r.completed?'Земля пройдена':r.unlocked?(r.done?'Открыта · '+r.done+' из '+r.total+' шагов':'Доступна по основному маршруту'):'Откроется дальше по пути';
-  body.innerHTML='<div class="land-kicker">Земля '+r.number+' · '+state+'</div><h2>'+r.title+'</h2><div class="land-sub">'+r.subtitle+'</div><p>'+r.description+'</p><div class="meter"><i style="width:'+r.progress+'%"></i></div><div class="land-foot"><span>'+r.done+' / '+r.total+' шагов отмечено</span><span class="artifact-state">'+(S.artifacts[i].unlocked?'Артефакт получен':'Артефакт впереди')+'</span></div>';
+  body.innerHTML='<div class="land-kicker">Земля '+r.number+' · '+state+'</div><h2>'+r.title+'</h2><div class="land-sub">'+r.subtitle+'</div><p>'+r.description+'</p><p class="land-condition"><b>Условие артефакта:</b> '+r.condition+'</p><div class="meter"><i style="width:'+r.progress+'%"></i></div><div class="land-foot"><span>'+r.done+' / '+r.total+' шагов отмечено</span><span class="artifact-state">'+(S.artifacts[i].unlocked?'Артефакт получен':'Артефакт впереди')+'</span></div>';
   var action=document.createElement('a');action.className='land-link';action.href=r.unlocked?r.entry:'tasks.html';action.textContent=r.unlocked?'Открыть землю':'Продолжить путь';if(!r.unlocked)action.classList.add('locked-link');
   card.append(mark,body,action);root.append(card);
  });
