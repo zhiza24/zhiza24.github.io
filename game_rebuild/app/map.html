@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="ru">
+<head><script src="theme.js?v=8"></script><script src="sound.js?v=1"></script><script>try{if(localStorage.getItem('alch_v5_author_seen'))document.documentElement.classList.add('aseen')}catch(e){}</script><script src="flow.js?v=kit2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=kit2"></script><script src="profile-layer.js?v=kit2"></script><script src="route-gate.js?v=hm1"></script><script src="gender.js?v=2"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0c10">
+<title>Путь Алхимика — карта путешествия</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#090b10; --gold:#d9b56d; --gold2:#f3d99b; --text:#f2eadb;
+    --scroll-w:min(88vw,360px);
+    --scroll-closed-ratio:.35417;
+    --scroll-closed-h:calc(var(--scroll-w) * var(--scroll-closed-ratio));
+    --scroll-cap-top:calc(var(--scroll-w) * 248 / 604);
+    --scroll-cap-bot:calc(var(--scroll-w) * 248 / 604);
+    --nav-h:calc(78px + env(safe-area-inset-bottom));
+    --top-h:calc(56px + env(safe-area-inset-top));
+    --sov-top:calc(env(safe-area-inset-top) + 78px);
+    --sov-h:calc(100dvh - env(safe-area-inset-top) - 78px - var(--nav-h));
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var(--text);font-family:Georgia,"Times New Roman",serif}
+  button{font:inherit}
+  .vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+  .map-screen{position:fixed;left:0;right:0;top:var(--top-h);bottom:var(--nav-h);overflow:hidden}
+  .map-stage{position:absolute;height:100%;width:auto;aspect-ratio:784/1168;left:50%;bottom:0;transform:translateX(-50%)}
+  .map-img{width:100%;height:100%;object-fit:fill;display:block;pointer-events:none}
+  .node{position:absolute;z-index:3;transform:translate(-50%,-50%);width:42px;height:42px;padding:0;border-radius:50%;border:2px solid #f0d18c;background:radial-gradient(circle at 35% 30%,#fff5d0 0%,#f0c870 35%,#c98a40 70%,#8a5420 100%);box-shadow:0 0 0 2px rgba(122,74,22,.85),0 0 16px rgba(255,211,106,.7);color:#3a1a05;cursor:pointer}
+  .node .num{display:block;font:700 17px/42px "Cormorant Garamond",serif;text-align:center}
+  .node .name,.node .state{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none;text-shadow:0 1px 3px #000}
+  .node .name{top:108%;font:600 15px/1.2 Manrope,Arial,sans-serif;color:#f1e3c6;opacity:0}
+  .node .state{width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+  .node.current .name,.node:hover .name,.node:focus-visible .name{opacity:1}
+  .node.current{animation:p 2s infinite;z-index:5}
+  .node.done{box-shadow:0 0 0 2px rgba(122,74,22,.85),0 0 14px rgba(216,189,128,.8)}
+  .node.available{border-color:#e5a85e}
+  .node.locked{filter:grayscale(.45) brightness(.72);opacity:.78}
+  .hero-pin{position:absolute;z-index:4;width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid #f0d18c;background:#2a1a0c;box-shadow:0 0 0 2px #7a4a16,0 0 10px rgba(255,211,106,.8);transform:translate(-50%,calc(-100% - 8px));pointer-events:none}
+  .hero-pin img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block}
+  .dock{position:absolute;left:0;right:0;bottom:0;height:158px;pointer-events:none;z-index:45}
+  .dock a{pointer-events:auto}
+  .start{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff5d0 0%,#f0c870 30%,#c98a40 60%,#8a5420 100%);display:flex;align-items:center;justify-content:center;font:700 24px "Cormorant Garamond",serif;color:#fff8e0;text-shadow:0 2px 3px #000;text-decoration:none;animation:p 2s infinite;box-shadow:0 0 0 3px #7a4a16,0 0 0 6px rgba(201,138,64,.4),0 10px 24px rgba(0,0,0,.5),inset 0 3px 8px rgba(255,240,180,.5)}
+  .start:before{content:"";position:absolute;inset:6px;border-radius:50%;border:1.2px dashed rgba(255,230,170,.65);pointer-events:none}
+  .cont{position:absolute;left:50%;bottom:108px;transform:translateX(-50%);width:168px;height:48px;border-radius:16px;background:linear-gradient(145deg,#8a5420 0%,#c98a40 40%,#f0c870 70%,#8a5420 100%);display:flex;align-items:center;justify-content:center;font:700 19px "Cormorant Garamond",serif;color:#fff8e0;text-shadow:0 2px 4px #3a1a05;text-decoration:none;white-space:nowrap;box-shadow:0 0 0 2px #5a3410,0 8px 20px rgba(0,0,0,.5),inset 0 2px 6px rgba(255,230,170,.6),inset 0 -3px 6px rgba(0,0,0,.3);animation:p 2.6s infinite}
+  .cont:before{content:"";position:absolute;inset:4px;border-radius:12px;border:1px dashed rgba(255,230,170,.6);pointer-events:none}
+  .cont[hidden]{display:none}
+  .dock a:focus-visible{outline:3px solid #ffe7b0;outline-offset:6px}
+  @keyframes p{0%,100%{box-shadow:0 0 6px 2px rgba(255,211,106,.5)}50%{box-shadow:0 0 26px 10px rgba(255,211,106,.85)}}
+  .scl{position:fixed;z-index:55;left:50%;top:calc(env(safe-area-inset-top) + 78px);transform:translateX(-50%);width:var(--scroll-w);border:0;padding:0;background:none;cursor:pointer;transition:opacity .3s ease;will-change:opacity;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55))}
+  .scl img{display:block;width:100%;height:auto}
+  .scl.op{opacity:0;pointer-events:none}
+  .sov{position:fixed;left:0;right:0;top:var(--sov-top);bottom:var(--nav-h);z-index:48;display:flex;justify-content:center;align-items:flex-start;pointer-events:none;visibility:hidden}
+  .sov:before{content:"";position:absolute;inset:0;background:rgba(12,8,4,.52);opacity:0;transition:opacity .6s ease;will-change:opacity;pointer-events:none}
+  .sov.ready{visibility:visible;pointer-events:auto}
+  .sov.on:before{opacity:1}
+  .spp{position:relative;width:min(var(--scroll-w),100%);height:100%;flex:none;--sc-ease:cubic-bezier(.45,.05,.25,1);--sc-dur:.6s}
+  .spp-clip,.spp-inner,.spp-foot{transition:transform var(--sc-dur) var(--sc-ease);will-change:transform;backface-visibility:hidden}
+  .spp-clip{position:absolute;inset:0;overflow:hidden;z-index:0;transform:translate3d(0,calc(var(--scroll-closed-h) - 100%),0)}
+  .spp-inner{position:absolute;inset:0;transform:translate3d(0,calc(100% - var(--scroll-closed-h)),0)}
+  .spp-foot{position:absolute;left:0;right:0;bottom:0;height:var(--scroll-cap-bot);z-index:1;pointer-events:none;transform:translate3d(0,calc(var(--scroll-closed-h) - var(--sov-h)),0)}
+  .sov.on .spp-clip,.sov.on .spp-inner,.sov.on .spp-foot{transform:translate3d(0,0,0)}
+  .spp-art{position:absolute;inset:0;pointer-events:none}
+  .spp-top{position:absolute;left:0;top:0;width:100%;height:auto;display:block;z-index:1}
+  .spp-bot{position:absolute;left:0;bottom:0;width:100%;height:auto;display:block}
+  .spp-mid{position:absolute;left:0;right:0;top:calc(var(--scroll-cap-top) * .45);bottom:calc(var(--scroll-cap-bot) * .42);background:url(img/scroll_open_mid.png?v=h9) center top / 100% auto repeat-y;z-index:0}
+  .sbd{position:absolute;left:11%;right:11%;top:calc(var(--scroll-cap-top) * .36 + 44px);bottom:calc(var(--scroll-cap-bot) * .36 + 66px);overflow:auto;overscroll-behavior:contain;z-index:3;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%);padding:12px 0 16px;-webkit-overflow-scrolling:touch;font:500 19px/1.55 Manrope,sans-serif;color:#3a220a;opacity:0;transition:opacity .18s ease}
+  .sov.on .sbd,.sov.on .sx,.sov.on .sau{opacity:1;transition:opacity .25s ease .45s}
+  .sclose{position:absolute;z-index:2;left:50%;bottom:calc(var(--scroll-cap-bot) * .36 + 12px);transform:translateX(-50%);min-width:140px;height:42px;padding:0 26px;border-radius:21px;border:1.5px solid #a8742a;background:linear-gradient(180deg,#fff3cf 0%,#efd08a 55%,#d6a54e 100%);box-shadow:0 0 0 1px rgba(255,240,200,.7) inset,0 3px 10px rgba(90,52,16,.35);color:#4a2a0a;font:700 18px/1 "Cormorant Garamond",serif;letter-spacing:.02em;white-space:nowrap;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .18s ease}
+  .sclose:before{content:"";position:absolute;inset:3px;border-radius:18px;border:1px dashed rgba(122,74,22,.45);pointer-events:none}
+  .sov.on .sclose{opacity:1;pointer-events:auto;transition:opacity .25s ease .45s}
+  .sclose:focus-visible{outline:3px solid #8a5420;outline-offset:3px}
+  .sbd h3{margin:0 0 8px;font:700 26px/1.1 "Cormorant Garamond",serif;color:#6a3e10;text-align:center}
+  .sbd p{margin:0 0 10px}
+  .sbd .ft{font-style:italic;color:#8a5a20}
+  .sx{position:absolute;z-index:3;opacity:0;transition:opacity .18s ease;top:calc(var(--scroll-w) * 100 / 604 + 4px);right:8%;width:34px;height:34px;border:0;background:none;font:400 28px/1 serif;color:#6a3e10;cursor:pointer}
+  .sau{position:absolute;z-index:3;opacity:0;transition:opacity .18s ease;top:calc(var(--scroll-w) * 100 / 604 + 6px);left:8%;width:30px;height:30px;border-radius:50%;border:1.5px solid #a8742a;background:radial-gradient(#fff1c8,#d9a54e);color:#3a220a;font:700 19px/1 serif;cursor:pointer;display:none}
+  .sau.on{background:radial-gradient(#ffe08a,#c98a2e);box-shadow:0 0 10px #ffc04a}
+  .overlay{position:fixed;inset:0;z-index:80;background:rgba(3,5,8,.76);backdrop-filter:blur(7px);display:none;align-items:flex-end;justify-content:center;padding:16px}
+  .overlay.show{display:flex}
+  .detail{position:relative;width:min(100%,520px);max-height:min(82vh,720px);overflow:auto;border:1px solid rgba(222,184,111,.48);border-radius:22px 22px 16px 16px;background:radial-gradient(ellipse at 50% 0%,rgba(169,117,49,.14),transparent 45%),linear-gradient(160deg,#1a1e28,#0e1118 72%);box-shadow:0 25px 90px #000b;padding:25px 23px 22px}
+  .close{position:absolute;right:15px;top:14px;width:34px;height:34px;border-radius:50%;border:1px solid #76613e;background:#171b23;color:#dfc58f;font:20px Arial,sans-serif;cursor:pointer}
+  .detail-kicker{font:15px Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#c29b5d;margin:1px 42px 8px 0}
+  .detail h2{font-size:clamp(23px,5vw,30px);font-weight:400;color:#f0dfbb;margin:0 0 10px}
+  .detail p{font:17px/1.65 Arial,sans-serif;color:#c3b9a8;margin:0 0 17px}
+  .progress-head{display:flex;justify-content:space-between;gap:10px;color:#d9c69f;font:15px Arial,sans-serif;margin:18px 0 8px}
+  .progress{height:5px;border-radius:8px;background:#34333a;overflow:hidden}
+  .progress b{display:block;height:100%;width:0;background:linear-gradient(90deg,#a96c2e,#f0cf86);box-shadow:0 0 12px #d7a85b}
+  .reactor-days{display:grid;grid-template-columns:repeat(21,1fr);gap:4px;margin:12px 0 3px}
+  .reactor-days i{aspect-ratio:1;border-radius:3px;background:#3d3a3b;border:1px solid #55504a}
+  .reactor-days i.done{background:#d0a75e;border-color:#e8c783;box-shadow:0 0 5px #c28c42aa}
+  .day-caption{font:15px Arial,sans-serif;color:#928879;margin-top:6px}
+  .detail-actions{display:flex;gap:10px;margin-top:22px}
+  .continue{flex:1;border:1px solid #d5ae69;border-radius:10px;padding:13px 16px;background:linear-gradient(135deg,#c28b42,#8f5e2d);color:#160f08;font:600 15px Arial,sans-serif;letter-spacing:.06em;cursor:pointer}
+  .secondary{border:1px solid #5a5144;border-radius:10px;padding:13px 15px;background:#171b23;color:#d5c5a4;font:15px Arial,sans-serif;cursor:pointer}
+  .status-note{margin-top:12px;color:#887f70;font:15px/1.5 Arial,sans-serif}
+  @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+  /* first-visit author scroll: gone for good after closing */
+  html.aseen .scl,html.aseen .sov{display:none!important}
+  .sov{transition:opacity .5s ease}
+  .sov.gone{opacity:0;pointer-events:none}
+  .sov.closing .sbd,.sov.closing .sx,.sov.closing .sau,.sov.closing .sclose{visibility:hidden;opacity:0!important;transition:none!important}
+  body.scrolling .node.current,body.scrolling .start,body.scrolling .cont{animation-play-state:paused}
+  /* legible map text */
+  .node{width:46px;height:46px}
+  .node .num{font:700 20px/42px "Cormorant Garamond",serif;color:#2a1405;text-shadow:0 0 3px rgba(255,244,214,.95),0 0 1px #fff3cf}
+  .node.locked{filter:saturate(.35) brightness(.9);opacity:1}
+  .node .name{top:112%;font:700 17px/1.2 Manrope,Arial,sans-serif;color:#fff3d6;text-shadow:none;background:rgba(18,10,4,.84);border:1px solid rgba(240,209,140,.7);border-radius:10px;padding:4px 10px;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+  .start span{font-size:27px;color:#fffaf0;text-shadow:0 1px 0 #5a3410,0 2px 6px rgba(0,0,0,.85)}
+  .cont{font:800 19px Manrope,Arial,sans-serif;letter-spacing:.02em;color:#1e1206;text-shadow:0 1px 0 rgba(255,245,220,.6);background:linear-gradient(180deg,#fff1c8 0%,#efcd84 50%,#c9923f 100%);width:158px;height:46px;font-size:17px;letter-spacing:0;border:1.5px solid #fff0c4}
+  .map-screen>.cont{bottom:auto;transform:translate(-50%,-50%);z-index:46}
+  .cont:before{border-color:rgba(90,52,16,.45)}
+
+  /* chakra axis */
+  .axis-path{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:visible}
+  #apGlow{fill:none;stroke:#ffc24a;stroke-width:12;stroke-opacity:.55;vector-effect:non-scaling-stroke;filter:url(#apg)}
+  #apDots{fill:none;stroke:#fff3c4;stroke-width:5;stroke-linecap:round;stroke-dasharray:0.01 8;vector-effect:non-scaling-stroke}
+  .crown{position:absolute;left:50%;top:13%;width:40%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(255,250,232,.5) 0%,rgba(255,236,176,.28) 35%,rgba(255,220,140,0) 70%);mix-blend-mode:screen}
+  .node{--ck:#ffd36a;--ckg:rgba(255,211,106,.6);box-shadow:0 0 0 2px rgba(122,74,22,.9),0 0 0 4.5px var(--ck),0 0 16px 5px var(--ckg)!important}
+  .node[data-id="1"]{--ck:#e0262c;--ckg:rgba(224,38,44,.7)}
+  .node[data-id="2"]{--ck:#f27a1a;--ckg:rgba(242,122,26,.7)}
+  .node[data-id="3"]{--ck:#f5d22a;--ckg:rgba(245,210,42,.7)}
+  .node[data-id="4"]{--ck:#2fbf5c;--ckg:rgba(47,191,92,.7)}
+  .node[data-id="5"]{--ck:#2f86ea;--ckg:rgba(47,134,234,.75)}
+  .node[data-id="6"]{--ck:#4b3bd6;--ckg:rgba(90,70,230,.75)}
+  .node[data-id="7"]{--ck:#9b45e0;--ckg:rgba(155,69,224,.75)}
+  .node[data-id="8"]{--ck:#fff6dc;--ckg:rgba(255,238,180,.85)}
+  .node.locked{filter:none;opacity:1}
+  .node.locked:after{content:"";position:absolute;inset:-2px;border-radius:50%;background:rgba(30,20,10,.18);pointer-events:none}
+  .node.current{animation:ckp 2.2s ease-in-out infinite}
+  @keyframes ckp{0%,100%{box-shadow:0 0 0 2px rgba(122,74,22,.9),0 0 0 4.5px var(--ck),0 0 12px 3px var(--ckg)}50%{box-shadow:0 0 0 2px rgba(122,74,22,.9),0 0 0 5.5px var(--ck),0 0 30px 12px var(--ckg)}}
+  .start{animation:none;box-shadow:0 0 0 3px #7a4a16,0 0 0 6px #7a2e22,0 0 22px 8px rgba(122,40,28,.75),0 10px 24px rgba(0,0,0,.5),inset 0 3px 8px rgba(255,240,180,.5)}
+  .node .name{top:50%;left:calc(100% + 12px);transform:translateY(-50%)}
+  .hero-pin{transform:translate(calc(-50% - 52px),-50%)}
+  .map-screen>.cont{left:50%!important;top:50%!important;height:34px;width:176px;z-index:46;box-shadow:0 0 0 2px #5a3410,0 10px 26px rgba(0,0,0,.75),0 0 0 6px rgba(20,12,4,.35),inset 0 2px 6px rgba(255,240,200,.6);animation:none}
+
+  /* plain chakra circles: no numerals, no captions; Start lifted off the nav */
+  .node .num,.node .name{display:none!important}
+  .node{
+    width:36px;height:36px;
+    border:2.5px solid var(--ck);
+    background:radial-gradient(circle at 38% 30%,color-mix(in srgb,var(--ck) 82%,#fff) 0%,color-mix(in srgb,var(--ck) 58%,#2a1810) 42%,color-mix(in srgb,var(--ck) 22%,#0c0806) 100%);
+    box-shadow:0 0 0 2px rgba(18,10,4,.55),0 0 0 4px color-mix(in srgb,var(--ck) 85%,transparent),0 0 16px 5px var(--ckg)!important;
+  }
+  .node[data-id="2"]{background:radial-gradient(circle at 38% 30%,#ffd4a8 0%,#f27a1a 48%,#4a1c08 100%)}
+  .node[data-id="3"]{background:radial-gradient(circle at 38% 30%,#fff3b0 0%,#f5d22a 48%,#4a3a08 100%)}
+  .node[data-id="8"]{
+    background:radial-gradient(circle at 38% 32%,#fffdf6 0%,#ffe9a8 42%,#c9a056 80%);
+    border-color:#fff6dc;
+  }
+  @keyframes ckp{
+    0%,100%{box-shadow:0 0 0 2px rgba(18,10,4,.55),0 0 0 4px var(--ck),0 0 12px 3px var(--ckg)}
+    50%{box-shadow:0 0 0 2px rgba(18,10,4,.55),0 0 0 5.5px var(--ck),0 0 28px 11px var(--ckg)}
+  }
+  .start{
+    position:absolute;left:50%;top:88%;bottom:auto;
+    transform:translate(-50%,-50%);
+    width:68px;height:68px;z-index:4;
+    font-size:20px;
+  }
+  .start span{font-size:22px}
+  .hero-pin{transform:translate(calc(-50% - 44px),-50%);width:30px;height:30px}
+</style>
+<link rel="stylesheet" href="sun-btn.css?v=r6f19">
+<style>
+  .start.sun-btn{position:absolute;background:transparent!important;box-shadow:none!important;animation:none!important;border:0;overflow:visible;display:block;line-height:0;text-decoration:none}
+  .start.sun-btn:before{display:none!important;content:none!important}
+  .start.sun-btn .start-lbl{filter:drop-shadow(0 0 4px rgba(255,248,200,.9))}
+  .start.sun-btn .start-cap{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:7px;z-index:6;font:800 15px/1 Manrope,Arial,sans-serif;letter-spacing:.2em;padding-left:.2em;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 8px rgba(0,0,0,.8);white-space:nowrap;pointer-events:none}
+  .start.sun-btn .sun-btn__halo{inset:-48%}
+</style>
+<link rel="stylesheet" href="nav.css?v=h9f19"></head>
+<body data-page="map">
+<h1 class="vh">Карта путешествия</h1>
+<button class="scl" id="scl" type="button" aria-label="Послание"><img src="img/scroll_closed.png?v=h8" alt=""></button>
+<div class="sov" id="sov">
+  <div class="spp" id="spp">
+    <div class="spp-clip"><div class="spp-inner"><div class="spp-art" aria-hidden="true">
+      <img class="spp-top" src="img/scroll_open_top_f.png?v=h10" decoding="sync" alt="">
+      <div class="spp-mid"></div>
+    </div></div></div>
+    <div class="spp-foot"><img class="spp-bot" src="img/scroll_open_bot_f.png?v=h10" decoding="sync" alt="" aria-hidden="true"><button class="sclose" id="sclose" type="button">Закрыть</button></div>
+    <button class="sx" id="sx" type="button" aria-label="Свернуть">×</button>
+    <button class="sau" id="sau" type="button" aria-label="Слушать">♪</button>
+    <div class="sbd" id="sbd"></div>
+  </div>
+</div>
+<div class="map-screen">
+  <div class="map-stage" id="mapStage">
+    <img class="map-img" src="img/map_axis.jpg?v=ax1" alt="Карта пути">
+    <svg class="axis-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><filter id="apg" x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="1.6"/></filter></defs><path id="apGlow" d=""/><path id="apDots" d=""/></svg>
+    <div class="crown" aria-hidden="true"></div>
+    <div class="hero-pin" id="heroPin" hidden><img data-hero-img="portrait" alt=""></div>
+    <button class="node" data-id="1" aria-label="Открыть Ворота рождения"><span class="num">I</span><span class="name">Ворота рождения</span><span class="state">Текущая</span></button>
+    <button class="node" data-id="2" aria-label="Открыть Землю отражений"><span class="num">II</span><span class="name">Земля отражений</span><span class="state">Пройдена</span></button>
+    <button class="node" data-id="3" aria-label="Открыть Долину проявлений"><span class="num">III</span><span class="name">Долина проявлений</span><span class="state">Доступна</span></button>
+    <button class="node" data-id="4" aria-label="Открыть Лабиринт повторений"><span class="num">IV</span><span class="name">Лабиринт повторений</span><span class="state">Закрыта</span></button>
+    <button class="node" data-id="5" aria-label="Открыть Зеркальную цитадель"><span class="num">V</span><span class="name">Зеркальная цитадель</span><span class="state">Закрыта</span></button>
+    <button class="node" data-id="6" aria-label="Открыть Кузницу выбора"><span class="num">VI</span><span class="name">Кузница выбора</span><span class="state">Закрыта</span></button>
+    <button class="node" data-id="7" aria-label="Открыть Реактор преображения"><span class="num">VII</span><span class="name">Реактор преображения</span><span class="state">Закрыта</span><span class="reactor-meter" hidden aria-label="0 из 21 дней"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></button>
+    <button class="node" data-id="8" aria-label="Открыть Землю мастерства"><span class="num">VIII</span><span class="name">Земля мастерства</span><span class="state">Закрыта</span></button>
+    <a class="start sun-btn" id="start" aria-label="Старт" href="form.html"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span><span class="sun-btn__label start-lbl" aria-hidden="true"><svg viewBox="0 0 24 24" width="40%" height="40%"><path d="M5.2 16c-.8 0-1.3-.9-.8-1.6l6.8-10.2c.4-.6 1.2-.6 1.6 0l6.8 10.2c.5.7 0 1.6-.8 1.6z" transform="translate(0 2)" fill="#e8590c"/></svg></span><span class="start-cap">СТАРТ</span></a>
+  </div>
+  <a class="cont" id="resume" href="form.html" hidden>Продолжить игру</a>
+</div>
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+  <section class="detail">
+    <button class="close" id="close" aria-label="Закрыть">×</button>
+    <div class="detail-kicker" id="detailKicker">Территория I · Точка 0</div>
+    <h2 id="detailTitle">Ворота рождения</h2>
+    <p id="detailDescription"></p>
+    <div class="progress-head"><span>Прогресс территории</span><span id="progressText">0 из 4 шагов</span></div>
+    <div class="progress"><b id="progressBar"></b></div>
+    <div id="reactorDetail" hidden>
+      <div class="reactor-days" id="reactorDays"></div>
+      <div class="day-caption">21 день · три отрезка пути: 1–7, 8–14, 15–21</div>
+    </div>
+    <div class="detail-actions">
+      <button class="continue" id="continue">Продолжить путь</button>
+      <button class="secondary" id="closeSecondary">Закрыть</button>
+    </div>
+    <div class="status-note" id="statusNote">Демонстрационное состояние. Кнопка не запускает игровые экраны.</div>
+  </section>
+</div>
+<script src="engine.js?v=arch1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=mf4"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=bar7"></script>
+<script>
+(() => {
+  const AX=50,CASTLE_Y=11,N8_Y=17.5;
+  const medalAt={};
+  function layoutAxis(){
+    const stage=document.getElementById('mapStage');
+    const H=stage.clientHeight||1;
+    const start=document.getElementById('start');
+    const cta=document.getElementById('resume');
+    const mid=H/2;
+    const n8Y=H*N8_Y/100;
+    const contH=(cta&&!cta.hidden&&cta.offsetHeight)||34;
+    const tries=[
+      {ss:72,ns:38,hc:46,pad:8},
+      {ss:68,ns:36,hc:44,pad:7},
+      {ss:64,ns:34,hc:42,pad:6},
+      {ss:60,ns:32,hc:40,pad:5},
+      {ss:56,ns:30,hc:38,pad:4},
+      {ss:52,ns:28,hc:36,pad:3}
+    ];
+    let startSize=52,nodeSize=28,heroClear=36,halfG,startY,n4Y,n5Y,dBelow,dAbove;
+    for(const a of tries){
+      const sR=a.ss/2,nR=a.ns/2;
+      const g=contH/2+nR+a.pad;
+      const sY=H-a.hc-sR;
+      const y4=mid+g,y5=mid-g;
+      const db=(sY-y4)/4,da=(y5-n8Y)/3;
+      if(db>=sR+nR+a.pad && da>=a.ns+a.pad && y5>n8Y+a.ns+a.pad && sY>y4+sR+nR+a.pad){
+        startSize=a.ss;nodeSize=a.ns;heroClear=a.hc;halfG=g;startY=sY;n4Y=y4;n5Y=y5;dBelow=db;dAbove=da;
+        break;
+      }
+      startSize=a.ss;nodeSize=a.ns;heroClear=a.hc;halfG=g;startY=sY;n4Y=y4;n5Y=y5;dBelow=db;dAbove=da;
+    }
+    // Equal visual air in the lower half: Start is larger, so its center gap is wider than 1–4.
+    const sR=startSize/2,nR=nodeSize/2;
+    const belowSpan=startY-n4Y;
+    const evenAir=(belowSpan-sR-nR-3*nodeSize)/4;
+    const startGap=sR+nR+evenAir;
+    const lowGap=nodeSize+evenAir;
+    const ys={
+      0:startY,
+      1:startY-startGap,
+      2:startY-startGap-lowGap,
+      3:startY-startGap-2*lowGap,
+      4:n4Y,
+      5:n5Y,
+      6:n5Y-dAbove,
+      7:n5Y-2*dAbove,
+      8:n8Y
+    };
+    start.style.width=startSize+'px';
+    start.style.height=startSize+'px';
+    start.style.fontSize=Math.round(startSize*.30)+'px';
+    const startSpan=start.querySelector('.start-lbl');
+    
+    start.style.left=AX+'%';
+    start.style.top=(startY/H*100).toFixed(2)+'%';
+    for(let i=1;i<=8;i++){
+      const y=ys[i]/H*100;
+      medalAt[i]=[AX,+y.toFixed(2)];
+      const node=document.querySelector('.node[data-id="'+i+'"]');
+      if(!node)continue;
+      node.style.width=nodeSize+'px';
+      node.style.height=nodeSize+'px';
+      node.style.left=AX+'%';
+      node.style.top=y.toFixed(2)+'%';
+    }
+    const pts=[+(startY/H*100).toFixed(2),...Object.keys(medalAt).sort((a,b)=>a-b).map(k=>medalAt[k][1]),CASTLE_Y];
+    let d='M'+AX+' '+pts[0],side=1;
+    for(let i=1;i<pts.length;i++){
+      const y0=pts[i-1],y1=pts[i],dy=y0-y1,k=(i===1||i===pts.length-1)?7:12;
+      d+=' C'+(AX+side*k)+' '+(y0-dy/3).toFixed(2)+' '+(AX+side*k)+' '+(y1+dy/3).toFixed(2)+' '+AX+' '+y1;side=-side;
+    }
+    document.getElementById('apGlow').setAttribute('d',d);
+    document.getElementById('apDots').setAttribute('d',d);
+    const pin=document.getElementById('heroPin');
+    const cur=document.querySelector('.node.current');
+    if(pin&&cur){pin.style.left=cur.style.left;pin.style.top=cur.style.top}
+  }
+  layoutAxis();
+  const territories = {
+    1:{roman:"I",point:"Точка 0",name:"Ворота рождения",status:"current",description:"Начало путешествия. Здесь герой знакомится со своей исходной точкой, замечает фоновые состояния и получает первые ориентиры.",progress:2,total:4,step:"Продолжить знакомство"},
+    2:{roman:"II",point:"Точка А",name:"Земля отражений",status:"done",description:"Исследование внутренних сфер, ценностей, желаний и того, как привычная картина мира отражается в ежедневных решениях.",progress:7,total:7,step:"Территория пройдена"},
+    3:{roman:"III",point:"Точка Б",name:"Долина проявлений",status:"available",description:"Наблюдение за реальными ситуациями в разных сферах жизни. Здесь становится заметно, как внутренние правила проявляются в действиях и результатах.",progress:0,total:3,step:"Начать исследование"},
+    4:{roman:"IV",point:"Точка Б",name:"Лабиринт повторений",status:"locked",description:"Исследование повторяющихся сценариев, скрытых правил и причин, по которым знакомые ситуации воспроизводятся снова.",progress:0,total:5,step:"Откроется после предыдущей территории"},
+    5:{roman:"V",point:"Точка Б",name:"Зеркальная цитадель",status:"locked",description:"Сборка фрактальной карты: увидеть взаимосвязи, опоры и способы защиты, которые влияют на выбор.",progress:0,total:2,step:"Откроется после предыдущей территории"},
+    6:{roman:"VI",point:"Точка Б",name:"Кузница выбора",status:"locked",description:"Выбор одной точки влияния и подготовка к практическому эксперименту. Здесь намерение превращается в конкретное действие.",progress:0,total:2,step:"Откроется после предыдущей территории"},
+    7:{roman:"VII",point:"Точка С",name:"Реактор преображения",status:"locked",description:"Одна территория и 21 последовательный день наблюдений и экспериментов. Три отрезка помогают увидеть динамику, не превращая календарный пропуск в обнуление пути.",progress:0,total:21,step:"21 день практики",reactor:true},
+    8:{roman:"VIII",point:"Финал",name:"Земля мастерства",status:"locked",description:"Возвращение к исходным ориентирам, сравнение результатов и фиксация того, что изменилось в восприятии, решениях и действиях.",progress:0,total:3,step:"Откроется после завершения Реактора"}
+  };
+  let profile={};
+  try{profile=JSON.parse(localStorage.getItem('alch_v5_profile'))||{}}catch(e){}
+  const flow=window.GFLOW||[],saved=profile.flow||{};
+  const lastIndex=flow.findIndex(x=>x.u===(window.GRoute?GRoute.resume():saved.last));
+  const position=lastIndex>=0?lastIndex:Math.max(1,Math.min(Number(saved.max)||1,flow.length-1));
+  function territory(step){
+    if(step.pt==='0')return 1;if(step.pt==='А')return 2;
+    if(step.u==='slot.html?id=pb_intro'||step.u==='slot.html?id=evidence')return 3;
+    if(step.u==='slot.html?id=fractal')return 5;
+    if(['leverage','guard','rs','ct','sv','vsort'].some(k=>step.u==='slot.html?id='+k))return 6;
+    if(step.pt==='Б')return 4;if(step.pt==='С')return 7;return 8;
+  }
+  const currentId=flow[position]?territory(flow[position]):1;
+  Object.keys(territories).forEach(key=>{
+    const id=Number(key),t=territories[id];
+    const steps=flow.map((x,i)=>({x,i})).filter(item=>territory(item.x)===id);
+    t.indices=steps.map(item=>item.i);t.total=steps.length;
+    t.progress=steps.filter(item=>GRoute.status(item.x.u,profile)==='done').length;
+    const seen=steps.some(item=>item.i<position);
+    t.status=t.progress===t.total?'done':id===currentId?'current':seen?'available':'locked';
+    t.url='tasks.html#block-'+encodeURIComponent(steps[0]?.x.pt||'0');
+    if(t.reactor){t.total=21;t.progress=Math.max(0,Math.min(21,Number((profile.reactor||{}).day)||0));}
+    const node=document.querySelector('.node[data-id="'+id+'"]');
+    node.classList.remove('current','done','available','locked');node.classList.add(t.status);
+    node.querySelector('.state').textContent=t.status==='current'?'Ты здесь':t.status==='done'?'Пройдена':t.status==='available'?'Посещена':'Пока закрыта';
+    if(t.reactor)node.querySelectorAll('.reactor-meter i').forEach((cell,i)=>cell.classList.toggle('on',i<t.progress));
+  });
+  const pin=document.getElementById('heroPin');
+  if(window.GHeroApply)GHeroApply();
+  const pinImg=pin&&pin.querySelector('img');
+  if(pinImg&&!pinImg.getAttribute('src'))pinImg.src=window.GHeroSrc?GHeroSrc('portrait'):'img/hero_m_portrait.jpg?v=h3';
+  const pinAt=medalAt[currentId];
+  if(pin&&pinAt){pin.style.left=pinAt[0]+'%';pin.style.top=pinAt[1]+'%';pin.hidden=false;}
+  const checkpoint=GRoute.state(profile),cta=document.getElementById('resume');
+  const started=position>1||Object.keys(saved.completed||{}).length>0||
+    ['name','birth','points','mapStyle','ego','wheel','wheelTest','mirrors','passport'].some(key=>profile[key]&&(!(Array.isArray(profile[key]))||profile[key].length))||
+    Number(profile.reactor?.day)>0||Object.keys(profile.reactor?.days||{}).length>0;
+  cta.hidden=false;
+  cta.textContent=checkpoint.finished?'Посмотреть пройденное':'Продолжить игру';
+  cta.href=!started?'form.html':checkpoint.finished?'tasks.html':checkpoint.url;
+  if(!cta.hidden){
+    const ms=document.querySelector('.map-screen');ms.appendChild(cta);
+  }
+  layoutAxis();
+  window.addEventListener('resize',layoutAxis);
+  const start=document.getElementById('start');
+  const beginning=started?'form.html?opening=1&v=opening2':'form.html';
+  start.href=started?beginning:'form.html';
+  const statusNames={current:"Текущая",done:"Пройдена",available:"Посещена",locked:"Закрыта"};
+  const overlay=document.getElementById("overlay");
+  const title=document.getElementById("detailTitle");
+  const kicker=document.getElementById("detailKicker");
+  const description=document.getElementById("detailDescription");
+  const progressText=document.getElementById("progressText");
+  const progressBar=document.getElementById("progressBar");
+  const note=document.getElementById("statusNote");
+  const reactorDetail=document.getElementById("reactorDetail");
+  const reactorDays=document.getElementById("reactorDays");
+  let selected=1;
+
+  function openTerritory(id){
+    const t=territories[id]; if(!t)return;
+    selected=id;
+    title.textContent=t.name;
+    kicker.textContent=`Территория ${t.roman} · ${t.point} · ${statusNames[t.status]}`;
+    description.textContent=t.description;
+    progressText.textContent=t.reactor?`${t.progress} из 21 дней`:`${t.progress} из ${t.total} подтвержденных шагов`;
+    progressBar.style.width=(t.progress/t.total*100)+"%";
+    reactorDetail.hidden=!t.reactor;
+    reactorDays.replaceChildren();
+    if(t.reactor){
+      for(let i=1;i<=21;i++){
+        const cell=document.createElement("i");
+        if(i<=t.progress)cell.className="done";
+        cell.title=`День ${i}`;
+        reactorDays.append(cell);
+      }
+    }
+    const button=document.getElementById("continue");
+    button.textContent=t.status==="locked"?"Территория закрыта":t.status!=="current"?"Смотреть результаты":"Продолжить путь";
+    button.disabled=t.status==="locked";
+    button.style.opacity=button.disabled?".55":"1";
+    button.style.cursor=button.disabled?"not-allowed":"pointer";
+    note.textContent=t.status==="locked"?"Продолжай путь по текущей территории.":"Здесь сохраняется твой путь. К прежним результатам можно возвращаться в дневнике.";
+    overlay.classList.add("show");
+    document.getElementById("close").focus();
+  }
+  function close(){overlay.classList.remove("show")}
+  document.querySelectorAll(".node").forEach(node=>node.addEventListener("click",()=>openTerritory(Number(node.dataset.id))));
+  document.getElementById("close").addEventListener("click",close);
+  document.getElementById("closeSecondary").addEventListener("click",close);
+  overlay.addEventListener("click",e=>{if(e.target===overlay)close()});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+  document.getElementById("continue").addEventListener("click",()=>{if(territories[selected].status!=="locked")location.href=territories[selected].url});
+})();
+</script>
+<script>
+var SCROLL_TITLE='Послание';
+var SCROLL_HTML='<p>Приветствую вас, господа пробужденные…</p><p class="ft">Скоро здесь появится авторский текст.</p>';
+var SCROLL_AUDIO='snd/author.mp3';
+(function(){
+  var o=document.getElementById('sov'),a=document.getElementById('sau'),scl=document.getElementById('scl'),au=null,hideT=null;
+  document.getElementById('sbd').innerHTML='<h3>'+SCROLL_TITLE+'</h3>'+SCROLL_HTML;
+  fetch(SCROLL_AUDIO,{method:'HEAD'}).then(function(r){if(r.ok){au=new Audio(SCROLL_AUDIO);au.onended=function(){a.classList.remove('on')};a.style.display='block'}}).catch(function(){});
+  a.onclick=function(){if(!au)return;if(au.paused){au.play();a.classList.add('on')}else{au.pause();a.classList.remove('on')}};
+  var KEY='alch_v5_author_seen',seen=false,closed=false;
+  try{seen=!!localStorage.getItem(KEY)}catch(e){}
+  if(seen){o.remove();scl.remove();return}
+  function cl(){
+    if(closed||!o.classList.contains('ready'))return;closed=true;
+    try{localStorage.setItem(KEY,String(Date.now()))}catch(e){}
+    if(au){au.pause();a.classList.remove('on')}
+    clearTimeout(hideT);
+    o.classList.add('closing');
+    o.classList.remove('on');                       // roll up: transform-only (.6s)
+    hideT=setTimeout(function(){
+      o.classList.add('gone');                      // then fade away (.5s)
+      setTimeout(function(){o.remove();scl.remove();document.body.classList.remove('scrolling');document.documentElement.classList.add('aseen')},560);
+    },620);
+  }
+  function op(){
+    if(closed||o.classList.contains('ready'))return;
+    clearTimeout(hideT);
+    document.body.classList.add('scrolling');
+    o.classList.add('ready');
+    scl.classList.add('op');
+    requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add('on')})});
+  }
+  // first visit: unroll by itself after a short pause
+  var autoT=setTimeout(op,900);
+  scl.onclick=function(){clearTimeout(autoT);op()};
+  document.getElementById('sx').onclick=cl;
+  document.getElementById('sclose').onclick=cl;
+  o.onclick=function(e){if(e.target==o)cl()};
+})();
+</script>
+</body>
+</html>

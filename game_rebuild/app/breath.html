@@ -1,0 +1,81 @@
+<!doctype html><html lang="ru"><head><script src="theme.js?v=8"></script><script src="sound.js?v=1"></script>
+<script src="flow.js?v=kit2"></script>
+<script src="opening.js?v=opening2"></script>
+<script src="route.js?v=kit2"></script>
+<script src="profile-layer.js?v=kit2"></script>
+<script src="route-gate.js?v=hm1"></script>
+<script src="gender.js?v=2"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script src="upd.js?v=1794512684"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
+<title>Дыхание</title>
+<style>
+html,body,a,button,.c{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
+a:focus,button:focus,.c:focus,a:focus-visible,button:focus-visible,.c:focus-visible{outline:none}
+html,body{margin:0;min-height:100%;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;font-size:17px;line-height:1.45;text-align:center}
+body{display:flex;align-items:center;justify-content:center;flex-direction:column;box-sizing:border-box;padding:calc(56px + env(safe-area-inset-top)) 16px calc(100px + env(safe-area-inset-bottom))}
+h2{font:700 26px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;margin:10px 0 8px}
+.n{font-size:44px;font-weight:800;color:#fff0c8;min-height:52px;line-height:52px;margin:0}
+.stage{width:252px;height:252px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin:0 auto}
+.c{width:120px;height:120px;border-radius:50%;background:radial-gradient(#ffe9a8,#e0a940 60%,#a8692a);box-shadow:0 0 22px 4px rgba(255,207,90,.85),0 0 48px 12px rgba(255,207,90,.45);overflow:visible;transition:transform 3s ease-in-out;transform-origin:center center;cursor:pointer;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
+.t{margin:0 0 4px;font:800 22px/30px Manrope;color:#ffd877;min-height:30px}
+.s{margin-top:12px;color:#c9a46a;font-size:17px;min-height:24px}
+</style>
+<link rel="stylesheet" href="nav.css?v=h9f19">
+</head>
+<body data-page="task">
+<div class="n" id="n"></div>
+<div class="t" id="t"></div>
+<div class="stage"><div class="c" id="c" role="button" aria-label="Коснись сферы"></div></div>
+<h2>Часть пути пройдена.<br>Переведи дыхание</h2>
+<div class="s" id="s">Коснись сферы</div>
+<script>
+/* Сфера e6702a2: запуск по касанию, дальше сама. Вдох 3 с (scale 1.7), выдох 4 с (scale 1); свечение box-shadow без filter (iOS без квадрата), 3 цикла, без фазы паузы. Счет сверху, надпись снизу. */
+var P=[['Вдох',3,1.7],['Выдох',4,1]],cy=0,ph=0,doneF=false,started=false;
+function fin(){
+  if(doneF)return;
+  doneF=true;
+  t.textContent='Я есмь';
+  n.textContent='';
+  s.textContent='';
+  try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}
+  setTimeout(function(){
+    location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance();
+  },1400);
+}
+function run(){
+  if(ph>=P.length){
+    ph=0;cy++;
+    if(cy>=3){fin();return}
+    s.textContent='цикл '+(cy+1)+' из 3';
+  }
+  var p=P[ph],k=p[1];
+  t.textContent=p[0];
+  c.style.transitionTimingFunction='ease-in-out';
+  c.style.transitionDuration=k+'s';
+  c.style.transform='scale('+p[2]+')';
+  try{navigator.vibrate&&navigator.vibrate(25)}catch(e){}
+  (function tk(){
+    n.textContent=k;
+    if(--k>0)setTimeout(tk,1000);
+    else setTimeout(function(){ph++;run()},1000);
+  })();
+}
+function start(e){
+  if(started||doneF)return;
+  if(e)e.preventDefault();
+  started=true;
+  s.textContent='цикл 1 из 3';
+  run();
+}
+c.addEventListener('pointerdown',start,{passive:false});
+</script>
+<script src="engine.js?v=arch1"></script>
+<script src="passport-data.js?v=1"></script>
+<script src="passport.js?v=opening2"></script>
+<script src="texts.js?v=mf4"></script>
+<script src="texts_fr.js?v=mf2"></script>
+<script src="nav.js?v=bar7"></script>
+<script>/* iOS: filter на html дает квадрат вокруг масштабируемой сферы */document.documentElement.style.filter='none';</script>
+</body></html>

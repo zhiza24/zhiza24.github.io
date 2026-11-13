@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0c10">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="g.css?v=1f19"><link rel="stylesheet" href="nav.css?v=f19">
+<title>Реактор · 28 дней</title>
+<style>
+:root{--gold:#d9b56d;--cream:#f2eadb;--muted:#a9a092}
+body{background:radial-gradient(ellipse at 50% 0%,#302315 0%,#11131a 48%,#090b10 100%);color:var(--cream)}
+.reactor-wrap{max-width:760px;margin:22px auto;padding:0 14px 48px}
+.hero-card,.practice-card{border:1px solid #675132;border-radius:20px;background:linear-gradient(145deg,#1c2029,#11151d);padding:clamp(18px,4vw,28px);box-shadow:0 18px 48px #0006}
+.eyebrow{font:600 10px Manrope,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+h1{font:600 clamp(32px,7vw,48px)/1.05 "Cormorant Garamond",serif;color:#f3dfb5;margin:10px 0}
+.lead{font:14px/1.7 Manrope,sans-serif;color:#c4bdaf}
+.progress{height:5px;background:#35343a;border-radius:8px;overflow:hidden;margin:18px 0 8px}.progress b{display:block;height:100%;background:linear-gradient(90deg,#94612d,#f0d18c);transition:width .3s}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:16px 0}.days span{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;border:1px solid #514638;color:#a9a092;font:12px Manrope,sans-serif}.days .done{background:#b68a4b;color:#17120b;border-color:#e0bd7b}.days .current{border:2px solid #f0d18c;color:#f3dfb5;box-shadow:0 0 16px #d7ad5a55}
+.week{font:600 10px Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#d7b879;margin:8px 0}
+.day-title{font:600 25px "Cormorant Garamond",serif;color:#f3dfb5;margin:4px 0 14px}
+.task{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-top:1px solid #ffffff12;font:14px/1.55 Manrope,sans-serif;color:#e8e0d2;cursor:pointer}
+.task input{width:20px;height:20px;accent-color:#c99d57;flex:none;margin-top:1px}
+textarea{width:100%;min-height:76px;resize:vertical;background:#0c1017;border:1px solid #514638;border-radius:10px;padding:12px;color:#f2eadb;font:14px/1.5 Manrope,sans-serif;box-sizing:border-box}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.actions button,.actions a{flex:1;min-width:145px;border:1px solid #c9a46a;border-radius:11px;padding:13px 15px;background:linear-gradient(135deg,#c28b42,#8f5e2d);color:#170f07;font:700 12px Manrope,sans-serif;text-align:center;text-decoration:none;cursor:pointer}
+.actions .secondary{background:#171c25;color:#e2d1ad;border-color:#65563e}
+.note{font:12px/1.6 Manrope,sans-serif;color:#a9a092;margin-top:12px}
+.overlay{display:none;border:1px solid #967445;background:#171c25;border-radius:14px;padding:16px;margin-top:14px;font:14px/1.65 Manrope,sans-serif}.overlay.show{display:block}
+@media(max-width:420px){.days{gap:4px}.days span{font-size:10px}.actions button,.actions a{min-width:100%}}
+</style></head><body data-page="tracker">
+<main class="reactor-wrap">
+<section class="hero-card">
+<div class="eyebrow">Точка С · интеграция опыта</div>
+<h1>Реактор · 28 дней</h1>
+<p class="lead">Не нужно становиться другим человеком за четыре недели. Здесь ты проверяешь новые способы реагирования в обычной жизни: небольшими действиями, с учетом своих ресурсов и реальных обстоятельств.</p>
+<div class="progress"><b id="bar" style="width:0%"></b></div><div class="lead" id="counter">День 1 из 28</div>
+<div class="days" id="days"></div>
+</section>
+<section class="practice-card" style="margin-top:14px">
+<div class="week" id="week">НЕДЕЛЯ I · ЗАМЕЧАТЬ</div><div class="day-title" id="title">День 1. Что повторяется?</div>
+<div id="tasks"></div>
+<label class="note" for="reflection">Запись дня · что заметил и что оказалось важным?</label>
+<textarea id="reflection" placeholder="Можно записать одну фразу. Запись остается только на этом устройстве."></textarea>
+<div class="actions"><button id="complete">Засчитать день</button><button class="secondary" id="overwhelm">Меня накрыло</button></div>
+<div class="overlay" id="grounding"><b>Сначала вернись в настоящий момент.</b><p>Поставь стопы на опору. Назови про себя три предмета, которые видишь, два звука, которые слышишь, и одно ощущение в теле. Не нужно немедленно решать всю ситуацию. Спроси себя: что сейчас известно точно и какой самый небольшой безопасный шаг доступен?</p><button class="secondary" id="closeGrounding">Вернуться к дню</button></div>
+<p class="note" id="message">Пропуск не обнуляет предыдущие дни. Если сегодня нет ресурса, можно вернуться позже. День засчитывается после хотя бы одного отмеченного действия.</p>
+</section>
+<div class="actions"><a class="secondary" href="diary.html">Дневник</a><a class="secondary" href="map.html">Карта пути</a><a id="retest" class="secondary" href="slot.html?id=retest">К повторному исследованию</a></div>
+</main>
+<script src="engine.js?v=arch1"></script><script src="flow.js?v=40steps"></script><script src="route.js?v=40steps"></script><script src="profile-layer.js?v=40steps"></script><script src="route-gate.js?v=40steps"></script><script src="nav.js?v=bar7"></script>
+<script>
+(function(){
+'use strict';
+var P=window.GPro&&GPro.load?GPro.load():{},R=P.reactor28;
+if(!R||R.version!==28){if(P.reactor&&P.reactor.day)P.reactor21Archive=P.reactor;R={version:28,day:0,days:{},notes:{},last:null};P.reactor28=R;GPro.save(P);}
+R.days=R.days||{};R.notes=R.notes||{};
+var D=Math.min(28,Math.max(0,+R.day||0));
+var plan=[
+['ЗАМЕЧАТЬ','Что повторяется?','Назови один эмоциональный итог, который возникает в разных обстоятельствах.','Запиши событие отдельно от первой мысли о нем.','Заметь один момент, когда привычная реакция уже началась.','Что сегодня было фактом, а что — объяснением?'],
+['ЗАМЕЧАТЬ','Сигнал начала','Вспомни ситуацию, в которой знакомая реакция включилась особенно быстро.','Отметь первый сигнал: мысль, чувство, телесное ощущение или действие.','Понаблюдай за следующим похожим эпизодом без требования изменить его.','Что помогло заметить начало раньше?'],
+['ЗАМЕЧАТЬ','Фоновая фраза','Запиши фразу, которой обычно заканчивается для тебя сложная ситуация.','Проверь, всегда ли она соответствует фактам.','Найди один эпизод, который не укладывается в эту фразу.','Как звучит более точное описание?'],
+['ЗАМЕЧАТЬ','Тело и контекст','Заметь, как тело реагирует в знакомой ситуации.','Опиши ощущение без толкования его причин.','Проверь, меняется ли оно в другой обстановке.','Что ты узнал о своем сигнале?'],
+['ЗАМЕЧАТЬ','Старая стратегия','Опиши, что ты обычно делаешь, когда возникает напряжение.','Назови, что этот способ дает сразу.','Отметь его возможную цену позже.','В каких обстоятельствах эта стратегия полезна?'],
+['ЗАМЕЧАТЬ','Исключение из правила','Найди случай, когда привычный сценарий не сработал или не возник.','Что в ситуации было иначе?','Какой ресурс или условие помогло?','Что можно повторить без насилия над собой?'],
+['ЗАМЕЧАТЬ','Итог первой недели','Собери три наблюдения за неделю.','Выдели один повторяющийся фильтр, если он действительно заметен.','Запиши то, что пока остается неясным.','Какое наблюдение хочешь взять во вторую неделю?'],
+['ПАУЗА И ВЫБОР','Между событием и ответом','В одной ситуации сделай короткую паузу до привычного ответа.','Назови факт, чувство и желание отдельно.','Выбери: ответить сейчас, позже или не отвечать.','Что изменила пауза?'],
+['ПАУЗА И ВЫБОР','Моя зона влияния','Раздели ситуацию на то, что зависит от тебя, другого человека и обстоятельств.','Выбери только свою часть.','Сделай один шаг в своей зоне ответственности.','Что стало легче, когда ты не взял на себя все?'],
+['ПАУЗА И ВЫБОР','Граница','Заметь просьбу или ожидание, на которое хочется ответить автоматически.','Проверь свое желание и реальные возможности.','Если нужно, возьми время на ответ или обозначь границу.','Что произошло после ясного ответа?'],
+['ПАУЗА И ВЫБОР','Получать и принимать','Заметь возможность принять поддержку, внимание или вознаграждение.','Проверь, не возникло ли автоматическое чувство долга.','Прими то, что тебе подходит, без немедленной компенсации.','Что ты почувствовал после?'],
+['ПАУЗА И ВЫБОР','Три ориентира','Выбери одну ценность, важную именно сейчас.','Опиши, как она выглядит в обычном поведении.','Сделай маленький выбор в ее пользу.','Совпало ли действие с ценностью?'],
+['ПАУЗА И ВЫБОР','Факт вместо приговора','Вспомни ситуацию, где ты оценил себя слишком категорично.','Выпиши проверяемые факты.','Сформулируй вывод, который точнее учитывает обстоятельства.','Как меняется отношение к себе?'],
+['ПАУЗА И ВЫБОР','Достаточно','Выбери задачу и заранее определи достаточный результат.','Сделай только согласованный объем.','Остановись, когда критерий выполнен.','Что ты заметил в момент остановки?'],
+['ПАУЗА И ВЫБОР','Итог второй недели','Назови два способа, которыми ты уже можешь выбирать иначе.','Отметь, что пока сложно и почему.','Выбери одну ситуацию для эксперимента на следующей неделе.','Какой поддержки или условия не хватает?'],
+['ЭКСПЕРИМЕНТ','Небольшое действие','Выбери действие, которое занимает не больше 15 минут.','Уточни, какой результат будет наблюдаемым.','Выполни его в подходящих условиях.','Что произошло на самом деле?'],
+['ЭКСПЕРИМЕНТ','Просьба о помощи','Определи, какая конкретная помощь тебе нужна.','Выбери человека или способ обращения.','Сформулируй просьбу без требования читать мысли.','Что ты узнал о возможности опираться на других?'],
+['ЭКСПЕРИМЕНТ','Новый ответ','Опиши привычную реакцию в одной ситуации.','Выбери альтернативный ответ, который реалистичен сейчас.','Проверь его в небольшой безопасной ситуации.','Что стоит сохранить, а что изменить?'],
+['ЭКСПЕРИМЕНТ','Проверка гипотезы','Запиши одну гипотезу о том, что мешает движению.','Определи, какие факты ее подтвердят или опровергнут.','Собери хотя бы один факт, не подгоняя его под версию.','Каков статус гипотезы теперь?'],
+['ЭКСПЕРИМЕНТ','Перераспределить нагрузку','Найди одну задачу, которую можно упростить, перенести или разделить.','Определи реальный срок и объем.','Сделай договоренность или измени план.','Что изменилось в нагрузке?'],
+['ЭКСПЕРИМЕНТ','Повторить удачный ход','Вспомни эксперимент, который оказался полезным.','Назови условия, при которых он сработал.','Повтори его в похожем контексте.','Насколько результат повторился?'],
+['ЭКСПЕРИМЕНТ','Итог третьей недели','Собери факты о трех попытках нового действия.','Отдели результат от ожиданий.','Выбери один способ, который стоит оставить.','Что требует другого подхода?'],
+['ИНТЕГРАЦИЯ','Что стало привычнее','Сравни свои реакции в начале и сейчас.','Отметь изменения, которые подтверждаются конкретными эпизодами.','Назови то, что пока не изменилось.','Какой вывод будет честным?'],
+['ИНТЕГРАЦИЯ','Моя новая формула','Сформулируй короткую фразу, которая помогает тебе возвращаться к выбору.','Проверь, не обещает ли она контролировать все обстоятельства.','Используй ее в подходящей ситуации.','Насколько она звучит твоим голосом?'],
+['ИНТЕГРАЦИЯ','План на сложный день','Определи ранние признаки перегрузки.','Выбери один способ поддержки и один посильный шаг.','Сохрани этот план в дневнике.','Что поможет не требовать от себя невозможного?'],
+['ИНТЕГРАЦИЯ','Три опоры','Назови три качества, действия или условия, на которые реально можешь опереться.','Подкрепи каждое примером из жизни.','Выбери одну опору и используй ее сегодня.','Что ты раньше не учитывал?'],
+['ИНТЕГРАЦИЯ','Карта продолжения','Выбери одну сферу, где хочешь продолжить изменения.','Опиши желаемый результат и ближайший наблюдаемый признак.','Назначь следующий шаг и реалистичный срок.','Что может потребовать корректировки?'],
+['ИНТЕГРАЦИЯ','Завершение цикла','Просмотри записи 28 дней.','Отметь подтвержденные изменения, открытые вопросы и новые решения.','Выбери, что возьмешь в обычную жизнь на следующие четыре недели.','Как теперь звучит твое авторство?']
+];
+var weeks=['НЕДЕЛЯ I · ЗАМЕЧАТЬ','НЕДЕЛЯ II · ПАУЗА И ВЫБОР','НЕДЕЛЯ III · ЭКСПЕРИМЕНТ','НЕДЕЛЯ IV · ИНТЕГРАЦИЯ'];
+var $=function(id){return document.getElementById(id)};
+function save(){P.reactor28=R;GPro.save(P)}
+function render(){
+ $('bar').style.width=(D/28*100)+'%';$('counter').textContent=D>=28?'Цикл завершен · 28 из 28 дней':'День '+(D+1)+' из 28';
+ $('days').innerHTML=Array.from({length:28},function(_,i){return '<span class="'+(i<D?'done':i===D?'current':'')+'">'+(i+1)+'</span>'}).join('');
+ if(D>=28){$('week').textContent='ЦИКЛ ЗАВЕРШЕН';$('title').textContent='Ты собрал свой опыт';$('tasks').innerHTML='<p class="lead">Четыре недели не обязаны менять все. Важно, что теперь у тебя есть записи, наблюдения и проверенные способы действовать. Перейди к повторному исследованию и сравни результаты без требования получить идеальную картину.</p>';$('reflection').disabled=true;$('complete').textContent='Перейти к повторному исследованию';$('complete').onclick=function(){if(window.GRoute)GRoute.complete('reactor28.html');location.href='slot.html?id=retest'};return}
+ var item=plan[D],week=Math.floor(D/7);$('week').textContent=weeks[week];$('title').textContent='День '+(D+1)+'. '+item[1];
+ var saved=R.days[D]||[];$('tasks').innerHTML=item.slice(2).map(function(t,i){return '<label class="task"><input type="checkbox" data-i="'+i+'" '+(saved[i]?'checked':'')+'><span>'+t+'</span></label>'}).join('');
+ $('reflection').value=(R.notes[D]||'');$('reflection').disabled=false;$('complete').textContent='Засчитать день';$('complete').onclick=completeDay;
+ $('tasks').querySelectorAll('input').forEach(function(input){input.addEventListener('change',function(){var a=R.days[D]||[];a[+input.dataset.i]=input.checked?1:0;R.days[D]=a;save()})});
+}
+function completeDay(){var count=(R.days[D]||[]).filter(Boolean).length;if(!count){$('message').textContent='Отметь хотя бы одно действие, которое ты действительно сделал. Маленького шага достаточно.';return}
+ var today=new Date().toDateString();if(R.last===today){$('message').textContent='Сегодняшний день уже засчитан. Продолжение откроется после смены календарного дня.';return}
+ R.notes[D]=$('reflection').value;R.last=today;R.day=D+1;R.completedAt=R.day===28?Date.now():R.completedAt;D++;save();$('message').textContent='День сохранен. Никакой гонки: возвращайся, когда будет время.';render();window.scrollTo(0,0)}
+$('reflection').addEventListener('input',function(){R.notes[D]=$('reflection').value;save()});
+$('overwhelm').onclick=function(){$('grounding').classList.add('show')};$('closeGrounding').onclick=function(){$('grounding').classList.remove('show')};
+render();
+})();
+</script></body></html>

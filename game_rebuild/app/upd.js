@@ -1,0 +1,1 @@
+(function(){var s=document.currentScript,m=/v=(\d+)/.exec(s&&s.src||''),pv=m?m[1]:'';fetch('ver.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.text()}).then(function(v){v=v.trim();if(v&&v!==pv){var u=new URL(location.href);if(u.searchParams.get('u')!==v){u.searchParams.set('u',v);location.replace(u.toString())}}}).catch(function(){})})();

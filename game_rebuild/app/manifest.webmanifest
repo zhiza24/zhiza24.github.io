@@ -1,0 +1,10 @@
+{
+  "name": "Путь Алхимика — Майя Явь",
+  "short_name": "Путь Алхимика",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#090b10",
+  "theme_color": "#0b0c10",
+  "lang": "ru",
+  "description": "Авторская игра-исследование: карта, герой, дневник и путь из 40 шагов."
+}

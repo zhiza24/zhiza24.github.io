@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ru">
+<head><script src="theme.js?v=8"></script><script src="sound.js?v=1"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FDFBF7">
+<title>Рождение героя · Путь Алхимика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg-cream:#FDFBF7;--bg-milk:#F4EFE6;--accent-gold:#B99A5B;--accent-sage:#879887;--text-espresso:#302923;--text-muted:#746B62;--card-bg:#fff;--radius-lg:22px;--transition:all .25s ease}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Manrope,-apple-system,BlinkMacSystemFont,sans-serif}
+body{min-height:100svh;background:radial-gradient(ellipse at 50% 0%,#fff 0%,var(--bg-cream) 48%,#eee9df 100%);color:var(--text-espresso);display:flex;justify-content:center;align-items:center;padding:24px 16px}
+button,input{font:inherit}
+.shell{width:100%;max-width:500px}
+.kicker{text-align:center;color:var(--accent-sage);font-size:15px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin:0 0 13px}
+.game-container{width:100%;background:rgba(255,255,255,.92);border:1px solid #e9e1d5;border-radius:var(--radius-lg);box-shadow:0 22px 65px rgba(57,46,34,.09);padding:clamp(24px,6vw,38px);position:relative;overflow:hidden}
+.game-container:before{content:"";position:absolute;left:12%;right:12%;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent-gold),transparent)}
+h1,h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;color:var(--text-espresso);letter-spacing:-.025em;text-align:center;margin:0}
+h1{font-size:clamp(32px,8vw,42px);line-height:1.02}
+.intro{text-align:center;color:var(--text-muted);font-size:17px;line-height:1.65;margin:12px auto 28px;max-width:340px}
+.form-group{margin:0 0 21px}
+label{display:block;font-size:15px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#776e63;margin:0 0 9px}
+input[type=text],input[type=date]{display:block;width:100%;padding:15px 16px;border:1px solid #e8e1d7;background:#fdfbf8;border-radius:12px;font-size:19px;color:var(--text-espresso);outline:none;transition:var(--transition);min-height:52px}
+input:focus{border-color:var(--accent-gold);background:#fff;box-shadow:0 0 0 3px rgba(185,154,91,.12)}
+.gender-selector{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gender-card{appearance:none;border:1px solid #e8e1d7;border-radius:14px;padding:17px 12px;text-align:center;cursor:pointer;background:#fdfbf8;transition:var(--transition);color:var(--text-espresso)}
+.gender-card .symbol{display:block;font-family:"Cormorant Garamond",serif;font-size:27px;color:var(--accent-sage);margin-bottom:5px}
+.gender-card span:last-child{display:block;font-size:16px;font-weight:700}
+.gender-card.active{border:1.5px solid var(--accent-gold);background:#faf7ef;box-shadow:inset 0 0 0 1px rgba(185,154,91,.12)}
+.gender-card.active .symbol{color:#a98749}
+.btn-primary{width:100%;border:0;border-radius:13px;padding:16px 18px;background:var(--text-espresso);color:#fffdf8;font-size:17px;font-weight:700;letter-spacing:.02em;cursor:pointer;transition:var(--transition);margin-top:4px}
+.btn-primary:hover{background:#657766;transform:translateY(-1px)}
+.btn-primary:focus-visible,.gender-card:focus-visible{outline:3px solid rgba(185,154,91,.35);outline-offset:3px}
+.privacy{text-align:center;color:#958b80;font-size:15px;line-height:1.5;margin:16px 8px 0}
+.error{min-height:18px;color:#a34f43;font-size:15px;text-align:center;margin:10px 0 0}
+.result{display:none;text-align:center;padding-top:4px}
+.result.show{display:block}
+.result-mark{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:#edf1eb;color:#718572;font-size:28px}
+.result h2{font-size:34px;margin-bottom:8px}
+.result p{font-size:17px;color:var(--text-muted);line-height:1.65}
+.summary{margin:20px 0;padding:15px;border-radius:14px;background:#f8f6f1;text-align:left;font-size:16px;line-height:1.8}
+.summary b{color:#6e806f}
+.secondary{background:transparent;color:var(--text-espresso);border:1px solid #ded5c8;margin-top:10px}
+@media(max-width:380px){body{padding:14px 10px}.game-container{padding:23px 19px}.intro{margin-bottom:22px}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <p class="kicker">Путь Алхимика · Точка 0</p>
+  <section class="game-container" id="birth-screen" aria-labelledby="title">
+    <div id="birth-form">
+      <h1 id="title">Рождение героя</h1>
+      <p class="intro">У каждого путешествия есть своя точка начала. Укажите исходные данные — и мы подготовим Вашего героя.</p>
+      <form id="hero-form" novalidate>
+        <div class="form-group">
+          <label for="hero-name">Как к Вам обращаться</label>
+          <input type="text" id="hero-name" name="name" placeholder="Ваше имя или выбранное обращение" maxlength="40" autocomplete="given-name" required>
+        </div>
+        <div class="form-group">
+          <label for="hero-birthdate">Дата рождения</label>
+          <input type="date" id="hero-birthdate" name="birthdate" required>
+        </div>
+        <div class="form-group">
+          <label>Образ героя</label>
+          <div class="gender-selector" role="group" aria-label="Выбор пола героя">
+            <button class="gender-card active" type="button" data-gender="female" aria-pressed="true">
+              <span class="symbol" aria-hidden="true">♀</span><span>Путница</span>
+            </button>
+            <button class="gender-card" type="button" data-gender="male" aria-pressed="false">
+              <span class="symbol" aria-hidden="true">♂</span><span>Путник</span>
+            </button>
+          </div>
+        </div>
+        <button class="btn-primary" type="submit">Родить героя</button>
+        <p class="error" id="form-error" role="alert"></p>
+        <p class="privacy">Данные этой демонстрационной страницы сохраняются только в Вашем браузере. Они пока не изменяют основной профиль игры.</p>
+      </form>
+    </div>
+    <div class="result" id="birth-result" aria-live="polite">
+      <div class="result-mark" aria-hidden="true">✧</div>
+      <h2>Герой рожден</h2>
+      <p>Точка начала Вашего путешествия зафиксирована.</p>
+      <div class="summary" id="hero-summary"></div>
+      <button class="btn-primary" type="button" id="edit-hero">Изменить данные</button>
+      <button class="btn-primary secondary" type="button" id="open-game">Открыть действующую игру</button>
+      <p class="privacy">Это предварительный экран рождения. Следующий этап — подключение к существующему профилю и расчетам игры.</p>
+    </div>
+  </section>
+</main>
+<script>
+(function(){
+  var gender='female';
+  var cards=document.querySelectorAll('.gender-card');
+  cards.forEach(function(card){card.addEventListener('click',function(){
+    gender=card.dataset.gender;
+    cards.forEach(function(c){var active=c===card;c.classList.toggle('active',active);c.setAttribute('aria-pressed',String(active));});
+  });});
+  var form=document.getElementById('hero-form');
+  var error=document.getElementById('form-error');
+  var birthInput=document.getElementById('hero-birthdate');
+  var today=new Date();birthInput.max=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=document.getElementById('hero-name').value.trim();
+    var birth=birthInput.value;
+    if(!name){error.textContent='Укажите, как к Вам обращаться.';return;}
+    if(!birth){error.textContent='Укажите дату рождения.';return;}
+    var d=new Date(birth+'T00:00:00');
+    if(Number.isNaN(d.getTime())||d>today){error.textContent='Проверьте дату рождения.';return;}
+    var profile={name:name,birthdate:birth,gender:gender,createdAt:new Date().toISOString(),previewVersion:1};
+    try{localStorage.setItem('alch_v5_birth_preview_v1',JSON.stringify(profile));}catch(err){error.textContent='Браузер не разрешил сохранить данные. Проверьте настройки хранения.';return;}
+    document.getElementById('hero-summary').innerHTML='<div><b>Обращение:</b> '+escapeHtml(name)+'</div><div><b>Дата рождения:</b> '+birth.split('-').reverse().join('.')+'</div><div><b>Образ:</b> '+(gender==='female'?'Путница':'Путник')+'</div>';
+    document.getElementById('birth-form').style.display='none';
+    document.getElementById('birth-result').classList.add('show');
+  });
+  document.getElementById('edit-hero').addEventListener('click',function(){document.getElementById('birth-result').classList.remove('show');document.getElementById('birth-form').style.display='block';});
+  document.getElementById('open-game').addEventListener('click',function(){location.href='index.html';});
+  function escapeHtml(v){return String(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  try{var saved=JSON.parse(localStorage.getItem('alch_v5_birth_preview_v1')||'null');if(saved){document.getElementById('hero-name').value=saved.name||'';birthInput.value=saved.birthdate||'';gender=saved.gender||'female';cards.forEach(function(c){var active=c.dataset.gender===gender;c.classList.toggle('active',active);c.setAttribute('aria-pressed',String(active));});}}catch(e){}
+})();
+</script>
+</body>
+</html>
