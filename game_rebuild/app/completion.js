@@ -22,7 +22,7 @@ R.source=function(){
  var p=P(),s=p.sourceCheck||{},supports=Array.isArray(p.res)?p.res:[];
  var areas=['Голова и челюсть','Шея и плечи','Грудь','Живот','Спина','Руки и ноги','Напряжение не замечаю','Не хочу отвечать'];
  var limits=[['time','Время'],['money','Деньги'],['energy','Физические силы'],['care','Обязанности и забота о других'],['support','Недостаток поддержки'],['conditions','Внешние условия'],['none','Сейчас явного ограничения нет'],['other','Другое']];
- var summary=[p.ego&&p.ego.top,p.archB&&p.archB.top,p.kmTest&&p.kmTest.top,p.firstSet&&p.firstSet.top].filter(Boolean);
+ var summary=typeof FOBS==='function'?FOBS(p):[];
  return '<span class="tag">Точка 0</span><span class="tag">Источник</span><h1>Тело, энергия и реальные условия</h1><p>Сначала мы замечали реакции и привычные правила. Теперь отделим внутренние способы реагирования от реального ресурса и обстоятельств. Низкий ресурс не означает недостаток характера или неправильный настрой.</p>'+
  '<div class="pt"><b>Что уже отмечено как опора</b><p>'+E(supports.join(', ')||'Пока не выбрано')+'</p></div>'+
  '<label>Сколько доступной энергии сейчас, от 0 до 10?</label><input id="srcEnergy" type="range" min="0" max="10" value="'+E(s.energy==null?5:s.energy)+'" oninput="document.getElementById(\'srcEnergyVal\').textContent=this.value"><p id="srcEnergyVal">'+E(s.energy==null?5:s.energy)+'</p>'+
@@ -30,7 +30,7 @@ R.source=function(){
  '<label>Что сейчас ограничивает твои возможности? Можно выбрать несколько.</label>'+checkList('srcLimits',limits,s.constraints||[]) +
  '<label>Что помогает восстановиться или получить поддержку?</label><textarea id="srcRecovery" rows="2" maxlength="500">'+E(s.recovery||supports.join(', '))+'</textarea>'+
  '<label>Что помогло бы увеличить доступный ресурс хотя бы на 10%?</label><textarea id="srcNeed" rows="3" maxlength="600">'+E(s.need||'')+'</textarea>'+
- '<h2>Итог Точки 0</h2><p>Посмотри на наблюдения, которые накопились. Система не будет решать за тебя, какие из них точны.</p><div class="pt">'+summary.map(E).join('<br>')+'</div>'+
+ '<h2>Итог Точки 0</h2><p>Посмотри на наблюдения, которые накопились. Система не будет решать за тебя, какие из них точны.</p><div class="pt">'+summary.map(function(x){return '<p><small>'+E(x.l)+'</small><br>'+E(x.t)+'</p>'}).join('')+'</div>'+
  '<label>Что из этого ты действительно узнаешь в своем опыте?</label><textarea id="srcConfirm" rows="3" maxlength="600">'+E(s.confirm||'')+'</textarea>'+
  '<label>Что не подходит или требует уточнения?</label><textarea id="srcCorrection" rows="2" maxlength="500">'+E(s.correction||'')+'</textarea>'+
  button('Сохранить и перейти к жизненным сферам','srcSave');
@@ -138,7 +138,7 @@ R.sort_go=function(){
  draw();
 };
 /* Стирание старой формулы: жест необязателен, новая фраза подтверждается человеком. */
-R.eraser=function(){var p=GPAT[lead()];return '<span class="tag">Точка Б</span><h1>Сними старую формулу</h1><p>Жест здесь символический. Он не означает, что привычка исчезла. Можно стереть слой пальцем или нажать кнопку, чтобы перейти сразу к выбору новой формулировки.</p><div class="er"><div class="u">'+E(GS(p.parts[5][1]))+'</div><canvas id="eraseCanvas"></canvas></div><button type="button" class="secondary" id="eraseSkip">Показать формулировку без жеста</button><div id="eraseAfter" style="display:none"><label>Предложенная новая формулировка. Можешь изменить ее своими словами.</label><textarea id="erasePhrase" rows="2" maxlength="500">'+E(p.parts[5][1])+'</textarea><label>Какое небольшое действие поможет проверить ее?</label><textarea id="eraseAction" rows="2" maxlength="500"></textarea>'+button('Сохранить новую формулировку','eraseSave')+'</div>'};
+R.eraser=function(){var p=GPAT[lead()];return '<span class="tag">Точка Б</span><h1>Сними старую формулу</h1><p>Жест здесь символический. Он не означает, что привычка исчезла. Можно стереть слой пальцем или нажать кнопку, чтобы перейти сразу к выбору новой формулировки.</p><div class="er"><div class="u">'+E(GS(p.parts[5][1]))+'</div><canvas id="eraseCanvas"></canvas></div><button type="button" class="secondary" id="eraseSkip">Показать формулировку без жеста</button><div id="eraseAfter" style="display:none"><label>Предложенная новая формулировка. Можешь изменить ее своими словами.</label><textarea id="erasePhrase" rows="2" maxlength="500">'+E(GS(p.parts[5][1]))+'</textarea><label>Какое небольшое действие поможет проверить ее?</label><textarea id="eraseAction" rows="2" maxlength="500"></textarea>'+button('Сохранить новую формулировку','eraseSave')+'</div>'};
 R.eraser_go=function(){
  var p=GPAT[lead()],c=checked('eraseCanvas'),ctx=c.getContext('2d'),r=c.getBoundingClientRect();c.width=Math.max(1,r.width);c.height=Math.max(1,r.height);ctx.fillStyle='#2a2018';ctx.fillRect(0,0,c.width,c.height);ctx.fillStyle='#c9b591';ctx.font='600 18px Manrope';ctx.textAlign='center';ctx.fillText('Старая формула: '+GS(p.parts[2][1]),c.width/2,c.height/2,c.width-28);ctx.globalCompositeOperation='destination-out';
  var shown=false,down=false,count=0;
