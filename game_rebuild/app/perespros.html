@@ -49,19 +49,19 @@ var QUESTIONS=[
 'Что она мне приказывает?',
 'По какому сегодняшнему факту я отдал бы ей решение?'
 ];
-S.rounds=Array.isArray(S.rounds)?S.rounds:[];
+S.rounds=Array.isArray(S.rounds)?S.rounds:[];if(S.rounds.length>4)S.rounds=S.rounds.slice(0,4);if(S.rounds.length===4)S.completed=true;S.draft=Array.isArray(S.draft)?S.draft:['','',''];
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function save(){P.perespros=S;GPro.save(P)}
 function renderPractice(){
- var n=S.rounds.length,round=S.rounds[n]||['','',''];
+ var n=S.rounds.length,round=S.rounds[n]||S.draft||['','',''];
  host.innerHTML='<div class="round">Раунд '+(n+1)+' из 4'+(n===3?' · самостоятельное применение':'')+'</div><h2>'+(n===3?'Проверьте фразу самостоятельно':'Три вопроса')+'</h2>'+
  QUESTIONS.map(function(q,i){return '<div class="question"><b>'+esc(q)+'</b><textarea data-q="'+i+'" maxlength="700" placeholder="Ваш ответ"></textarea></div>'}).join('')+
  '<div class="actions"><button id="saveRound">Завершить раунд</button></div><p class="note" id="status" aria-live="polite">Для перехода дальше ответьте на все три вопроса.</p>';
- host.querySelectorAll('textarea').forEach(function(t){t.value=round[+t.dataset.q]||''});
+ host.querySelectorAll('textarea').forEach(function(t){t.value=round[+t.dataset.q]||'';t.addEventListener('input',function(){S.draft=[].slice.call(host.querySelectorAll('textarea')).map(function(x){return x.value});save()})});
  document.getElementById('saveRound').onclick=function(){
   var answers=[].slice.call(host.querySelectorAll('textarea')).map(function(t){return t.value.trim()});
   if(answers.some(function(x){return !x})){document.getElementById('status').textContent='Заполните все три ответа. Можно отвечать коротко.';return}
-  S.rounds[n]=answers;
+  S.rounds[n]=answers;S.draft=['','',''];
   if(n===3){S.completed=true;S.completedAt=Date.now()}save();
   render();
  };
