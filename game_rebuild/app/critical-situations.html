@@ -30,6 +30,7 @@ h1{font:600 clamp(30px,6vw,44px)/1.08 "Cormorant Garamond",serif;color:#f2dfb8;m
 (function(){
 'use strict';
 var P=GPro.load(),q=new URLSearchParams(location.search),data=(window.criticalThinkingData&&criticalThinkingData.situations)||[];
+if((!P.ctTest||!P.ctTest.v||GRoute.status('slot.html?id=ct')==='locked')&&q.get('retake')!=='1'){location.replace('slot.html?id=ct');return;}
 var saved=P.ctSituations||{answers:[],index:0};
 if(q.get('retake')==='1')saved={answers:[],index:0};
 saved.answers=saved.answers||[];var index=Math.max(0,Math.min(11,+saved.index||0));
