@@ -86,12 +86,12 @@ R.evidence_go=function(){
 };
 /* Фрактальная карта: игрок сам выбирает узнаваемую ситуацию и подтверждает/исправляет вывод. */
 R.fractal=function(){
- var p=P(),L=lead(),E0=p.fractal&&p.fractal.evidence||[],st=FST(E0),r=(GFR.resource_patterns||{})[L]||{};
+ var p=P(),L=lead(),E0=p.fractal&&p.fractal.evidence||[],st=FST(E0),r=(GFR.resource_patterns||{})[L]||{},use=(r.useful_when||[]).map(function(x){return '<li>'+E(GT(x))+'</li>'}).join(''),over=(r.overuse||[]).map(function(x){return '<li>'+E(GT(x))+'</li>'}).join('');
  return '<span class="tag">Точка Б</span><h1>Фрактальная карта</h1><p>Это не портрет, который система выносит за тебя. Выбери, какая из записанных ситуаций действительно узнаваема, а какая гипотеза пока не подтверждается.</p>'+
  '<div class="pt"><small>Текущий статус сопоставления</small>'+E(st[1])+'</div>'+E0.map(function(e,i){return '<label class="fc-row"><input type="radio" name="fractPick" value="'+i+'"><span class="fc-tx"><b>'+E(WN[WK.indexOf(e.sphere)]||e.sphere)+'</b><br>'+E(e.situation||'Ситуация не записана')+'<br><small>'+['Не похоже','Отчасти','Похоже'][e.supports_rule]+'</small></span></label>'}).join('')+
  '<label class="fc-row"><input type="radio" name="fractPick" value="none"><span class="fc-tx">Ни одна ситуация не подходит</span></label>'+
  '<label>Что именно ты узнаешь или что хочешь исправить в описании?</label><textarea id="fractNote" rows="3" maxlength="700">'+E(p.fractal&&p.fractal.recognitionNote||'')+'</textarea>'+
- '<h2>Ресурс привычного способа</h2><p>'+E(GT(r.title||''))+'</p><p>'+E(GT(r.desc||''))+'</p><p>'+E(GT(r.value||''))+'</p>'+button('Сохранить мою карту','fractSave');
+ '<h2>Что в этом способе было полезного</h2><p>'+E(GT(r.protect||''))+'</p><p>'+E(GT(r.ability||''))+'</p><p><b>Когда это действительно помогает</b></p><ul>'+use+'</ul><p><b>Когда способ начинает ограничивать</b></p><ul>'+over+'</ul><p><b>Как использовать ресурс иначе</b></p><p>'+E(GT(r.new_use||''))+'</p>'+button('Сохранить мою карту','fractSave');
 };
 R.fractal_go=function(){var p=P();checked('fractSave').onclick=function(){var choice=document.querySelector('input[name="fractPick"]:checked');p.fractal=p.fractal||{v:1};p.fractal.recognizedEvidence=choice?choice.value:null;p.fractal.recognitionNote=val('fractNote');p.fractal.status=FST(p.fractal.evidence||[])[0];p.fractal.confirmed=!!choice&&choice.value!=='none';log(p,'Фрактальная карта',p.fractal.confirmed?'ситуация '+choice.value:'пока не подтверждено');S(p);next()}};
 /* Точка влияния: выбор не остается абстрактным — уменьшаем шаг под реальные ресурсы. */
@@ -151,7 +151,7 @@ R.eraser_go=function(){
  checked('eraseSave').onclick=function(){var phrase=val('erasePhrase');if(!phrase){checked('erasePhrase').focus();return}var P0=P();P0.lab=P0.lab||{};P0.lab.newPhrase=phrase;P0.lab.newAction=val('eraseAction');P0.lab.eraserDone=true;if(window.GArts)GArts.grant(p.art,{profile:P0});log(P0,'Новая формулировка',phrase);S(P0);next()};
 };
 /* Страж отвечает на выбранные реплики, а не выдает одну и ту же трансформацию. */
-R.guard=function(){var g6=(GTXT.guard6||{})[lead()];return '<span class="tag">Точка Б</span><span class="tag">Страж</span><h1>'+E(g6&&g6.name?GS(g6.name):'Встреча со Стражем')+'</h1><p>Страж не требует уничтожить защиту. Он помогает увидеть, какую задачу она решала и какой другой ход теперь доступен.</p><div id="gd"></div>'};
+R.guard=function(){var L=lead(),g6=(GTXT.guard6||{})[L],base=GTXT.guard||{},pat=GPAT[L]||{},parts=pat.parts||[];return '<span class="tag">Точка Б</span><span class="tag">Страж</span><h1>'+E(g6&&g6.name?GS(g6.name):GS(base.title||'Встреча со Стражем'))+'</h1><p>'+E(GS(base.intro||''))+'</p><div class="pt"><small>Твоя рабочая гипотеза</small><b>'+E(GS(pat.n||''))+'</b><p>'+E(GS(parts[2]&&parts[2][1]||''))+'</p><p>'+E(GS(parts[3]&&parts[3][1]||''))+'</p></div><p>Страж не требует уничтожить защиту. Он помогает увидеть, какую задачу она решала и какой другой ход теперь доступен.</p><div id="gd"></div>'};
 R.guard_go=function(){
  var g6=(GTXT.guard6||{})[lead()];if(!g6){if(fallbackGuardGo)fallbackGuardGo();return}
  var D=g6.stages||[],i=0,A=[],host=checked('gd');
