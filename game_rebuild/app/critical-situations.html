@@ -1,0 +1,70 @@
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090b10">
+<title>Критическое мышление · 12 ситуаций</title>
+<script src="theme.js?v=storage-isolation"></script><script src="flow.js?v=40steps"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=40steps"></script><script src="profile-layer.js?v=40steps"></script><script src="route-gate.js?v=40steps"></script><script src="critical_thinking_questions.js?v=12situations"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#d9b56d;--cream:#f2eadb;--muted:#aaa294}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#302315,#11151e 50%,#090b10);color:var(--cream);font-family:Manrope,Arial,sans-serif;padding:20px 14px 100px}
+main{max-width:720px;margin:0 auto}.eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+h1{font:600 clamp(30px,6vw,44px)/1.08 "Cormorant Garamond",serif;color:#f2dfb8;margin:10px 0}
+.lead{font-size:13px;line-height:1.7;color:#c2b9a9}
+.card{border:1px solid #695333;border-radius:18px;background:linear-gradient(145deg,#1c222d,#11151d);padding:clamp(18px,4vw,28px);margin-top:18px;box-shadow:0 18px 45px #0005}
+.progress{height:5px;background:#34343a;border-radius:8px;overflow:hidden;margin:16px 0 8px}.progress b{display:block;height:100%;background:linear-gradient(90deg,#95652f,#f0d18c)}
+.meta{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#b89a62}
+.question{font:600 24px/1.25 "Cormorant Garamond",serif;color:#f0dfb9;margin:12px 0}
+.option{width:100%;display:block;text-align:left;padding:15px 16px;margin:10px 0;border:1px solid #574b39;border-radius:12px;background:#151b24;color:#eee4d2;font:13px/1.55 Manrope,sans-serif;cursor:pointer}
+.option:hover{border-color:#c69b5b}.option:disabled{opacity:.55;cursor:default}
+.feedback{border-left:3px solid #b89153;background:#111720;padding:14px 16px;border-radius:0 12px 12px 0;font-size:13px;line-height:1.65;margin-top:16px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions button,.actions a{flex:1;min-width:145px;text-align:center;padding:13px 16px;border-radius:10px;border:1px solid #cba15f;background:linear-gradient(135deg,#d2a45c,#94602b);color:#1b1309;font:700 12px Manrope,sans-serif;text-decoration:none;cursor:pointer}
+.actions .secondary{background:#171d26;color:#e5d4b2;border-color:#65563e}
+.score{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}.score div{border:1px solid #554733;border-radius:12px;padding:12px 8px;text-align:center;background:#151b24}.score b{display:block;font:600 30px "Cormorant Garamond",serif;color:#f0d18c}.score small{font-size:9px;color:#aaa294;line-height:1.4}
+@media(max-width:420px){.score{grid-template-columns:1fr 1fr 1fr}.score b{font-size:26px}}
+</style></head><body data-page="tasks">
+<main><div class="eyebrow">Точка Б · Проверка способа рассуждать</div><h1>12 ситуаций</h1>
+<p class="lead">В каждой ситуации выбери ответ, который ближе к тому, как ты действительно поступил(а) бы. После выбора появится объяснение. Здесь оценивается не интеллект, а способ обращаться с информацией, неопределенностью и собственными выводами.</p>
+<section class="card" id="app"><div class="lead">Загружаем ситуации…</div></section>
+</main>
+<script src="engine.js?v=arch1"></script><script src="nav.js?v=40steps"></script>
+<script>
+(function(){
+'use strict';
+var P=GPro.load(),q=new URLSearchParams(location.search),data=(window.criticalThinkingData&&criticalThinkingData.situations)||[];
+var saved=P.ctSituations||{answers:[],index:0};
+if(q.get('retake')==='1')saved={answers:[],index:0};
+saved.answers=saved.answers||[];var index=Math.max(0,Math.min(11,+saved.index||0));
+var app=document.getElementById('app');
+function save(){P.ctSituations=saved;GPro.save(P)}
+function counts(){var c={critical:0,reactive:0,avoidant:0};saved.answers.forEach(function(a){if(a&&c[a.type]!==undefined)c[a.type]++});return c}
+function button(text,cls,fn){var b=document.createElement('button');b.type='button';b.className=cls||'';b.textContent=text;b.onclick=fn;return b}
+function showSummary(){
+ var c=counts();app.innerHTML='<div class="meta">Исследование завершено</div><div class="question">Твоя карта решений</div><p class="lead">Это распределение выбранных ответов в двенадцати ситуациях, а не оценка личности. Посмотри, в каких обстоятельствах ты чаще проверяешь основания, реагируешь быстро или предпочитаешь выйти из ситуации.</p><div class="score"><div><b>'+c.critical+'</b><small>Проверка фактов и аргументов</small></div><div><b>'+c.reactive+'</b><small>Быстрая реакция</small></div><div><b>'+c.avoidant+'</b><small>Уход от проверки</small></div></div><p class="lead">Вспомни ситуации, где ты выбрал(а) не самый привычный ответ. Что помогло? А где решение зависело от нехватки времени, информации или безопасности?</p>';
+ var a=document.createElement('div');a.className='actions';a.append(button('Перейти дальше','',finish));a.append(button('Пройти ситуации заново','secondary',function(){saved={answers:[],index:0};save();render()}));app.append(a);
+}
+function finish(){
+ saved.completed=true;saved.completedAt=Date.now();saved.score=counts();save();
+ if(GRoute.status('slot.html?id=ct')==='current')GRoute.complete('slot.html?id=ct');
+ location.href='slot.html?id=leverage';
+}
+function render(){
+ if(!data.length){app.textContent='Ситуации пока недоступны.';return}
+ if(saved.completed&&q.get('retake')!=='1'){showSummary();return}
+ if(index>=data.length){showSummary();return}
+ var item=data[index],answer=saved.answers[index];
+ app.innerHTML='<div class="meta">Ситуация '+(index+1)+' из '+data.length+' · '+item.title+'</div><div class="progress"><b style="width:'+((index)/data.length*100)+'%"></b></div><div class="question">'+item.text+'</div><div id="options"></div><div id="feedback"></div><div class="actions" id="actions"></div>';
+ var options=document.getElementById('options'),feedback=document.getElementById('feedback'),actions=document.getElementById('actions');
+ item.options.forEach(function(opt,i){
+  var b=button(opt.text,'option',function(){saved.answers[index]={situationId:item.id,type:opt.type,optionText:opt.text,explanation:opt.explanation,answeredAt:Date.now()};saved.index=index;save();render()});
+  if(answer)b.disabled=true;
+  if(answer&&answer.optionText===opt.text)b.style.borderColor='#d9b56d';
+  options.append(b);
+ });
+ if(answer){var fb=document.createElement('div');fb.className='feedback';fb.textContent=answer.explanation;feedback.append(fb);
+  actions.append(button(index===data.length-1?'Завершить исследование':'Следующая ситуация','',function(){if(index===data.length-1){index=data.length;saved.index=index;save();showSummary()}else{index++;saved.index=index;save();render()} }));
+ }else{
+  var note=document.createElement('p');note.className='lead';note.textContent='Выбери один вариант. После ответа ты увидишь, на чем основан такой способ решения.';feedback.append(note);
+ }
+}
+render();
+})();
+</script></body></html>

@@ -236,7 +236,7 @@ function store(k,res,log){if(preview)return;var P=load(),S=STEP[k];if(window.GPr
 function quoteKey(k){return STEP[k].u}
 function result(box,k,built,retake){var S=STEP[k],n=nextOf(S.u);box.innerHTML=built.html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="next" id="nx">'+(retakeMode?'Дальше: Задания':n?'Дальше: '+esc(n.t):'Дальше')+'</button><div class="gt-links">'+(retake?'<button type="button" id="gtRe">Пройти заново</button>':'')+'<a href="diary.html">В дневник</a></div>';
  if(window.GQuote)GQuote.add(box,quoteKey(k),box.querySelector('#nx'));
- var nx=box.querySelector('#nx');window.nx=nx;nx.onclick=function(){if(preview){location.href=n&&STEP[Object.keys(STEP).filter(function(x){return STEP[x].u===n.u})[0]]?n.u+'&preview=1':'tasks.html';return}if(window.GReview||retakeMode){location.href='tasks.html'+(retakeMode?'#skipped':'');return}location.href=GRoute.advance()};
+ var nx=box.querySelector('#nx');window.nx=nx;nx.onclick=function(){if(preview){location.href=n&&STEP[Object.keys(STEP).filter(function(x){return STEP[x].u===n.u})[0]]?n.u+'&preview=1':'tasks.html';return}if(k==='ct'&&!window.GReview){location.href='critical-situations.html'+(retakeMode?'?retake=1':'');return}if(window.GReview||retakeMode){location.href='tasks.html'+(retakeMode?'#skipped':'');return}location.href=GRoute.advance()};
  var re=box.querySelector('#gtRe');if(re)re.onclick=function(){retake()};scrollTo(0,0)}
 function mountTest(k,box){css();var P=load(),S=STEP[k],have=P[S.f];
  function run(){new Runner(box,ITEMS[k](),function(ans){var b=BUILD[k](ans);store(k,b.res,b.log);result(box,k,b,run)},S.mod).draw()}

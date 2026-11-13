@@ -2,6 +2,17 @@
    Загружается первым в <head>: ставит data-theme на <html> до отрисовки.
    Тема меняет только экраны тестов, вопросов и итогов (ego.html, slot.html кроме зеркал), Дневник и читалку Книги.
    Сюжетные сцены, заставки, карта, Пифагор, арканы и паспорт не меняются. */
+/* Изолированное хранилище новой сборки. Старый game_v5 не читается и не перезаписывается. */
+(function(){
+'use strict';
+if(!window.Storage||Storage.prototype.__alchemyRebuildMapped)return;
+var get=Storage.prototype.getItem,set=Storage.prototype.setItem,remove=Storage.prototype.removeItem;
+function key(k){k=String(k);return k.indexOf('alch_v5_')===0?'alch_rebuild_'+k.slice(8):k}
+Storage.prototype.getItem=function(k){return get.call(this,key(k))};
+Storage.prototype.setItem=function(k,v){return set.call(this,key(k),v)};
+Storage.prototype.removeItem=function(k){return remove.call(this,key(k))};
+try{Object.defineProperty(Storage.prototype,'__alchemyRebuildMapped',{value:true})}catch(e){}
+})();
 (function(){
 'use strict';
 if(window.GTheme)return;
