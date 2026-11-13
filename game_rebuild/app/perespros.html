@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0c10">
+<script src="theme.js?v=8"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="g.css?v=1f19"><link rel="stylesheet" href="nav.css?v=f19">
+<title>Переспрос · Путь Алхимика</title>
+<style>
+body{background:radial-gradient(ellipse at 50% 0%,#302315 0%,#11131a 48%,#090b10 100%);color:#f2eadb}
+.wrap{max-width:720px;margin:28px auto;padding:0 16px 120px}
+.card{border:1px solid #675132;border-radius:18px;background:linear-gradient(145deg,#1c2029,#11151d);padding:clamp(18px,4vw,28px);margin:14px 0;box-shadow:0 18px 48px #0005}
+.eyebrow{font:600 10px Manrope,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#d9b56d}
+h1{font:600 clamp(36px,7vw,50px)/1.05 "Cormorant Garamond",serif;color:#f3dfb5;margin:10px 0}
+h2{font:600 25px "Cormorant Garamond",serif;color:#f3dfb5;margin:0 0 12px}
+p{font:14px/1.7 Manrope,sans-serif;color:#c4bdaf}
+.question{padding:15px 0;border-top:1px solid #ffffff18}
+.question:first-of-type{border-top:0}
+.question b{display:block;font:600 18px/1.45 Manrope,sans-serif;color:#f1dfbd;margin-bottom:9px}
+textarea{display:block;width:100%;box-sizing:border-box;min-height:72px;resize:vertical;background:#0c1017;border:1px solid #514638;border-radius:10px;padding:12px;color:#f2eadb;font:14px/1.5 Manrope,sans-serif}
+button{border:1px solid #c9a46a;border-radius:11px;padding:13px 16px;background:linear-gradient(135deg,#c28b42,#8f5e2d);color:#170f07;font:700 12px Manrope,sans-serif;cursor:pointer}
+button:disabled{opacity:.4;cursor:not-allowed}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.actions button{flex:1;min-width:145px}
+.note{font:12px/1.6 Manrope,sans-serif;color:#a9a092}
+.round{font:600 11px Manrope,sans-serif;color:#d7b879;letter-spacing:.14em;text-transform:uppercase}
+.saved{border-left:3px solid #d9b56d;padding:12px 14px;background:#29251e;margin:10px 0;color:#e8dfcf;font:13px/1.6 Manrope,sans-serif;white-space:pre-wrap}
+@media(max-width:460px){.actions{flex-direction:column}}
+</style>
+</head>
+<body data-page="perespros">
+<main class="wrap">
+<section class="card">
+<div class="eyebrow">Инструмент ясности</div>
+<h1>Переспрос</h1>
+<p>Проверка фразы, которая звучит внутри как готовое решение. Не нужно спорить с ней, доказывать обратное или заменять ее позитивным утверждением. Важно увидеть, откуда она взялась и на каком сегодняшнем факте держится.</p>
+<div id="app"></div>
+</section>
+<p class="note">Ответы сохраняются только в профиле этого браузера. После четырех раундов обучение не запускается заново: три вопроса остаются доступными как постоянный инструмент.</p>
+</main>
+<script src="engine.js?v=arch1"></script><script src="nav.js?v=atlas1"></script>
+<script>
+(function(){
+'use strict';
+var P=GPro.load(),S=P.perespros||{version:1,rounds:[],completed:false},host=document.getElementById('app');
+var QUESTIONS=[
+'Это я сейчас так вижу или это принесённая фраза?',
+'Что она мне приказывает?',
+'По какому сегодняшнему факту я отдал бы ей решение?'
+];
+S.rounds=Array.isArray(S.rounds)?S.rounds:[];
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function save(){P.perespros=S;GPro.save(P)}
+function renderPractice(){
+ var n=S.rounds.length,round=S.rounds[n]||['','',''];
+ host.innerHTML='<div class="round">Раунд '+(n+1)+' из 4'+(n===3?' · самостоятельное применение':'')+'</div><h2>'+(n===3?'Проверьте фразу самостоятельно':'Три вопроса')+'</h2>'+
+ QUESTIONS.map(function(q,i){return '<div class="question"><b>'+esc(q)+'</b><textarea data-q="'+i+'" maxlength="700" placeholder="Ваш ответ"></textarea></div>'}).join('')+
+ '<div class="actions"><button id="saveRound">Завершить раунд</button></div><p class="note" id="status" aria-live="polite">Для перехода дальше ответьте на все три вопроса.</p>';
+ host.querySelectorAll('textarea').forEach(function(t){t.value=round[+t.dataset.q]||''});
+ document.getElementById('saveRound').onclick=function(){
+  var answers=[].slice.call(host.querySelectorAll('textarea')).map(function(t){return t.value.trim()});
+  if(answers.some(function(x){return !x})){document.getElementById('status').textContent='Заполните все три ответа. Можно отвечать коротко.';return}
+  S.rounds[n]=answers;
+  if(n===3){S.completed=true;S.completedAt=Date.now()}save();
+  render();
+ };
+}
+function renderDone(){
+ host.innerHTML='<div class="round">Навык освоен · 4 раунда завершены</div><h2>Переспрос остается с Вами</h2><p>Когда внутри появляется фраза, которой хочется немедленно подчиниться, вернитесь к трем вопросам:</p>'+
+ QUESTIONS.map(function(q){return '<div class="question"><b>'+esc(q)+'</b></div>'}).join('')+
+ '<p class="note">Повторное обучение не запускается. Это постоянная памятка для самостоятельного применения.</p>';
+}
+if(S.completed){renderDone()}else{renderPractice()}
+})();
+</script>
+</body></html>
