@@ -92,10 +92,10 @@ Runner.prototype.draw=function(){var it=this.items[this.i],self=this,b=this.box;
   b.querySelectorAll('.gt-row button').forEach(function(x){x.onclick=function(){val[rows[+x.parentNode.dataset.k]]=x.dataset.c;mk()}});mk();b.querySelector('#gtGo').onclick=function(){self.set(it.id,val);self.next()};return}
 };
 
-/* ---------- подсчет шкал 0–4 ---------- */
+/* ---------- подсчет шкал: нормализация ответов 0–4 к авторской шкале 0–12 ---------- */
 function num(v){return typeof v==='number'?v:null}
 function scoreScales(sc,ans){return sc.map(function(s){var vals=[];s.items.forEach(function(it){var a=num(ans[it.id]);if(a!=null)vals.push(it.rev?4-a:a)});var n=vals.length,sum=vals.reduce(function(a,b){return a+b},0);
- var score=n===4?sum:n===3?Math.round(sum/3*4*10)/10:null;return {id:s.id,name:s.name,answered:n,possible:4,score:score,status:n===4?'full':n===3?'preliminary':'insufficient',level:score==null?null:score<4?0:score<8?1:score<12?2:3}})}
+ var score=n>=3?Math.round((sum/n)*3*10)/10:null;return {id:s.id,name:s.name,answered:n,possible:4,score:score,status:n===4?'full':n===3?'preliminary':'insufficient',level:score==null?null:score<3?0:score<6?1:score<9?2:3}})}
 function answered(sc,ans){var n=0;sc.forEach(function(s){s.items.forEach(function(it){if(num(ans[it.id])!=null)n++})});return n}
 function lvText(sc,r){var s=sc.filter(function(x){return x.id===r.id})[0];return r.level==null?'':g(s.lv[r.level])}
 function lvName(r,labels){return r.level==null?'Недостаточно данных':labels[r.level]+(r.status==='preliminary'?', '+W.prelim:'')}
