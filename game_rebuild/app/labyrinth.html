@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0c10">
+<script src="theme.js?v=8"></script><script src="flow.js?v=40steps"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=40steps"></script><script src="profile-layer.js?v=atlas1"></script><script src="route-gate.js?v=atlas1"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="g.css?v=1f19"><link rel="stylesheet" href="nav.css?v=f19">
+<title>Лабиринт желаний · четыре шага</title>
+<style>
+body{background:radial-gradient(ellipse at 50% 0%,#26372d 0%,#111a15 48%,#090d0a 100%);color:#f1eadb}.wrap{max-width:740px;margin:22px auto;padding:0 16px 110px}.head{text-align:center;padding:22px 8px}.eyebrow{font:600 10px Manrope,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#c7a76a}.head h1{font:600 clamp(38px,8vw,56px)/1 "Cormorant Garamond",serif;color:#fff4df;margin:12px 0}.lead{font:13px/1.8 Manrope,sans-serif;color:#c2cdbf}.panel{border:1px solid #435345;border-radius:16px;background:linear-gradient(145deg,#1c2a21,#141d17);padding:20px;margin:14px 0}.meta{font:600 10px Manrope,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#c7a76a}.title{font:600 29px/1.12 "Cormorant Garamond",serif;color:#f4e6ca;margin:9px 0}.sub{font:12px/1.7 Manrope,sans-serif;color:#aeb9aa}.prompt{font:600 20px/1.4 "Cormorant Garamond",serif;color:#e9d6ad;margin:16px 0}textarea{width:100%;box-sizing:border-box;background:#0c1410;border:1px solid #536455;border-radius:10px;padding:13px;color:#f3eadb;font:14px/1.6 Manrope,sans-serif;resize:vertical}label.opt{display:flex;gap:10px;align-items:flex-start;padding:12px;margin:8px 0;border:1px solid #455648;border-radius:10px;background:#17231b;font:12px/1.6 Manrope,sans-serif;color:#d7dfd2}label.opt input{margin-top:3px;accent-color:#c7a76a}.progress{height:4px;background:#35443a;border-radius:9px;overflow:hidden;margin:15px 0}.progress i{display:block;height:100%;background:#c7a76a}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.actions button,.actions a{flex:1;min-width:135px;border:1px solid #b99b62;border-radius:9px;padding:12px;background:linear-gradient(135deg,#d8bd7d,#a88b55);color:#171b14;text-decoration:none;text-align:center;font:700 11px Manrope,sans-serif;cursor:pointer}.actions .secondary{background:#17231b;color:#e8d7ad;border-color:#536455}.answer{border-left:2px solid #c7a76a;padding:10px 13px;margin:10px 0;background:#17231b;color:#d9e0d4;font:12px/1.7 Manrope,sans-serif}.muted{color:#aeb9aa;font:11px/1.7 Manrope,sans-serif}
+</style></head><body data-page="labyrinth">
+<main class="wrap"><header class="head"><div class="eyebrow">Дополнительная практика · Территория IV</div><h1>Лабиринт желаний</h1><p class="lead">Четыре письменных шага помогают посмотреть на желание, препятствия, вторичную выгоду привычного положения и реальную цену перемен. Это дополнительное исследование: оно не меняет баллы основного теста и не требует обязательных ответов.</p></header>
+<div id="app" class="panel"></div>
+<div class="actions"><a class="secondary" href="atlas.html">Вернуться в атлас</a><a class="secondary" href="diary.html">Открыть дневник</a></div></main>
+<script src="engine.js?v=arch1"></script><script src="data/labyrinth_data.js?v=1"></script><script src="nav.js?v=atlas1"></script>
+<script>
+(function(){
+'use strict';
+var P=GPro.load(),steps=(window.labyrinthData&&labyrinthData.steps)||[],state=P.labyrinthReflection||{answers:{},index:0},app=document.getElementById('app');
+state.answers=state.answers||{};var index=Math.max(0,Math.min(steps.length,+state.index||0));
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function save(){state.index=index;P.labyrinthReflection=state;GPro.save(P)}
+function selected(){return [].slice.call(app.querySelectorAll('input[name="obstacle"]:checked')).map(function(x){return x.value})}
+function render(){
+ if(!steps.length){app.textContent='Материалы практики пока недоступны.';return}
+ if(index>=steps.length){summary();return}
+ var d=steps[index],a=state.answers[d.id]||{};
+ app.innerHTML='<div class="meta">Шаг '+(index+1)+' из '+steps.length+'</div><div class="progress"><i style="width:'+((index)/steps.length*100)+'%"></i></div><h2 class="title">'+esc(d.title)+'</h2><p class="sub">'+esc(d.subtitle)+'</p><div class="prompt">'+esc(d.prompt)+'</div>'+
+ (d.type==='multi_choice'?(d.options||[]).map(function(o){return '<label class="opt"><input type="checkbox" name="obstacle" value="'+esc(o.id)+'" '+((a.values||[]).includes(o.id)?'checked':'')+'><span>'+esc(o.text)+'</span></label>'}).join(''):'<textarea id="answer" rows="5" maxlength="1600" placeholder="'+esc(d.placeholder||'Запиши свои наблюдения')+'">'+esc(a.text||'')+'</textarea>')+
+ '<p class="muted">Можно сохранить частичный ответ или пропустить вопрос. Твои записи остаются в этом браузере.</p><div class="actions"><button class="secondary" id="back" '+(index===0?'disabled':'')+'>Назад</button><button id="skip" class="secondary">Пока пропустить</button><button id="next">'+(index===steps.length-1?'Посмотреть итог':'Сохранить и дальше')+'</button></div>';
+ document.getElementById('back').onclick=function(){capture();index=Math.max(0,index-1);save();render()};
+ document.getElementById('skip').onclick=function(){capture();index++;save();render()};
+ document.getElementById('next').onclick=function(){capture();if(d.id==='desire_definition'&&!state.answers[d.id].text){app.insertAdjacentHTML('beforeend','<p class="muted">Если пока не получается сформулировать желание, нажми «Пока пропустить».</p>');return}index++;save();render()};
+ function capture(){if(d.type==='multi_choice')a.values=selected();else a.text=(document.getElementById('answer')||{}).value||'';a.updatedAt=Date.now();state.answers[d.id]=a}
+}
+function summary(){
+ var rows=steps.map(function(d){var a=state.answers[d.id]||{},txt=d.type==='multi_choice'?(a.values||[]).map(function(id){var o=d.options.find(function(x){return x.id===id});return o&&o.text}).filter(Boolean).join('; '):a.text;return '<div class="answer"><b>'+esc(d.title)+'</b><br>'+esc(txt||'Пока не сформулировано')+'</div>'}).join('');
+ app.innerHTML='<div class="meta">Исследование сохранено</div><h2 class="title">Что ты увидел в лабиринте</h2><p class="lead">Здесь нет автоматического вывода о скрытой причине. Посмотри на свои ответы и реши, какая часть требует внимания, а какая связана с реальными ограничениями.</p>'+rows+'<label class="muted">Что из этого хочешь проверить в ближайшее время?</label><textarea id="labNext" rows="3" maxlength="700">'+esc(state.nextStep||'')+'</textarea><div class="actions"><button class="secondary" id="edit">Вернуться к ответам</button><button id="finish">Сохранить итог</button></div>';
+ document.getElementById('edit').onclick=function(){index=0;save();render()};
+ document.getElementById('finish').onclick=function(){state.nextStep=document.getElementById('labNext').value.trim();state.completedAt=Date.now();state.completed=true;save();app.insertAdjacentHTML('afterbegin','<p class="muted">Записи сохранены в профиле. Их можно открыть и изменить позже.</p>')};
+}
+render();
+})();
+</script></body></html>
