@@ -32,6 +32,8 @@ jobs:
         with:
           path: _site
   deploy:
+    environment:
+      name: alchemy-pages
     runs-on: ubuntu-latest
     needs: build
     steps:
