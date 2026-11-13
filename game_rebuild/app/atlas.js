@@ -2,7 +2,7 @@
 (function(g){
 'use strict';
 g.renderAtlas=function(){
- var P=GPro.load(),S=GAtlas.state(P),root=document.getElementById('regions'),bag=document.getElementById('artifacts');
+ var P=GPro.load(),changed=GAtlas.sync(P);if(changed)GPro.save(P);var S=GAtlas.state(P),root=document.getElementById('regions'),bag=document.getElementById('artifacts');
  root.replaceChildren();bag.replaceChildren();
  S.regions.forEach(function(r,i){
   var card=document.createElement('article');card.className='land '+r.state;
