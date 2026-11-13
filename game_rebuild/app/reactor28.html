@@ -25,6 +25,17 @@ textarea{width:100%;min-height:76px;resize:vertical;background:#0c1017;border:1p
 .actions button,.actions a{flex:1;min-width:145px;border:1px solid #c9a46a;border-radius:11px;padding:13px 15px;background:linear-gradient(135deg,#c28b42,#8f5e2d);color:#170f07;font:700 12px Manrope,sans-serif;text-align:center;text-decoration:none;cursor:pointer}
 .actions .secondary{background:#171c25;color:#e2d1ad;border-color:#65563e}
 .note{font:12px/1.6 Manrope,sans-serif;color:#a9a092;margin-top:12px}
+label{display:block;font:600 12px Manrope,sans-serif;color:var(--gold);margin:12px 0 6px}
+input,select{width:100%;box-sizing:border-box;background:#0c1017;border:1px solid #514638;border-radius:10px;padding:11px;color:#f2eadb;font:14px/1.5 Manrope,sans-serif}
+select{min-height:42px}
+textarea{font:14px/1.5 Manrope,sans-serif}
+.pt{padding:14px;margin:12px 0;border:1px solid #514638;border-radius:12px;background:#0c1017}
+.row{display:flex;gap:8px;margin:8px 0}
+.row button{flex:1;min-height:42px;border:1px solid #65563e;border-radius:10px;background:#171c25;color:#e2d1ad;font:600 12px Manrope,sans-serif}
+.row button.on{background:#c28b42;color:#170f07}
+.reactorBtn{display:block;width:100%;margin:12px 0;border:1px solid #c9a46a;border-radius:11px;padding:13px 15px;background:linear-gradient(135deg,#c28b42,#8f5e2d);color:#170f07;font:700 12px Manrope,sans-serif;cursor:pointer}
+.secondary{background:#171c25!important;color:#e2d1ad!important;border-color:#65563e!important}
+.donePhrase{min-height:20px;color:#f3dfb5;font:600 20px "Cormorant Garamond",serif;margin-top:8px}
 .overlay{display:none;border:1px solid #967445;background:#171c25;border-radius:14px;padding:16px;margin-top:14px;font:14px/1.65 Manrope,sans-serif}.overlay.show{display:block}
 @media(max-width:420px){.days{gap:4px}.days span{font-size:10px}.actions button,.actions a{min-width:100%}}
 </style></head><body data-page="tracker">
@@ -61,8 +72,9 @@ var $=function(id){return document.getElementById(id)};
 function save(){P.reactor28=R;GPro.save(P)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function directions(){var a=P.focuses||P.valuesCore&&P.valuesCore.top3||P.values&&P.values.order||[];return [0,1,2].map(function(i){return String(a[i]||'').trim()})}
-function button(id,text,cls){return '<button type="button" id="'+id+'" class="'+(cls||'')+'">'+text+'</button>'}
+function button(id,text,cls){return '<button type="button" id="'+id+'" class="'+(cls||'reactorBtn')+'">'+text+'</button>'}
 function renderSetup(){
+ $('complete').style.display='none';
  $('week').textContent='ПЕРЕД НАЧАЛОМ · ИСХОДНАЯ ТОЧКА';$('title').textContent='Настройка личного маршрута';
  var dirs=directions(),acts=R.personalActions||[];
  $('tasks').innerHTML='<p class="lead">Перед первой неделей зафиксируй отправную точку. Эти три вопроса повторятся после 28 дней — так можно будет сравнить собственные ответы. Здесь же запиши три небольших действия по выбранным направлениям. Их можно будет менять по ходу практики.</p>'+
