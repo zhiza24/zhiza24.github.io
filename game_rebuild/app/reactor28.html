@@ -62,7 +62,7 @@ textarea{font:14px/1.5 Manrope,sans-serif}
 <script>(function(){
 'use strict';
 var P=GPro.load(),R=P.reactor28;
-if(!R||R.version!==28){if(P.reactor&&P.reactor.day)P.reactor21Archive=P.reactor;R={version:28,day:0,days:{},notes:{},last:null};P.reactor28=R;GPro.save(P)}
+if(!R||R.version&&R.version!==28){if(P.reactor)P.reactor21Archive=P.reactor;if(P.reactor21)P.reactor21Archive=P.reactor21;if(R)P.reactor28Archive=R;R={version:28,day:0,days:{},notes:{},last:null};P.reactor28=R;GPro.save(P)}else{R.version=28;P.reactor28=R;}
 R.days=R.days||{};R.notes=R.notes||{};R.weeklyReviews=R.weeklyReviews||{};R.dailyActions=R.dailyActions||{};
 var D=Math.min(28,Math.max(0,+R.day||0)),plan=[];
 (window.trackerProgramData&&window.trackerProgramData.weeks||[]).forEach(function(w){(w.days||[]).forEach(function(d){plan.push({title:d.title,type:d.type,explanation:d.explanation,action:d.action,journalPrompt:d.journalPrompt,expectedResult:d.expectedResult,weekTitle:w.title,weekTheme:w.theme})})});
