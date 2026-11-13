@@ -41,7 +41,7 @@ GHM.ready(function(){
  if(P.ego&&P.ego.lead)L.push(['Знакомое состояние','«'+P.ego.top+'»']);
  if(P.archB&&P.archB.lead)L.push(['Привычный ход',P.archB.top]);
  if(P.lab&&P.lab.lead&&window.GPAT&&GPAT[P.lab.lead])L.push(['Установка в работе',GPAT[P.lab.lead].n]);
- var v=(P.valuesCore&&P.valuesCore.top3)||[];if(v.length)L.push(['Три ориентира',v.join(', ')]);
+ var v=(P.focuses&&P.focuses.length?P.focuses:(P.valuesCore&&P.valuesCore.top3)||[]);if(v.length)L.push(['Три направления',v.map(function(x){return typeof x==='string'?x:(x.name||x.label||x.title||'')}).filter(Boolean).join(', ')]);if(P.reactor28&&P.reactor28.day)L.push(['Реактор','День '+P.reactor28.day+' из 28']);
  if(P.fractal&&P.fractal.lever&&P.fractal.lever.title)L.push(['Точка влияния',P.fractal.lever.title]);
  if(P.archD&&P.archD.top&&P.archD.d1t)L.push(['Выбранное состояние',P.archD.top]);
  document.getElementById('pr').innerHTML=L.length?'<div class="pr">'+L.map(function(x){return '<div class="r"><span>'+E(x[0])+'</span><b>'+E(x[1])+'</b></div>'}).join('')+'</div>':'<p class="muted">Портрет появится, когда ты '+'пройдешь'+' первые испытания.</p>';
