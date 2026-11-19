@@ -1,0 +1,56 @@
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090b10">
+<title>Когнитивные предпочтения · Путь Алхимика</title>
+<script src="theme.js?v=storage-isolation"></script><script src="flow.js?v=40steps"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=40steps"></script><script src="profile-layer.js?v=40steps"></script><script src="route-gate.js?v=40steps"></script><script src="cognition_questions.js?v=optional"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#d9b56d;--cream:#f2eadb;--muted:#aaa294}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#302315,#11151e 50%,#090b10);color:var(--cream);font-family:Manrope,Arial,sans-serif;padding:20px 14px 100px}
+main{max-width:740px;margin:0 auto}.eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+h1{font:600 clamp(30px,6vw,44px)/1.08 "Cormorant Garamond",serif;color:#f2dfb8;margin:10px 0}
+.lead{font-size:13px;line-height:1.7;color:#c2b9a9}
+.card{border:1px solid #695333;border-radius:18px;background:linear-gradient(145deg,#1c222d,#11151d);padding:clamp(18px,4vw,28px);margin-top:18px;box-shadow:0 18px 45px #0005}
+.progress{height:5px;background:#34343a;border-radius:8px;overflow:hidden;margin:16px 0 8px}.progress b{display:block;height:100%;background:linear-gradient(90deg,#95652f,#f0d18c)}
+.meta{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#b89a62}
+.question{font:600 24px/1.25 "Cormorant Garamond",serif;color:#f0dfb9;margin:14px 0}
+.option{width:100%;display:block;text-align:left;padding:14px 15px;margin:9px 0;border:1px solid #574b39;border-radius:12px;background:#151b24;color:#eee4d2;font:13px/1.55 Manrope,sans-serif;cursor:pointer}
+.option:hover{border-color:#c69b5b}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions button,.actions a{flex:1;min-width:145px;text-align:center;padding:13px 16px;border-radius:10px;border:1px solid #cba15f;background:linear-gradient(135deg,#d2a45c,#94602b);color:#1b1309;font:700 12px Manrope,sans-serif;text-decoration:none;cursor:pointer}
+.actions .secondary{background:#171d26;color:#e5d4b2;border-color:#65563e}
+.axis{border:1px solid #554733;border-radius:13px;padding:15px;margin:12px 0;background:#151b24}.axis h3{margin:0 0 7px;color:#ecd8ae;font:600 21px "Cormorant Garamond",serif}.axis p{font-size:12px;line-height:1.6;color:#c2b9a9;margin:5px 0}
+.badge{display:inline-block;border:1px solid #78613d;border-radius:99px;padding:4px 8px;font-size:10px;color:#e5c78c;margin:4px 4px 0 0}
+</style></head><body data-page="cognition">
+<main><div class="eyebrow">Дополнительное исследование · не входит в 40 шагов</div><h1>Когнитивные предпочтения</h1>
+<p class="lead">32 вопроса по четырем осям. Выбирайте вариант, который чаще соответствует Вашему обычному способу. Если ни один не подходит, используйте нейтральный ответ. Он не прибавляет баллы ни одному полюсу.</p>
+<section class="card" id="app"><p class="lead">Загружаем вопросы…</p></section>
+</main>
+<script src="engine.js?v=arch1"></script><script src="nav.js?v=optional"></script>
+<script>
+(function(){
+'use strict';
+var P=GPro.load(),data=window.cognitionQuestions||[],saved=P.cognition||{answers:[],index:0};
+saved.answers=saved.answers||[];var index=Math.min(32,Math.max(0,+saved.index||saved.answers.length||0));
+var app=document.getElementById('app'),axes={EI:{name:'Взаимодействие с внешней средой',a:'E',b:'I',la:'Внешняя активность',lb:'Внутренняя переработка'},SN:{name:'Способ восприятия информации',a:'S',b:'N',la:'Конкретные признаки',lb:'Общие связи и возможности'},LF:{name:'Основание оценки и решения',a:'L',b:'F',la:'Логика и критерии',lb:'Ценности и влияние на людей'},RP:{name:'Отношение к структуре и изменениям',a:'R',b:'P',la:'Структура и завершенность',lb:'Гибкость и открытость'}};
+function save(){P.cognition=saved;GPro.save(P)}
+function result(){
+ var scores={EI:{E:0,I:0,n:0,neutral:0},SN:{S:0,N:0,n:0,neutral:0},LF:{L:0,F:0,n:0,neutral:0},RP:{R:0,P:0,n:0,neutral:0}};
+ saved.answers.forEach(function(a){var x=scores[a.axis];if(!x)return;if(a.neutral){x.neutral++;return}if(x[a.pole]!==undefined){x[a.pole]++;x.n++}});
+ saved.scores=scores;saved.completedAt=saved.completedAt||Date.now();saved.completed=true;save();
+ app.innerHTML='<div class="meta">Результат · 4 оси</div><div class="question">Твоя карта предпочтений</div><p class="lead">Это не фиксированный соционический тип. Результат показывает распределение ответов в этом опроснике. Предпочтения могут меняться в зависимости от роли, среды и задачи.</p>';
+ Object.keys(axes).forEach(function(k){var a=axes[k],v=scores[k],valid=v.n,html=document.createElement('section');html.className='axis';var title=document.createElement('h3');title.textContent=a.name;html.append(title);var desc;
+ if(valid<4)desc='Недостаточно содержательных ответов для осторожного вывода ('+valid+' из 8).';
+ else if(v[a.a]===v[a.b])desc='По этой оси ответы распределились поровну. Выраженное предпочтение не выделилось.';
+ else desc='В этих ответах чаще проявляется направление «'+(v[a.a]>v[a.b]?a.la:a.lb)+'». Это описание выбранных вариантов, а не постоянное свойство.';
+ var p=document.createElement('p');p.textContent=desc;html.append(p);
+ var badges=document.createElement('div');badges.innerHTML='<span class="badge">'+a.a+': '+v[a.a]+'</span><span class="badge">'+a.b+': '+v[a.b]+'</span><span class="badge">Нейтрально: '+v.neutral+'</span>';html.append(badges);app.append(html)});
+ var actions=document.createElement('div');actions.className='actions';var again=document.createElement('button');again.className='secondary';again.textContent='Пройти заново';again.onclick=function(){saved={answers:[],index:0};save();index=0;render()};var back=document.createElement('a');back.href='map.html';back.textContent='Вернуться к карте';actions.append(again,back);app.append(actions);
+}
+function render(){
+ if(saved.completed&&saved.answers.length===32){result();return}
+ if(index>=data.length){result();return}
+ var q=data[index];app.innerHTML='<div class="meta">Вопрос '+(index+1)+' из '+data.length+' · Ось '+q.axis+'</div><div class="progress"><b style="width:'+((index)/data.length*100)+'%"></b></div><div class="question">'+q.text+'</div><div id="opts"></div>';
+ var opts=document.getElementById('opts');q.options.forEach(function(o){var b=document.createElement('button');b.type='button';b.className='option';b.textContent=o.text;b.onclick=function(){var neutral=o.text.indexOf('Ни один из вариантов')===0;saved.answers[index]={id:q.id,axis:q.axis,pole:o.pole,neutral:neutral,text:o.text};index++;saved.index=index;save();render();window.scrollTo(0,0)};opts.append(b)});
+}
+render();
+})();
+</script></body></html>

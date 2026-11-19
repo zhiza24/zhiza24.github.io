@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#FDFBF7">
+<title>Дополнительное исследование · Детские адаптации</title><script src="theme.js?v=8"></script><script src="flow.js?v=40steps"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=40steps"></script><script src="profile-layer.js?v=atlas1"></script><script src="route-gate.js?v=atlas1"></script><link rel="stylesheet" href="g.css?v=1f19"><link rel="stylesheet" href="nav.css?v=f19">
+<style>
+body{background:radial-gradient(ellipse at 50% 0%,#26372d 0%,#111a15 48%,#090d0a 100%);color:#f1eadb}
+.quiz-shell{max-width:720px;margin:26px auto;padding:0 18px}.quiz-panel{background:linear-gradient(145deg,#1c2a21,#141d17);border:1px solid #435345;border-radius:18px;padding:clamp(18px,4vw,26px);box-shadow:0 12px 34px #0004;color:#f1eadb}.muted{color:#b9c2b4;line-height:1.7}.meter{height:7px;background:#344238;border-radius:9px;overflow:hidden;margin:14px 0}.meter span{display:block;height:100%;background:#c7a76a;transition:width .2s}.option{display:block;width:100%;text-align:left;padding:15px 16px;margin:10px 0;border:1px solid #435345;border-radius:12px;background:#18251d;color:#f1eadb;font:inherit;line-height:1.5;cursor:pointer}.option:hover,.option.selected{border-color:#c7a76a;background:#26372b}.actions{display:flex;gap:10px;margin-top:18px}.actions button{flex:1}.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}.result-item{background:#17231b;border:1px solid #435345;border-radius:12px;padding:14px}.result-item strong{display:block;color:#d8bd7d}.result-item span{font-size:13px;color:#b9c2b4}.primary{background:#302923!important;color:#fff!important;border-color:#302923!important}.hidden{display:none!important}@media(max-width:480px){.actions{flex-direction:column}.result-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page="adaptations">
+<main class="quiz-shell">
+<section class="quiz-panel" id="quiz-panel">
+<div class="eyebrow">Дополнительное исследование · Территория I</div><h1>Детские адаптации</h1>
+<p class="muted">Это дополнительный ситуационный формат, который дополняет основной тест «Первые настройки», но не заменяет его. Сравним привычные способы реагирования в детстве и сейчас. Вспоминай не отдельный яркий случай, а то, что чаще повторялось. Здесь нет правильных ответов и оценки твоего детства.</p>
+<div class="meter"><span id="progress" style="width:0%"></span></div><p class="muted" id="counter">Вопрос 1 из 24</p>
+<h2 id="question" style="font-size:19px;line-height:1.5;font-weight:600">Загрузка…</h2><div id="options"></div>
+<div class="actions"><button class="btn-secondary" id="back" type="button">Назад</button><button class="btn-primary" id="next" type="button" disabled>Далее</button></div>
+<p class="muted" id="save-status" aria-live="polite">Ответы сохраняются в профиле этого браузера.</p>
+</section>
+<section class="quiz-panel hidden" id="result-panel" aria-live="polite">
+<div class="eyebrow">Территория I · Исследование завершено</div><h1>Карта способов адаптации</h1>
+<p class="muted">Результат показывает, какие способы реагирования чаще встречались в каждом периоде и что изменилось со временем. Это ориентир для самонаблюдения, а не фиксированная характеристика личности.</p>
+<div id="result-summary"></div><div class="result-grid" id="scores"></div>
+<div class="actions"><button class="btn-secondary" id="redo" type="button">Пересмотреть ответы</button><a class="btn-primary primary" href="atlas.html" style="text-align:center;text-decoration:none;padding:12px;border-radius:10px">Вернуться в атлас</a></div>
+</section>
+</main>
+<script src="engine.js?v=arch1"></script><script src="data/adaptations_questions.js"></script><script src="data/adaptations_interpretations.js"></script>
+<script>
+window.AlchemistProfile={
+ load:function(){var p=GPro.load();p.research=p.research||{};return p},
+ update:function(fn){var p=GPro.load();p.research=p.research||{};fn(p);GPro.save(p);return p},
+ setResearchResult:function(name,result,answers){var p=GPro.load();p.research=p.research||{};var old=p.research[name]||{};p.research[name]=Object.assign({},old,{status:'completed',result:result,rawAnswers:answers,completedAt:Date.now()});GPro.save(p);return p}
+};
+</script>
+<script>
+(function(){
+'use strict';
+const questions=window.adaptationsQuestions||[];
+const copy=window.RESEARCH_INTERPRETATIONS.firstSettings;
+const labels=copy.strategyLabels;
+const $=id=>document.getElementById(id);
+let period='childhood',index=0,answers={childhood:{},current:{}};
+const special=[
+ {value:'NR',text:copy.responseOptions.notRemember.label},
+ {value:'NH',text:copy.responseOptions.notHappen.label}
+];
+function persist(){
+ AlchemistProfile.update(p=>{
+  p.research.adaptations=p.research.adaptations||{};
+  p.research.adaptations.status='in_progress';
+  p.research.adaptations.rawAnswers={childhood:{...answers.childhood},current:{...answers.current}};
+  p.research.adaptations.currentIndex=index;
+  p.research.adaptations.currentPeriod=period;
+ });
+ $('save-status').textContent='Ответы сохранены. Можно продолжить позже.';
+}
+function chosen(q){return answers[period][q.id]||null;}
+function render(){
+ if(!questions.length){$('question').textContent='Не удалось загрузить вопросы.';return;}
+ const q=questions[index],value=chosen(q),isChild=period==='childhood';
+ $('counter').textContent=(isChild?'Детство':'Сейчас')+' · вопрос '+(index+1)+' из '+questions.length;
+ $('progress').style.width=(((isChild?0:questions.length)+index+1)/(questions.length*2)*100)+'%';
+ $('question').textContent=(isChild?copy.periodPrompts.childhood:copy.periodPrompts.current)+'\n\n'+q.text;
+ $('options').replaceChildren();
+ q.options.forEach(opt=>{
+  const b=document.createElement('button');b.type='button';b.className='option'+(value===opt.strategy?' selected':'');b.textContent=opt.text;
+  b.addEventListener('click',()=>{answers[period][q.id]=opt.strategy;persist();render();});
+  $('options').append(b);
+ });
+ special.forEach(opt=>{
+  const b=document.createElement('button');b.type='button';b.className='option'+(value===opt.value?' selected':'');b.textContent=opt.text;
+  b.addEventListener('click',()=>{answers[period][q.id]=opt.value;persist();render();});
+  $('options').append(b);
+ });
+ $('back').disabled=period==='childhood'&&index===0;
+ $('next').disabled=!value;
+ $('next').textContent=index===questions.length-1?(period==='childhood'?'Перейти к настоящему':'Завершить исследование'):'Далее';
+}
+function calculatePeriod(which){
+ const scores={A:0,B:0,C:0,D:0},valid=0;
+ let notRemember=0,notHappen=0;
+ questions.forEach(q=>{
+  const v=answers[which][q.id];
+  if(v==='NR'){notRemember++;return;}
+  if(v==='NH'){notHappen++;return;}
+  if(scores[v]!==undefined){scores[v]++;valid++;}
+ });
+ const max=Math.max(...Object.values(scores)),leaders=Object.keys(scores).filter(k=>scores[k]===max&&max>0);
+ return {scores,valid,notRemember,notHappen,leaders,dominant:valid>=copy.rules.minResponses&&leaders.length===1?leaders[0]:null};
+}
+function makeCard(title,periodResult){
+ const card=document.createElement('section');card.className='result-item';
+ const h=document.createElement('strong');h.textContent=title;card.append(h);
+ Object.keys(labels).forEach(k=>{
+  const p=document.createElement('p');p.textContent=labels[k]+': '+periodResult.scores[k]+' из '+periodResult.valid+' содержательных ответов';card.append(p);
+ });
+ const note=document.createElement('p');note.className='muted';
+ note.textContent='Не помню: '+periodResult.notRemember+'. Такого не было: '+periodResult.notHappen+'.';
+ card.append(note);return card;
+}
+function show(result){
+ $('quiz-panel').classList.add('hidden');$('result-panel').classList.remove('hidden');
+ const summary=$('result-summary');summary.replaceChildren();
+ const heading=document.createElement('h2');heading.textContent='Сравнение двух периодов';summary.append(heading);
+ const child=makeCard('Детство',result.childhood),now=makeCard('Сейчас',result.current);
+ $('scores').replaceChildren(child,now);
+ let outcome;
+ if(result.childhood.valid<copy.rules.minResponses&&result.current.valid<copy.rules.minResponses)outcome=copy.missing.both;
+ else if(result.childhood.valid<copy.rules.minResponses)outcome=copy.missing.childhood;
+ else if(result.current.valid<copy.rules.minResponses)outcome=copy.missing.current;
+ else if(!result.childhood.dominant||!result.current.dominant)outcome=copy.mixed;
+ else outcome=copy.transitions[result.childhood.dominant+result.current.dominant];
+ const title=document.createElement('h3');title.textContent=outcome.title;
+ const text=document.createElement('p');text.textContent=outcome.text;
+ const focus=document.createElement('p');focus.textContent=outcome.focus||'Посмотри, в каких ситуациях этот способ помогает, а где ограничивает выбор.';
+ summary.append(title,text,focus);
+ const foot=document.createElement('p');foot.className='muted';foot.textContent='Ответы «Не помню» и «Такого не было» не добавляют баллы. Они учитываются отдельно и не трактуются как отсутствие реакции.';summary.append(foot);
+}
+function finish(){
+ const childhood=calculatePeriod('childhood'),current=calculatePeriod('current');
+ const result={childhood,current,questionCount:questions.length,comparison:childhood.dominant&&current.dominant?childhood.dominant+current.dominant:null};
+ AlchemistProfile.setResearchResult('adaptations',result,answers);
+ show(result);
+}
+function next(){
+ if(!chosen(questions[index]))return;
+ if(index<questions.length-1){index++;persist();render();return;}
+ if(period==='childhood'){period='current';index=0;persist();render();return;}
+ finish();
+}
+function back(){
+ if(index>0){index--;persist();render();return;}
+ if(period==='current'){period='childhood';index=questions.length-1;persist();render();}
+}
+function init(){
+ const m=AlchemistProfile.load().research.adaptations||{},raw=m.rawAnswers||{};
+ if(raw.childhood||raw.current){answers={childhood:{...(raw.childhood||{})},current:{...(raw.current||{})}};}
+ else{
+  // Совместимость со старым сохранением: прежние ответы считаются ответами за текущий период.
+  questions.forEach(q=>{const v=raw[q.id];if(v&&typeof v.answer==='string')answers.current[q.id]=v.answer;});
+ }
+ period=m.currentPeriod==='current'?'current':'childhood';
+ index=Math.min(Math.max(Number(m.currentIndex)||0,0),questions.length-1);
+ if(m.status==='completed'&&questions.every(q=>answers.childhood[q.id])&&questions.every(q=>answers.current[q.id])){finish();return;}
+ render();
+}
+$('back').addEventListener('click',back);
+$('next').addEventListener('click',next);
+$('redo').addEventListener('click',()=>{period='childhood';index=0;answers={childhood:{},current:{}};AlchemistProfile.update(p=>{p.research.adaptations={status:'in_progress',rawAnswers:answers,currentPeriod:period,currentIndex:0};});$('result-panel').classList.add('hidden');$('quiz-panel').classList.remove('hidden');render();});
+init();
+})();
+</script><script src="nav.js?v=atlas1"></script>
+</body></html>
