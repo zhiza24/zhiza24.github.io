@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" data-slot="splash" data-size="800x1200">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#FBF6EA"/>
+      <stop offset="1" stop-color="#EDE3CF"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="1200" fill="url(#g)"/>
+  <circle cx="400" cy="420" r="120" fill="none" stroke="#C4A35A" stroke-width="3" opacity=".7"/>
+  <circle cx="400" cy="420" r="18" fill="#C4A35A" opacity=".85"/>
+  <!-- SLOT: replace this file with Grok art 800x1200, ivory/gold, quiet luxury -->
+</svg>

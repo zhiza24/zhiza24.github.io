@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" data-slot="launch-btn" data-size="400x400">
+  <defs>
+    <radialGradient id="lg" cx="40%" cy="35%" r="70%">
+      <stop offset="0" stop-color="#F3E3B0"/>
+      <stop offset="1" stop-color="#C4A35A"/>
+    </radialGradient>
+  </defs>
+  <circle cx="200" cy="200" r="190" fill="url(#lg)"/>
+  <circle cx="200" cy="200" r="160" fill="none" stroke="#fff8e6" stroke-width="2" opacity=".6"/>
+  <!-- SLOT: Grok art 400x400 gold medallion for the launch button -->
+</svg>

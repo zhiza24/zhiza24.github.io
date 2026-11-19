@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" data-slot="season-winter" data-size="600x200">
+  <rect width="600" height="200" fill="#E6ECF2"/>
+  <circle cx="80" cy="100" r="36" fill="none" stroke="#6C86A0" stroke-width="3"/>
+  <!-- SLOT: Grok art 600x200 for season зима -->
+</svg>
