@@ -164,6 +164,10 @@ BUILD.ct=function(ans){var sc=T.ct.scales,res=scoreScales(sc,ans),n=answered(sc,
  return {res:out,html:'<span class="tag">Точка Б</span><span class="tag">Критическое мышление</span>'+main+sit+detailsScales(sc,res,LVC,'Подробнее по всем шести измерениям'),log:'Критическое мышление: '+out.top}};
 function fsCrossHtml(ctx){ctx=ctx||{};var h='<section class="ar-compare"><h3>Сопоставление с предыдущими наблюдениями</h3><p>Эти результаты получены в других заданиях. Они не меняют ответы «Первых настроек» и не доказывают причину детских реакций.</p>',any=false;
  var e=ctx.echo;
+ if(e&&!e.status&&e.answers&&window.GArch&&GArch.scoreB){
+  var calc=GArch.scoreB(e.answers),dict=window.GARCH&&GARCH.resB||{},names=calc.leaders.map(function(c){return dict[c]?dict[c].name:c});
+  e={status:calc.status,lead:calc.status==='leading'?calc.leaders[0]:null,top:calc.status==='leading'||calc.status==='mixed'?names.join(' · '):null,leaders:calc.leaders};
+ }
  if(e){
   if(e.status==='leading'&&e.lead&&e.top){h+='<p><b>Эхо — чаще повторявшийся ход:</b> '+esc(e.top)+'. Это описание ответов на жизненные ситуации, а не характеристика личности.</p>';any=true}
   else if(e.status==='mixed'&&e.top){h+='<p><b>Эхо — сопоставимые ходы:</b> '+esc(e.top)+'. По ответам не выделяется один общий способ реакции.</p>';any=true}
@@ -176,7 +180,7 @@ function fsCrossHtml(ctx){ctx=ctx||{};var h='<section class="ar-compare"><h3>С�
  else if(w){h+='<p>В Колесе нет ветвей с отметкой от 50% при двух отвеченных ситуациях. Это не означает отсутствия таких способов.</p>';any=true}
  if(!any)h+='<p>Колесо и «Эхо» пока не пройдены или их результаты недоступны. «Первые настройки» можно читать самостоятельно.</p>';
  h+='<p>Не нужно искать совпадение любой ценой. Важнее посмотреть, что сохранилось, что изменилось и какие ответы требуют собственного примера.</p></section>';return h}
-BUILD.fs=function(ans){var F=T.fs,names=Object.keys(F.str),P0=load(),out={v:VER,answers:ans,context:{wheel:P0.betray&&P0.betray.start?JSON.parse(JSON.stringify(P0.betray.start)):null,echo:P0.archB?{top:P0.archB.top,lead:P0.archB.lead}:null},at:Date.now()};
+BUILD.fs=function(ans){var F=T.fs,names=Object.keys(F.str),P0=load(),out={v:VER,answers:ans,context:{wheel:P0.betray&&P0.betray.start?JSON.parse(JSON.stringify(P0.betray.start)):null,echo:P0.archB?{v:P0.archB.v,status:P0.archB.status,top:P0.archB.top,lead:P0.archB.lead,leaders:P0.archB.leaders,answers:P0.archB.answers}:null},at:Date.now()};
  function per(list){var o={};names.forEach(function(n){var a=list.filter(function(q){return q.s===n}).map(function(q){return ans[q.id]}),v=a.filter(function(x){return typeof x==='number'});o[n]={answered:v.length,mean:v.length?v.reduce(function(x,y){return x+y},0)/v.length:null,notRemember:a.filter(function(x){return x==='nr'}).length,notWas:a.filter(function(x){return x==='nw'}).length,allNotWas:a.length===3&&a.every(function(x){return x==='nw'})}});return o}
  var C=per(F.child),N=per(F.now),R={};
  names.forEach(function(n){var c=C[n],x=N[n],r;if(c.allNotWas)r='notwas';else if(c.answered<2||x.answered<2)r='few';
