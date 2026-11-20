@@ -41,6 +41,7 @@
     mirrors: { field: 'mirror_exercise' },
     wheel: { field: 'wheel' },
     wheelTest: { field: 'wheelTest' },
+    betrayWheel: { field: 'betrayWheel' },
     archB: { field: 'archB' },
     archV: { field: 'archV' },
     archP: { field: 'archP' },
