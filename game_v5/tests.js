@@ -36,7 +36,7 @@ var FQ=[[4,'Почти всегда'],[3,'Часто'],[2,'Иногда'],[1,'Р
 var LVD=['Фоновая опора','Эпизодическое проявление','Заметное влияние','Выраженный автоматизм'],LVC=['Пока неустойчив','Формируется','Уверенно проявляется','Выраженная опора'];
 /* Тексты, которых не было в комплекте: написаны по правилам вопросов, перечислены в written_by_bot.md. */
 var W={
- few:'Пока ответов недостаточно, чтобы собрать цельную картину. Можно вернуться к оставшимся вопросам и продолжить с того места, где остановился.'
+ few:'Пока ответов недостаточно, чтобы собрать цельную картину. Можно вернуться к оставшимся вопросам и продолжить с того места, где остановился.',
  clearRS:'По твоим ответам ни одна из шести областей не выделилась как выраженная трудность. Ты в целом различаешь свою часть и чужую. Это не значит, что сложных ситуаций не бывает: просто сейчас граница ответственности в основном держится.',
  clearKM:'По твоим ответам ни один фильтр не выделился как выраженный. Осторожность, сомнения и нехватка бывают у всех, но сейчас они не задают общий тон восприятия.',
  prelim:'предварительно',
@@ -163,9 +163,17 @@ BUILD.ct=function(ans){var sc=T.ct.scales,res=scoreScales(sc,ans),n=answered(sc,
  out.top=out.status==='insufficient'?'Недостаточно данных':'Опора: '+res.filter(function(r){return (out.leadingScales||[]).indexOf(r.id)>=0}).map(function(r){return r.name}).join(', ')+(legacy?'':(prof&&prof.title?', карта: '+prof.title:''));
  return {res:out,html:'<span class="tag">Точка Б</span><span class="tag">Критическое мышление</span>'+main+sit+detailsScales(sc,res,LVC,'Подробнее по всем шести измерениям'),log:'Критическое мышление: '+out.top}};
 function fsCrossHtml(ctx){ctx=ctx||{};var h='<section class="ar-compare"><h3>Сопоставление с предыдущими наблюдениями</h3><p>Эти результаты получены в других заданиях. Они не меняют ответы «Первых настроек» и не доказывают причину детских реакций.</p>',any=false;
- var e=ctx.echo;if(e&&e.top){h+='<p><b>Эхо:</b> '+esc(e.top)+'. Это описание привычного хода в сложных ситуациях; здесь оно приведено рядом, а не используется как объяснение детства.</p>';any=true}
- var w=ctx.wheel,marked=[];if(w&&Array.isArray(w.sectors)){w.sectors.forEach(function(sec){(sec.forms||[]).forEach(function(f){if((f.answered||0)<2)return;var a=f.shadow&&f.shadow.score,b=f.support&&f.support.score;if(typeof a==='number'&&a>=50)marked.push(f.shadow.title+' — '+Math.round(a)+'%');if(typeof b==='number'&&b>=50)marked.push(f.support.title+' — '+Math.round(b)+'%')})})}
- if(marked.length){h+='<p><b>Колесо самопредательства:</b> '+marked.map(esc).join('; ')+'.</p>';any=true}else if(w){h+='<p>В Колесе нет ветвей с отметкой от 50% при двух отвеченных ситуациях. Это не означает отсутствия таких способов.</p>';any=true}
+ var e=ctx.echo;
+ if(e){
+  if(e.status==='leading'&&e.lead&&e.top){h+='<p><b>Эхо — чаще повторявшийся ход:</b> '+esc(e.top)+'. Это описание ответов на жизненные ситуации, а не характеристика личности.</p>';any=true}
+  else if(e.status==='mixed'&&e.top){h+='<p><b>Эхо — сопоставимые ходы:</b> '+esc(e.top)+'. По ответам не выделяется один общий способ реакции.</p>';any=true}
+  else if(e.status==='weak'||e.status==='insufficient'){h+='<p><b>Эхо:</b> устойчивый ведущий ход пока не выделен. Это тоже результат; не нужно назначать его искусственно.</p>';any=true}
+  else if(e.top){h+='<p><b>Эхо:</b> '+esc(e.top)+'. Результат приведен рядом, а не используется как объяснение детства.</p>';any=true}
+ }
+ var w=ctx.wheel,marked=[];
+ if(w&&Array.isArray(w.sectors)){w.sectors.forEach(function(sec){(sec.forms||[]).forEach(function(f){if((f.answered||0)<2)return;var a=f.shadow&&f.shadow.score,b=f.support&&f.support.score;if(typeof a==='number'&&a>=50)marked.push(f.shadow.title+' — '+Math.round(a)+'%');if(typeof b==='number'&&b>=50)marked.push(f.support.title+' — '+Math.round(b)+'%')})})}
+ if(marked.length){h+='<p><b>Колесо самопредательства:</b> '+marked.map(esc).join('; ')+'.</p>';any=true}
+ else if(w){h+='<p>В Колесе нет ветвей с отметкой от 50% при двух отвеченных ситуациях. Это не означает отсутствия таких способов.</p>';any=true}
  if(!any)h+='<p>Колесо и «Эхо» пока не пройдены или их результаты недоступны. «Первые настройки» можно читать самостоятельно.</p>';
  h+='<p>Не нужно искать совпадение любой ценой. Важнее посмотреть, что сохранилось, что изменилось и какие ответы требуют собственного примера.</p></section>';return h}
 BUILD.fs=function(ans){var F=T.fs,names=Object.keys(F.str),P0=load(),out={v:VER,answers:ans,context:{wheel:P0.betray&&P0.betray.start?JSON.parse(JSON.stringify(P0.betray.start)):null,echo:P0.archB?{top:P0.archB.top,lead:P0.archB.lead}:null},at:Date.now()};
