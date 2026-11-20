@@ -288,7 +288,7 @@ function mount(box){
      note:'Исследовательские наблюдения, не диагноз и не автоматическое предписание.'
     };
    }
-   if(window.GArts&&GArts.grant)GArts.grant('mirror',{source:'slot.html?id=dialog'});
+   if(window.GArts&&GArts.grantInto)GArts.grantInto(P2,'mirror',{source:'slot.html?id=dialog'});
    (P2.log=P2.log||[]).push({t:Date.now(),x:'Кто сейчас выбирает: Эго — '+egoRate+'%, Самость — '+selfRate+'%'});
    save(P2);
   }
