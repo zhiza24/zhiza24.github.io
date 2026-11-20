@@ -44,9 +44,9 @@ function save(P){try{localStorage.setItem(KEY,JSON.stringify(P));return true}cat
 function Pget(){var P=load();P.betray=P.betray||{};return P}
 function seed(P){return String(P.name||'')+'|'+String(P.birth||'')+'|betray-wheel-v2'}
 function clone(x){return JSON.parse(JSON.stringify(x))}
-var P0=Pget(),old=AGAIN?P0.betray.draftEnd:P0.betray.draft;
-var order=(old&&Array.isArray(old.order)&&old.order.length===GBW.QUESTIONS.length)?old.order:GBW.ordered(seed(P0)).map(function(q){return q.id});
-var answers=old&&old.answers?old.answers:{},index=old&&Number.isInteger(old.i)?old.i:0;
+var P0=Pget(),old=AGAIN?P0.betray.draftEnd:P0.betray.draft,validDraft=!!(old&&old.version===2&&Array.isArray(old.order)&&old.order.length===GBW.QUESTIONS.length&&old.answers);
+var order=validDraft?old.order:GBW.ordered(seed(P0)).map(function(q){return q.id});
+var answers=validDraft?old.answers:{},index=validDraft&&Number.isInteger(old.i)?old.i:0;
 function current(){return GBW.QUESTIONS.filter(function(q){return q.id===order[index]})[0]}
 function persist(){var P=Pget();P.betray[AGAIN?'draftEnd':'draft']={version:2,i:index,order:order,answers:answers,at:Date.now()};return save(P)}
 function tick(){if(window.GSound&&!GSound.isOn())return;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=660;g.gain.value=.035;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.045)}catch(e){}}
@@ -64,7 +64,7 @@ function step(){
  html+='<section class="bw-card" id="swipeCard"><p style="color:#c9a46a;font-size:14px;text-align:center">Вспомни, как обычно бывает в реальной жизни</p><h1 style="font-size:25px">'+q.text+'</h1><div class="bw-actions"><button type="button" data-v="left"><small>Свайп влево</small><br>'+q.left+'</button><button type="button" data-v="right"><small>Свайп вправо</small><br>'+q.right+'</button></div><button type="button" class="bw-mid" data-v="both">Оба варианта бывают</button><button type="button" class="bw-mid" data-v="skip">Ни один не подходит</button></section>';
  if(index>0)html+='<button type="button" class="quiet" id="back">Назад</button>';
  box.innerHTML=html;
- box.querySelectorAll('[data-v]').forEach(function(b){b.onclick=function(){var x=b.getAttribute('data-v');if(x==='skip'){delete answers[q.id];index++;persist();draw();return}choose(x)}});
+ box.querySelectorAll('[data-v]').forEach(function(b){b.onclick=function(){var x=b.getAttribute('data-v');if(x==='skip'){answers[q.id]='none';index++;persist();draw();return}choose(x)}});
  var card=document.getElementById('swipeCard'),sx=null,sy=null;
  card.addEventListener('touchstart',function(e){if(e.touches.length===1){sx=e.touches[0].clientX;sy=e.touches[0].clientY}},{passive:true});
  card.addEventListener('touchend',function(e){if(sx===null||!e.changedTouches.length)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>75&&Math.abs(dx)>Math.abs(dy)*1.25)choose(dx<0?'left':'right')},{passive:true});
@@ -72,7 +72,7 @@ function step(){
 }
 function legacyFields(rec){
  var sh={},sp={},map={perf:'perf',please:'please',numb:'numb',detach:'detach',over:'over',ctrl:'ctrl'},support={perf:'enough',please:'bound',numb:'alive',detach:'near',over:'care',ctrl:'trust'};
- rec.sectors.forEach(function(s){var neg=0,pos=0,den=0;s.forms.forEach(function(f){neg+=f.shadow.score;pos+=f.support.score;den+=2});var nv=Math.round(neg/den*3),pv=Math.round(pos/den*3);if(nv)sh[map[s.id]]=nv;if(pv)sp[support[s.id]]=pv});
+ rec.sectors.forEach(function(s){var neg=0,pos=0,den=0;s.forms.forEach(function(f){if(!f.answered)return;neg+=(f.shadow.score||0)*f.answered;pos+=(f.support.score||0)*f.answered;den+=f.answered});if(!den)return;var nv=Math.round(neg/den*3),pv=Math.round(pos/den*3);if(nv)sh[map[s.id]]=nv;if(pv)sp[support[s.id]]=pv});
  rec.sh=sh;rec.sp=sp;
 }
 function result(){
@@ -92,7 +92,7 @@ function finish(skipped,rec){
  else{if(B.start){(B.history=B.history||[]).push(B.start)}B.start=rec;B.done=Date.now();delete B.draft;B.picked=GBW.legacyPicked(rec)}
  save(P);
  if(AGAIN){location.href='slot.html?id=compare';return}
- if(window.GProfile)try{GProfile.saveResult('betray',rec,{answers:answers},{profile:P})}catch(e){}
+ 
  if(window.GRoute)GRoute.complete('betray.html',P);
  location.href=window.GRoute?GRoute.advance():'tasks.html';
 }
