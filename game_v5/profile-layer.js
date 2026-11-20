@@ -239,6 +239,7 @@
     if (lockedSource(source)) return false;
     if (has(id, P)) return false;
     P.arts.push(id);
+    P.artsAt = P.artsAt || {}; P.artsAt[id] = { t: Date.now(), src: source || '' };
     P.log = P.log || [];
     P.log.push({ t: Date.now(), x: 'Артефакт: ' + label(id, P) });
     return true;
