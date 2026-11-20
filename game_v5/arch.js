@@ -46,7 +46,8 @@ function scoreA(ans){var s={},sit={};ACODES.forEach(function(c){s[c]=0;sit[c]=0}
 function a12Code(ans){var m=(Array.isArray(ans.A11)?ans.A11:[]).filter(function(c){return c!=='0'});if(m.length)return m[0];
  var s={};D.A.forEach(function(q){var c=ans[q.id];if(c&&c!=='0'&&c!=='skip')s[c]=(s[c]||0)+1});var k=Object.keys(s).sort(function(x,y){return s[y]-s[x]||ACODES.indexOf(x)-ACODES.indexOf(y)});return k[0]||null}
 function scoreB(ans){var s={};BCODES.forEach(function(c){s[c]=0});D.B.forEach(function(q){var c=ans[q.id];if(c&&c!=='0'&&c!=='skip')s[c]++});
- var cand=BCODES.slice().sort(function(x,y){return s[y]-s[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}).filter(function(c){return s[c]>0}).slice(0,2);return {scores:s,count:JSON.parse(JSON.stringify(s)),cand:cand}}
+ var ord=BCODES.slice().sort(function(x,y){return s[y]-s[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}),top=s[ord[0]]||0,leaders=top?ord.filter(function(c){return s[c]===top}):[],cand=ord.filter(function(c){return s[c]>0}).slice(0,2);
+ return {scores:s,count:JSON.parse(JSON.stringify(s)),cand:cand,leaders:leaders,topScore:top,status:!top?'insufficient':leaders.length>1?'mixed':top>=2?'leading':'weak'}}
 function modeOf(ans){var s={C1:0,C2:0,C3:0,C4:0};D.C.forEach(function(q){var c=ans[q.id];if(c&&s[c]!=null)s[c]++});
  if(s.C4>=3)return {scores:s,mode:'C4'};var mx=Math.max(s.C1,s.C2,s.C3,s.C4),tops=Object.keys(s).filter(function(k){return s[k]===mx});
  if(tops.length===1&&mx>=3)return {scores:s,mode:tops[0]};
@@ -164,9 +165,13 @@ function wheelComparison(wheel){
  return out
 }
 function partB(box){var P0=prof(),wheel=P0.betray&&P0.betray.start||null;var items=[{kind:'intro',key:'b'}];D.B.forEach(function(q){items.push({kind:'one',id:q.id,h:q.h,t:q.t,o:q.o,shuffle:true})});
- new Runner({box:box,skin:'slot',items:items,module:'archB',done:function(ans){var r=scoreB(ans),c=r.cand[0],lead=c&&r.scores[c]>=2?c:null,RB=D.resB[lead||'none'];
-  var res={v:2,line:'B',top:lead?RB.name:'Один привычный способ пока не выделился',lead:lead,answers:ans,scores:r.scores,count:r.count,cand:r.cand,wheelSnapshot:wheel?JSON.parse(JSON.stringify(wheel)):null,at:Date.now()};
-  var html='<span class="tag">Точка 0</span><span class="tag">Эхо</span><div class="al">Твой привычный ход</div><div class="aq">'+h(lead?RB.name:res.top)+'</div><p>'+h(RB.text)+'</p>'+(RB.sw?'<p class="ar-pt">Переключатель: '+h(RB.sw)+'</p>':'')+(lead&&D.bfull&&D.bfull[lead]?(function(x,L){return '<details class="ar-det"><summary>Подробнее об этом ходе</summary><p>'+h(x.d)+'</p><p><b>'+esc(L.logic)+':</b> '+h(x.logic)+'</p><p><b>'+esc(L.gain)+':</b> '+h(x.gain)+'</p><p><b>'+esc(L.cost)+':</b> '+h(x.cost)+'</p></details>')(D.bfull[lead],D.bfullLabels||{}):'')+(lead==null&&D.showDraft?'<p class="ar-draft">Текст для этого случая — черновик<span>черновик</span></p>':'')+wheelComparison(wheel);
+ new Runner({box:box,skin:'slot',items:items,module:'archB',done:function(ans){var r=scoreB(ans),lead=r.status==='leading'?r.leaders[0]:null,RB=D.resB[lead||'none'],ties=r.status==='mixed'?r.leaders:[];
+  var title=lead?RB.name:ties.length?'Несколько привычных ходов проявляются сопоставимо':'Один привычный способ пока не выделился';
+  var res={v:3,line:'B',top:lead?RB.name:ties.length?ties.map(function(c){return D.resB[c].name}).join(' · '):title,lead:lead,leaders:ties,answers:ans,scores:r.scores,count:r.count,cand:r.cand,wheelSnapshot:wheel?JSON.parse(JSON.stringify(wheel)):null,at:Date.now()};
+  var body=lead?h(RB.text):ties.length?ties.map(function(c){return '<p><b>'+h(D.resB[c].name)+':</b> '+h(D.resB[c].text)+'</p>'}).join(''):'<p>'+h(RB.text)+'</p>';
+  var sw=lead&&RB.sw?'<p class="ar-pt">Переключатель: '+h(RB.sw)+'</p>':'';
+  var full=lead&&D.bfull&&D.bfull[lead]?(function(x,L){return '<details class="ar-det"><summary>Подробнее об этом ходе</summary><p>'+h(x.d)+'</p><p><b>'+esc(L.logic)+':</b> '+h(x.logic)+'</p><p><b>'+esc(L.gain)+':</b> '+h(x.gain)+'</p><p><b>'+esc(L.cost)+':</b> '+h(x.cost)+'</p></details>')(D.bfull[lead],D.bfullLabels||{}):'';
+  var html='<span class="tag">Точка 0</span><span class="tag">Эхо</span><div class="al">'+(lead?'Твой наиболее частый привычный ход':ties.length?'Сопоставимые привычные ходы':'Что видно по ответам')+'</div><div class="aq">'+h(title)+'</div>'+body+sw+full+(r.status==='weak'?'<p>Пока ни один способ не повторился достаточно часто, чтобы выделить его как ведущий. Это не означает, что таких реакций у тебя нет.</p>':'')+wheelComparison(wheel);
   resultScreen(box,'slot',html,'b',function(){store('b',res,{answers:ans},'Привычный ход: '+res.top)})}}).start()}
 function partV(box){var P=data(),e=P.ego&&P.ego.v===2?P.ego:null,a=e?e.cand||[]:[],b=P.archB?P.archB.cand||[]:[],items=[{kind:'intro',key:'v'}];
  D.C.forEach(function(q){items.push({kind:'one',id:q.id,t:q.t,o:q.o})});
