@@ -47,7 +47,7 @@ function a12Code(ans){var m=(Array.isArray(ans.A11)?ans.A11:[]).filter(function(
  var s={};D.A.forEach(function(q){var c=ans[q.id];if(c&&c!=='0'&&c!=='skip')s[c]=(s[c]||0)+1});var k=Object.keys(s).sort(function(x,y){return s[y]-s[x]||ACODES.indexOf(x)-ACODES.indexOf(y)});return k[0]||null}
 function scoreB(ans){var s={};BCODES.forEach(function(c){s[c]=0});var answered=0,coded=0;
  D.B.forEach(function(q){var c=ans[q.id];if(c!=null&&c!=='skip')answered++;if(c&&c!=='0'&&c!=='skip'&&s[c]!=null){s[c]++;coded++}});
- var ord=BCODES.slice().sort(function(x,y){return s[y]-s[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}),top=s[ord[0]]||0,near=top?ord.filter(function(c){return s[c]>=top-1&&s[c]>0}):[],status=answered<8||coded<6?'insufficient':top<3?'weak':near.length>1?'mixed':'leading',leaders=status==='mixed'?near:status==='leading'?[ord[0]]:[],cand=leaders.slice();
+ var ord=BCODES.slice().sort(function(x,y){return s[y]-s[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}),top=s[ord[0]]||0,near=top?ord.filter(function(c){return s[c]>=top-1&&s[c]>0}):[],status=answered<8||coded<6?'insufficient':top<3?'weak':near.length>1?'mixed':'leading',leaders=status==='mixed'?near:status==='leading'?[ord[0]]:[],cand=leaders.slice(0,2);
  return {scores:s,count:JSON.parse(JSON.stringify(s)),cand:cand,leaders:leaders,topScore:top,answered:answered,coded:coded,status:status}}
 function modeOf(ans){var s={C1:0,C2:0,C3:0,C4:0};D.C.forEach(function(q){var c=ans[q.id];if(c&&s[c]!=null)s[c]++});
  if(s.C4>=3)return {scores:s,mode:'C4'};var mx=Math.max(s.C1,s.C2,s.C3,s.C4),tops=Object.keys(s).filter(function(k){return s[k]===mx});
