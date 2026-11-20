@@ -261,7 +261,34 @@ function mount(box){
    doubtCount:ans.filter(function(a){return a.pick==='mid'}).length,
    topWounds:topWounds,answers:ans,doneAt:Date.now()};
   if(!preview){
-   var P2=load();P2.dialog=rec;
+   var P2=load();
+   P2.dialog=rec;
+   P2.researchContext=P2.researchContext||{};
+   P2.researchContext.egoSelf={
+    version:rec.v,source:'dialog',updatedAt:rec.doneAt,
+    egoRate:rec.egoRate,selfRate:rec.selfRate,
+    egoScore:rec.egoScore,selfScore:rec.selfScore,
+    topProtectivePatterns:rec.topWounds.slice(),
+    selfContactAreas:ans.filter(function(a){return a.side==='self'&&(a.pick==='yes'||a.pick==='mid')}).map(function(a){return {id:a.id,pillar:a.pillar,pick:a.pick}}),
+    responseUncertainty:rec.doubtCount,
+    rawAnswers:ans.map(function(a){return {id:a.id,side:a.side,pick:a.pick,text:a.text}}),
+    note:'Исследовательские наблюдения, не диагноз и не автоматическое предписание.'
+   };
+   if(window.GProfile&&GProfile.saveResult){
+    GProfile.saveResult('dialog',rec,{answers:ans,version:rec.v});
+    P2=load();
+    P2.researchContext=P2.researchContext||{};
+    P2.researchContext.egoSelf={
+     version:rec.v,source:'dialog',updatedAt:rec.doneAt,
+     egoRate:rec.egoRate,selfRate:rec.selfRate,egoScore:rec.egoScore,selfScore:rec.selfScore,
+     topProtectivePatterns:rec.topWounds.slice(),
+     selfContactAreas:ans.filter(function(a){return a.side==='self'&&(a.pick==='yes'||a.pick==='mid')}).map(function(a){return {id:a.id,pillar:a.pillar,pick:a.pick}}),
+     responseUncertainty:rec.doubtCount,
+     rawAnswers:ans.map(function(a){return {id:a.id,side:a.side,pick:a.pick,text:a.text}}),
+     note:'Исследовательские наблюдения, не диагноз и не автоматическое предписание.'
+    };
+   }
+   if(window.GArts&&GArts.grant)GArts.grant('mirror',{source:'slot.html?id=dialog'});
    (P2.log=P2.log||[]).push({t:Date.now(),x:'Кто сейчас выбирает: Эго — '+egoRate+'%, Самость — '+selfRate+'%'});
    save(P2);
   }
