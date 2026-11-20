@@ -38,13 +38,13 @@ var CAT=[
     done:'Семь дней наблюдений.',
     daily:'Заметь слово и его мягкую замену.',
     need:function(P){return !!(P.lab||P.betray||(P.kmTest&&P.kmTest.v))}},
-  {id:'betray', lv:2, group:'research', t:'Что узнаю в себе', len:7, load:'3 минуты',
-    d:'Отмечаешь, где сегодня включились перфекционизм, контроль, угождение или онемение.',
-    why:'Открывается, если уже было колесо самопредательства.',
-    effect:'Быстрее узнаешь привычный ход.',
-    min:'Одна отметка.',
-    done:'Семь дней с отметкой.',
-    daily:'Отметь, что сегодня включилось.',
+  {id:'betray', lv:2, group:'research', t:'Колесо тени и опоры', len:28, load:'1 минута',
+    d:'Колесо за цикл: где ты теряешь себя и где уже поддерживаешь себя. Отметки ставятся в «Разборе дня».',
+    why:'Открывается, если уже было колесо тени и опоры.',
+    effect:'Видно и то, где ты себя предаешь, и то, где ты молодец.',
+    min:'Одна отметка в разборе дня.',
+    done:'Отметки в течение цикла.',
+    daily:'Отметь в разборе дня одну тень или одну опору.',
     need:function(P){return !!(P.betray&&(P.betray.done||P.betray.picked))}},
   {id:'hours', lv:2, group:'research', t:'Блоки времени', len:1, load:'10 минут',
     d:'Почасовая сетка дня: куда уходят время, силы и внимание.',
@@ -60,15 +60,71 @@ var CAT=[
     min:'Одна фраза «я хочу».',
     done:'Семь записей.',
     daily:'Напиши одно свое «хочу» сегодня.',
-    need:function(P){return !!(P.desireLab||P.selfWorth||P.interact)}},
+    need:function(P){return !!(P.desireLab||P.selfWorth||P.interact)}, journal:true},
   {id:'bounds', lv:2, group:'research', t:'Границы и распределение сил', len:7, load:'3 минуты',
     d:'Замечаешь, где сегодня отдал силы чужому, и выбираешь одну границу.',
     why:'Если часто уходишь в чужие задачи.',
     effect:'Ровнее расход сил.',
     min:'Заметить одно место, где силы ушли вовне.',
     done:'Семь наблюдений.',
-    daily:'Отметь границу дня.'}
+    daily:'Отметь границу дня.', journal:true},
+  /* Уровень 2: по результатам исследований. Ежедневная короткая запись. */
+  {id:'enough', lv:2, group:'research', journal:true, t:'Достаточно хорошо', len:7, load:'3 минуты',
+    d:'Завершаешь одно дело без идеала и засчитываешь его.', why:'Если в результатах заметны перфекционизм и строгая самокритика.',
+    effect:'Меньше переработок, больше завершенного.', min:'Одно дело, засчитанное без доделок.', done:'Семь записей.', daily:'Что ты сегодня {засчитал|засчитала} как достаточно хорошее?',
+    need:function(P){return hi(P,'respTest','RS05')||hi(P,'selfWorth','SV02')||bw(P,'perf')}},
+  {id:'letgo', lv:2, group:'research', journal:true, t:'Отпускаю контроль', len:7, load:'3 минуты',
+    d:'Каждый день отпускаешь одну вещь, которая не в твоей власти, или поручаешь ее.', why:'Если заметны гиперконтроль и привычка все удерживать самому.',
+    effect:'Ровнее нагрузка, больше доверия.', min:'Назвать одну вещь, которую можно отпустить.', done:'Семь записей.', daily:'Что ты сегодня {отпустил|отпустила} или {поручил|поручила}?',
+    need:function(P){return hi(P,'respTest','RS06')||bw(P,'ctrl')||ad(P,'A2')}},
+  {id:'guilt', lv:2, group:'research', journal:true, t:'Без лишней вины', len:7, load:'3 минуты',
+    d:'Разделяешь свою часть и чужую в одной ситуации дня.', why:'Если вина и ответственность за других звучат громко.',
+    effect:'Спокойнее отказывать и не тащить чужое.', min:'Одна фраза «это моя часть, а это не моя».', done:'Семь записей.', daily:'Где сегодня твоя часть, а где не твоя?',
+    need:function(P){return hi(P,'respTest','RS02')||hi(P,'selfWorth','SV04')||hi(P,'kmTest','KM03')}},
+  {id:'chooseme', lv:2, group:'research', journal:true, t:'Выбираю себя', len:7, load:'2–5 минут',
+    d:'Замечаешь ситуацию, где свои потребности снова на последнем месте, и выбираешь одно действие в свою пользу.', why:'Если заметны угождение и чрезмерная отдача.',
+    effect:'Свое «хочу» перестает ждать.', min:'Заметить одну такую ситуацию.', done:'Семь записей.', daily:'Что ты сегодня {сделал|сделала} в свою пользу?',
+    need:function(P){return bw(P,'please')||bw(P,'over')||ad(P,'A3')}},
+  {id:'mine', lv:2, group:'research', journal:true, t:'Присваиваю результат', len:7, load:'2 минуты',
+    d:'Каждый день записываешь один результат и говоришь себе: «Это сделал{|а} я».', why:'Если хорошее быстро обесценивается и кажется, что всего мало.',
+    effect:'Удовлетворение держится дольше.', min:'Один результат дня.', done:'Семь записей.', daily:'Какой результат ты сегодня {присвоил|присвоила}?',
+    need:function(P){return fam(P,'S6')||hi(P,'selfWorth','SV05')||bw(P,'perf')}},
+  {id:'risk', lv:2, group:'research', journal:true, t:'Риск или предположение', len:7, load:'3 минуты',
+    d:'Одну тревожную мысль делишь на факт и предположение.', why:'Если внимание часто ищет возможные сложности.',
+    effect:'Меньше напряжения без потери осторожности.', min:'Одна мысль: факт или догадка.', done:'Семь записей.', daily:'Что сегодня было фактом, а что предположением?',
+    need:function(P){return fam(P,'S5')||hi(P,'kmTest','KM01')}},
+  {id:'contact', lv:2, group:'research', journal:true, t:'Восстанавливаю контакт', len:7, load:'3 минуты',
+    d:'Один раз в день прямо говоришь о своей потребности или делаешь шаг навстречу.', why:'Если ты часто уходишь в себя или отдаляешься.',
+    effect:'Больше поддержки рядом.', min:'Одно сообщение или фраза о себе.', done:'Семь записей.', daily:'Кому и о чем ты сегодня {сказал|сказала}?',
+    need:function(P){return fam(P,'S7')||ad(P,'A4')||bw(P,'detach')}},
+  {id:'myzone', lv:2, group:'research', journal:true, t:'Шаг в зоне влияния', len:7, load:'2 минуты',
+    d:'Находишь одну вещь, которая точно зависит от тебя, и делаешь ее.', why:'Если бывает ощущение, что выбор ограничен.',
+    effect:'Возвращается чувство выбора.', min:'Одно маленькое действие.', done:'Семь записей.', daily:'Что сегодня зависело от тебя и ты это {сделал|сделала}?',
+    need:function(P){return fam(P,'S8')||hi(P,'kmTest','KM05')||bw(P,'numb')}},
+  {id:'mydecision', lv:2, group:'research', journal:true, t:'Мое решение', len:7, load:'2 минуты',
+    d:'Фиксируешь одно решение, принятое по своему выбору, без ожидания одобрения.', why:'Если важна внешняя оценка.',
+    effect:'Опора на свой выбор.', min:'Одно решение одной фразой.', done:'Семь записей.', daily:'Какое решение сегодня было твоим?',
+    need:function(P){return hi(P,'selfWorth','SV06')||hi(P,'kmTest','KM02')}},
+  {id:'acceptsup', lv:2, group:'research', journal:true, t:'Принимаю поддержку', len:7, load:'2 минуты',
+    d:'Каждый день принимаешь одну помощь или распределяешь одну задачу.', why:'Если ты привык{|ла} все делать сам{|а}.',
+    effect:'Меньше перегрузки.', min:'Принять одну мелочь.', done:'Семь записей.', daily:'Какую поддержку ты сегодня {принял|приняла}?',
+    need:function(P){return selfHeavy(P)}},
+  /* Опорные практики: укрепляют то, что уже работает. */
+  {id:'keepgood', lv:2, group:'support', journal:true, t:'Закрепляю хорошее', len:7, load:'2 минуты',
+    d:'Записываешь одно хорошее событие дня и что ты почувствовал{|а} после.', why:'Укрепляет уже работающую радость и наполненность.',
+    effect:'Хорошее остается с тобой дольше.', min:'Одно хорошее событие.', done:'Семь записей.', daily:'Что хорошего было сегодня и что осталось после?',
+    need:function(P){return true}},
+  {id:'create', lv:2, group:'support', journal:true, t:'Свое созидание', len:7, load:'10 минут',
+    d:'Каждый день немного времени на свой интерес или идею.', why:'Если интерес и движение — твоя сильная сторона.',
+    effect:'Энергия от своего дела.', min:'Пять минут на свой интерес.', done:'Семь записей.', daily:'Что ты сегодня {создал|создала} или {попробовал|попробовала}?',
+    need:function(P){return fam(P,'S2')}}
 ];
+function lvOf(P,f,id){var x=P[f];if(!x||!x.scales)return null;var s=x.scales.filter(function(z){return z.id===id})[0];return s&&s.level!=null?s.level:null}
+function hi(P,f,id){var l=lvOf(P,f,id);return l!=null&&l>=2}
+function bw(P,id){var B=P.betray||{},r=B.end||B.start;if(r&&r.sh&&typeof r.sh[id]==='number')return r.sh[id]>=2;return (B.picked||[]).indexOf(id)>=0}
+function fam(P,s){var b=P.backgroundProfile;return !!(b&&b.levels&&b.levels[s]>=2)}
+function ad(P,a){var b=P.backgroundProfile;return !!(b&&(b.adaptHyp||[]).indexOf(a)>=0)}
+function selfHeavy(P){var b=P.backgroundProfile;return !!(b&&b.adaptations&&b.adaptations.A6>=5&&(b.adaptations.A3||0)<=2)}
 
 function byId(id){return CAT.filter(function(x){return x.id===id})[0]||null}
 function hist(T){T.practHist=T.practHist||[]; return T.practHist}
@@ -124,7 +180,13 @@ function recs(P,T,n){
   if(sim&&GSim.lowDays&&GSim.lowDays(T,n,'energy')>=3) add('hours','Энергия низкая несколько дней. Стоит посмотреть, куда уходит ресурс.');
   var fails=(window.GSim&&GSim.lastRes)?GSim.lastRes(T,n,3):[];
   if(fails.filter(function(v){return v==='fail'||v==='min'}).length>=3) add('choose','Три дня не получается шаг. Можно собрать его через «выбираю — делаю».');
-  if(P.betray&&(P.betray.done||P.betray.picked)) add('betray','В исследовании уже было колесо самопредательства.');
+  /* уровень 3: по ежедневным отметкам */
+  if(window.GSim&&GSim.trend&&GSim.trend(T,n,'mood')<=-1.5) add('keepgood','Настроение несколько дней снижается. Стоит опереться на то, что уже было хорошим.');
+  var Bd=(P.betray&&P.betray.days)||{},keys=Object.keys(Bd).sort().slice(-5),sp=0;keys.forEach(function(k){var r=Bd[k]||{};if((r.sh||[]).some(function(x){return x==='please'||x==='over'}))sp++});
+  if(sp>=3) add(unlocked(P,byId('chooseme'))?'chooseme':'bounds','Несколько дней подряд ты отмечаешь, что уходишь в чужие задачи и отдаешь больше, чем есть сил.');
+  /* персонально по результатам всех исследований (не больше двух) */
+  if(window.GStrategy&&GStrategy.practRec){try{GStrategy.practRec(P).forEach(function(r){add(r.id,r.why)})}catch(e){}}
+  if(P.betray&&(P.betray.done||P.betray.picked)) add('betray','Колесо тени и опоры за цикл покажет, где ты теряешь себя и где поддерживаешь.');
   if(P.lab||P.kmTest) add('brake','В установках могут звучать слова-тормоза.');
   if(P.desireLab||P.selfWorth) add('want','Исследование желания и самоценности подсказывает практику собственного «хочу».');
   /* уникальные */

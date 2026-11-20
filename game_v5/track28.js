@@ -316,14 +316,14 @@ var PRC=[
   {id:'grat',t:'Дневник благодарности',len:10,d:'Каждый день минимум 10 благодарностей, цель цикла 50.'},
   {id:'choose',t:'Выбираю — делаю — сделано',len:7,d:'Дела дня по шагам. После каждого третьего появляется строчка с твоим желанием.'},
   {id:'brake',t:'Слова-тормоза',len:7,d:'Ловишь слово, которое тормозит, и видишь мягкую замену.'},
-  {id:'betray',t:'Что узнаю в себе',len:7,d:'Отмечаешь, где сегодня включились перфекционизм, контроль, угождение или онемение.'},
+  {id:'betray',t:'Колесо тени и опоры',len:28,d:'Колесо за цикл: где ты теряешь себя и где уже поддерживаешь себя.'},
   {id:'hours',t:'Блоки времени',len:1,d:'Почасовая сетка дня: куда уходят время, силы и внимание.'},
   {id:'pract',t:'Вдох-выдох, Я есмь, Тихое внимание',len:7,d:'Короткие практики на 2 часа с отметкой.'},
   {id:'signs',t:'Знаки дня',len:28,d:'Записываешь, что в жизни откликнулось на твое желание.'}
 ];
 function prc(id){var x=PRC.filter(function(z){return z.id===id})[0];if(x)return x;var g=window.GPract&&GPract.byId(id);return g?{id:g.id,t:g.t,len:g.len,d:g.d}:null}
 function actOn(T,id,n){var a=(T.act||{})[id];return a&&n>=a.from&&n<a.from+a.len?a:null}
-function prFilled(d,id){if(id==='grat')return (d.grat||[]).length>0;if(id==='choose')return (d.choose||[]).length>0;if(id==='brake')return (d.brakeWords||[]).length>0;if(id==='betray')return (d.betrayMarks||[]).length>0;if(id==='signs')return (d.signs||[]).length>0;if(id==='want')return !!(d.journal&&d.journal.want);if(id==='bounds')return !!(d.journal&&d.journal.bounds);if(id==='hours'){for(var k in (d.hours||{}))if(d.hours[k]&&d.hours[k].text)return true;return false}return !!d.practDone}
+function prFilled(d,id){if(window.GPract&&id!=='want'&&id!=='bounds'){var gj=GPract.byId(id);if(gj&&gj.journal)return !!(d.journal&&d.journal[id])}if(id==='grat')return (d.grat||[]).length>0;if(id==='choose')return (d.choose||[]).length>0;if(id==='brake')return (d.brakeWords||[]).length>0;if(id==='betray')return (d.betrayMarks||[]).length>0;if(id==='signs')return (d.signs||[]).length>0;if(id==='want')return !!(d.journal&&d.journal.want);if(id==='bounds')return !!(d.journal&&d.journal.bounds);if(id==='hours'){for(var k in (d.hours||{}))if(d.hours[k]&&d.hours[k].text)return true;return false}return !!d.practDone}
 window.prFilledTrack=function(T,id,n){return prFilled(dayRec(T,n),id)}
 function prCount(T,id){var a=(T.act||{})[id];if(!a)return 0;var c=0;for(var i=a.from;i<a.from+a.len&&i<=28;i++)if(prFilled(dayRec(T,i),id))c++;return c}
 var RES=[{id:'done',t:'Сделано'},{id:'part',t:'Частично'},{id:'min',t:'Минимум'},{id:'other',t:'Другой шаг'},{id:'fail',t:'Сегодня не получилось'}];
@@ -356,9 +356,9 @@ function practCard(P,T,n,item,reason){
   var a=window.GPract?GPract.openRun(T,item.id):actOn(T,item.id,n);
   var filled=window.GPract?GPract.uniqueDays(T,item.id):prCount(T,item.id);
   var h='<div class="row-line prc"><b>'+esc(item.t)+'</b>';
-  h+='<p class="mute">'+esc(item.d||'')+(item.len>1?' · '+item.len+' дней.':' · На один день.')+(item.load?' Нагрузка: '+esc(item.load)+'.':'')+'</p>';
-  if(reason)h+='<p class="soft-tip">Почему сейчас: '+esc(reason)+'</p>';
-  if(item.effect)h+='<p class="mute">Ожидаемый эффект: '+esc(item.effect)+'</p>';
+  h+='<p class="mute">'+esc(gx(item.d||''))+(item.len>1?' · '+item.len+' дней.':' · На один день.')+(item.load?' Нагрузка: '+esc(item.load)+'.':'')+'</p>';
+  if(reason)h+='<p class="soft-tip">Почему сейчас: '+esc(gx(reason))+'</p>';
+  if(item.effect)h+='<p class="mute">Ожидаемый эффект: '+esc(gx(item.effect))+'</p>';
   if(a)h+='<p class="score ok">Идет · день '+(n-a.from+1)+' из '+a.len+' · уникальных дней: '+filled+'</p><button type="button" class="quiet-btn" data-act="pr-off" data-id="'+item.id+'">Приостановить</button>';
   else{
     if(filled)h+='<p class="mute">За все запуски уникальных дней: '+filled+'. История не обнуляется.</p>';
@@ -374,16 +374,16 @@ function viewPracts(P,T){
     h+='<h2 class="lab-h">Сейчас рекомендуется</h2>';
     recs.forEach(function(r){h+=practCard(P,T,n,r.item,r.reason)});
   }
-  var groups=[['base','Базовые практики'],['research','По результатам исследования'],['situ','По ситуации']];
+  var groups=[['base','Базовые практики'],['support','Укрепить то, что уже работает'],['research','По результатам твоих исследований'],['situ','По ситуации']];
   var cat=(window.GPract&&GPract.CAT)||PRC.map(function(x){return {id:x.id,t:x.t,len:x.len,d:x.d,group:(x.id==='brake'||x.id==='betray'||x.id==='hours')?'research':'base'}});
   groups.forEach(function(g){
-    var list=cat.filter(function(x){return (x.group||'base')===g[0]});
+    var list=cat.filter(function(x){return (x.group||'base')===g[0]&&(!window.GPract||x.lv!==2||GPract.unlocked(P,x))});
     if(!list.length)return;
     h+='<h2 class="lab-h">'+g[1]+'</h2>';
     list.forEach(function(item){
       var open=true;
       if(window.GPract&&item.lv===2)open=GPract.unlocked(P,item);
-      if(!open){h+='<div class="row-line prc dim"><b>'+esc(item.t)+'</b><p class="mute">Откроется, когда в профиле появятся соответствующие исследования.</p></div>';return}
+      if(!open)return;
       h+=practCard(P,T,n,item);
     });
   });
@@ -481,6 +481,7 @@ function dayPanel(P,T,n){
     html+='<input type="range" min="1" max="10" value="'+v+'" data-act="slider" data-k="'+m.key+'"></div>';
   });
   html+='</div>';
+  html+=razborBlock(P,T,n);
 
   if(actOn(T,'signs',n)){
   html+='<div class="row-line"><b>Знаки дня</b><div class="signs">';
@@ -499,11 +500,11 @@ function dayPanel(P,T,n){
   var pa='';
   PRC.forEach(function(x){if(x.id==='signs')return;var a=actOn(T,x.id,n);if(!a)return;pa+=acc(x.id,x.t,'день '+(n-a.from+1)+' из '+a.len+' · заполнено '+prCount(T,x.id),BOD[x.id]())});
   html+=pa;
-  if(window.GPract){['want','bounds'].forEach(function(id){
+  if(window.GPract){GPract.CAT.filter(function(x){return x.journal}).map(function(x){return x.id}).forEach(function(id){
     if(!GPract.isOn(T,id,n))return;
     var it=GPract.byId(id); if(!it)return;
-    html+='<div class="row-line"><b>'+esc(it.t)+'</b><p class="mute">'+esc(it.daily)+'</p>';
-    html+='<textarea data-act="journal" data-id="'+id+'" rows="2" maxlength="240" placeholder="'+esc(it.min)+'">'+esc((d.journal&&d.journal[id])||'')+'</textarea></div>';
+    html+='<div class="row-line"><b>'+esc(it.t)+'</b><p class="mute">'+esc(gx(it.daily))+'</p>';
+    html+='<textarea data-act="journal" data-id="'+id+'" rows="2" maxlength="240" placeholder="'+esc(gx(it.min))+'">'+esc((d.journal&&d.journal[id])||'')+'</textarea></div>';
   });}
   html+='<button type="button" class="quiet-btn" data-act="practs">'+(pa?'Практики':'Лаборатория практик')+'</button>';
   html+='<button class="go" type="button" data-act="done">Завершить день</button></div>';
@@ -555,7 +556,23 @@ function brakeBody(d){
   }
   return html;
 }
+/* Разбор дня: одним касанием отметить, где сегодня себя предал(а) и где поддержал(а). P.betray.days[дата] */
+function dayDate(T,n){var base=T.start||Date.now();if(!T.start)return window.GBW?GBW.isoDay(Date.now()):'';return window.GBW?GBW.isoDay(base+(n-1)*86400000):''}
+function cycleRange(T){if(!T.start||!window.GBW)return [null,null];return [GBW.isoDay(T.start),GBW.isoDay(T.start+27*86400000)]}
+function razborBlock(P,T,n){
+  if(!window.GBW)return '';
+  GBW.css();
+  var key=dayDate(T,n),B=P.betray||{},rec=(B.days&&B.days[key])||{sh:[],sp:[]};
+  var h='<div class="row-line razbor"><b>Разбор дня</b>';
+  h+='<p class="mute">'+esc(gx('Где сегодня {предал|предала} себя'))+'</p><div class="bw-chips sh">'+GBW.S.map(function(s){return '<button type="button" class="'+((rec.sh||[]).indexOf(s.id)>=0?'on':'')+'" data-act="bw" data-z="sh" data-id="'+s.id+'">'+esc(s.t)+'</button>'}).join('')+'</div>';
+  h+='<p class="mute">'+esc(gx('Где сегодня {поддержал|поддержала} себя'))+'</p><div class="bw-chips sp">'+GBW.S.map(function(s){return '<button type="button" class="'+((rec.sp||[]).indexOf(s.m.id)>=0?'on':'')+'" data-act="bw" data-z="sp" data-id="'+s.m.id+'">'+esc(s.m.t)+'</button>'}).join('')+'</div>';
+  var r=cycleRange(T),A=GBW.daysAgg(P,r[0],r[1]);
+  if(A.days)h+='<details class="bw-mini"><summary>Мое колесо за цикл · дней с отметкой: '+A.days+'</summary>'+GBW.svg(A.vals,{size:230})+GBW.legend()+'</details>';
+  return h+'</div>';
+}
 function betrayBody(d){
+  if(window.GBW){var P=load(),T=(P.tracker||{}),r=cycleRange(T),A=GBW.daysAgg(P,r[0],r[1]);GBW.css();
+    return '<p class="mute">Отмечай в «Разборе дня» выше. Колесо закрашивается твоими отметками за 28 дней.</p>'+(A.days?GBW.svg(A.vals,{size:230})+GBW.legend():'<p class="mute">Пока нет отметок.</p>');}
   var cur=d.betrayMarks||[];
   return '<div class="brake">'+BETRAY.map(function(w){
     return '<button type="button" class="'+(cur.indexOf(w.id)>=0?'on':'')+'" data-act="betray-mark" data-id="'+w.id+'">'+esc(w.t)+'</button>';
@@ -819,6 +836,13 @@ function bind(){
       var ix=d.brakeWords.indexOf(id);
       if(ix>=0)d.brakeWords.splice(ix,1); else d.brakeWords.push(id);
       d.brakeLast=id; save(P); render(); openAccAfterRender('brake'); return;
+    }
+    if(act==='bw'){
+      var z=b.getAttribute('data-z'),bid=b.getAttribute('data-id'),key=dayDate(T,n);
+      P.betray=P.betray||{};P.betray.days=P.betray.days||{};var rr=P.betray.days[key]=P.betray.days[key]||{sh:[],sp:[]};rr[z]=rr[z]||[];
+      var bi=rr[z].indexOf(bid);if(bi>=0)rr[z].splice(bi,1);else rr[z].push(bid);rr.t=Date.now();rr.day=n;
+      d.betrayMarks=(rr.sh||[]).concat(rr.sp||[]);
+      var y=window.scrollY;save(P); render(); try{window.scrollTo(0,y)}catch(e){} return;
     }
     if(act==='betray-mark'){
       var id=b.getAttribute('data-id'); d.betrayMarks=d.betrayMarks||[];
