@@ -45,10 +45,11 @@ function scoreA(ans){var s={},sit={};ACODES.forEach(function(c){s[c]=0;sit[c]=0}
  return {scores:s,sit:sit,a11:a11,R:R,Rcode:a12Code(ans),cand:cand,skips:skips}}
 function a12Code(ans){var m=(Array.isArray(ans.A11)?ans.A11:[]).filter(function(c){return c!=='0'});if(m.length)return m[0];
  var s={};D.A.forEach(function(q){var c=ans[q.id];if(c&&c!=='0'&&c!=='skip')s[c]=(s[c]||0)+1});var k=Object.keys(s).sort(function(x,y){return s[y]-s[x]||ACODES.indexOf(x)-ACODES.indexOf(y)});return k[0]||null}
-function scoreB(ans){var s={};BCODES.forEach(function(c){s[c]=0});var answered=0,coded=0;
- D.B.forEach(function(q){var c=ans[q.id];if(c!=null&&c!=='skip')answered++;if(c&&c!=='0'&&c!=='skip'&&s[c]!=null){s[c]++;coded++}});
- var ord=BCODES.slice().sort(function(x,y){return s[y]-s[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}),top=s[ord[0]]||0,near=top?ord.filter(function(c){return s[c]>=top-1&&s[c]>0}):[],status=answered<8||coded<6?'insufficient':top<3?'weak':near.length>1?'mixed':'leading',leaders=status==='mixed'?near:status==='leading'?[ord[0]]:[],cand=leaders.slice(0,2);
- return {scores:s,count:JSON.parse(JSON.stringify(s)),cand:cand,leaders:leaders,topScore:top,answered:answered,coded:coded,status:status}}
+function scoreB(ans){var s={},availability={},rates={};BCODES.forEach(function(c){s[c]=0;availability[c]=0});var answered=0,coded=0;
+ D.B.forEach(function(q){var c=ans[q.id],seen={};if(c!=null&&c!=='skip')answered++;if(c&&c!=='0'&&c!=='skip'&&s[c]!=null){s[c]++;coded++}q.o.forEach(function(o){if(availability[o[0]]!=null&&!seen[o[0]]){availability[o[0]]++;seen[o[0]]=1}})});
+ BCODES.forEach(function(c){rates[c]=availability[c]?s[c]/availability[c]:0});
+ var ord=BCODES.slice().sort(function(x,y){return rates[y]-rates[x]||s[y]-s[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}),top=s[ord[0]]||0,topRate=rates[ord[0]]||0,near=top?ord.filter(function(c){return s[c]>=2&&topRate-rates[c]<=0.15}):[],status=answered<8||coded<6?'insufficient':top<3?'weak':near.length>1?'mixed':'leading',leaders=status==='mixed'?near:status==='leading'?[ord[0]]:[],cand=leaders.slice(0,2);
+ return {scores:s,count:JSON.parse(JSON.stringify(s)),availability:availability,rates:rates,cand:cand,leaders:leaders,topScore:top,topRate:topRate,answered:answered,coded:coded,status:status}}
 function modeOf(ans){var s={C1:0,C2:0,C3:0,C4:0};D.C.forEach(function(q){var c=ans[q.id];if(c&&s[c]!=null)s[c]++});
  if(s.C4>=3)return {scores:s,mode:'C4'};var mx=Math.max(s.C1,s.C2,s.C3,s.C4),tops=Object.keys(s).filter(function(k){return s[k]===mx});
  if(tops.length===1&&mx>=3)return {scores:s,mode:tops[0]};
@@ -173,15 +174,15 @@ function wheelComparison(wheel){
  return out
 }
 function echoMapHtml(r){
- var order=BCODES.slice(),den=r.coded||0,labels=order.map(function(c){
-  var n=r.scores[c]||0,p=den?Math.round(n/den*100):0;
-  return {code:c,name:D.resB[c].name,count:n,pct:p}
- }).sort(function(a,b){return b.count-a.count||order.indexOf(a.code)-order.indexOf(b.code)});
+ var order=BCODES.slice(),den=r.coded||0,availability=r.availability||{},rates=r.rates||{},labels=order.map(function(c){
+  var n=r.scores[c]||0,available=availability[c]||0,p=available?Math.round((rates[c]||0)*100):0;
+  return {code:c,name:D.resB[c].name,count:n,available:available,pct:p,rate:rates[c]||0}
+ }).sort(function(a,b){return b.rate-a.rate||b.count-a.count||order.indexOf(a.code)-order.indexOf(b.code)});
  var leadNames=r.status==='leading'?[r.leaders[0]]:r.status==='mixed'?r.leaders:[];
- var html='<section class="ar-echo-map"><h3>Карта восьми отражений</h3><p class="ar-echo-note">Заполнено '+r.answered+' из 12 ситуаций; в '+den+' ответах выбран один из восьми ходов. Полосы показывают частоту выбора среди этих ответов.</p>';
+ var html='<section class="ar-echo-map"><h3>Карта восьми отражений</h3><p class="ar-echo-note">Заполнено '+r.answered+' из 12 ситуаций; в '+den+' ответах выбран один из восьми ходов. Для каждого хода показана доля выборов среди ситуаций, где он предлагался. Проценты не складываются в 100%.</p>';
  labels.forEach(function(x){
   var top=leadNames.indexOf(x.code)>=0;
-  html+='<div class="ar-echo-row'+(top?' top':'')+'"><span class="ar-echo-name">'+h(x.name)+'</span><span class="ar-echo-value">'+x.count+' · '+x.pct+'%</span><div class="ar-echo-track"><div class="ar-echo-fill" style="width:'+x.pct+'%"></div></div></div>'
+  html+='<div class="ar-echo-row'+(top?' top':'')+'"><span class="ar-echo-name">'+h(x.name)+'</span><span class="ar-echo-value">'+x.count+'/'+x.available+' · '+x.pct+'%</span><div class="ar-echo-track"><div class="ar-echo-fill" style="width:'+x.pct+'%"></div></div></div>'
  });
  html+='<div class="ar-echo-legend"><span class="ar-echo-dot"></span> Частота выбора, не процент личности и не оценка качества реакции</div>';
  if(r.status==='leading')html+='<div class="ar-echo-lead"><b>Чаще других повторялся ход:</b> '+h(D.resB[r.leaders[0]].name)+'. Это предварительная закономерность в ответах, а не постоянная характеристика.</div>';
@@ -196,7 +197,7 @@ function partB(box){
  new Runner({box:box,skin:'slot',items:items,module:'archB',done:function(ans){
   var r=scoreB(ans),lead=r.status==='leading'?r.leaders[0]:null,RB=D.resB[lead||'none'],ties=r.status==='mixed'?r.leaders:[];
   var title=lead?RB.name:ties.length?'Несколько привычных ходов проявляются сопоставимо':r.status==='insufficient'?'Пока недостаточно данных':'Один привычный способ пока не выделился';
-  var res={v:4,line:'B',top:lead?RB.name:ties.length?ties.map(function(c){return D.resB[c].name}).join(' · '):title,lead:lead,leaders:ties,answers:ans,scores:r.scores,count:r.count,cand:r.cand,answered:r.answered,coded:r.coded,status:r.status,wheelSnapshot:wheel?JSON.parse(JSON.stringify(wheel)):null,at:Date.now()};
+  var res={v:4,line:'B',top:lead?RB.name:ties.length?ties.map(function(c){return D.resB[c].name}).join(' · '):title,lead:lead,leaders:ties,answers:ans,scores:r.scores,count:r.count,availability:r.availability,rates:r.rates,cand:r.cand,answered:r.answered,coded:r.coded,status:r.status,wheelSnapshot:wheel?JSON.parse(JSON.stringify(wheel)):null,at:Date.now()};
   var body='';
   if(lead)body='<p>'+h(RB.text)+'</p>';
   else if(ties.length)body=ties.map(function(c){return '<div class="ar-blk"><div class="aq">'+h(D.resB[c].name)+'</div><p>'+h(D.resB[c].text)+'</p></div>'}).join('');
