@@ -30,7 +30,7 @@ var css='.ar-ph{margin:12px 0 14px;border:1px solid #b8893f;border-radius:16px;p
 '.ar-draft{border-left:3px solid #c99a45;padding:4px 0 4px 10px;font-style:italic;line-height:1.5}.ar-draft span{display:inline-block;margin-left:6px;font:700 12px Manrope;font-style:normal;letter-spacing:.06em;text-transform:uppercase;opacity:.6}'+
 '.ar-on{background:linear-gradient(#ffe9a8,#e0a940)!important;color:#2a1606!important;border-color:#6a3a12!important}.ar-skip{display:block;margin:10px auto 0;background:none;border:0;color:inherit;opacity:.7;font:600 16px Manrope;text-decoration:underline;cursor:pointer}.ar-det{margin:12px 0}.ar-det summary{cursor:pointer;font-weight:600;opacity:.85}.ar-det p{margin:8px 0}.ar-quiet{display:inline;width:auto;min-height:0;margin:12px 0 0;padding:0;border:0;background:none!important;color:#c9a46a!important;font:500 15px/1.5 Manrope,sans-serif;box-shadow:none;text-align:left;cursor:pointer}'+
 '.ar-ta{width:100%;box-sizing:border-box;margin-top:8px;padding:10px;border-radius:10px;border:1.5px solid #a8692a;font:600 17px Manrope;background:#fff6dc;color:#3a2410}.ar-ctx{font-size:16px;opacity:.85;margin:-4px 0 10px;line-height:1.4}.ar-blk{margin:14px 0}.ar-blk h3{margin:0 0 6px;font:800 16px Manrope;letter-spacing:.05em;text-transform:uppercase;opacity:.8}.ar-blk p{margin:6px 0;line-height:1.55}.ar-pt{font-weight:700}.ar-title{font:800 22px Manrope;color:#f0c870;line-height:1.3}.ar-compare{margin:18px 0;padding:14px;border:1px solid #9e783a;border-radius:14px;background:rgba(32,23,14,.45)}.ar-compare h3{margin:0 0 8px;color:#f0c870;font:800 16px Manrope}.ar-compare p{line-height:1.55}.sc .ar-title{font:700 26px \'Cormorant Garamond\',serif;color:#6a3a12}'+
-'.ao{display:block;width:100%;margin:7px 0;padding:12px 14px;border:1px solid #9e783a;border-radius:12px;background:#20170e;color:#f4ecdf;font:600 18px Manrope;text-align:left;cursor:pointer}.aq{font:700 22px Manrope;color:#f0c870;line-height:1.35;margin:4px 0 12px}.al{font-size:15px;color:#bfa77f;text-transform:uppercase;letter-spacing:.06em;margin:6px 0}.ar-slot .ar-ta{background:#20170e;color:#f4ecdf;border-color:#9e783a}.ar-slot .ar-on{color:#2a1606!important}';
+'.ao{display:block;width:100%;margin:7px 0;padding:12px 14px;border:1px solid #9e783a;border-radius:12px;background:#20170e;color:#f4ecdf;font:600 18px Manrope;text-align:left;cursor:pointer}.aq{font:700 22px Manrope;color:#f0c870;line-height:1.35;margin:4px 0 12px}.al{font-size:15px;color:#bfa77f;text-transform:uppercase;letter-spacing:.06em;margin:6px 0}.ar-slot .ar-ta{background:#20170e;color:#f4ecdf;border-color:#9e783a}.ar-slot .ar-on{color:#2a1606!important}.ar-room{margin:10px 0 16px;padding:16px;border:1px solid rgba(201,154,69,.55);border-radius:18px;background:radial-gradient(ellipse at 50% 0%,rgba(201,154,69,.14),transparent 68%),linear-gradient(145deg,rgba(32,23,14,.92),rgba(13,14,18,.96));box-shadow:inset 0 0 28px rgba(201,154,69,.06)}.ar-room-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px;color:#c9a46a;font:700 12px Manrope;letter-spacing:.1em;text-transform:uppercase}.ar-room-count{font:700 13px Manrope;color:#f0c870;white-space:nowrap}.ar-room-progress{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;margin:0 0 18px}.ar-room-progress i{height:3px;border-radius:8px;background:rgba(226,205,168,.17)}.ar-room-progress i.done{background:#c99a45;box-shadow:0 0 8px rgba(201,154,69,.35)}.ar-room-situation{font:700 12px Manrope;letter-spacing:.1em;text-transform:uppercase;color:#bfa77f;margin-bottom:8px}.ar-room-question{font:700 22px/1.35 Manrope;color:#f3e5c9;margin:0 0 16px}.ar-ref-grid{display:grid;grid-template-columns:1fr;gap:9px}.ar-ref-card{display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:13px 14px;border:1px solid rgba(201,154,69,.42);border-radius:13px;background:linear-gradient(110deg,rgba(55,39,24,.72),rgba(26,25,24,.92));color:#f4ecdf;text-align:left;font:600 16px/1.4 Manrope;cursor:pointer;transition:transform .18s,border-color .18s,background .18s}.ar-ref-card:active{transform:scale(.985);border-color:#f0c870;background:linear-gradient(110deg,rgba(110,76,35,.72),rgba(36,30,23,.96))}.ar-ref-card:focus-visible{outline:2px solid #f0c870;outline-offset:2px}.ar-ref-index{display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;border:1px solid rgba(240,200,112,.42);border-radius:50%;color:#e3bd75;font:700 12px Manrope}.ar-ref-card.context{background:rgba(20,21,23,.58);border-style:dashed;color:#d1c5b1;font-weight:500}.ar-ref-card.context .ar-ref-index{border-color:rgba(209,197,177,.28);color:#b9aa92}.ar-room-skip{display:block;margin:14px auto 0;padding:5px 8px;border:0;background:none;color:#bfa77f;font:500 14px Manrope;text-decoration:underline;cursor:pointer}.ar-echo-map{margin:18px 0;padding:15px;border:1px solid rgba(158,120,58,.6);border-radius:16px;background:rgba(24,20,16,.65)}.ar-echo-map h3{margin:0 0 5px;color:#f0c870;font:800 17px Manrope}.ar-echo-note{margin:0 0 14px;color:#d2c2a5;font:14px/1.5 Manrope}.ar-echo-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 10px;margin:12px 0}.ar-echo-name{font:600 14px Manrope;color:#eadcc3}.ar-echo-value{font:600 13px Manrope;color:#c9a46a;font-variant-numeric:tabular-nums}.ar-echo-track{grid-column:1/-1;height:7px;border-radius:8px;background:rgba(226,205,168,.12);overflow:hidden}.ar-echo-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#8f6730,#e4bc70)}.ar-echo-row.top .ar-echo-name{color:#f0c870}.ar-echo-row.top .ar-echo-fill{background:linear-gradient(90deg,#c58b35,#ffe0a0);box-shadow:0 0 10px rgba(240,200,112,.2)}.ar-echo-lead{margin:12px 0 0;padding-top:12px;border-top:1px solid rgba(201,154,69,.25);color:#f0dfbf;font:14px/1.55 Manrope}.ar-echo-lead b{color:#f0c870}.ar-echo-legend{display:flex;gap:7px;align-items:center;margin-top:10px;color:#bfa77f;font:12px/1.4 Manrope}.ar-echo-dot{width:7px;height:7px;border-radius:50%;background:#d6a34e}';
 function addCss(){if(document.getElementById('ar-css'))return;var s=document.createElement('style');s.id='ar-css';s.textContent=css;document.head.appendChild(s)}
 var SKIN={ego:{opt:'a',q:'q',l:'l',go:'go'},slot:{opt:'ao',q:'aq',l:'al',go:'next'}};
 
@@ -45,9 +45,10 @@ function scoreA(ans){var s={},sit={};ACODES.forEach(function(c){s[c]=0;sit[c]=0}
  return {scores:s,sit:sit,a11:a11,R:R,Rcode:a12Code(ans),cand:cand,skips:skips}}
 function a12Code(ans){var m=(Array.isArray(ans.A11)?ans.A11:[]).filter(function(c){return c!=='0'});if(m.length)return m[0];
  var s={};D.A.forEach(function(q){var c=ans[q.id];if(c&&c!=='0'&&c!=='skip')s[c]=(s[c]||0)+1});var k=Object.keys(s).sort(function(x,y){return s[y]-s[x]||ACODES.indexOf(x)-ACODES.indexOf(y)});return k[0]||null}
-function scoreB(ans){var s={};BCODES.forEach(function(c){s[c]=0});D.B.forEach(function(q){var c=ans[q.id];if(c&&c!=='0'&&c!=='skip')s[c]++});
- var ord=BCODES.slice().sort(function(x,y){return s[y]-s[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}),top=s[ord[0]]||0,leaders=top?ord.filter(function(c){return s[c]===top}):[],cand=ord.filter(function(c){return s[c]>0}).slice(0,2);
- return {scores:s,count:JSON.parse(JSON.stringify(s)),cand:cand,leaders:leaders,topScore:top,status:!top?'insufficient':leaders.length>1?'mixed':top>=2?'leading':'weak'}}
+function scoreB(ans){var s={};BCODES.forEach(function(c){s[c]=0});var answered=0,coded=0;
+ D.B.forEach(function(q){var c=ans[q.id];if(c!=null&&c!=='skip')answered++;if(c&&c!=='0'&&c!=='skip'&&s[c]!=null){s[c]++;coded++}});
+ var ord=BCODES.slice().sort(function(x,y){return s[y]-s[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}),top=s[ord[0]]||0,near=top?ord.filter(function(c){return s[c]>=top-1&&s[c]>0}):[],status=answered<8||coded<6?'insufficient':top<3?'weak':near.length>1?'mixed':'leading',leaders=status==='mixed'?near:status==='leading'?[ord[0]]:[],cand=leaders.slice();
+ return {scores:s,count:JSON.parse(JSON.stringify(s)),cand:cand,leaders:leaders,topScore:top,answered:answered,coded:coded,status:status}}
 function modeOf(ans){var s={C1:0,C2:0,C3:0,C4:0};D.C.forEach(function(q){var c=ans[q.id];if(c&&s[c]!=null)s[c]++});
  if(s.C4>=3)return {scores:s,mode:'C4'};var mx=Math.max(s.C1,s.C2,s.C3,s.C4),tops=Object.keys(s).filter(function(k){return s[k]===mx});
  if(tops.length===1&&mx>=3)return {scores:s,mode:tops[0]};
@@ -117,6 +118,13 @@ Runner.prototype.draw=function(){var it=this.items()[this.i];if(!it){this.o.done
  if(it.kind==='intro'){var I=D.intro[it.key];b.innerHTML='<div class="ar-ph"><b>'+esc(I.who)+'</b><small>'+esc(I.zdesc)+'</small></div><div class="'+k.q+'">'+h(I.title)+'</div>'+(D.showDraft&&I.draft?'<p class="ar-draft">'+h(I.draft)+'<span>черновик</span></p>':'')+'<p style="line-height:1.55">'+h(I.text)+'</p>'+(it.context?'<p class="ar-ctx">'+h(it.context)+'</p>':'')+'<button class="'+k.go+'" id="arGo">'+h(I.btn)+'</button>';
   b.querySelector('#arGo').onclick=function(){self.next()};return}
  if(it.kind==='screen'){b.innerHTML=it.html()+'<button class="'+k.go+'" id="arGo">'+esc(it.btn||'Дальше')+'</button>';b.querySelector('#arGo').onclick=function(){if(it.go)it.go();self.next()};return}
+ if(it.kind==='reflection'){
+  var opts=it.o.slice();if(it.shuffle){var last=opts.filter(function(x){return x[0]==='0'});opts=shuffle(opts.filter(function(x){return x[0]!=='0'}),it.id).concat(last)}
+  var progress='';for(var pi=0;pi<qn.length;pi++)progress+='<i class="'+(pi<ix?'done':'')+'"></i>';
+  b.innerHTML='<section class="ar-room"><div class="ar-room-top"><span>Комната отражений</span><span class="ar-room-count">'+String(ix+1).padStart(2,'0')+' / '+String(qn.length).padStart(2,'0')+'</span></div><div class="ar-room-progress">'+progress+'</div><div class="ar-room-situation">'+h(it.h||'Ситуация')+'</div><div class="ar-room-question">'+h(it.t)+'</div><div class="ar-ctx">Что возникает у тебя первым?</div><div class="ar-ref-grid">'+opts.map(function(x,i){return '<button type="button" class="ar-ref-card'+(x[0]==='0'?' context':'')+'" data-c="'+esc(x[0])+'"><span class="ar-ref-index">'+(i+1)+'</span><span>'+h(x[1])+'</span></button>'}).join('')+'</div><button type="button" class="ar-room-skip" id="arRefSkip">Пропустить эту ситуацию</button></section>';
+  b.querySelectorAll('.ar-ref-card').forEach(function(card){card.onclick=function(){var c=card.dataset.c;self.ans[it.id]=c;self.raw(it,c);try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}self.next()}});
+  b.querySelector('#arRefSkip').onclick=function(){self.ans[it.id]='skip';self.next()};return
+ }
  var head=(ix>=0?'<div class="'+k.l+'">Вопрос '+(ix+1)+' из '+qn.length+'</div>':'')+(it.h?'<div class="'+k.l+'" style="opacity:.8">'+h(it.h)+'</div>':'')+(it.parts?'<div class="'+k.q+'">'+h(it.parts[0])+'</div><p class="ar-ctx" style="font-size:17px">«'+h(it.parts[1])+'»</p><div class="'+k.q+'">'+h(it.parts[2])+'</div>':'<div class="'+k.q+'">'+h(typeof it.t==='function'?it.t(this.ans):it.t)+'</div>');
  var ctx=typeof it.ctx==='function'?it.ctx(this.ans):it.ctx;if(ctx)head+='<p class="ar-ctx">'+h(ctx)+'</p>';if(it.hint)head+='<p class="ar-ctx">'+h(it.hint)+'</p>';
  if(it.kind==='text'){b.innerHTML=head+'<textarea class="ar-ta" id="arTx" rows="3" maxlength="300"></textarea><button class="'+k.go+'" id="arGo">Дальше</button>';var tx=b.querySelector('#arTx');tx.value=this.ans[it.id]||'';b.querySelector('#arGo').onclick=function(){var v=tx.value.trim();if(v)self.ans[it.id]=v;else delete self.ans[it.id];self.next()};return}
@@ -164,15 +172,45 @@ function wheelComparison(wheel){
  out+='<p>«Эхо» и Колесо исследуют поведение с разных сторон. Их проценты нельзя складывать, а похожие названия сами по себе не доказывают совпадение. В следующих этапах важно смотреть, где результаты подтверждают друг друга, а где показывают разные реакции.</p></section>';
  return out
 }
-function partB(box){var P0=prof(),wheel=P0.betray&&P0.betray.start||null;var items=[{kind:'intro',key:'b'}];D.B.forEach(function(q){items.push({kind:'one',id:q.id,h:q.h,t:q.t,o:q.o,shuffle:true})});
- new Runner({box:box,skin:'slot',items:items,module:'archB',done:function(ans){var r=scoreB(ans),lead=r.status==='leading'?r.leaders[0]:null,RB=D.resB[lead||'none'],ties=r.status==='mixed'?r.leaders:[];
-  var title=lead?RB.name:ties.length?'Несколько привычных ходов проявляются сопоставимо':'Один привычный способ пока не выделился';
-  var res={v:3,line:'B',top:lead?RB.name:ties.length?ties.map(function(c){return D.resB[c].name}).join(' · '):title,lead:lead,leaders:ties,answers:ans,scores:r.scores,count:r.count,cand:r.cand,wheelSnapshot:wheel?JSON.parse(JSON.stringify(wheel)):null,at:Date.now()};
-  var body=lead?h(RB.text):ties.length?ties.map(function(c){return '<p><b>'+h(D.resB[c].name)+':</b> '+h(D.resB[c].text)+'</p>'}).join(''):'<p>'+h(RB.text)+'</p>';
+function echoMapHtml(r){
+ var order=BCODES.slice(),den=r.coded||0,labels=order.map(function(c){
+  var n=r.scores[c]||0,p=den?Math.round(n/den*100):0;
+  return {code:c,name:D.resB[c].name,count:n,pct:p}
+ }).sort(function(a,b){return b.count-a.count||order.indexOf(a.code)-order.indexOf(b.code)});
+ var leadNames=r.status==='leading'?[r.leaders[0]]:r.status==='mixed'?r.leaders:[];
+ var html='<section class="ar-echo-map"><h3>Карта восьми отражений</h3><p class="ar-echo-note">Каждая полоса показывает, как часто этот ход выбирался среди ситуаций, где ты указал(а) один из восьми вариантов реакции.</p>';
+ labels.forEach(function(x){
+  var top=leadNames.indexOf(x.code)>=0;
+  html+='<div class="ar-echo-row'+(top?' top':'')+'"><span class="ar-echo-name">'+h(x.name)+'</span><span class="ar-echo-value">'+x.count+' · '+x.pct+'%</span><div class="ar-echo-track"><div class="ar-echo-fill" style="width:'+x.pct+'%"></div></div></div>'
+ });
+ html+='<div class="ar-echo-legend"><span class="ar-echo-dot"></span> Частота выбора, не процент личности и не оценка качества реакции</div>';
+ if(r.status==='leading')html+='<div class="ar-echo-lead"><b>Чаще других повторялся ход:</b> '+h(D.resB[r.leaders[0]].name)+'. Это предварительная закономерность в ответах, а не постоянная характеристика.</div>';
+ else if(r.status==='mixed')html+='<div class="ar-echo-lead"><b>Сопоставимо проявились:</b> '+r.leaders.map(function(c){return h(D.resB[c].name)}).join('; ')+'. В этих ответах нет оснований сводить все к одному ходу.</div>';
+ else if(r.status==='weak')html+='<div class="ar-echo-lead">Ни один ход не повторился достаточно часто, чтобы выделить его как ведущий. Возможно, реакции заметно меняются от ситуации к ситуации.</div>';
+ else html+='<div class="ar-echo-lead">Пока недостаточно ответов одного из восьми вариантов, чтобы надежно сравнить частоту ходов. Карта показывает только предварительное распределение.</div>';
+ html+='</section>';return html
+}
+function partB(box){
+ var P0=prof(),wheel=P0.betray&&P0.betray.start||null,items=[{kind:'intro',key:'b'}];
+ D.B.forEach(function(q){items.push({kind:'reflection',id:q.id,h:q.h,t:q.t,o:q.o,shuffle:true})});
+ new Runner({box:box,skin:'slot',items:items,module:'archB',done:function(ans){
+  var r=scoreB(ans),lead=r.status==='leading'?r.leaders[0]:null,RB=D.resB[lead||'none'],ties=r.status==='mixed'?r.leaders:[];
+  var title=lead?RB.name:ties.length?'Несколько привычных ходов проявляются сопоставимо':r.status==='insufficient'?'Пока недостаточно данных':'Один привычный способ пока не выделился';
+  var res={v:4,line:'B',top:lead?RB.name:ties.length?ties.map(function(c){return D.resB[c].name}).join(' · '):title,lead:lead,leaders:ties,answers:ans,scores:r.scores,count:r.count,cand:r.cand,answered:r.answered,coded:r.coded,status:r.status,wheelSnapshot:wheel?JSON.parse(JSON.stringify(wheel)):null,at:Date.now()};
+  var body='';
+  if(lead)body='<p>'+h(RB.text)+'</p>';
+  else if(ties.length)body=ties.map(function(c){return '<div class="ar-blk"><div class="aq">'+h(D.resB[c].name)+'</div><p>'+h(D.resB[c].text)+'</p></div>'}).join('');
+  else body='<p>'+h(RB.text)+'</p>';
   var sw=lead&&RB.sw?'<p class="ar-pt">Переключатель: '+h(RB.sw)+'</p>':'';
-  var full=lead&&D.bfull&&D.bfull[lead]?(function(x,L){return '<details class="ar-det"><summary>Подробнее об этом ходе</summary><p>'+h(x.d)+'</p><p><b>'+esc(L.logic)+':</b> '+h(x.logic)+'</p><p><b>'+esc(L.gain)+':</b> '+h(x.gain)+'</p><p><b>'+esc(L.cost)+':</b> '+h(x.cost)+'</p></details>')(D.bfull[lead],D.bfullLabels||{}):'';
-  var html='<span class="tag">Точка 0</span><span class="tag">Эхо</span><div class="al">'+(lead?'Твой наиболее частый привычный ход':ties.length?'Сопоставимые привычные ходы':'Что видно по ответам')+'</div><div class="aq">'+h(title)+'</div>'+body+sw+full+(r.status==='weak'?'<p>Пока ни один способ не повторился достаточно часто, чтобы выделить его как ведущий. Это не означает, что таких реакций у тебя нет.</p>':'')+wheelComparison(wheel);
-  resultScreen(box,'slot',html,'b',function(){store('b',res,{answers:ans},'Привычный ход: '+res.top)})}}).start()}
+  var full='';
+  if(lead&&D.bfull&&D.bfull[lead]){
+   var x=D.bfull[lead],L=D.bfullLabels||{};
+   full='<details class="ar-det"><summary>Подробнее об этом ходе</summary><p>'+h(x.d)+'</p><p><b>'+esc(L.logic||'Логика')+':</b> '+h(x.logic)+'</p><p><b>'+esc(L.gain||'Что дает')+':</b> '+h(x.gain)+'</p><p><b>'+esc(L.cost||'Цена')+':</b> '+h(x.cost)+'</p></details>'
+  }
+  var html='<span class="tag">Точка 0</span><span class="tag">Эхо</span><div class="al">'+(lead?'Твой наиболее частый привычный ход':ties.length?'Сопоставимые привычные ходы':'Что видно по ответам')+'</div><div class="aq">'+h(title)+'</div>'+body+sw+full+echoMapHtml(r)+wheelComparison(wheel);
+  resultScreen(box,'slot',html,'b',function(){store('b',res,{answers:ans},'Привычный ход: '+res.top)})
+ }}).start()
+}
 function partV(box){var P=data(),e=P.ego&&P.ego.v===2?P.ego:null,a=e?e.cand||[]:[],b=P.archB?P.archB.cand||[]:[],items=[{kind:'intro',key:'v'}];
  D.C.forEach(function(q){items.push({kind:'one',id:q.id,t:q.t,o:q.o})});
  function ph(i){return g(D.phrase[a[i]])}
