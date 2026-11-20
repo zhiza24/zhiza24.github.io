@@ -7,9 +7,9 @@ var H=window.GHeroData||{},P=H.P||{},female=P.gender==='f',esc=H.esc||function(x
 function g(m,f){return female?f:m}
 var FL=window.GFLOW||[],comp=(P.flow||{}).completed||{},curU=(P.flow||{}).current||'';
 var CH=[
- {pt:'0',name:'Начало пути',sub:'Точка 0 · Знакомство с собой',desc:'Кто ты, как устроена твоя природа, какие стратегии и привычные реакции влияют на твой выбор.',links:[['nature','Твоя природа'],['positions','Грани героя']]},
+ {pt:'0',name:'Начало пути',sub:'Точка 0 · Знакомство с собой',desc:'Кто ты, как устроена твоя природа, какие стратегии и привычные реакции влияют на твой выбор.',links:[['nature','Твоя природа'],['positions','Твои грани']]},
  {pt:'А',name:'Твоя исходная точка',old:'Моя исходная точка',sub:'Точка А · Реальная картина жизни',desc:'Что происходит в твоей жизни сейчас, где есть удовлетворенность, где дефицит, какие сферы требуют внимания.',links:[['numbers','Твои опоры']]},
- {pt:'Б',name:'Твой перекресток',old:'Мой перекресток',sub:'Точка Б · Установки и желания',desc:g('Какие внутренние схемы повторяются, что удерживает тебя на месте, чего ты действительно хочешь и на что готов опираться.','Какие внутренние схемы повторяются, что удерживает тебя на месте, чего ты действительно хочешь и на что готова опираться.'),links:[['directions','13 направлений'],['hypotheses','Твои наблюдения'],['library','Все 22 аркана']]},
+ {pt:'Б',name:'Твой перекресток',old:'Мой перекресток',sub:'Точка Б · Установки и желания',desc:g('Какие внутренние схемы повторяются, что удерживает тебя на месте, чего ты действительно хочешь и на что готов опираться.','Какие внутренние схемы повторяются, что удерживает тебя на месте, чего ты действительно хочешь и на что готова опираться.'),links:[['directions','Твои направления'],['hypotheses','Твои наблюдения']]},
  {pt:'С',name:'Твой путь к цели',old:'Мой путь к цели',sub:'Точка С · Действия и новый опыт',desc:'Твои ориентиры, выбранное желание, стратегия действий и 28-дневный цикл изменений.',links:[]},
  {pt:'Финал',big:'✦',name:'Твои перемены',old:'Мои перемены',sub:'Финал · Замер результатов',desc:g('Что изменилось, что ты понял о себе, какие действия сработали и что берешь с собой дальше.','Что изменилось, что ты поняла о себе, какие действия сработали и что берешь с собой дальше.'),links:[]}];
 var ART={
@@ -51,7 +51,7 @@ var n=H.layers&&H.layers.positions&&H.layers.positions.A,nat=H.nature;
 $('hName').textContent=P.name||g('Герой','Героиня');
 $('hRole').textContent=n?H.title(n):'Нужна дата рождения';
 $('hArc').textContent=n?H.title(n):'—';
-if(n){$('hArcL').textContent='Твой аркан · '+n+' из 22';try{var ar=GPassportData.arcana[n-1],rf=String(ar.resource||'');rf=window.GPassport&&GPassport.say?GPassport.say(rf,P.gender):rf;$('hArcT').textContent=rf.split(/(?<=\.)\s/)[0]}catch(e){}}
+if(n){$('hArcL').textContent='Твой аркан';try{var ar=GPassportData.arcana[n-1],rf=String(ar.resource||'');rf=window.GPassport&&GPassport.say?GPassport.say(rf,P.gender):rf;$('hArcT').textContent=rf.split(/(?<=\.)\s/)[0]}catch(e){}}
 if(nat&&window.GNature){var am=GNature.A[nat.primary];$('hMech').textContent=GNature.name(nat.primary,female);$('hMechT').textContent=am.mech+'. '+am.lead.replace('Твоя естественная механика — ','Тебе естественно ').replace(/\.$/,'')+'.'}else $('hMech').textContent='—';
 $('cArc').onclick=function(){if(window.openPassport)openPassport('arcana')};
 $('cMech').onclick=function(){if(window.openPassport)openPassport('nature')};
