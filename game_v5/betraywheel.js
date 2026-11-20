@@ -55,8 +55,8 @@ function summary(r,g){g=g||function(m){return m};var sp=[],sh=[];if(!r)return {s
  S.forEach(function(s){var a=(r.sh||{})[s.id],b=(r.sp||{})[s.m.id];if(typeof b==='number'&&b>=2)sp.push({s:s,v:b});if(typeof a==='number'&&a>=2)sh.push({s:s,v:a})});
  sp.sort(function(a,b){return b.v-a.v});sh.sort(function(a,b){return b.v-a.v});return {sp:sp,sh:sh}}
 function summaryHtml(r,gx){gx=gx||function(s){return s};var x=summary(r),h='';
- h+='<div class="bw-sum"><p><b class="bw-gold">На что ты опираешься:</b> '+(x.sp.length?esc(x.sp.map(function(z){return z.s.m.t}).join(', '))+'.':esc(gx('Пока ни одна опора не отмечена как частая. В трекере ты сможешь замечать, где уже {поддержал|поддержала} себя.')))+'</p>';
- h+='<p><b class="bw-mute">Где чаще отодвигаешь себя:</b> '+(x.sh.length?esc(x.sh.map(function(z){return z.s.t}).join(', '))+'.':'Ни один сектор не отмечен как частый.')+'</p></div>';return h}
+ h+='<div class="bw-sum"><p><b class="bw-gold">Где уже проявляется опора:</b> '+(x.sp.length?esc(x.sp.map(function(z){return z.s.m.t+' — '+(z.v===3?'часто':'иногда')}).join(', '))+'.':esc(gx('Пока ни одна опора не отмечена как частая. В трекере ты сможешь замечать, где уже {поддержал|поддержала} себя.')))+'</p>';
+ h+='<p><b class="bw-mute">Где проявляется привычная реакция:</b> '+(x.sh.length?esc(x.sh.map(function(z){return z.s.t+' — '+(z.v===3?'часто':'иногда')}).join(', '))+'.':'Ни один сектор не отмечен как частый.')+'</p></div>';return h}
 function isoDay(t){var d=new Date(t),m=d.getMonth()+1,dd=d.getDate();return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(dd<10?'0':'')+dd}
 /* агрегат отметок дня за период: доли от максимума */
 function daysAgg(P,from,to){var D=(P.betray&&P.betray.days)||{},c={sh:{},sp:{}},mx=0,n=0;
