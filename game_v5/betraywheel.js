@@ -47,7 +47,7 @@ function svg(vals,o){o=o||{};vals=vals||{sh:{},sp:{}};var R=160,r0=38,uid='bw'+(
  if(o.labels!==false){S.forEach(function(s,i){var a=i*60;
   [[s.t,a+15,'#e8dccf'],[s.m.t,a+45,'#ffe2a0']].forEach(function(z){var ang=z[1],flip=ang>180,rot=flip?ang+90:ang-90,anchor=flip?'end':'start',x=pt(r0+8,ang);
    h+='<text transform="translate('+x[0]+' '+x[1]+') rotate('+rot+')" text-anchor="'+anchor+'" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="'+(z[0].length>17?8.8:10.5)+'" font-weight="700" fill="'+z[2]+'" stroke="#120d07" stroke-width="2.4" paint-order="stroke">'+esc(z[0])+'</text>'})})}
- h+='<circle r="'+(r0-3)+'" fill="#120d07"/><text text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="700" fill="#f0c870" font-size="9.5"><tspan x="0" y="-5">САМО-</tspan><tspan x="0" y="6">ПРЕДАТЕЛЬСТВО</tspan></text><text x="0" y="17" text-anchor="middle" font-family="Manrope,sans-serif" font-size="6.5" fill="#c9a46a">и опора на себя</text>';
+ h+='<circle r="'+(r0-3)+'" fill="#120d07"/><text x="0" y="7" text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="700" fill="#f0c870" font-size="23">Я</text>';
  return h+'</svg>'}
 /* оценки 1..3 -> доли */
 function fromRates(r){var o={sh:{},sp:{}};if(!r)return o;['sh','sp'].forEach(function(k){var x=r[k]||{};Object.keys(x).forEach(function(id){var v=x[id];o[k][id]=typeof v==='number'?v/3:null})});return o}
