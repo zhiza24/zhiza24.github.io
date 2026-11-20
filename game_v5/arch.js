@@ -148,6 +148,7 @@ function wheelComparison(wheel){
  if(!wheel||!Array.isArray(wheel.sectors))return '<section class="ar-compare"><h3>Сопоставление с Колесом самопредательства</h3><p>В профиле пока нет завершенного результата Колеса. Это исследование сохранится отдельно.</p></section>';
  var marked=[];
  wheel.sectors.forEach(function(sec){(sec.forms||[]).forEach(function(form){
+  if((form.answered||0)<2)return;
   var a=form.shadow&&form.shadow.score,b=form.support&&form.support.score;
   if(typeof a==='number'&&a>=50)marked.push({kind:'shadow',name:form.shadow.title,score:a});
   if(typeof b==='number'&&b>=50)marked.push({kind:'support',name:form.support.title,score:b});
