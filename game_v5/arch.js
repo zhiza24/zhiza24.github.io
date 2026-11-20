@@ -56,7 +56,7 @@ function modeOf(ans){var s={C1:0,C2:0,C3:0,C4:0};D.C.forEach(function(q){var c=a
  return {scores:s,mode:'mix'}}
 function v02(x){return x==='2'?2:x==='1'?1:(x==='0a'||x==='0b')?0:null}
 /* итоговые статусы по правилам 9.1–9.4 */
-function finalize(P){var e=P.ego&&P.ego.v===2?P.ego:null,b=P.archB||null,V=(P.archV&&P.archV.answers)||{},out={};
+function finalize(P){var e=P.ego&&P.ego.v===2?P.ego:null,b0=P.archB||null,b=b0?(b0.status?b0:scoreB(b0.answers||{})):null,V=(P.archV&&P.archV.answers)||{},out={};if(b&&['leading','mixed'].indexOf(b.status)<0)b=null;
  var cand=e?e.cand||[]:[],S=e?e.scores:{};
  function st(c,i){if(!c||!e)return 'unclear';var s=S[c]||0,sit=e.sit[c]||0,inA=e.a11.indexOf(c)>=0,R=e.Rcode===c?e.R:null,vv=v02(V['V02_'+i]),rec=V['V01_'+i]&&V['V01_'+i]!=='none'&&V['V01_'+i]!=='skip';
   if(e.skips>=5)return 'unclear';
@@ -212,7 +212,7 @@ function partB(box){
   resultScreen(box,'slot',html,'b',function(){store('b',res,{answers:ans},'Привычный ход: '+res.top)})
  }}).start()
 }
-function partV(box){var P=data(),e=P.ego&&P.ego.v===2?P.ego:null,a=e?e.cand||[]:[],b=P.archB?P.archB.cand||[]:[],items=[{kind:'intro',key:'v'}];
+function partV(box){var P=data(),e=P.ego&&P.ego.v===2?P.ego:null,a=e?e.cand||[]:[],eb=P.archB?(P.archB.status?P.archB:scoreB(P.archB.answers||{})):null,b=eb&&['leading','mixed'].indexOf(eb.status)>=0?eb.cand||[]:[],items=[{kind:'intro',key:'v'}];
  D.C.forEach(function(q){items.push({kind:'one',id:q.id,t:q.t,o:q.o})});
  function ph(i){return g(D.phrase[a[i]])}
  if(a[0]){items.push({kind:'one',id:'V01_0',t:D.V01.t.replace('%A%',ph(0)),o:D.V01.o,text:D.V01.text});
