@@ -49,8 +49,11 @@ function $(id){return document.getElementById(id)}
 var n=H.layers&&H.layers.positions&&H.layers.positions.A,nat=H.nature;
 $('hName').textContent=P.name||g('Герой','Героиня');
 $('hRole').textContent=n?H.title(n):'Нужна дата рождения';
-$('hArc').textContent=n?String(n):'—';
-$('hMech').textContent=nat&&window.GNature?GNature.name(nat.primary,female):'—';
+$('hArc').textContent=n?H.title(n):'—';
+if(n){$('hArcL').textContent='Твой аркан · '+n+' из 22';try{var ar=GPassportData.arcana[n-1],rf=String(ar.resource||'');rf=window.GPassport&&GPassport.say?GPassport.say(rf,P.gender):rf;$('hArcT').textContent=rf.split(/(?<=\.)\s/)[0]}catch(e){}}
+if(nat&&window.GNature){var am=GNature.A[nat.primary];$('hMech').textContent=GNature.name(nat.primary,female);$('hMechT').textContent=am.mech+'. '+am.lead.replace('Твоя естественная механика — ','Тебе естественно ').replace(/\.$/,'')+'.'}else $('hMech').textContent='—';
+$('cArc').onclick=function(){if(window.openPassport)openPassport('arcana')};
+$('cMech').onclick=function(){if(window.openPassport)openPassport('nature')};
 $('hNat').onclick=function(){if(window.openPassport)openPassport('nature')};
 /* 3. главы */
 $('hist').innerHTML=CH.map(function(c,i){var s=status(c),A=arts.filter(function(a){return artPt(a)===c.pt});
