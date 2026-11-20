@@ -316,7 +316,7 @@ var PRC=[
   {id:'grat',t:'Дневник благодарности',len:10,d:'Каждый день минимум 10 благодарностей, цель цикла 50.'},
   {id:'choose',t:'Выбираю — делаю — сделано',len:7,d:'Дела дня по шагам. После каждого третьего появляется строчка с твоим желанием.'},
   {id:'brake',t:'Слова-тормоза',len:7,d:'Ловишь слово, которое тормозит, и видишь мягкую замену.'},
-  {id:'betray',t:'Колесо тени и опоры',len:28,d:'Колесо за цикл: где ты теряешь себя и где уже поддерживаешь себя.'},
+  {id:'betray',t:'Колесо контакта с собой',len:28,d:'Колесо за цикл: где ты отодвигаешь себя и где поддерживаешь себя.'},
   {id:'hours',t:'Блоки времени',len:1,d:'Почасовая сетка дня: куда уходят время, силы и внимание.'},
   {id:'pract',t:'Вдох-выдох, Я есмь, Тихое внимание',len:7,d:'Короткие практики на 2 часа с отметкой.'},
   {id:'signs',t:'Знаки дня',len:28,d:'Записываешь, что в жизни откликнулось на твое желание.'}
@@ -564,7 +564,7 @@ function razborBlock(P,T,n){
   GBW.css();
   var key=dayDate(T,n),B=P.betray||{},rec=(B.days&&B.days[key])||{sh:[],sp:[]};
   var h='<div class="row-line razbor"><b>Разбор дня</b>';
-  h+='<p class="mute">'+esc(gx('Где сегодня {предал|предала} себя'))+'</p><div class="bw-chips sh">'+GBW.S.map(function(s){return '<button type="button" class="'+((rec.sh||[]).indexOf(s.id)>=0?'on':'')+'" data-act="bw" data-z="sh" data-id="'+s.id+'">'+esc(s.t)+'</button>'}).join('')+'</div>';
+  h+='<p class="mute">'+esc(gx('Где сегодня {отодвинул|отодвинула} себя'))+'</p><div class="bw-chips sh">'+GBW.S.map(function(s){return '<button type="button" class="'+((rec.sh||[]).indexOf(s.id)>=0?'on':'')+'" data-act="bw" data-z="sh" data-id="'+s.id+'">'+esc(s.t)+'</button>'}).join('')+'</div>';
   h+='<p class="mute">'+esc(gx('Где сегодня {поддержал|поддержала} себя'))+'</p><div class="bw-chips sp">'+GBW.S.map(function(s){return '<button type="button" class="'+((rec.sp||[]).indexOf(s.m.id)>=0?'on':'')+'" data-act="bw" data-z="sp" data-id="'+s.m.id+'">'+esc(s.m.t)+'</button>'}).join('')+'</div>';
   var r=cycleRange(T),A=GBW.daysAgg(P,r[0],r[1]);
   if(A.days)h+='<details class="bw-mini"><summary>Мое колесо за цикл · дней с отметкой: '+A.days+'</summary>'+GBW.svg(A.vals,{size:230})+GBW.legend()+'</details>';
