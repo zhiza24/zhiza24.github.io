@@ -72,7 +72,7 @@ function step(){
 }
 function legacyFields(rec){
  var sh={},sp={},map={perf:'perf',please:'please',numb:'numb',detach:'detach',over:'over',ctrl:'ctrl'},support={perf:'enough',please:'bound',numb:'alive',detach:'near',over:'care',ctrl:'trust'};
- rec.sectors.forEach(function(s){var neg=0,pos=0,den=0;s.forms.forEach(function(f){if(!f.answered)return;neg+=(f.shadow.score||0)*f.answered;pos+=(f.support.score||0)*f.answered;den+=f.answered});if(!den)return;var nv=Math.round(neg/den*3),pv=Math.round(pos/den*3);if(nv)sh[map[s.id]]=nv;if(pv)sp[support[s.id]]=pv});
+ rec.sectors.forEach(function(s){var neg=0,pos=0,den=0;s.forms.forEach(function(f){if(!f.answered)return;neg+=(f.shadow.score||0)*f.answered;pos+=(f.support.score||0)*f.answered;den+=f.answered});if(!den)return;var nv=Math.round(neg/den/100*3),pv=Math.round(pos/den/100*3);if(nv)sh[map[s.id]]=nv;if(pv)sp[support[s.id]]=pv});
  rec.sh=sh;rec.sp=sp;
 }
 function result(){
