@@ -27,7 +27,7 @@ var uidN=0;
 /* vals: {sh:{id:0..1}, sp:{id:0..1}} доли заливки; o.hi — подсветить сектор; o.size; o.labels */
 function svg(vals,o){o=o||{};vals=vals||{sh:{},sp:{}};var R=160,r0=38,uid='bw'+(++uidN),h='';
  var size=o.size||320;
- h+='<svg class="bw-svg" viewBox="-170 -170 340 340" width="'+size+'" height="'+size+'" role="img" aria-label="Колесо: где ты теряешь себя и где опираешься на себя">';
+ h+='<svg class="bw-svg" viewBox="-170 -170 340 340" width="'+size+'" height="'+size+'" role="img" aria-label="Колесо контакта с собой">';
  h+='<defs><filter id="'+uid+'r"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>'+
   '<radialGradient id="'+uid+'g" r="0.75"><stop offset="0" stop-color="#ffe9a8"/><stop offset="1" stop-color="#d9a441"/></radialGradient>'+
   '<radialGradient id="'+uid+'s" r="0.75"><stop offset="0" stop-color="#8a7a72"/><stop offset="1" stop-color="#5d514c"/></radialGradient></defs>';
@@ -55,8 +55,8 @@ function summary(r,g){g=g||function(m){return m};var sp=[],sh=[];if(!r)return {s
  S.forEach(function(s){var a=(r.sh||{})[s.id],b=(r.sp||{})[s.m.id];if(typeof b==='number'&&b>=2)sp.push({s:s,v:b});if(typeof a==='number'&&a>=2)sh.push({s:s,v:a})});
  sp.sort(function(a,b){return b.v-a.v});sh.sort(function(a,b){return b.v-a.v});return {sp:sp,sh:sh}}
 function summaryHtml(r,gx){gx=gx||function(s){return s};var x=summary(r),h='';
- h+='<div class="bw-sum"><p><b class="bw-gold">На что ты опираешься:</b> '+(x.sp.length?esc(x.sp.map(function(z){return z.s.m.t}).join(', '))+'.':esc(gx('Пока ни одна опора не отмечена как частая. Это не приговор: в трекере ты будешь замечать, где уже {поддержал|поддержала} себя.')))+'</p>';
- h+='<p><b class="bw-mute">Где чаще теряешь себя:</b> '+(x.sh.length?esc(x.sh.map(function(z){return z.s.t}).join(', '))+'.':'Ни один сектор не отмечен как частый.')+'</p></div>';return h}
+ h+='<div class="bw-sum"><p><b class="bw-gold">На что ты опираешься:</b> '+(x.sp.length?esc(x.sp.map(function(z){return z.s.m.t}).join(', '))+'.':esc(gx('Пока ни одна опора не отмечена как частая. В трекере ты сможешь замечать, где уже {поддержал|поддержала} себя.')))+'</p>';
+ h+='<p><b class="bw-mute">Где чаще отодвигаешь себя:</b> '+(x.sh.length?esc(x.sh.map(function(z){return z.s.t}).join(', '))+'.':'Ни один сектор не отмечен как частый.')+'</p></div>';return h}
 function isoDay(t){var d=new Date(t),m=d.getMonth()+1,dd=d.getDate();return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(dd<10?'0':'')+dd}
 /* агрегат отметок дня за период: доли от максимума */
 function daysAgg(P,from,to){var D=(P.betray&&P.betray.days)||{},c={sh:{},sp:{}},mx=0,n=0;
@@ -69,6 +69,6 @@ function css(){if(document.getElementById('bw-css'))return;var st=document.creat
  '.bw-chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}.bw-chips button{border:1px solid #6a4e28;background:transparent;color:inherit;border-radius:999px;padding:7px 11px;font:600 14px Manrope,sans-serif;cursor:pointer}'+
  '.bw-chips.sh button.on{background:#5d514c;border-color:#8a7a72;color:#fff}.bw-chips.sp button.on{background:#d9a441;border-color:#f0c870;color:#2a1606}'+
  '.bw-pair{display:flex;gap:8px;justify-content:center}.bw-pair>div{flex:1;text-align:center;font-size:13px;color:#c9a46a}';document.head.appendChild(st)}
-function legend(){return '<div class="bw-leg"><span><i style="background:#6d605a"></i>где теряешь себя</span><span><i style="background:#e0a940"></i>где опираешься на себя</span></div>'}
+function legend(){return '<div class="bw-leg"><span><i style="background:#6d605a"></i>Тень · привычные реакции</span><span><i style="background:#e0a940"></i>Опора · поддержка себя</span></div>'}
 window.GBW={S:S,byId:byId,svg:svg,fromRates:fromRates,summary:summary,summaryHtml:summaryHtml,daysAgg:daysAgg,isoDay:isoDay,legacyPicked:legacyPicked,css:css,legend:legend,esc:esc};
 })();
