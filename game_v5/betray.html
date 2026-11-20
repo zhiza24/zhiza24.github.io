@@ -12,7 +12,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <script src="upd.js?v=1794512684"></script>
-<title>Колесо тени и опоры</title>
+<title>Колесо контакта с собой</title>
 <link rel="icon" href="favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="g.css?v=1f19">
@@ -58,8 +58,8 @@ var st={i:dr.i==null?-1:dr.i,sh:dr.sh||{},sp:dr.sp||{}};
 function keep(){var P=Pget();P.betray[AGAIN?'draftEnd':'draft']={i:st.i,sh:st.sh,sp:st.sp,at:Date.now()};save(P)}
 window.gBack=function(){if(st.i>=0){st.i--;keep();draw();return true}return false};
 function intro(){
- var h='<p class="mute">'+(AGAIN?'Финал · второй круг':'После Мага')+'</p><h1>'+(AGAIN?'Колесо еще раз':'Где ты теряешь себя и где опираешься на себя')+'</h1>';
- h+='<p class="lead">'+esc(gx(AGAIN?'Пройди колесо заново, не глядя на прошлый круг. Потом увидишь оба рядом.':'В каждом секторе две стороны. Тень — как ты иногда предаешь себя. Опора — как ты уже умеешь себя поддерживать. Отвечай про обычную жизнь. Ничего не назначено заранее: колесо закрасится только твоими ответами.'))+'</p>';
+ var h='<p class="mute">'+(AGAIN?'Финал · второй круг':'После Мага')+'</p><h1>'+(AGAIN?'Колесо еще раз':'Колесо контакта с собой')+'</h1>';
+ h+='<p class="lead">'+esc(gx(AGAIN?'Пройди колесо заново, не глядя на прошлый круг. Потом увидишь оба рядом.':'В каждом секторе две стороны. В каждом секторе две стороны: привычный способ отодвинуть себя и способ поддержать себя. Отвечай про обычную жизнь — как чаще бывает у тебя сейчас. Обе стороны могут проявляться в разных обстоятельствах.'))+'</p>';
  h+=GBW.svg(GBW.fromRates(st),{size:300})+GBW.legend();
  h+='<button class="go" type="button" id="go">'+(st.i>=0?'Продолжить':'Начать')+'</button>';
  if(!AGAIN)h+='<button type="button" class="quiet" id="skip">Пропустить</button>';
@@ -74,7 +74,7 @@ function step(){
  h+='<h1 style="font-size:25px">'+esc(isSp?sec.m.t:sec.t)+'</h1>';
  if(!isSp)h+='<p class="mute" style="margin:-4px 0 8px">Зачем это включается: '+esc(sec.goal.toLowerCase())+'</p>';
  h+='<p class="lead" style="margin-bottom:12px">'+esc(gx(isSp?sec.m.how:sec.how))+'</p>';
- h+='<p style="text-align:center;margin:0 0 6px;color:#f0c870">'+esc(isSp?'Как часто у тебя так получается?':'Как часто это с тобой бывает?')+'</p>';
+ h+='<p style="text-align:center;margin:0 0 6px;color:#f0c870">'+esc(isSp?'Как часто это проявляется в твоей жизни?':'Как часто это проявляется в твоей жизни?')+'</p>';
  h+='<div class="cards rate">'+RATE.map(function(r){var on=String(cur)===String(r[0])||(cur===null&&r[0]==='dk');return '<button type="button" class="'+(on?'on':'')+'" data-v="'+r[0]+'"><b style="margin:0">'+r[1]+'</b></button>'}).join('')+'</div>';
  if(st.i>0)h+='<button type="button" class="quiet" id="back">Назад</button>';
  box.innerHTML=h;
@@ -87,7 +87,7 @@ function result(){
  if(prev&&prev.sh){h+='<div class="bw-pair"><div>Было'+GBW.svg(GBW.fromRates(prev),{size:160,labels:false})+'</div><div>Стало'+GBW.svg(GBW.fromRates(r),{size:160,labels:false})+'</div></div>'+GBW.legend()}
  else h+=GBW.svg(GBW.fromRates(r),{size:320})+GBW.legend();
  h+=GBW.summaryHtml(r,gx);
- h+='<p class="mute" style="text-align:left;margin-top:10px">'+esc(gx('Это не оценка и не диагноз. Тень когда-то помогала тебе справляться. Опора — то, что уже работает и что можно укреплять. В трекере ты будешь одним касанием отмечать и то, и другое.'))+'</p>';
+ h+='<p class="mute" style="text-align:left;margin-top:10px">'+esc(gx('Обе стороны — части твоего нынешнего опыта. В трекере ты сможешь замечать, когда проявляется привычный способ отодвинуть себя, а когда — способ поддержать себя.'))+'</p>';
  h+='<button class="go" type="button" id="go">'+(AGAIN?'Вернуться к итогам':'Дальше')+'</button>';
  box.innerHTML=h;
  document.getElementById('go').onclick=function(){finish(false)};
