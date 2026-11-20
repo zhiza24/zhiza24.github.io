@@ -77,10 +77,46 @@ function blank(){var a={};FORMS.forEach(function(f){a[f.id]={sh:0,sp:0,answered:
 function aggregate(answers){var cells=blank();QUESTIONS.forEach(function(q){var v=answers[q.id];if(v==null||v==='none')return;var c=cells[q.form];c.answered++;if(v==='left')c.sh++;else if(v==='right')c.sp++;else if(v==='both'){c.sh+=.5;c.sp+=.5}c.answers.push(v)});return cells}
 function cellValue(c,side){return c.answered?Math.min(1,c[side]/c.answered):null}
 function wheelValues(answers){var c=aggregate(answers),out={};FORMS.forEach(function(f){out[f.id]={sh:cellValue(c[f.id],'sh'),sp:cellValue(c[f.id],'sp')}});return out}
-function svg(answers,o){o=o||{};var c=aggregate(answers||{}),R=160,r0=34,id='bw'+(++uid),size=o.size||320,h='<svg class="bw-svg" viewBox="-170 -170 340 340" width="'+size+'" height="'+size+'" role="img" aria-label="Карта ответов по шести направлениям">';h+='<defs><radialGradient id="'+id+'sh"><stop offset="0" stop-color="#9b8c83"/><stop offset="1" stop-color="#5d514c"/></radialGradient><radialGradient id="'+id+'sp"><stop offset="0" stop-color="#ffe9a8"/><stop offset="1" stop-color="#d9a441"/></radialGradient></defs><circle r="'+R+'" fill="#17110a"/>';
-S.forEach(function(s,i){var a=i*60; s.forms.forEach(function(f,j){var a0=a+j*30;[['sh',a0,a0+15],['sp',a0+15,a0+30]].forEach(function(z,k){var v=cellValue(c[f.id],z[0]);if(v!=null&&v>0){var r=r0+(R-r0)*v;h+='<path d="'+wedge(r0,r,z[1]+.5,z[2]-.5)+'" fill="url(#'+id+z[0]+')" opacity=".92"/>'}if(o.labels){var mid=z[1]+7.5,p=pt(102,mid),num=i*4+j*2+k+1;h+='<text x="'+p[0]+'" y="'+p[1]+'" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="8" font-weight="800" fill="#f4ecdf">'+num+'</text>'}})});
-h+='<path d="'+wedge(r0,R,a,a+60)+'" fill="none" stroke="#c9a46a" stroke-width="1.2"/>';if(o.labels){var p=pt(178,a+30);h+='<text x="'+p[0]+'" y="'+p[1]+'" text-anchor="middle" font-family="Manrope,sans-serif" font-size="9" fill="#f0c870">'+esc(s.t)+'</text>'}});
-h+='<circle r="'+r0+'" fill="#120d07" stroke="#c9a46a"/><text x="0" y="6" text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="700" fill="#f0c870" font-size="23">Я</text></svg>';return h}
+function svg(answers,o){
+ o=o||{};var cells=aggregate(answers||{}),R=160,id='bw'+(++uid),size=o.size||340;
+ var r0=34,r1=70,r2=112,r3=160;
+ var h='<svg class="bw-svg" viewBox="-170 -170 340 340" width="'+size+'" height="'+size+'" role="img" aria-label="Круговая карта шести направлений, двенадцати способов и двадцати четырех проявлений">';
+ h+='<defs><linearGradient id="'+id+'sh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d87970"/><stop offset="1" stop-color="#8d3438"/></linearGradient><linearGradient id="'+id+'sp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0bd"/><stop offset="1" stop-color="#b9c9a2"/></linearGradient></defs>';
+ h+='<circle r="'+R+'" fill="#17110a"/>';
+ S.forEach(function(s,i){
+  var a=i*60,mid=a+30,sectorPath=wedge(r0,r1,a+.7,a+59.3);
+  h+='<path d="'+sectorPath+'" fill="#594532" stroke="#c9a46a" stroke-width=".8"/>';
+  if(o.labels){
+   var p=pt(52,mid),rot=mid+90;if(mid>90&&mid<270)rot+=180;
+   var short=s.t==='Чрезмерная отдача'?'Отдача':s.t==='Угождение людям'?'Угождение':s.t==='Перфекционизм'?'Перфекц.':s.t==='Гиперконтроль'?'Контроль':s.t;
+   h+='<text x="'+p[0]+'" y="'+p[1]+'" transform="rotate('+rot+' '+p[0]+' '+p[1]+')" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="6.5" font-weight="800" fill="#fff0d5">'+esc(short)+'</text>';
+  }
+  s.forms.forEach(function(f,j){
+   var a0=a+j*30,a1=a0+30,mp=a0+15;
+   h+='<path d="'+wedge(r1,r2,a0+.55,a1-.55)+'" fill="#30251b" stroke="#9c7b4c" stroke-width=".7"/>';
+   if(o.labels){
+    var pp=pt(90,mp),branch=f.sh;
+    var shortBranch=branch.length>17?branch.slice(0,16)+'…':branch;
+    h+='<text x="'+pp[0]+'" y="'+pp[1]+'" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="5.6" fill="#ead9bd">'+esc(shortBranch)+'</text>';
+   }
+   [['sh',a0,a0+15],['sp',a0+15,a1]].forEach(function(z,k){
+    var v=cellValue(cells[f.id],z[0]),base=z[0]==='sh'?'#643a36':'#646b4f';
+    h+='<path d="'+wedge(r2,r3,z[1]+.45,z[2]-.45)+'" fill="'+base+'" stroke="#b89b70" stroke-width=".55"/>';
+    if(v!=null&&v>0){
+     var color=z[0]==='sh'?'url(#'+id+'sh)':'url(#'+id+'sp)';
+     h+='<path d="'+wedge(r2,r2+(r3-r2)*v,z[1]+.8,z[2]-.8)+'" fill="'+color+'" opacity=".98"/>';
+    }
+    if(o.labels){
+     var lp=pt(135,z[1]+7.5),num=i*4+j*2+k+1;
+     h+='<text x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="7" font-weight="800" fill="#fff8e8">'+num+'</text>';
+    }
+   });
+  });
+  h+='<path d="'+wedge(r0,r3,a,a+60)+'" fill="none" stroke="#c9a46a" stroke-width="1.15"/>';
+ });
+ h+='<circle r="'+r0+'" fill="#120d07" stroke="#c9a46a" stroke-width="1.2"/><text x="0" y="6" text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="700" fill="#f0c870" font-size="23">Я</text></svg>';
+ return h
+}
 function result(answers){var c=aggregate(answers||{}),sectors=[];S.forEach(function(s){sectors.push({id:s.id,title:s.t,forms:s.forms.map(function(f){var x=c[f.id],den=x.answered||0;return {id:f.id,shadow:{title:f.sh,score:den?x.sh/den*100:null,how:f.shHow},support:{title:f.sp,score:den?x.sp/den*100:null,how:f.spHow},answered:x.answered,why:f.why}})})});return {version:2,sectors:sectors,cells:c,answers:answers||{},completedAt:Date.now()}}
 function detailsHtml(r){var h='',n=0;(r.sectors||[]).forEach(function(s){h+='<section class="bw-sector"><h2>'+esc(s.title)+'</h2>';s.forms.forEach(function(f){n++;var a=f.shadow.score==null?'нет данных':Math.round(f.shadow.score)+'%';h+='<article><h3>'+n+'. '+esc(f.shadow.title)+' · '+a+'</h3><p>'+esc(f.shadow.how)+'</p>';n++;var b=f.support.score==null?'нет данных':Math.round(f.support.score)+'%';h+='<h3>'+n+'. '+esc(f.support.title)+' · '+b+'</h3><p>'+esc(f.support.how)+'</p><p class="bw-why">'+esc(f.why)+'</p></article>'});h+='</section>'});return h}
 function intro(){return 'Иногда один и тот же человек в одних обстоятельствах отодвигает себя, а в других умеет опираться на себя. Здесь мы посмотрим на конкретные ситуации из обычной жизни. Выбирай то, что чаще похоже на твое поведение сейчас. Здесь нет правильных ответов.'}
