@@ -9,7 +9,7 @@ window.GFLOW=[
 {u:'breath.html?at=p0',pt:'0',t:'Дыхание'},
 {u:'cutscene.html',pt:'0',t:'Заставка: Я есмь'},
 {u:'slot.html?id=dialog',pt:'0',t:'Кто сейчас выбирает'},
-{u:'slot.html?id=km',pt:'0',t:'Тест: Кривой Мир'},
+{u:'slot.html?id=km',pt:'0',t:'Тест: Идеальный Кривой Мир'},
 {u:'scene.html?k=ego',pt:'0',t:'Маг: вход в тест'},
 {u:'ego.html',pt:'0',t:'Тест: фоновое состояние'},
 {u:'betray.html',pt:'0',t:'Колесо самопредательства'},
