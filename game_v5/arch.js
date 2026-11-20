@@ -178,7 +178,7 @@ function echoMapHtml(r){
   return {code:c,name:D.resB[c].name,count:n,pct:p}
  }).sort(function(a,b){return b.count-a.count||order.indexOf(a.code)-order.indexOf(b.code)});
  var leadNames=r.status==='leading'?[r.leaders[0]]:r.status==='mixed'?r.leaders:[];
- var html='<section class="ar-echo-map"><h3>Карта восьми отражений</h3><p class="ar-echo-note">Каждая полоса показывает, как часто этот ход выбирался среди ситуаций, где ты указал(а) один из восьми вариантов реакции.</p>';
+ var html='<section class="ar-echo-map"><h3>Карта восьми отражений</h3><p class="ar-echo-note">Заполнено '+r.answered+' из 12 ситуаций; в '+den+' ответах выбран один из восьми ходов. Полосы показывают частоту выбора среди этих ответов.</p>';
  labels.forEach(function(x){
   var top=leadNames.indexOf(x.code)>=0;
   html+='<div class="ar-echo-row'+(top?' top':'')+'"><span class="ar-echo-name">'+h(x.name)+'</span><span class="ar-echo-value">'+x.count+' · '+x.pct+'%</span><div class="ar-echo-track"><div class="ar-echo-fill" style="width:'+x.pct+'%"></div></div></div>'
@@ -200,7 +200,8 @@ function partB(box){
   var body='';
   if(lead)body='<p>'+h(RB.text)+'</p>';
   else if(ties.length)body=ties.map(function(c){return '<div class="ar-blk"><div class="aq">'+h(D.resB[c].name)+'</div><p>'+h(D.resB[c].text)+'</p></div>'}).join('');
-  else body='<p>'+h(RB.text)+'</p>';
+  else if(r.status==='insufficient')body='<p>Заполнено '+r.answered+' из 12 ситуаций. В '+r.coded+' ответах выбран один из восьми ходов. Для сравнения нужно не менее 8 отвеченных ситуаций и 6 ответов по моделям. Пока не будем выделять ведущий ход.</p>';
+  else body='<p>Ответов достаточно для сравнения, но ни один ход не повторился хотя бы три раза. Это не означает, что таких реакций у тебя нет: они могут зависеть от обстоятельств.</p>';
   var sw=lead&&RB.sw?'<p class="ar-pt">Переключатель: '+h(RB.sw)+'</p>':'';
   var full='';
   if(lead&&D.bfull&&D.bfull[lead]){
