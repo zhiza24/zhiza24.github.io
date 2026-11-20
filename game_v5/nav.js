@@ -50,7 +50,7 @@ if(card){var released=false;function relCard(){if(released)return;released=true;
 card.addEventListener('animationend',function(e){if(!e.animationName||e.animationName==='up')relCard()});
 try{var an=card.getAnimations&&card.getAnimations();if(an&&an.length&&an.every(function(a){return a.playState==='finished'}))relCard()}catch(e){}
 setTimeout(relCard,2800)}
-if(!window.GBook){var gbs=document.createElement('script');gbs.src='book.js?v=fx2';document.body.appendChild(gbs)}
+if(!window.GBook){var gbs=document.createElement('script');gbs.src='book.js?v=fx3';document.body.appendChild(gbs)}
 function P(){try{return JSON.parse(localStorage.getItem('alch_v5_profile'))||{}}catch(e){return{}}}
 function ok(){if(window.GOpening&&i===1)return false;var u=i>=0?GFLOW[i].u:'';return !!(u&&window.GRoute&&(GRoute.reading(u)||GRoute.ready(u,P())))}
 function nxt(){var n=flowNext();return n&&window.GOpening?GOpening.url(n):n}
