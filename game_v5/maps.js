@@ -12,18 +12,18 @@ function css(){if(document.getElementById('gm-css'))return;var s=document.create
 '.gm-it p{margin:4px 0}.gm-it .hm-q{font-weight:700;margin:2px 0}.gm-it ul,.gm-it ol{margin:4px 0;padding-left:20px}.gm-it details summary{cursor:pointer;color:#a8762f}'+
 '.gm-h{font:700 13px Manrope,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#a8762f;margin:16px 0 6px}'+
 '.gm-arts{display:flex;flex-wrap:wrap;gap:6px}.gm-art{padding:6px 10px;border:1px solid rgba(201,154,69,.6);border-radius:999px;font-size:14px}'+
-'.gm-ch{display:inline-block;margin:4px;padding:8px 12px;border:1.5px solid #c99a45;border-radius:999px;background:transparent;color:inherit;font:600 15px Manrope,sans-serif;cursor:pointer}'+
+'.gm-art .art-img{width:22px;height:22px;border-radius:5px;vertical-align:middle;object-fit:cover}'+'.gm-ch{display:inline-block;margin:4px;padding:8px 12px;border:1.5px solid #c99a45;border-radius:999px;background:transparent;color:inherit;font:600 15px Manrope,sans-serif;cursor:pointer}'+
 '.gm-ch.on{background:linear-gradient(#ffe9a8,#e0a940);color:#2a1606}';document.head.appendChild(s)}
 /* items: результаты, полученные на шагах выбранных точек */
 function items(P,pts){if(!window.GHM)return [];return GHM.done(P).filter(function(x){return pts.indexOf(ptOf(x.u))>=0})}
 function arts(P,pts){var L=(P.arts||[]);if(!window.GArts)return L.map(function(a){return {n:a,i:'✦'}});
- return L.map(function(a){return {n:GArts.label(a,P),i:GArts.icon?GArts.icon(a):'✦'}})}
+ return L.map(function(a){return {n:GArts.label(a,P),i:GArts.icon?GArts.icon(a):'✦',h:GArts.iconHtml?GArts.iconHtml(a):''}})}
 function block(x){return '<div class="gm-it"><b>'+esc(x.name)+'</b>'+x.html+'</div>'}
 function render(box,pts,opts,cb){opts=opts||{};css();
  var go=function(){var P=load(),L=items(P,pts),h='';
   if(opts.extra)h+=opts.extra(P)||'';
   h+=L.length?L.map(block).join(''):'<p>Результаты появятся, когда ты пройдешь шаги этой части пути.</p>';
-  if(opts.arts){var A=arts(P);if(A.length)h+='<div class="gm-h">Артефакты героя</div><div class="gm-arts">'+A.map(function(a){return '<span class="gm-art">'+esc(a.i)+' '+esc(a.n)+'</span>'}).join('')+'</div>'}
+  if(opts.arts){var A=arts(P);if(A.length)h+='<div class="gm-h">Артефакты героя</div><div class="gm-arts">'+A.map(function(a){return '<span class="gm-art">'+(a.h||esc(a.i))+' '+esc(a.n)+'</span>'}).join('')+'</div>'}
   box.innerHTML='<div class="gm">'+h+'</div>';if(cb)cb(P,L)};
  if(window.GHM)GHM.ready(go);else{var s=document.createElement('script');s.src='heromap.js?v=map1';s.onload=function(){GHM.ready(go)};s.onerror=go;document.head.appendChild(s)}}
 /* выбор до трех зон для дальнейшего исследования из полученных результатов */

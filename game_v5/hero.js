@@ -40,6 +40,7 @@ function idOf(x){return window.GArts&&GArts.idOf?GArts.idOf(x):x}
 function artPt(id){var at=(P.artsAt||{})[id];if(at&&at.src){var st=FL.find(function(s){return s.u===at.src});if(st)return st.pt}return (ART[id]||['0'])[0]}
 function artName(id){return window.GArts?GArts.label(id,P):id}
 function artIcon(id){return window.GArts&&GArts.icon?GArts.icon(id):'✦'}
+function artHtml(id){return window.GArts&&GArts.iconHtml?GArts.iconHtml(id):esc(artIcon(id))}
 function steps(pt){return FL.filter(function(s){return s.pt===pt&&!/^(index|form|elder|hero)\.html/.test(s.u)})}
 function status(c){var st=steps(c.pt),d=st.filter(function(s){return comp[s.u]}).length,now=st.some(function(s){return s.u===curU});if(st.length&&d===st.length)return 'done';if(d||now)return 'now';return c.pt==='Финал'?'ahead':'lock'}
 var SL={done:'Пройдено',now:'В процессе',lock:'Закрыто',ahead:'Еще впереди'};
@@ -57,7 +58,7 @@ $('cMech').onclick=function(){if(window.openPassport)openPassport('nature')};
 $('hNat').onclick=function(){if(window.openPassport)openPassport('nature')};
 /* 3. главы */
 $('hist').innerHTML=CH.map(function(c,i){var s=status(c),A=arts.filter(function(a){return artPt(a)===c.pt});
- return '<button type="button" class="ch '+s+'" data-ch="'+i+'"><span class="big">'+esc(c.big||c.pt)+'</span><span class="cb"><b>'+esc(c.name)+'</b><small>'+esc(c.sub)+'</small><em class="st">'+SL[s]+'</em><span class="ds">'+esc(s==='lock'||s==='ahead'?'Откроется: '+c.desc.charAt(0).toLowerCase()+c.desc.slice(1):c.desc)+'</span>'+(A.length?'<span class="ai">'+A.map(function(a){return '<i title="'+esc(artName(a))+'">'+esc(artIcon(a))+'</i>'}).join('')+'</span>':'')+'</span></button>'}).join('');
+ return '<button type="button" class="ch '+s+'" data-ch="'+i+'"><span class="big">'+esc(c.big||c.pt)+'</span><span class="cb"><b>'+esc(c.name)+'</b><small>'+esc(c.sub)+'</small><em class="st">'+SL[s]+'</em><span class="ds">'+esc(s==='lock'||s==='ahead'?'Откроется: '+c.desc.charAt(0).toLowerCase()+c.desc.slice(1):c.desc)+'</span>'+(A.length?'<span class="ai">'+A.map(function(a){return '<i title="'+esc(artName(a))+'">'+artHtml(a)+'</i>'}).join('')+'</span>':'')+'</span></button>'}).join('');
 var dlg=$('chD');
 function open(h,t){$('chT').textContent=t;$('chB').innerHTML=h;$('chB').scrollTop=0;if(!dlg.open)dlg.showModal()}
 function insights(c){return ((P.diary||{}).ins||[]).filter(function(e){var a=String(e.at||'');return a==='Герой · '+c.name||a==='Герой · Точка '+c.pt||(c.pt==='А'&&a==='Герой · Исходная точка')||(c.pt==='Б'&&a==='Герой · Перекресток')||(c.pt==='0'&&a==='Герой · Начало пути')||(c.pt==='С'&&a==='Герой · Путь к цели')})}
@@ -71,10 +72,10 @@ function chapter(i){var c=CH[i],s=status(c),st=steps(c.pt),D=st.filter(function(
  var L=(c.links||[]).filter(function(x){return x[0]==='nature'||(H.OPEN&&H.OPEN[x[0]]&&H.layers)});
  h+='<h3>Что я открыл'+g('','а')+' о себе</h3>'+(found.length?found.map(function(f){return '<p><b>'+esc(f[0])+'</b><br>'+esc(f[1].length>220?f[1].slice(0,217)+'…':f[1])+'</p>'}).join(''):'<p class="pmuted">Выводы появятся здесь по мере прохождения заданий.</p>')+(L.length?'<div class="pbtns">'+L.map(function(x){return '<button type="button" data-open="'+x[0]+'">'+esc(x[1])+'</button>'}).join('')+'</div>':'');
  var I=insights(c);h+='<h3>Мой инсайт</h3>'+(I.length?I.map(function(e){return '<blockquote>'+esc(e.x)+'</blockquote>'}).join(''):'<p class="pmuted">«Я заметил'+g('','а')+', что часто… Теперь я понимаю, что…»</p>')+'<textarea id="insTx" rows="3" maxlength="4000" placeholder="Запиши свой инсайт"></textarea><div class="pbtns"><button type="button" id="insSave" data-ch="'+i+'">Записать в дневник</button></div><p class="pmuted" id="insFb" aria-live="polite"></p>';
- var A=arts.filter(function(a){return artPt(a)===c.pt});h+='<h3>Что я получил'+g('','а')+'</h3>'+(A.length?'<div class="artgrid">'+A.map(function(a){return '<button type="button" class="art" data-art="'+esc(a)+'"><span>'+esc(artIcon(a))+'</span><small>'+esc(artName(a))+'</small></button>'}).join('')+'</div>':'<p class="pmuted">Артефакты этой главы появятся после заданий.</p>');
+ var A=arts.filter(function(a){return artPt(a)===c.pt});h+='<h3>Что я получил'+g('','а')+'</h3>'+(A.length?'<div class="artgrid">'+A.map(function(a){return '<button type="button" class="art" data-art="'+esc(a)+'"><span>'+artHtml(a)+'</span><small>'+esc(artName(a))+'</small></button>'}).join('')+'</div>':'<p class="pmuted">Артефакты этой главы появятся после заданий.</p>');
  open(h,c.name)}
 function artCard(a){var m=ART[a]||['','Пройденный шаг','Пройденный этап пути','Я иду своим путем.'],at=(P.artsAt||{})[a],st=at&&FL.find(function(s){return s.u===at.src});
- open('<div class="artbig">'+esc(artIcon(a))+'</div><p><b>За что получен</b><br>'+esc(st?st.t:m[1])+(at&&at.t?' · '+new Date(at.t).toLocaleDateString('ru-RU'):'')+'</p><p><b>Что символизирует</b><br>'+esc(m[2])+'</p><p><b>Какую опору напоминает</b><br>«'+esc(m[3])+'»</p><div class="pbtns"><button type="button" data-back="'+esc(CH.findIndex(function(c){return c.pt===artPt(a)}))+'">← К главе</button></div>',artName(a))}
+ open('<div class="artbig">'+artHtml(a)+'</div><p><b>За что получен</b><br>'+esc(st?st.t:m[1])+(at&&at.t?' · '+new Date(at.t).toLocaleDateString('ru-RU'):'')+'</p><p><b>Что символизирует</b><br>'+esc(m[2])+'</p><p><b>Какую опору напоминает</b><br>«'+esc(m[3])+'»</p><div class="pbtns"><button type="button" data-back="'+esc(CH.findIndex(function(c){return c.pt===artPt(a)}))+'">← К главе</button></div>',artName(a))}
 $('hist').onclick=function(e){var b=e.target.closest('[data-ch]');if(b)chapter(+b.dataset.ch)};
 $('chX').onclick=function(){dlg.close()};dlg.addEventListener('click',function(e){if(e.target===dlg)return dlg.close();var o=e.target.closest('[data-open]'),ar=e.target.closest('[data-art]'),bk=e.target.closest('[data-back]');
  if(o){dlg.close();if(window.openPassport)openPassport(o.dataset.open)}else if(ar)artCard(ar.dataset.art);else if(bk)chapter(+bk.dataset.back);

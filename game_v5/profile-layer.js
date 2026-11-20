@@ -106,6 +106,9 @@
     var id = idOf(ref);
     return (CATALOG[id] && CATALOG[id].icon) || '💎';
   }
+  var IMGS = ['crystal_1','mirror','black_crystal','bridge','compass','fire','lantern','path_crystal','hero_passport','source','wheel','key','guardian_measure','guardian_experience','guardian_connection','guardian_clarity','guardian_boundaries','guardian_pace','sword','wish_star','proof_sign','path_map','guardian_companion'];
+  function img(ref) { var id = idOf(ref); return IMGS.indexOf(id) >= 0 ? 'img/arts/' + id + '.webp?v=1' : ''; }
+  function iconHtml(ref) { var u = img(ref); return u ? '<img class="art-img" src="' + u + '" alt="" loading="lazy">' : String(icon(ref)).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function migrateArts(list) {
     var src = Array.isArray(list) ? list : [];
     var out = [];
@@ -263,6 +266,8 @@
     idOf: idOf,
     label: function (ref, P) { return label(ref, P); },
     icon: icon,
+    img: img,
+    iconHtml: iconHtml,
     has: function (ref, P) { return has(ref, P); },
     grant: grant,
     grantInto: grantInto,
