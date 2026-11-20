@@ -35,6 +35,7 @@ window.GFLOW=[
 {u:'slot.html?id=eraser',pt:'Б',t:'Стирание установки пальцем'},
 {u:'slot.html?id=mirage',pt:'Б',t:'Пустыня миражей'},
 {u:'slot.html?id=lab_d',pt:'Б',t:'Тест: Лабиринт желаний'},
+{u:'wish.html',pt:'Б',t:'Небо желаний и заявка'},
 {u:'slot.html?id=arch_p',pt:'Б',t:'Страж: точка переключения'},
 {u:'slot.html?id=found',pt:'Б',t:'Основание установки'},
 {u:'slot.html?id=pb_end',pt:'Б',t:'Итог Точки Б'},
@@ -48,7 +49,7 @@ window.GFLOW=[
 {u:'slot.html?id=guard',pt:'Б',t:'Встреча со Стражем'},
 {u:'slot.html?id=pc_intro',pt:'С',t:'Заставка Точки С: три действия'},
 {u:'slot.html?id=arch_d',pt:'С',t:'Архитектор: выбор состояния'},
-{u:'reactor.html',pt:'С',t:'Трекер 21 день'},
+{u:'reactor.html',pt:'С',t:'Трекер 28 дней'},
 {u:'slot.html?id=retest',pt:'Финал',t:'Повторный тест'},
 {u:'slot.html?id=compare',pt:'Финал',t:'Было и стало'},
 {u:'slot.html?id=end',pt:'Финал',t:'Финал пути'}];

@@ -84,7 +84,7 @@ function run(box,src){css();document.body.classList.add('tri-on');var D=GTXT.dia
    (dq?'<details><summary>Сомневаюсь: '+dq+'</summary>'+list(function(a){return a.answer==='doubt'},true)+'</details>':'')+
    (diff?'<details><summary>Где ты слышишь иначе, чем подсказка игры</summary>'+list(function(a){return a.answer&&a.answer!=='doubt'&&a.answer!==a.key},true)+'</details>':'')+
    (preview?'<p><small>Просмотр: ответы не сохраняются в твой путь.</small></p>':'')+'<button class="next" id="nx">'+(n?'Дальше: '+esc(n.t):'Дальше')+'</button><div class="tri-links"><button type="button" id="triRe">Пройти заново</button><a href="diary.html">В дневник</a></div></div>';
-  var nx=pan.querySelector('#nx');window.nx=nx;if(window.GQuote)GQuote.add(pan.querySelector('.tri-res'),'slot.html?id=dialog',nx);
+  var nx=pan.querySelector('#nx');window.nx=nx;if(window.GQuote)GQuote.add(pan.querySelector('.tri-res'),'slot.html?id=dialog',nx); if(window.GSupport)GSupport.after(pan.querySelector('.tri-res')||pan,'test',nx);
   nx.onclick=function(){if(preview){location.href='tasks.html';return}if(window.GReview){location.href='tasks.html';return}var u=GRoute.advance();if(u)location.href=u};
   pan.querySelector('#triRe').onclick=function(){ans={};pos=0;hist=[];draw();scrollTo(0,0)};
   window.scrollTo(0,0)}

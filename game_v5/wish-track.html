@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<script src="theme.js?v=8"></script>
+<script src="sound.js?v=1"></script>
+<script src="flow.js?v=wish1"></script>
+<script src="opening.js?v=opening2"></script>
+<script src="route.js?v=wish1"></script>
+<script src="profile-layer.js?v=kit2"></script>
+<script src="route-gate.js?v=wish1"></script>
+<script src="gender.js?v=2"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script src="upd.js?v=1794512684"></script>
+<link rel="icon" href="favicon.svg">
+<title>Желание</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="g.css?v=1f19">
+<link rel="stylesheet" href="nav.css?v=h9f19">
+<style>
+.pg{max-width:440px;margin:0 auto;padding:calc(64px + env(safe-area-inset-top)) 16px 120px}
+h1{font-family:'Cormorant Garamond',serif;color:#f0c870;font-size:28px;margin:0 0 8px}
+.card{background:linear-gradient(#2a1c0e,#17110a);border:1px solid #9e783a;border-radius:16px;padding:16px;margin:12px 0}
+.card small{display:block;color:#c9a46a;margin-bottom:4px}
+.mute{color:#c9a46a}
+.quiet{display:block;margin:10px 0;color:#c9a46a}
+.go{display:block;width:100%;box-sizing:border-box;margin:12px 0 0;padding:14px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope,sans-serif;text-align:center;text-decoration:none}
+</style>
+</head>
+<body data-page="wishtrack">
+<div class="pg">
+<h1>Желание</h1>
+<p class="mute">Здесь живет заявленное желание и три целевых направления. Полный дневной трекер на 28 дней откроется сеткой-календарем в Реакторе.</p>
+<div class="card" id="declared"><small>Заявленное желание</small><p id="dText" class="mute">Пока нет заявки. Она появится, когда ты загадаешь желание в небе Точки Б.</p></div>
+<div class="card" id="dirs"><small>Три целевых направления</small><p id="dirText" class="mute">Появятся после разбора на двух колесах, когда ты выберешь ровно три.</p></div>
+<a class="go" href="reactor.html">Открыть трекер</a>
+<a class="quiet" href="tasks.html">К заданиям</a>
+<a class="quiet" href="wish.html">Открыть небо желаний</a>
+</div>
+<script src="engine.js?v=arch1"></script>
+<script src="texts.js?v=mf4"></script>
+<script src="nav.js?v=wish1"></script>
+<script>
+(function(){
+var P=window.GPro&&GPro.load?GPro.load():(function(){try{return JSON.parse(localStorage.getItem('alch_v5_profile'))||{}}catch(e){return {}}}());
+var T=P.tracker||{};
+function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+if(T.declared)document.getElementById('dText').innerHTML='<b style="color:#f0c870">'+esc(T.declared.text||T.declared.raw||'')+'</b>';
+if((T.directions||[]).length)document.getElementById('dirText').innerHTML='<ol style="margin:6px 0 0 18px;color:#f4ecdf">'+(T.directions||[]).map(function(d){return '<li>'+esc(d.text||'')+'</li>'}).join('')+'</ol>';
+})();
+</script>
+</body>
+</html>
