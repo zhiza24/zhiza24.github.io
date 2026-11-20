@@ -17,30 +17,35 @@ function vib(n){try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}}
 /* 16 коротких естественных фраз вперемешку (10 темных: матричные слова + 5 травм; 6 светлых: живая опора).
    Никаких подсказывающих слов — человек отвечает о себе честно. */
 var CARDS=[
- {id:'d1',side:'ego',word:'Я должен',wound:'injustice',t:'Сначала доделаю, потом отдохну.'},
- {id:'l1',side:'self',pillar:'Право на отдых',t:'Я могу устать и остановиться без вины.'},
- {id:'d2',side:'ego',word:'Я не могу просить',wound:'rejection',t:'Не буду просить, {сам справлюсь|сама справлюсь}.'},
- {id:'d3',side:'ego',word:'Мне стыдно отказать',wound:'humiliation',t:'Соглашусь, неудобно отказывать.'},
- {id:'l2',side:'self',pillar:'Ясные границы',t:'Если мне не подходит, я спокойно говорю «нет».'},
- {id:'d4',side:'ego',word:'Мне нужно контролировать',wound:'betrayal',t:'Лучше перепроверю {сам|сама}, так спокойнее.'},
- {id:'d5',side:'ego',word:'Меня не ждут',wound:'rejection',t:'Не пойду, меня там особо не ждут.'},
- {id:'l3',side:'self',pillar:'Свобода от чужих оценок',t:'Я не {должен|должна} угадывать, что думают другие.'},
- {id:'d6',side:'ego',word:'А что обо мне подумают',wound:'injustice',t:'А что обо мне подумают, если не выйдет?'},
- {id:'d7',side:'ego',word:'Я попробую',wound:'abandonment',t:'Начну с понедельника, попробую, как пойдет.'},
- {id:'l4',side:'self',pillar:'Соразмерный шаг',t:'Не обязательно менять все сразу — хватит одного шага.'},
- {id:'d8',side:'ego',word:'У меня нет выбора',wound:'humiliation',t:'У меня сейчас нет другого выхода.'},
- {id:'l5',side:'self',pillar:'Контакт со своими желаниями',t:'Мне важно сначала понять, чего хочу именно я.'},
- {id:'d9',side:'ego',word:'Я виноват',wound:'abandonment',t:'Если человек молчит, значит я {виноват|виновата}.'},
- {id:'d10',side:'ego',word:'Они все портят',wound:'betrayal',t:'Они опять все испортили, приходится тащить {самому|самой}.'},
- {id:'l6',side:'self',pillar:'Живое доверие',t:'Я могу попросить о помощи, и это не слабость.'}
+ /* Восемь общих ситуаций: в каждой проявляется либо защитная надстройка Эго,
+    либо непосредственный контакт с собой. Обе реакции могут встречаться у одного человека. */
+ {id:'e1',side:'ego',word:'Требование к себе',wound:'duty',t:'Даже устав, я продолжаю делать то, что запланировал(а).'},
+ {id:'s1',side:'self',pillar:'Контакт с потребностями',t:'Если я устаю, я замечаю это и решаю, продолжать или остановиться.'},
+ {id:'e2',side:'ego',word:'Ориентация на одобрение',wound:'approval',t:'Перед тем как отказать, я думаю, как человек отнесется к моему ответу.'},
+ {id:'s2',side:'self',pillar:'Собственные границы',t:'Когда мне что-то не подходит, я могу прямо сказать об этом.'},
+ {id:'e3',side:'ego',word:'Контроль неопределенности',wound:'control',t:'Когда исход неясен, я стараюсь предусмотреть как можно больше вариантов.'},
+ {id:'s3',side:'self',pillar:'Гибкость в неопределенности',t:'Когда исход неясен, я выбираю ближайший понятный шаг и смотрю, что будет дальше.'},
+ {id:'e4',side:'ego',word:'Ожидание отвержения',wound:'rejection',t:'Прежде чем обратиться к человеку, я прикидываю, не буду ли ему мешать.'},
+ {id:'s4',side:'self',pillar:'Свободное обращение',t:'Если мне нужен контакт или помощь, я могу обратиться и узнать, готов ли человек.'},
+ {id:'e5',side:'ego',word:'Чужая ответственность',wound:'responsibility',t:'Если дело может сорваться, я часто беру его на себя, даже когда это не только моя задача.'},
+ {id:'s5',side:'self',pillar:'Разделение ответственности',t:'В общей задаче я уточняю, за что отвечаю я, а за что — другие.'},
+ {id:'e6',side:'ego',word:'Подмена собственных желаний',wound:'expectations',t:'Выбирая, я сначала учитываю, чего от меня ждут близкие или окружающие.'},
+ {id:'s6',side:'self',pillar:'Понимание своих желаний',t:'Перед выбором я спрашиваю себя, чего хочу именно я.'},
+ {id:'e7',side:'ego',word:'Защита от ошибки',wound:'perfection',t:'Если не уверен(а), что получится хорошо, я могу отложить начало.'},
+ {id:'s7',side:'self',pillar:'Право на пробу',t:'Я могу начать, даже если пока не знаю, каким будет итог.'},
+ {id:'e8',side:'ego',word:'Защитная самостоятельность',wound:'independence',t:'Даже когда мне предлагают помощь, мне проще справиться самому(самой).'},
+ {id:'s8',side:'self',pillar:'Свободный выбор поддержки',t:'Я могу принять помощь, если она мне подходит, и отказаться, если нет.'}
 ];
 
 var WOUND_INFO={
- injustice:{name:'высокая планка и страх ошибки',note:'Внутри часто звучит строгое «надо» и оглядка на чужую оценку — усталость откладывается на потом.'},
- rejection:{name:'привычка отступать раньше, чем откажут',note:'Проще справляться в одиночку и не навязываться, чем рискнуть услышать «нет» или остаться лишним.'},
- humiliation:{name:'неудобно отказать и страшно выбрать себя',note:'Чужой комфорт перевешивает собственный, и кажется, что выхода нет.'},
- betrayal:{name:'напряжение контроля и недоверие',note:'Кажется, что если отпустить хватку, другие подведут и все равно придется разгребать самому.'},
- abandonment:{name:'страх остаться без опоры и чувство вины',note:'Тишину другого легко принять на свой счет, а важные шаги откладывать в ожидании поддержки.'}
+ duty:{name:'привычка ставить требования выше самочувствия',note:'Внутренний план или обязательство может звучать громче текущего состояния. Полезно замечать, когда настойчивость действительно нужна, а когда пора пересмотреть нагрузку.'},
+ approval:{name:'ориентация на чужую реакцию',note:'Перед собственным решением появляется проверка: как его воспримут другие. Это помогает учитывать отношения, но иногда затрудняет прямой ответ.'},
+ control:{name:'стремление снизить неопределенность',note:'Подготовка и прогнозирование дают ощущение устойчивости. Иногда на них уходит больше сил, чем требует следующий реальный шаг.'},
+ rejection:{name:'осторожность в контакте',note:'Перед обращением возникает предположение, что вы можете помешать или получить отказ. Это может сдерживать инициативу даже там, где контакт уместен.'},
+ responsibility:{name:'расширение личной ответственности',note:'Вы можете брать на себя больше своей доли, чтобы дело не остановилось. Важно различать собственную задачу и то, что принадлежит другим.'},
+ expectations:{name:'ориентация на ожидания',note:'При выборе сначала учитывается окружение. Это не обязательно отказ от себя, но полезно отдельно услышать собственное желание.'},
+ perfection:{name:'осторожность перед ошибкой',note:'Высокая планка может помогать качеству, но иногда превращает начало в ожидание полной уверенности.'},
+ independence:{name:'привычка справляться самостоятельно',note:'Самостоятельность может быть ресурсом. В некоторых ситуациях она же мешает заметить, что поддержку можно принять без потери автономии.'}
 };
 
 function css(){
@@ -240,111 +245,73 @@ function mount(box){
 
  /* ---------- 3. Сохранение и единый экран результата ---------- */
  function finish(){
-  var darkYes=ans.filter(function(a){return a.side==='ego'&&a.pick==='yes'});
-  var darkMid=ans.filter(function(a){return a.side==='ego'&&a.pick==='mid'});
-  var lightYes=ans.filter(function(a){return a.side==='self'&&a.pick==='yes'});
-  var lightMid=ans.filter(function(a){return a.side==='self'&&a.pick==='mid'});
-
+  function score(side){
+   return ans.filter(function(a){return a.side===side}).reduce(function(n,a){return n+(a.pick==='yes'?2:a.pick==='mid'?1:0)},0);
+  }
+  var egoScore=score('ego'),selfScore=score('self');
+  var egoRate=Math.round(egoScore/16*100),selfRate=Math.round(selfScore/16*100);
   var wCnt={};
-  darkYes.forEach(function(a){if(a.wound)wCnt[a.wound]=(wCnt[a.wound]||0)+2});
-  darkMid.forEach(function(a){if(a.wound)wCnt[a.wound]=(wCnt[a.wound]||0)+1});
+  ans.filter(function(a){return a.side==='ego'&&(a.pick==='yes'||a.pick==='mid')}).forEach(function(a){
+   if(a.wound)wCnt[a.wound]=(wCnt[a.wound]||0)+(a.pick==='yes'?2:1);
+  });
   var topWounds=Object.keys(wCnt).sort(function(a,b){return wCnt[b]-wCnt[a]}).slice(0,2);
-
-  var rec={
-   v:5,
-   egoCount:darkYes.length,
-   selfCount:lightYes.length,
-   doubtCount:darkMid.length+lightMid.length,
-   topWounds:topWounds,
-   answers:ans,
-   doneAt:Date.now()
-  };
-
+  var rec={v:6,egoScore:egoScore,selfScore:selfScore,egoRate:egoRate,selfRate:selfRate,
+   egoCount:ans.filter(function(a){return a.side==='ego'&&a.pick==='yes'}).length,
+   selfCount:ans.filter(function(a){return a.side==='self'&&a.pick==='yes'}).length,
+   doubtCount:ans.filter(function(a){return a.pick==='mid'}).length,
+   topWounds:topWounds,answers:ans,doneAt:Date.now()};
   if(!preview){
-   var P2=load();
-   P2.dialog=rec;
-   (P2.log=P2.log||[]).push({t:Date.now(),x:'Кто сейчас выбирает: темная сторона — '+darkYes.length+', светлая — '+lightYes.length});
+   var P2=load();P2.dialog=rec;
+   (P2.log=P2.log||[]).push({t:Date.now(),x:'Кто сейчас выбирает: Эго — '+egoRate+'%, Самость — '+selfRate+'%'});
    save(P2);
   }
   showResult(rec);
  }
 
  function showResult(rec){
-  var F=load().gender==='f';
-  var all=rec.answers||[];
-  var darkYes=all.filter(function(a){return a.side==='ego'&&a.pick==='yes'});
-  var darkMid=all.filter(function(a){return a.side==='ego'&&a.pick==='mid'});
-  var lightYes=all.filter(function(a){return a.side==='self'&&a.pick==='yes'});
-  var lightMid=all.filter(function(a){return a.side==='self'&&a.pick==='mid'});
-
-  var leadText='';
-  if(darkYes.length>=lightYes.length+2){
-   leadText='Сейчас чаще включается темная сторона — привычные защиты Эго (откликнулось '+ph(darkYes.length,'фраза','фразы','фраз')+' из 10).';
-  }else if(lightYes.length>darkYes.length&&darkYes.length<=3){
-   leadText='В твоих ответах хорошо слышна светлая сторона — голос Самости (откликнулось '+ph(lightYes.length,'опора','опоры','опор')+' из 6).';
+  var F=load().gender==='f',all=rec.answers||[];
+  function score(side){
+   return all.filter(function(a){return a.side===side}).reduce(function(n,a){return n+(a.pick==='yes'?2:a.pick==='mid'?1:0)},0);
+  }
+  var egoScore=typeof rec.egoScore==='number'?rec.egoScore:score('ego');
+  var selfScore=typeof rec.selfScore==='number'?rec.selfScore:score('self');
+  var egoRate=Math.round(egoScore/16*100),selfRate=Math.round(selfScore/16*100);
+  var egoSeen=all.filter(function(a){return a.side==='ego'&&(a.pick==='yes'||a.pick==='mid')});
+  var selfSeen=all.filter(function(a){return a.side==='self'&&(a.pick==='yes'||a.pick==='mid')});
+  var leadText;
+  if(egoRate-selfRate>=15){
+   leadText='В этих ситуациях чаще проявлялись привычные защитные настройки Эго. Их отклик — '+egoRate+'%.';
+  }else if(selfRate-egoRate>=15){
+   leadText='В этих ситуациях чаще проявлялся непосредственный контакт с собой — голос Самости. Его отклик — '+selfRate+'%.';
   }else{
-   leadText='В тебе звучат обе стороны: темная — '+darkYes.length+' из 10, светлая — '+lightYes.length+' из 6.';
+   leadText='В твоих ответах заметны обе составляющие: защитные настройки Эго — '+egoRate+'%, контакт с собой — '+selfRate+'%. Они могут проявляться в разных обстоятельствах.';
   }
-
-  var pillars=lightYes.map(function(a){return a.pillar}).filter(Boolean);
-  var strongLine=pillars.length
-   ? 'Твоя светлая сторона (Самость) уже опирается на: '+pillars.join(', ').toLowerCase()+'.'
-   : 'Даже если сейчас чаще срабатывает защита, ты честно '+(F?'заметила':'заметил')+' свои привычные фразы — с этого начинается выход из автопилота.';
-  var strongMore='<p>То, что в этом шаге называлось <b>светлой стороной</b>, — это голос <b>Самости</b>: спокойный, трезвый выбор из уважения к себе, без вины и давления.</p>';
-  if(lightYes.length){
-   strongMore+='<p><b>Фразы светлой стороны, которые уже про тебя:</b></p><ul>'+lightYes.map(function(a){return '<li>'+esc(a.text)+'</li>'}).join('')+'</ul>';
-  }
-
+  var pillars=selfSeen.map(function(a){return a.pillar}).filter(Boolean);
+  var strongLine=pillars.length?'В ситуациях теста ты отмечаешь контакт с собой в таких моментах: '+pillars.join(', ').toLowerCase()+'.':'В этом прохождении было мало ситуаций, где ты уверенно узнал(а) описанный способ опираться на себя. Это не оценка, а повод понаблюдать за собой в реальных обстоятельствах.';
+  var strongMore='<p>Самость здесь обозначает не идеальное и не «правильное» поведение, а контакт со своими ощущениями, желаниями и реальным выбором.</p>';
+  if(selfSeen.length)strongMore+='<p><b>Что ты отметил(а) как знакомое:</b></p><ul>'+selfSeen.map(function(a){return '<li>'+esc(a.text)+(a.pick==='mid'?' <i>(иногда)</i>':'')+'</li>'}).join('')+'</ul>';
   var wounds=(rec.topWounds||[]).filter(function(k){return WOUND_INFO[k]});
-  var insightLine='';
-  if(wounds.length){
-   insightLine='Темная сторона (Эго) чаще всего включается через '+wounds.map(function(k){return WOUND_INFO[k].name}).join(' и ')+'.';
-  }else if(darkYes.length||darkMid.length){
-   insightLine='Защитные фразы проскальзывают лишь время от времени — важно просто замечать момент, когда внутри появляется «надо» или вина.';
-  }else{
-   insightLine='Ни одна защитная фраза не отозвалась как постоянная. Если захочется, можно вернуться к этому шагу в обычный загруженный день и свериться снова.';
-  }
-
-  var insightMore='<p>То, что в этом шаге проявлялось как <b>темная сторона</b>, — это голос <b>Эго</b>: старые защитные привычки, которые когда-то помогали справляться, но сейчас забирают силы и свободу выбора.</p>';
-  wounds.forEach(function(k){
-   insightMore+='<p><b>'+esc(WOUND_INFO[k].name.charAt(0).toUpperCase()+WOUND_INFO[k].name.slice(1))+':</b> '+esc(WOUND_INFO[k].note)+'</p>';
-  });
-  var fastDark=darkYes.slice().sort(function(a,b){return (a.ms||9999)-(b.ms||9999)})[0];
-  if(fastDark&&fastDark.ms&&fastDark.ms<3500){
-   insightMore+='<p>Быстрее всего откликнулась фраза «'+esc(fastDark.text)+'» — похоже, этот ход срабатывает почти автоматически.</p>';
-  }
-
+  var insightLine=egoSeen.length?'В защитной надстройке Эго заметнее всего проявились: '+(wounds.length?wounds.map(function(k){return WOUND_INFO[k].name}).join(' и '):'несколько разных привычных реакций')+'.':'В этом наборе ситуаций защитные реакции Эго почти не получили отклика. Это не означает, что их нет: они могут проявляться в других обстоятельствах.';
+  var insightMore='<p>Эго в этой модели — не противоположность Самости и не «плохая» часть. Это надстройка из привычных способов защищаться, адаптироваться и справляться с требованиями среды. Она может быть полезной, но иногда начинает действовать автоматически.</p>';
+  wounds.forEach(function(k){insightMore+='<p><b>'+esc(WOUND_INFO[k].name.charAt(0).toUpperCase()+WOUND_INFO[k].name.slice(1))+':</b> '+esc(WOUND_INFO[k].note)+'</p>'});
   var chosenList=all.filter(function(a){return a.pick==='yes'||a.pick==='mid'}).map(function(a){
-   return (a.side==='ego'?'Темная сторона':'Светлая сторона')+(a.pick==='mid'?' (иногда)':'')+': «'+a.text+'»';
+   return (a.side==='ego'?'Эго — защитная настройка':'Самость — контакт с собой')+(a.pick==='mid'?' (иногда)':'')+': «'+a.text+'»';
   });
-
   var nextStep=null;
   if(window.GFLOW){var ci=GFLOW.findIndex(function(x){return x.u==='slot.html?id=dialog'});if(ci>=0&&GFLOW[ci+1])nextStep=GFLOW[ci+1]}
-
   box.innerHTML='<div class="tri"><div class="tri-res-wrap" id="triRes"></div></div>';
   GResultCard.render(box.querySelector('#triRes'),{
-   id:'dialog',
-   stepKey:'slot.html?id=dialog',
+   id:'dialog',stepKey:'slot.html?id=dialog',
    passed:(F?'Ты прошла':'Ты прошел')+' шаг «Кто сейчас выбирает»',
-   title:'Темная и светлая стороны',
-   lead:leadText,
-   strong:strongLine,
-   strongMore:strongMore,
-   insight:insightLine,
-   insightMore:insightMore,
-   answers:chosenList,
-   preview:preview,
+   title:'Эго и Самость',
+   lead:leadText,strong:strongLine,strongMore:strongMore,
+   insight:insightLine,insightMore:insightMore,answers:chosenList,preview:preview,
    nextLabel:nextStep?'Дальше: '+nextStep.t:'Дальше',
-   onNext:function(){
-    vib(20);
-    if(preview||window.GReview){location.href='tasks.html';return}
-    var u=GRoute.advance();if(u)location.href=u;
-   },
+   onNext:function(){vib(20);if(preview||window.GReview){location.href='tasks.html';return}var u=GRoute.advance();if(u)location.href=u},
    onRetake:function(){idx=0;ans=[];showDeck();scrollTo(0,0)}
   });
   scrollTo(0,0);
  }
-
  if(P.dialog&&P.dialog.v===5&&P.dialog.answers&&!preview){showResult(P.dialog);return}
  showIntro();
 }
