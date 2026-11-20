@@ -49,7 +49,8 @@ var W={
  piFew:'По этой оси пока мало ответов с выбором одного из двух способов. Вывод не делается.',
  ldSave:'Сохранение привычного положения может беречь силы, время или деньги, которые сейчас уже заняты другим. Это не каприз и не саботаж. Проверь, какой ресурс ты сохраняешь и можно ли выделить на перемену хотя бы небольшую часть.',
  fsWorse:'Заметнее стала стратегия «%S%».',
- fsStronger:'Сейчас эта стратегия звучит даже сильнее, чем в детстве.'};
+ fsStronger:'Сейчас эта стратегия звучит даже сильнее, чем в детстве.',
+ fsAbsent:'В детских ответах ты отметил(а), что такого опыта не было. Сейчас этот способ тоже не выделился как выраженный. Это описание твоих ответов, а не доказательство того, что подобного никогда не случалось.'};
 W.ldUnknown='Пока не определено. Ответ «Пока не знаю» тоже честный. Вернись к этому вопросу после одного конкретного эпизода.';
 
 /* ---------- стиль ---------- */
@@ -183,7 +184,8 @@ function fsCrossHtml(ctx){ctx=ctx||{};var h='<section class="ar-compare"><h3>С�
 BUILD.fs=function(ans){var F=T.fs,names=Object.keys(F.str),P0=load(),out={v:VER,answers:ans,context:{wheel:P0.betray&&P0.betray.start?JSON.parse(JSON.stringify(P0.betray.start)):null,echo:P0.archB?{v:P0.archB.v,status:P0.archB.status,top:P0.archB.top,lead:P0.archB.lead,leaders:P0.archB.leaders,answers:P0.archB.answers}:null},at:Date.now()};
  function per(list){var o={};names.forEach(function(n){var a=list.filter(function(q){return q.s===n}).map(function(q){return ans[q.id]}),v=a.filter(function(x){return typeof x==='number'});o[n]={answered:v.length,mean:v.length?v.reduce(function(x,y){return x+y},0)/v.length:null,notRemember:a.filter(function(x){return x==='nr'}).length,notWas:a.filter(function(x){return x==='nw'}).length,allNotWas:a.length===3&&a.every(function(x){return x==='nw'})}});return o}
  var C=per(F.child),N=per(F.now),R={};
- names.forEach(function(n){var c=C[n],x=N[n],r;if(c.allNotWas)r='notwas';else if(c.answered<2||x.answered<2)r='few';
+ names.forEach(function(n){var c=C[n],x=N[n],r;if(c.answered<2||x.answered<2)r='few';
+  else if(c.allNotWas)r=x.mean>=2?'later':'notwas';
   else if(c.mean>=2&&x.mean>=2&&(Math.abs(x.mean-c.mean)<1||x.mean>c.mean))r='kept';
   else if(c.mean>=2&&c.mean-x.mean>=1){var other=names.filter(function(m){return m!==n&&C[m].answered>=2&&N[m].answered>=2&&N[m].mean>=2&&N[m].mean-C[m].mean>=1&&N[m].mean>x.mean}).sort(function(a,b){return (N[b].mean-C[b].mean)-(N[a].mean-C[a].mean)})[0];r=other?'changed':'weaker';if(other)R[n+'_to']=other}
   else if(c.mean<1&&x.mean>=2)r='later';else r='none';R[n]=r});
@@ -191,8 +193,8 @@ BUILD.fs=function(ans){var F=T.fs,names=Object.keys(F.str),P0=load(),out={v:VER,
  var RT={kept:'Стратегия сохранилась.',weaker:'Стратегия ослабла.',changed:'Стратегия изменилась.',later:'Стратегия появилась позже.',none:'Совпадение не выявлено.'};
  var valid=names.filter(function(n){return N[n].answered>=2}),mx=valid.length?Math.max.apply(null,valid.map(function(n){return N[n].mean})):null,lead=valid.filter(function(n){return N[n].mean===mx&&mx>=2});out.leading=lead;
  out.status=!valid.length?'insufficient':lead.length>1?'mixed':lead.length?'supported':'unclear';
- function outTxt(n){var r=R[n];if(r==='notwas')return g(F.sp['Не было.']);if(r==='few')return g(F.sp['Недостаточно данных.']);var t=g(F.res[RT[r]]);if(r==='changed')t+=' '+W.fsWorse.replace('%S%',R[n+'_to']);if(r==='kept'&&N[n].mean-C[n].mean>=1)t+=' '+W.fsStronger;return t}
- function label(n){var r=R[n];return r==='notwas'?'Не было':r==='few'?'Недостаточно данных':RT[r].replace('.','')}
+ function outTxt(n){var r=R[n];if(r==='notwas')return W.fsAbsent;if(r==='few')return g(F.sp['Недостаточно данных.']);var t=g(F.res[RT[r]]);if(r==='changed')t+=' '+W.fsWorse.replace('%S%',R[n+'_to']);if(r==='kept'&&N[n].mean-C[n].mean>=1)t+=' '+W.fsStronger;return t}
+ function label(n){var r=R[n];return r==='notwas'?'Не было в детстве и сейчас не выделилось':r==='few'?'Недостаточно данных':RT[r].replace('.','')}
  var main=(lead.length?'<div class="al">Сейчас заметнее всего</div>'+lead.map(function(n){var S=F.str[n];return '<div class="aq">'+esc(n)+'</div><div class="gt-lv">'+esc(label(n))+'</div>'+P_(esc(g(S.now)))+P_(esc(outTxt(n)))}).join(''):P_(esc(valid.length?g(F.res['Совпадение не выявлено.']):g(F.sp['Недостаточно данных.']))));
  var nr=names.some(function(n){return C[n].notRemember||N[n].notRemember});
  var det='<details class="ar-det"><summary>Все четыре стратегии</summary><p class="ar-ctx">'+esc(g(F.intro))+'</p>'+names.map(function(n){var S=F.str[n],x=R[n]==='kept'?S.kept:(R[n]==='weaker'||R[n]==='changed')?S.changed:'';return '<div class="gt-lv">'+esc(n)+' · '+esc(label(n))+'</div><p><b>Детство:</b> '+esc(g(S.child))+'</p><p><b>Сейчас:</b> '+esc(g(S.now))+'</p><p>'+esc(outTxt(n))+'</p>'+(x?'<p>'+esc(g(x))+'</p>':'')}).join('')+(nr?'<div class="gt-lv">Не помню</div><p>'+esc(g(F.sp['Не помню.']))+'</p>':'')+'</details>';
