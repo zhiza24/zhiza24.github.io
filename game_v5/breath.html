@@ -1,7 +1,7 @@
 <!doctype html><html lang="ru"><head><script src="theme.js?v=8"></script><script src="sound.js?v=1"></script>
-<script src="flow.js?v=wish2"></script>
+<script src="flow.js?v=fix1"></script>
 <script src="opening.js?v=opening2"></script>
-<script src="route.js?v=wish2"></script>
+<script src="route.js?v=fix1"></script>
 <script src="profile-layer.js?v=kit2"></script>
 <script src="route-gate.js?v=wish2"></script>
 <script src="gender.js?v=2"></script>
@@ -14,62 +14,76 @@
 html,body,a,button,.c{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
 a:focus,button:focus,.c:focus,a:focus-visible,button:focus-visible,.c:focus-visible{outline:none}
 html,body{margin:0;min-height:100%;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;font-size:17px;line-height:1.45;text-align:center}
-body{display:flex;align-items:center;justify-content:center;flex-direction:column;box-sizing:border-box;padding:calc(56px + env(safe-area-inset-top)) 16px calc(100px + env(safe-area-inset-bottom))}
-h2{font:700 26px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;margin:10px 0 8px}
-.n{font-size:44px;font-weight:800;color:#fff0c8;min-height:52px;line-height:52px;margin:0}
-.stage{width:252px;height:252px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin:0 auto}
-.c{width:120px;height:120px;border-radius:50%;background:radial-gradient(#ffe9a8,#e0a940 60%,#a8692a);box-shadow:0 0 22px 4px rgba(255,207,90,.85),0 0 48px 12px rgba(255,207,90,.45);overflow:visible;transition:transform 3s ease-in-out;transform-origin:center center;cursor:pointer;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
-.t{margin:0 0 4px;font:800 22px/30px Manrope;color:#ffd877;min-height:30px}
-.s{margin-top:12px;color:#c9a46a;font-size:17px;min-height:24px}
+body{display:flex;align-items:center;justify-content:center;flex-direction:column;box-sizing:border-box;padding:calc(52px + env(safe-area-inset-top)) 16px calc(96px + env(safe-area-inset-bottom))}
+h2{font:700 26px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;margin:8px 0 8px}
+.t{margin:0 0 8px;font:800 22px/30px Manrope;color:#ffd877;min-height:30px;transition:opacity .25s ease}
+.stage{width:248px;height:248px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin:0 auto}
+.c{width:120px;height:120px;border-radius:50%;background:radial-gradient(#ffe9a8,#e0a940 60%,#a8692a);box-shadow:0 0 22px 4px rgba(255,207,90,.85),0 0 48px 12px rgba(255,207,90,.45);overflow:visible;transition:transform 3s ease-in-out;transform-origin:center center;cursor:pointer;touch-action:none}
+.c.hold{box-shadow:0 0 30px 8px rgba(255,214,102,.95),0 0 64px 18px rgba(255,207,90,.55)}
+.s{margin-top:8px;color:#c9a46a;font-size:16px;min-height:24px;transition:opacity .25s ease}
+.go{margin-top:18px;min-height:50px;padding:12px 32px;border:0;border-radius:999px;background:linear-gradient(180deg,#f5d68a,#cfa046);color:#261606;font:800 17px Manrope,sans-serif;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.45);opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .35s ease,transform .35s ease}
+.go.show{opacity:1;transform:none;pointer-events:auto}
 </style>
 <link rel="stylesheet" href="nav.css?v=h9f19">
 </head>
 <body data-page="task">
-<div class="n" id="n"></div>
 <div class="t" id="t"></div>
-<div class="stage"><div class="c" id="c" role="button" aria-label="Коснись сферы"></div></div>
+<div class="stage"><div class="c" id="c" role="button" aria-label="Зажми сферу, чтобы подышать"></div></div>
 <h2>Часть пути пройдена.<br>Переведи дыхание</h2>
-<div class="s" id="s">Коснись сферы</div>
+<div class="s" id="s">Зажми сферу и дыши в своем ритме</div>
+<button class="go" id="go" type="button">Идти дальше</button>
 <script>
-/* Сфера e6702a2: запуск по касанию, дальше сама. Вдох 3 с (scale 1.7), выдох 4 с (scale 1); свечение box-shadow без filter (iOS без квадрата), 3 цикла, без фазы паузы. Счет сверху, надпись снизу. */
-var P=[['Вдох',3,1.7],['Выдох',4,1]],cy=0,ph=0,doneF=false,started=false;
-function fin(){
-  if(doneF)return;
-  doneF=true;
-  t.textContent='Я есмь';
-  n.textContent='';
-  s.textContent='';
-  try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}
-  setTimeout(function(){
-    location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance();
-  },1400);
-}
-function run(){
-  if(ph>=P.length){
-    ph=0;cy++;
-    if(cy>=3){fin();return}
-    s.textContent='цикл '+(cy+1)+' из 3';
-  }
-  var p=P[ph],k=p[1];
+/* Зажал сферу — сфера плавно дышит (вдох 3с / выдох 4с) пока держишь. Отпустил — появляется кнопка «Идти дальше». */
+var c=document.getElementById('c'),t=document.getElementById('t'),s=document.getElementById('s'),go=document.getElementById('go');
+var holding=false,touched=false,timer=null,phase=0;
+var PH=[['Вдох',3000,1.68],['Выдох',4000,1.0]];
+function vib(n){try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}}
+function step(){
+  if(!holding)return;
+  var p=PH[phase];
   t.textContent=p[0];
   c.style.transitionTimingFunction='ease-in-out';
-  c.style.transitionDuration=k+'s';
+  c.style.transitionDuration=(p[1]/1000)+'s';
   c.style.transform='scale('+p[2]+')';
-  try{navigator.vibrate&&navigator.vibrate(25)}catch(e){}
-  (function tk(){
-    n.textContent=k;
-    if(--k>0)setTimeout(tk,1000);
-    else setTimeout(function(){ph++;run()},1000);
-  })();
+  vib(18);
+  timer=setTimeout(function(){
+    if(!holding)return;
+    phase=1-phase;
+    step();
+  },p[1]);
 }
-function start(e){
-  if(started||doneF)return;
+function onDown(e){
   if(e)e.preventDefault();
-  started=true;
-  s.textContent='цикл 1 из 3';
-  run();
+  if(holding)return;
+  holding=true;touched=true;phase=0;
+  clearTimeout(timer);
+  c.classList.add('hold');
+  s.textContent='Отпусти, когда будешь '+(window.GG?GG('готов','готова'):'готов');
+  go.classList.remove('show');
+  try{if(e&&e.pointerId!=null&&c.setPointerCapture)c.setPointerCapture(e.pointerId)}catch(err){}
+  step();
 }
-c.addEventListener('pointerdown',start,{passive:false});
+function onUp(){
+  if(!holding)return;
+  holding=false;
+  clearTimeout(timer);
+  c.classList.remove('hold');
+  c.style.transitionTimingFunction='ease-out';
+  c.style.transitionDuration='0.9s';
+  c.style.transform='scale(1)';
+  t.textContent='Я есмь';
+  s.textContent='';
+  go.classList.add('show');
+  vib(35);
+}
+c.addEventListener('pointerdown',onDown,{passive:false});
+c.addEventListener('pointerup',onUp);
+c.addEventListener('pointercancel',onUp);
+window.addEventListener('pointerup',onUp);
+go.addEventListener('click',function(){
+  vib(20);
+  location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance();
+});
 </script>
 <script src="engine.js?v=arch1"></script>
 <script src="passport-data.js?v=1"></script>
@@ -77,5 +91,5 @@ c.addEventListener('pointerdown',start,{passive:false});
 <script src="texts.js?v=mf4"></script>
 <script src="texts_fr.js?v=mf2"></script>
 <script src="nav.js?v=bar7"></script>
-<script>/* iOS: filter на html дает квадрат вокруг масштабируемой сферы */document.documentElement.style.filter='none';</script>
+<script>document.documentElement.style.filter='none';</script>
 </body></html>

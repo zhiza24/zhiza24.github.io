@@ -3,6 +3,8 @@
 'use strict';
 const K='alch_v5_profile';
 function relocate(p){p=p||{};const f=p.flow;if(!f)return p;let ch=false;if(f.current==='scene.html?k=start'){f.current='choose.html';ch=true}if(f.last==='scene.html?k=start'){f.last='choose.html';ch=true}
+ if(f.current==='scene.html?k=road'){f.current='bridge.html';ch=true}if(f.last==='scene.html?k=road'){f.last='bridge.html';ch=true}
+ if(f.current==='sum.html'){f.current='slot.html?id=dialog';ch=true}if(f.last==='sum.html'){f.last='slot.html?id=dialog';ch=true}
  /* Фонари убраны из маршрута, их место заняла дыхательная пауза. Выданный «Фонарь» остается.
     Заставка «Я есмь» стала шагом маршрута после дыхания; уже просмотренная считается пройденной. */
  const B='breath.html?at=p0',C='cutscene.html';f.completed=f.completed||{};if(f.current==='lanterns.html'){f.current=B;ch=true}if(f.last==='lanterns.html'){f.last=B;ch=true}if(f.completed['lanterns.html']&&!f.completed[B]){f.completed[B]=f.completed['lanterns.html'];ch=true}
@@ -90,6 +92,16 @@ function init(){
  p.flow=p.flow||{};const f=p.flow;
  if(!f.version){f.legacy={last:f.last||null,max:f.max||0};f.completed=f.completed||{};f.current=state(p).url;f.last=f.current;f.version=2;}
  recordVisit(u,p);save(p);
+ try{
+  const i=index(u),nx=i>=0&&GFLOW[i+1]?GFLOW[i+1].u:null;
+  if(nx&&document.head){
+   const ln=document.createElement('link');ln.rel='prefetch';ln.href=nx;document.head.appendChild(ln);
+   const PRE={'bridge.html':['img/map_bg.jpg','img/chasm_top.webp?v=pc1','img/fire_camp.webp?v=pc1','img/scene_fire.jpg'],
+    'cutscene.html':['img/sphere.png'],'slot.html?id=dialog':['img/scene_fire.jpg',p.gender==='f'?'img/triangle_f.jpg':'img/triangle_m.jpg'],
+    'scene.html?k=ego':['img/scene_mage.jpg'],'scene.html?k=pa':['img/scene_architect.jpg'],'slot.html?id=pb_intro':['img/scene_point_b.jpg'],'slot.html?id=pc_intro':['img/scene_point_c.jpg']};
+   (PRE[nx]||[]).forEach(src=>{const im=new Image();im.src=src});
+  }
+ }catch(e){}
 }
 function snapshot(u,p){
  const keys={

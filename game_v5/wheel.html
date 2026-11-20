@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><script src="theme.js?v=8"></script><script src="sound.js?v=1"></script><script src="flow.js?v=wish2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=wish2"></script><script src="profile-layer.js?v=kit2"></script><script src="route-gate.js?v=wish2"></script><script src="gender.js?v=1"></script><script>location.replace("hero.html?u="+Date.now())</script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794512684"></script><meta http-equiv="Cache-Control" content="no-cache">
+<!doctype html><html lang="ru"><head><script src="theme.js?v=8"></script><script src="sound.js?v=1"></script><script src="flow.js?v=fix1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=fix1"></script><script src="profile-layer.js?v=kit2"></script><script src="route-gate.js?v=wish2"></script><script src="gender.js?v=1"></script><script>location.replace("hero.html?u="+Date.now())</script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794512684"></script><meta http-equiv="Cache-Control" content="no-cache">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Колесо Фортуны</title><meta name="theme-color" content="#120c07">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -104,7 +104,7 @@ var top=document.getElementById('top');setTimeout(function(){top.classList.add('
 setTimeout(function(){cur++;if(cur<6){show();top.classList.remove('out');busy=false}else finish()},850)};
 function finish(){document.getElementById('top').style.display='none';document.querySelectorAll('.num').forEach(function(n){n.classList.remove('cur')});
 var o=K.slice().sort(function(a,b){return sc[b]-sc[a]}),lead=sc[o[0]]-sc[o[1]]>=2,key=lead?o[0]:'z',
-title=lead?'Основной почерк действия: '+NM[key]:'Переходный (Размазанность / арсенал гибких реакций)';
+title=lead?'Основная стратегия выбора: '+NM[key]:'Переходный (Размазанность / арсенал гибких реакций)';
 var P={};try{P=JSON.parse(localStorage.getItem('alch_v5_profile'))||{}}catch(e){}
 P.skill={key:key,title:title,scores:sc,top:lead?[o[0]]:[o[0],o[1]]};localStorage.setItem('alch_v5_profile',JSON.stringify(P));
 var D=[];try{D=JSON.parse(localStorage.getItem('alch_v5_diary'))||[]}catch(e){}D.push({date:new Date().toISOString(),title:'Колесо судьбы',result:P.skill});localStorage.setItem('alch_v5_diary',JSON.stringify(D));

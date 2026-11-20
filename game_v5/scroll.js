@@ -138,8 +138,8 @@
     ov.classList.remove('on');
     var reduce = false;
     try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-    var roll = reduce ? 0 : 620;
-    var fade = reduce ? 0 : 560;
+    var roll = reduce ? 0 : (document.body.classList.contains('gsc-fast') ? 220 : 320);
+    var fade = reduce ? 0 : (document.body.classList.contains('gsc-fast') ? 160 : 220);
     var cb = state.onClose;
     hideT = setTimeout(function () {
       ov.classList.add('gone');
@@ -162,7 +162,7 @@
     setAudio(opts.audio || '');
     resetBodyScroll();
     var every = !!opts.everyTime;
-    var delay = opts.delay != null ? +opts.delay : 900;
+    var delay = opts.delay != null ? +opts.delay : 260;
     if (opts.fast) document.body.classList.add('gsc-fast');
     else document.body.classList.remove('gsc-fast');
     if (state.seen && !every) {
@@ -173,7 +173,7 @@
     }
     icon.hidden = true;
     document.body.classList.add('gsc-first');
-    autoT = setTimeout(open, isNaN(delay) ? 900 : delay);
+    autoT = setTimeout(open, isNaN(delay) ? 260 : delay);
   }
 
   window.Scroll = {

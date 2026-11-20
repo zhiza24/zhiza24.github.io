@@ -41,13 +41,14 @@ var SRC=[
    if(!c.themes.length)return p('Паспорт открыт. Темы, в которых ты узнаешь себя, пока не отмечены.');
    return p('Темы, в которых ты '+(fem(P)?'узнала':'узнал')+' себя:')+'<ul class="hm-ul">'+c.themes.map(function(t){var d=D.themes.filter(function(x){return x.id===t.id})[0];return '<li><b>'+esc(t.name)+'</b>'+(d&&d.description?'<br><small>'+esc(window.GPassport?GPassport.say(d.description,P.gender):d.description)+'</small>':'')+'</li>'}).join('')+'</ul>'}],
  [1,'path','Выбор пути','choose.html',function(P){var c=CARDS[P.mapStyle];if(!c)return null;return '<div class="hm-q">«'+esc(c[0])+'»</div>'+p(esc(c[1]))}],
- [1,'pocherk','Почерк героя','bridge.html',function(P){var x=P.pocherk;if(!x||!x.lead||!window.POCHERK_TEXT)return null;var k=x.mixed?'mixed':x.lead,T=(POCHERK_TEXT[k]||{})[fem(P)?'F':'M']||[],D=window.POCHERK_DIRS||{};
+ [1,'pocherk','Твоя стратегия выбора','bridge.html',function(P){var x=P.pocherk;if(!x||!x.lead||!window.POCHERK_TEXT)return null;var k=x.mixed?'mixed':x.lead,T=(POCHERK_TEXT[k]||{})[fem(P)?'F':'M']||[],D=window.POCHERK_DIRS||{};
    var name=x.mixed&&x.leads?arr(x.leads).map(function(l){return D[l]}).join(' и '):D[x.lead];if(!T.length)return '<div class="hm-q">'+esc(name)+'</div>';
    return '<div class="hm-q">'+esc(name)+'</div>'+p(esc(T[0]))+det('Подробнее',T.slice(1).filter(Boolean).map(function(t){return p(esc(t))}).join(''))}],
  [1,'pi','Профиль взаимодействия','slot.html?id=pi',function(P){return testMain('pi',P)}],
  [2,'ego','Фоновое состояние','ego.html',function(P){var e=P.ego;if(!e||!e.top)return null;var A=window.GARCH&&e.lead?GARCH.resA[e.lead]:null;
    if(!A)return '<div class="hm-q">'+h(e.top)+'</div>';return '<div class="hm-q">'+h(A.title)+'</div>'+p(h(A.text))+(A.point?'<p class="hm-pt">Новая точка: «'+h(A.point).replace(/\.$/,'')+'»</p>':'')}],
  [3,'dialog','Диалог: кто сейчас выбирает','slot.html?id=dialog',function(P){var d=P.dialog;if(!d)return null;
+   if(d.v===5){var e5=d.egoCount||0,s5=d.selfCount||0,k5=d.doubtCount||0;return p(esc('Темная сторона (Эго): '+e5+' из 10 · Светлая сторона (Самость): '+s5+' из 6'+(k5?' · иногда: '+k5:'')+'.'))}
    if(d.v===4){var e=d.egoCount||0,s=d.selfCount||0,k=d.doubtCount||0;if(!e&&!s)return p('Сейчас ты сомневаешься во всех фразах. Это честный ответ: голоса пока звучат вместе. Можно вернуться к этим словам позже и заметить, какой из них слышен в обычный день.');
     return p(esc('Защитнику ты '+(fem(P)?'отдала ':'отдал ')+e+' '+word(e,'фразу','фразы','фраз')+', Самости '+s+(k?', в '+k+' сомневаешься':'')+'.'))+p('Куда направлен фокус внимания, там сила и выбор.')}
    return p('Диалог пройден.')}],
