@@ -66,7 +66,18 @@ function ensure(){
   if(!T.openDay)T.openDay=0;
   if(!T.view)T.view='month';
   if(T.declared&&T.directions&&T.directions.length===3&&!T.start)T.start=Date.now();
-  if(!T.strategy&&window.GStrategy){try{T.strategy=GStrategy.build(P);if(!T.start)T.start=Date.now()}catch(e){}}
+  if(window.GStrategy){try{
+    if(!T.strategy){T.strategy=GStrategy.build(P);if(!T.start)T.start=Date.now()}
+    else{
+      var ds=((T.directions)||[]).map(function(x){return typeof x==='string'?{id:x,text:x}:{id:(x&&x.id)||'',text:(x&&(x.text||x.t||x.name))||''}}).filter(function(x){return x.text});
+      if(ds.length===3){
+        T.strategy.stars=ds.map(function(d){return {id:d.id,text:d.text}});
+        if(T.strategy.focus&&T.strategy.focus.length){
+          T.strategy.focus=T.strategy.focus.map(function(x,i){if(!ds[i])return x;return {k:x.k,t:ds[i].text,g:x.g,src:x.src||x.t,wish:ds[i].text}});
+        }
+      }
+    }
+  }catch(e){}}
   if(!T.act){T.act={signs:{from:1,len:28}}}
   return P;
 }
@@ -180,7 +191,7 @@ function render(){
 }
 
 function wishText(T){return (T.declared&&(T.declared.text||T.declared.raw))||''}
-function dirs(T){return T.directions||[]}
+function dirs(T){return ((T&&T.directions)||[]).map(function(d){if(typeof d==='string')return {id:d,text:d};return {id:(d&&d.id)||'',text:(d&&(d.text||d.t||d.name))||''}}).filter(function(d){return d.text})}
 
 function dayFilled(T,n){
   var d=dayRec(T,n);
@@ -324,7 +335,10 @@ function viewMonth(P,T){
   var today=todayNum(T), open=+T.openDay||0;
   var html='<div class="t28">'+growthHtml(T);
   var wish=wishText(T);
-  html+=wish?'<p class="wishline">'+esc(wish)+'</p>':'<p class="wishline">Трекер 28 дней</p>';
+  html+=wish?'<p class="wishline">Центральная звезда · '+esc(wish)+'</p>':'<p class="wishline">Трекер 28 дней</p>';
+  var ds=dirs(T);
+  if(ds.length)html+='<p class="starsline">Три звезды: '+ds.map(function(d){return esc(d.text)}).join(' · ')+'</p>';
+  html+='<p class="cap28"><a class="sky-link" href="wish.html">Открыть небо желаний</a></p>';
   var res=(P.pathPlan&&P.pathPlan.result)||'';
   html+='<p class="cap28">'+(res?'Результат цикла: '+esc(res):'28 дней · четыре недели последовательных действий')+'</p>';
   var fc=filledCount(T);if(fc>0&&streakOf(T)===0&&today>1&&!T.finale)html+='<p class="cap28 soft">Пропуск ничего не обнуляет. Продолжи с сегодняшнего дня, с минимального шага'+(P.pathPlan&&P.pathPlan.min?': '+esc(P.pathPlan.min):'')+'.</p>';
@@ -371,7 +385,7 @@ function dayPanel(P,T,n){
     html+=markBtns(d.dirMarks[i]||'','data-who="dir" data-i="'+i+'"');
     html+='</div>';
   });
-  if(!dirs(T).length)html+='<div class="row-line"><p class="mute">Направления появятся, когда ты выберешь три после колес.</p></div>';
+  if(!dirs(T).length)html+='<div class="row-line"><p class="mute">Три звезды появятся, когда ты подтвердишь выбор на небе желаний.</p></div>';
 
   }
   html+='<div class="row-line sliders">';
@@ -574,14 +588,14 @@ function finaleBlock(P,T){
     var a=avgWeek(T,0,m.key), b=avgWeek(T,3,m.key);
     return '<p>'+esc(m.name)+': '+(a==null?'нет отметок':a)+(b==null?'':' → '+b)+'</p>';
   }).join('')+'</div>';
-  var dirH='<div class="card"><b>Три направления</b>'+dirs(T).map(function(dir,i){
+  var dirH='<div class="card"><b>Три звезды</b>'+dirs(T).map(function(dir,i){
     var done=0, marks={}; for(var n=1;n<=28;n++){var d=dayRec(T,n); if(d.dirState[i]==='done')done++; if(d.dirMarks[i])marks[d.dirMarks[i]]=(marks[d.dirMarks[i]]||0)+1;}
     return '<p><b>'+esc(dir.text)+'</b> · шагов сделано: '+done+'. Стало лучше: '+(marks.better||0)+', привычка: '+(marks.habit||0)+', вопрос решился: '+(marks.solved||0)+'.</p>';
   }).join('')+'</div>';
   var wm={}; for(var n=1;n<=28;n++){var m=dayRec(T,n).wishMark; if(m)wm[m]=(wm[m]||0)+1;}
   var signs=0; for(n=1;n<=28;n++)signs+=(dayRec(T,n).signs||[]).length;
   return '<h1>Было и стало</h1>'+wheelH+sl+dirH+
-    '<div class="card finale-card"><b>Судьба заявленного желания</b><p class="wishline">'+esc(wish)+'</p>'+
+    '<div class="card finale-card"><b>Судьба центральной звезды</b><p class="wishline">'+esc(wish)+'</p>'+
     '<p class="mute">Этот вопрос задается только здесь, в конце цикла. Знаков за 28 дней: '+signs+'. Отметок «стало лучше»: '+(wm.better||0)+', привычка: '+(wm.habit||0)+', вопрос решился: '+(wm.solved||0)+'.</p>'+
     '<div class="fate">'+[['came','сбылось'],['closer','приблизилось'],['letgo','отпущено']].map(function(x){
       return '<button type="button" class="'+(fate===x[0]?'on':'')+'" data-act="fate" data-v="'+x[0]+'">'+x[1]+'</button>';

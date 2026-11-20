@@ -170,6 +170,14 @@ function build(P){
  var focus=[{k:k1,t:FOC[k1].t,g:fg(k1)},{k:k2,t:FOC[k2].t,g:fg(k2)}];
  if(low)focus.push({k:'support',t:SUPPORT.t,g:SUPPORT.g});
  else focus.push({k:'steady',t:'Устойчивость действий',g:STEADY[mech]||STEADY.architect});
+ var dirs=((P.tracker&&P.tracker.directions)||[]).map(function(x){
+  if(typeof x==='string')return {id:x,text:x};
+  return {id:(x&&x.id)||'',text:(x&&(x.text||x.t||x.name))||''};
+ }).filter(function(x){return x.text});
+ var stars=dirs.slice(0,3);
+ if(stars.length===3){
+  focus=focus.map(function(x,i){return {k:x.k,t:stars[i].text,g:x.g,src:x.t,wish:stars[i].text}});
+ }
  /* препятствия */
  var PT=window.GPAT||{},p1=PT[k1],p2=PT[k2],obst=[];
  if(p1){obst.push({t:'Привычная реакция',x:p1.parts[1][1]+'.'});obst.push({t:'Скрытое правило',x:'«'+p1.parts[2][1]+'».'});obst.push({t:'Что эта привычка дает взамен',x:p1.parts[3][1]+'. Поэтому отказаться от нее непросто.'})}
@@ -197,7 +205,7 @@ function build(P){
   else if(wk===2){var a2=acts[ai++%acts.length];x=(i===3)?mk(pr2[(i+2)%pr2.length]||a2.m,fa(k2).min,fa(k2).alt,fa(k2).obs,1):mk(a2.m,a2.n,fa(k1).alt,'Заметь, как на это реагирует жизнь вокруг: люди, события, возможности.',i%2?2:0)}
   else{x=(i===6)?mk('Сравни, что было в начале цикла и что сейчас: что ты сделал{|а}, что изменилось, что понял{|а} о себе.','Запиши одно отличие.','Перечитай свои отметки за 28 дней.','Заметь, что из нового стало естественным.',2):(i%2?mk(pr1[(i+5)%pr1.length]||acts[3].m,fa(k1).min,fa(k1).alt,'Заметь, что уже получается без усилия.',0):(function(){var a=acts[ai++%acts.length];return mk(a.m,a.n,fa(k2).alt,'Заметь, что из этого ты хочешь оставить.',2)})())}
   x.w=wk;days.push(x)}
- return {v:1,at:Date.now(),wish:wish,cat:ck,need:need,focus:focus,obst:obst,res:res,result:C.result,signs:C.signs.slice(),first:gx(C.first,f),weeks:WEEKS,days:days,lead:k1,second:k2,low:low,weak:!!L.weak}}
+ return {v:1,at:Date.now(),wish:wish,cat:ck,need:need,focus:focus,stars:stars,obst:obst,res:res,result:C.result,signs:C.signs.slice(),first:gx(C.first,f),weeks:WEEKS,days:days,lead:k1,second:k2,low:low,weak:!!L.weak}}
 
 /* Адаптация шага по отметкам прошлых дней */
 function adapt(T,n){var S=T.strategy;if(!S)return null;var base=S.days[n-1];if(!base)return null;var o={m:base.m,n:base.n,a:base.a,o:base.o,dir:base.dir,note:''};
@@ -212,7 +220,8 @@ function adapt(T,n){var S=T.strategy;if(!S)return null;var base=S.days[n-1];if(!
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function html(S){
  var h='<p class="sg-k">Твоя стратегия готова</p><h1 class="sg-h">Твой маршрут на 28 дней</h1>';
- h+='<section class="sg-b"><small>Твое желание</small><p class="sg-w">'+esc(S.wish)+'</p></section>';
+ h+='<section class="sg-b"><small>Центральная звезда</small><p class="sg-w">'+esc(S.wish)+'</p></section>';
+ if(S.stars&&S.stars.length)h+='<section class="sg-b"><small>Три звезды ближайшего пути</small>'+S.stars.map(function(x,i){return '<p><b>'+(i+1)+'. '+esc(x.text)+'</b></p>'}).join('')+'</section>';
  h+='<section class="sg-b"><small>Что стоит за этим желанием</small><p>'+esc(S.need)+'</p></section>';
  h+='<section class="sg-b"><small>Что сейчас требует внимания</small>'+S.focus.map(function(x,i){return '<p><b>'+(i+1)+'. '+esc(x.t)+'</b><br>'+esc(x.g)+'</p>'}).join('')+'</section>';
  if(S.obst.length)h+='<details class="sg-b"><summary><small>Что мешает движению</small></summary>'+S.obst.map(function(x){return '<p><b>'+esc(x.t)+'.</b> '+esc(x.x)+'</p>'}).join('')+'</details>';

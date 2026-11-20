@@ -1,114 +1,154 @@
-/* Блок желаний game_v5: небо, заявка удержанием, две колеса, три направления.
-   Данные живут в alch_v5_profile: wishMod + tracker. Колесо баланса читает P.wheel. */
+/* Небо моих желаний: 8 созвездий по сферам колеса, центральная звезда, три подтвержденных желания для трекера.
+   Слои данных в alch_v5_profile.wishMod: wishes (исходные), links (связи), insights (наблюдения).
+   В трекер желания попадают только после «Да, работаю над этим». */
 (function(){
 'use strict';
 var KEY='alch_v5_profile';
-var HOLD_MS=2500;
-var SPH=[
-  {id:'health', name:'Здоровье', color:'#78b995'},
-  {id:'money', name:'Финансы', color:'#d8b657'},
-  {id:'career', name:'Карьера', color:'#77a9d3'},
-  {id:'love', name:'Отношения', color:'#d48eaa'},
-  {id:'family', name:'Семья', color:'#b69bd6'},
-  {id:'friends', name:'Друзья', color:'#dfab77'},
-  {id:'growth', name:'Рост', color:'#79c1bf'},
-  {id:'rest', name:'Отдых', color:'#a8bb75'}
+var CONS=[
+  {id:'health', wheel:'Здоровье', name:'Здоровье и тело', color:'#78b995',
+    q:'Как ты хочешь себя чувствовать? Что изменить в теле, самочувствии или облике?',
+    chips:['Больше энергии','Высыпаться','Легкость в теле','Регулярное движение','Спокойный ритм']},
+  {id:'money', wheel:'Финансы', name:'Деньги и возможности', color:'#d8b657',
+    q:'Какой уровень материальной свободы ты хочешь создать? Что приобрести или выстроить?',
+    chips:['Свой устойчивый доход','Подушка безопасности','Свобода выбирать работу','Крупная покупка']},
+  {id:'career', wheel:'Карьера', name:'Дело и самореализация', color:'#77a9d3',
+    q:'Какое дело ты хочешь создать или развивать? Чем хочешь заниматься?',
+    chips:['Свой проект','Новая роль','Дело по душе','Профессиональный шаг']},
+  {id:'love', wheel:'Отношения', name:'Любовь и отношения', color:'#d48eaa',
+    q:'Какие отношения и какую близость ты хочешь переживать?',
+    chips:['Теплое партнерство','Честный разговор','Взаимность','Новая встреча']},
+  {id:'family', wheel:'Семья', name:'Семья', color:'#b69bd6',
+    q:'Как ты хочешь проводить время с близкими? Какие семейные события пережить?',
+    chips:['Больше времени вместе','Общее дело','Семейный праздник','Теплый дом']},
+  {id:'friends', wheel:'Друзья', name:'Друзья и окружение', color:'#dfab77',
+    q:'Каким окружением ты хочешь себя наполнить?',
+    chips:['Живое общение','Новые знакомства','Свои люди рядом','Круг по интересам']},
+  {id:'growth', wheel:'Рост', name:'Знания и развитие', color:'#79c1bf',
+    q:'Чему ты хочешь научиться? Что изучить или в себе вырастить?',
+    chips:['Новый язык','Навык, который зовет','Учеба','Внутренняя ясность']},
+  {id:'rest', wheel:'Отдых', name:'Отдых и впечатления', color:'#a8bb75',
+    q:'Какие впечатления, путешествия или отдых ты хочешь себе подарить?',
+    chips:['Путешествие','Тихий отдых','Творчество для себя','Праздник, который ждешь']}
 ];
-var HEROES=[
-  {id:'ruler', name:'Правитель', drive:'контроль', q:'стабильность', color:'#2f8a52', guard:'порядок и ясность', wound:'чувство несправедливости', qs:['Мне важно, чтобы мои желания укладывались в понятный порядок.','Я спокойнее, когда {сам определяю|сама определяю}, как все будет устроено.']},
-  {id:'care', name:'Заботливый', drive:'комфорт', q:'стабильность', color:'#7a9a32', guard:'тепло и тех, кто рядом', wound:'страх остаться без своих', qs:['Я чаще загадываю то, что облегчит жизнь близким, а не только мне.','Мне важно, чтобы желаемое никого не оставило без опоры.']},
-  {id:'creator', name:'Творец', drive:'инновации', q:'стабильность', color:'#2a9a7a', guard:'право на свое видение', wound:'боль отвержения своего видения', qs:['Мои желания часто начинаются с образа, которого еще нет в жизни.','Мне хочется создавать новое, а не повторять уже знакомое.']},
-  {id:'innocent', name:'Простодушный', drive:'безопасность', q:'самопознание', color:'#3a9aaa', guard:'простой покой', wound:'чувство унижения', qs:['Я легче желаю то, что кажется безопасным и добрым.','Мне важно, чтобы желаемое не разрушило простой покой.']},
-  {id:'sage', name:'Мудрец', drive:'понимание', q:'самопознание', color:'#2a7a9a', guard:'время понять', wound:'рану недоверия', qs:['Сначала я хочу понять смысл желания, и только потом к нему идти.','Мне важно видеть, чему это желание меня учит.']},
-  {id:'seeker', name:'Искатель', drive:'свобода', q:'самопознание', color:'#3a6aaa', guard:'свободу не застрять', wound:'боль отвержения', qs:['Мои самые живые желания связаны со свободой и новым горизонтом.','Мне тесно, когда желание требует оставаться на одном месте.']},
-  {id:'rebel', name:'Бунтарь', drive:'независимость', q:'изменения', color:'#4a4aaa', guard:'независимость', wound:'чувство несправедливости', qs:['Я оживляюсь, когда желание ломает привычный ход вещей.','Мне важно идти своим путем, даже если он не похож на чужой.']},
-  {id:'magus', name:'Маг', drive:'сила', q:'изменения', color:'#5a3a9a', guard:'внутреннюю силу', wound:'чувство унижения', qs:['Я чувствую, что внутреннее состояние меняет, как складывается желаемое.','Мне важно сначала почувствовать, будто желаемое уже рядом.']},
-  {id:'hero', name:'Герой', drive:'мастерство', q:'изменения', color:'#6b3a8a', guard:'достоинство и путь', wound:'рану предательства', qs:['Я хочу желаний, в которых есть вызов и путь, который нужно пройти.','Мне важно довести задуманное до ясного результата.']},
-  {id:'lover', name:'Любовник', drive:'близость', q:'принадлежность', color:'#c45a5a', guard:'живое чувство', wound:'страх быть покинутым', qs:['Мои желания часто про близость, красоту и живое чувство.','Мне важно, чтобы в желаемом было место для теплых отношений.']},
-  {id:'jester', name:'Шут', drive:'наслаждение', q:'принадлежность', color:'#e08a50', guard:'легкость', wound:'чувство унижения', qs:['Я охотнее загадываю то, что приносит легкость и игру.','Мне важно, чтобы на пути к желаемому оставалась радость.']},
-  {id:'everyman', name:'Славный малый', drive:'принадлежность', color:'#e0a04a', guard:'связь со своими', wound:'боль отвержения', qs:['Мне легче желать того, в чем я не буду один.','Мне важно чувствовать, что мои желания понятны близким людям.']}
+var HZ=[
+  {id:'now', t:'Сейчас'},
+  {id:'year', t:'В течение года'},
+  {id:'years', t:'Несколько лет'},
+  {id:'someday', t:'Когда-нибудь'}
 ];
-var HERO_Q=[];HEROES.forEach(function(h){h.qs.forEach(function(t){HERO_Q.push({hero:h.id,text:t})})});
-var QUADS=[
-  {id:'стабильность', name:'Стабильность', color:'#2f8a52'},
-  {id:'самопознание', name:'Самопознание', color:'#2a7a9a'},
-  {id:'изменения', name:'Изменения', color:'#5a3a9a'},
-  {id:'принадлежность', name:'Принадлежность', color:'#c45a5a'}
-];
-var VALS=['Свобода','Любовь','Семья','Здоровье','Творчество','Развитие','Смысл','Стабильность','Приключения','Служение','Красота','Спокойствие','Дружба','Честность','Гармония'];
-var SOURCE=[
-  {id:'body', t:'Тело', d:'слышу это в теле, как тепло или движение'},
-  {id:'image', t:'Образ', d:'сначала встает картинка, а уже потом слова'},
-  {id:'mind', t:'Мысль', d:'приходит как ясная мысль или решение'},
-  {id:'relation', t:'Связь', d:'оживает, когда рядом другой человек'}
+var EXTRA=[
+  {re:/путешеств|поездк|итал|стран[аыу]|остров|море/i, id:'rest'},
+  {re:/язык|учи[тл]|курс|книг|навык/i, id:'growth'},
+  {re:/дом|квартир|сад|дач/i, id:'family'},
+  {re:/проект|дело|бизнес|работ/i, id:'career'},
+  {re:/деньг|доход|зарплат|купи/i, id:'money'},
+  {re:/семь|родител|дети|ребен/i, id:'family'},
+  {re:/любов|партнер|отношен/i, id:'love'},
+  {re:/здоров|тело|спорт|сон/i, id:'health'}
 ];
 
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
 function save(P){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-function gx(s){return String(s).replace(/\{([^|]*)\|([^}]*)\}/g,function(_,m,f){return window.GG?GG(m,f):m})}
+function gx(s){return String(s==null?'':s).replace(/\{([^|]*)\|([^}]*)\}/g,function(_,m,f){return window.GG?GG(m,f):m})}
 function uid(){return 'w'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function now(){return Date.now()}
-function zoneOf(n){n=+n;if(!isFinite(n))return 'none';if(n<=4)return 'need';if(n<=7)return 'ok';return 'like'}
-function zoneName(z){return z==='need'?'не хватает':z==='ok'?'терпимо':z==='like'?'нравится':'нет оценки'}
+function consOf(id){return CONS.filter(function(c){return c.id===id})[0]||null}
+function hzName(id){var h=HZ.filter(function(x){return x.id===id})[0];return h?h.t:''}
 
 function ensure(P){
   P=P||load();
   P.wishMod=P.wishMod||{};
   var W=P.wishMod;
+  if(W.v!==2){
+    if(Array.isArray(W.wishes)&&W.wishes.length){
+      W.wishes.forEach(function(w){if(!w.cid)w.cid='legacy'; if(!w.raw)w.raw=w.text||w.form||''});
+    }
+    W.v=2;
+    var ok=['invite','sky','const','center','accepted','compare','pick3','map'];
+    if(ok.indexOf(W.scene)<0){
+      W.scene=(P.tracker&&P.tracker.declared&&Array.isArray(P.tracker.directions)&&P.tracker.directions.length===3)?'map':'invite';
+    }
+  }
   if(!Array.isArray(W.wishes))W.wishes=[];
-  if(!W.research)W.research={heroAns:[],places:{},source:{},values:[],contra:'',dirs:[]};
-  if(!W.research.heroAns)W.research.heroAns=[];
-  if(!W.research.places)W.research.places={};
-  if(!W.research.source)W.research.source={};
-  if(!W.research.values)W.research.values=[];
-  if(!W.research.dirs)W.research.dirs=[];
+  if(!W.links||typeof W.links!=='object')W.links={};
+  if(!Array.isArray(W.insights))W.insights=[];
+  if(!Array.isArray(W.pick))W.pick=[];
   if(!W.scene)W.scene='invite';
   P.tracker=P.tracker||{};
   return P;
 }
-function wheelScores(P){
-  var a=(P&&P.wheel)||[];
-  if(Array.isArray(a)&&a.length===8)return a.map(function(x){return +x});
-  var loc=(P.wishMod&&P.wishMod.wheelLocal)||[];
-  if(Array.isArray(loc)&&loc.length===8)return loc.map(function(x){return +x});
-  return null;
+
+function liveWishes(P){return (P.wishMod.wishes||[]).filter(function(w){return w&&(w.text||w.raw)&&!w.archived})}
+function wishById(P,id){return (P.wishMod.wishes||[]).filter(function(w){return w.id===id})[0]||null}
+function labelOf(w){return (w&&(w.text||w.form||w.raw))||''}
+
+function autoLinks(w){
+  var set={}; if(w.cid&&w.cid!=='legacy')set[w.cid]=1;
+  var t=labelOf(w);
+  EXTRA.forEach(function(x){if(x.re.test(t)&&x.id!==w.cid)set[x.id]=1});
+  return Object.keys(set);
 }
-function remaining(P){
-  var W=P.wishMod, id=W.declaredId;
-  return W.wishes.filter(function(w){return w.id!==id});
+function linksOf(P,w){
+  var L=(P.wishMod.links&&P.wishMod.links[w.id])||w.spheres||autoLinks(w);
+  if(!L.length)L=autoLinks(w);
+  return L;
 }
-function declaredWish(P){
-  var id=P.wishMod&&P.wishMod.declaredId;
-  return (P.wishMod.wishes||[]).find(function(w){return w.id===id})||null;
+function refreshLinks(P,w){
+  P.wishMod.links=P.wishMod.links||{};
+  P.wishMod.links[w.id]=autoLinks(w);
+  return P.wishMod.links[w.id];
+}
+
+/* Колесо: оценки 0–10 и желание улучшить из фактической картины */
+function wheelInfo(P){
+  var names=['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'];
+  var scores=null;
+  if(Array.isArray(P.wheel)&&P.wheel.length===8)scores=P.wheel.map(function(x){return +x});
+  var out=CONS.map(function(c,i){
+    var sc=scores?scores[i]:null, want=false, urgent=false;
+    var WT=P.wheelTest;
+    if(WT&&Array.isArray(WT.spheres)){
+      var s=WT.spheres.filter(function(x){return x.name===c.wheel||x.name===names[i]})[0];
+      if(s&&Array.isArray(s.improvements)){
+        s.improvements.forEach(function(im){
+          if(im&&im.change==='yes'){want=true; if(im.urgency==='soon'||im.urgency==='now'||im.strength>=7)urgent=true}
+        });
+      }
+      if(s&&s.average!=null&&scores==null)sc=+s.average;
+    }
+    var low=sc!=null&&sc<=4;
+    return {id:c.id, wheel:c.wheel, name:c.name, score:sc, low:low, want:want||low, urgent:urgent, unsatisfied:want||low};
+  });
+  return out;
 }
 
 function writeDeclared(P){
-  var w=declaredWish(P); if(!w)return;
+  var b=P.wishMod.big; if(!b||!(b.text||b.raw))return;
   P.tracker=P.tracker||{};
   P.tracker.declared={
-    id:w.id,
-    text:w.form||w.text,
-    raw:w.text,
-    at:P.wishMod.declaredAt||now(),
-    scheme:'declared'
+    id:b.id||'big',
+    text:b.text||b.raw,
+    raw:b.raw||b.text,
+    at:b.at||now(),
+    scheme:'big'
   };
   P.log=P.log||[];
-  P.log.push({t:now(),x:'Заявлено желание: '+(w.form||w.text)});
+  P.log.push({t:now(),x:'Главное желание: '+(b.text||b.raw)});
   save(P);
 }
 function writeDirections(P){
-  var ids=P.wishMod.research.dirs||[];
+  var ids=P.wishMod.confirmed||P.wishMod.pick||[];
   var list=ids.map(function(id){
-    var w=P.wishMod.wishes.find(function(x){return x.id===id});
-    return w?{id:w.id,text:w.form||w.text}:null;
+    var w=wishById(P,id); if(!w)return null;
+    return {id:w.id, text:labelOf(w), cid:w.cid||null, horizon:w.horizon||null};
   }).filter(Boolean);
   P.tracker=P.tracker||{};
   P.tracker.directions=list;
   P.tracker.directionsAt=now();
   if(!P.tracker.start)P.tracker.start=now();
   P.log=P.log||[];
-  P.log.push({t:now(),x:'Три целевых направления: '+list.map(function(x){return x.text}).join('; ')});
+  P.log.push({t:now(),x:'Три звезды ближайшего пути: '+list.map(function(x){return x.text}).join('; ')});
   save(P);
 }
 
@@ -117,39 +157,7 @@ var sky=document.getElementById('wsky');
 var starsLayer=null;
 
 function setScene(name){var P=ensure();P.wishMod.scene=name;save(P);render()}
-
 function starSvg(){return '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2.2l3.4 8.6 9.2.8-7 6.2 2.2 9-7.8-4.6-7.8 4.6 2.2-9-7-6.2 9.2-.8z"/></svg>'}
-function placeStar(w,i,n){
-  var a=(i/Math.max(n,1))*Math.PI*2-Math.PI/2;
-  var cx=innerWidth/2, cy=130+Math.min(innerHeight*0.18,160);
-  var rx=Math.min(innerWidth*0.34, 140), ry=Math.min(innerHeight*0.14, 110);
-  w.x=cx+Math.cos(a)*rx;
-  w.y=cy+Math.sin(a)*ry;
-  w.x=Math.max(48,Math.min(innerWidth-48,w.x));
-  w.y=Math.max(110,Math.min(innerHeight*0.42,w.y));
-}
-function drawStars(opts){
-  opts=opts||{};
-  if(starsLayer)starsLayer.remove();
-  starsLayer=document.createElement('div');
-  starsLayer.id='wstars';
-  if(opts.viewonly)starsLayer.className='viewonly';
-  document.body.appendChild(starsLayer);
-  var P=ensure(), W=P.wishMod.wishes, hide=opts.hideCaps, focus=opts.focus, dimOthers=opts.dim;
-  W.forEach(function(w,i){
-    placeStar(w,i,W.length);
-    var b=document.createElement('button');
-    b.type='button';
-    b.className='star'+(w.id===P.wishMod.declaredId?' gold':'')+(focus&&w.id===focus?' front':'')+(dimOthers&&w.id!==focus?' dim':'')+(opts.faint?' faint':'')+(opts.glow&&opts.glow[w.id]?' glow':'');
-    b.style.left=w.x+'px'; b.style.top=w.y+'px';
-    var cap=esc((w.form||w.text||'').slice(0,28));
-    var side=w.x<70?'right':(w.x>innerWidth-70?'left':'center');
-    b.innerHTML=starSvg()+(hide?'':'<span class="cap cap-'+side+'">'+cap+'</span>');
-    b.onclick=function(){if(opts.onStar)opts.onStar(w)};
-    starsLayer.appendChild(b);
-  });
-  save(P);
-}
 function clearStars(){if(starsLayer){starsLayer.remove();starsLayer=null}}
 
 function drawSky(){
@@ -157,587 +165,426 @@ function drawSky(){
   var c=sky.getContext('2d');
   var w=sky.width=innerWidth,h=sky.height=innerHeight;
   c.fillStyle='#0c0804';c.fillRect(0,0,w,h);
-  var g=c.createRadialGradient(w*.5,h*.28,10,w*.5,h*.5,h*.8);
-  g.addColorStop(0,'rgba(80,50,16,.35)');g.addColorStop(1,'rgba(12,8,4,0)');
+  var g=c.createRadialGradient(w*.5,h*.42,8,w*.5,h*.5,h*.85);
+  g.addColorStop(0,'rgba(80,50,16,.4)');g.addColorStop(1,'rgba(12,8,4,0)');
   c.fillStyle=g;c.fillRect(0,0,w,h);
-  for(var i=0;i<80;i++){
+  for(var i=0;i<90;i++){
     c.globalAlpha=.15+Math.random()*.4;
     c.fillStyle='#f0c870';
     c.beginPath();c.arc(Math.random()*w,Math.random()*h,Math.random()*1.2+.2,0,Math.PI*2);c.fill();
   }
   c.globalAlpha=1;
 }
-
 function shell(html,cls){
   app.innerHTML='<div class="wsc '+(cls||'')+'">'+html+'</div>';
 }
 
+function cx(){return innerWidth/2}
+function cy(){return Math.min(innerHeight*0.34, 220)+8}
+function constPos(i){
+  var a=i*Math.PI/4-Math.PI/2;
+  var rx=Math.min(innerWidth*0.38, 148), ry=Math.min(innerHeight*0.18, 118);
+  return {x:cx()+Math.cos(a)*rx, y:cy()+Math.sin(a)*ry};
+}
+
+/* ---------- приоритет для трех звезд ---------- */
+function priorityScore(P,w){
+  var info=wheelInfo(P), links=linksOf(P,w), s=0;
+  links.forEach(function(id){
+    var g=info.filter(function(x){return x.id===id})[0];
+    if(g&&g.unsatisfied)s+=3;
+    if(g&&g.urgent)s+=1;
+    if(g&&g.low)s+=1;
+  });
+  if(w.important)s+=3;
+  if(w.horizon==='now')s+=2;
+  else if(w.horizon==='year')s+=1;
+  if(w.done)s-=8;
+  return s;
+}
+function ranked(P){
+  return liveWishes(P).filter(function(w){return !w.done}).slice().sort(function(a,b){
+    return priorityScore(P,b)-priorityScore(P,a)||(b.at||0)-(a.at||0);
+  });
+}
+
+function buildInsights(P){
+  var notes=[], info=wheelInfo(P), wishes=liveWishes(P);
+  var unsat=info.filter(function(x){return x.unsatisfied});
+  var withMatch=wishes.filter(function(w){return linksOf(P,w).some(function(id){return unsat.some(function(u){return u.id===id})})});
+  if(withMatch.length) notes.push({k:'match', t:'Есть желания, которые совпадают с сферами, где тебе сейчас тесно: '+withMatch.slice(0,4).map(labelOf).join(', ')+'.'});
+  var empty=unsat.filter(function(u){return !wishes.some(function(w){return linksOf(P,w).indexOf(u.id)>=0})});
+  if(empty.length) notes.push({k:'gap', t:'В сфере «'+empty.map(function(x){return x.wheel}).join('», «')+'» оценка невысока, а звезд пока нет. Это наблюдение, не задача.'});
+  var multi=wishes.filter(function(w){return linksOf(P,w).length>1});
+  if(multi.length) notes.push({k:'multi', t:'Некоторые желания связаны сразу с несколькими сферами: '+multi.slice(0,3).map(function(w){return '«'+labelOf(w)+'»'}).join(', ')+'.'});
+  var L=P.desireLab;
+  if(L&&(L.desire||L.top)){
+    notes.push({k:'lab', t:gx('В Лабиринте желаний ты уже {исследовал|исследовала} тему «'+(L.desire||L.top)+'». Это наблюдение, а не вывод о мотивах.')});
+    var hy=(L.mechs||[]).filter(function(m){return m&&m.score!=null&&m.score>=2});
+    if(hy.length) notes.push({k:'labm', t:'Там же проявились возможные функции привычного положения: '+hy.map(function(m){return m.name}).join(', ')+'. Это гипотеза для исследования, не диагноз.'});
+  }
+  P.wishMod.insights=notes;
+  return notes;
+}
+
+/* ---------- экраны ---------- */
 function inviteView(){
   clearStars();
   shell(
     '<div class="kicker">Точка Б</div>'+
-    '<h2>Сейчас у тебя есть редкий шанс собрать все свои желания в одном небе</h2>'+
-    '<p class="line mute">Не оценивай их и не отсекай. Сначала просто выложи все, что зовет. Потом одно из них ты заявишь, а с остальными разберемся на двух колесах.</p>'+
+    '<h2>Небо моих желаний</h2>'+
+    '<p class="line mute">'+gx('Сначала зажги звезды в восьми созвездиях — областях жизни, которые ты уже {видел|видела} на колесе. Потом в центре загорится главное желание. Три звезды для 28 дней ты выберешь {сам|сама} и подтвердишь.')+'</p>'+
     '<button class="go" id="goSky">Открыть небо</button>'
   );
   document.getElementById('goSky').onclick=function(){setScene('sky')};
 }
 
-function skyView(){
-  var P=ensure(), n=P.wishMod.wishes.length;
-  drawStars({});
-  shell(
-    '<div class="counter">'+n+' желани'+(n%10===1&&n%100!==11?'е':(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?'я':'й'))+'</div>'+
-    (n<4?'<p class="hint">Назови все, что зовет. Чем полнее небо, тем яснее будет выбор.</p>':'<p class="hint">Небо уже живет. Можешь добавить еще или идти дальше.</p>')+
-    '<div class="composer"><label for="wishIn">Я хочу...</label><div class="row"><input id="wishIn" maxlength="160" placeholder="напиши желание" autocomplete="off"><button class="send" id="addWish" aria-label="Добавить">✦</button></div></div>'+
-    (n>=1?'<button class="go" id="goNext" style="margin-top:12px">'+(n>=4?'Дальше':'Этого пока достаточно')+'</button>':'')
-  );
-  var inp=document.getElementById('wishIn');
-  function add(){
-    var t=(inp.value||'').trim(); if(!t)return;
-    P=ensure();
-    P.wishMod.wishes.push({id:uid(),text:t,at:now()});
-    save(P); inp.value=''; skyView();
-  }
-  document.getElementById('addWish').onclick=add;
-  inp.onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();add()}};
-  var nx=document.getElementById('goNext');
-  if(nx)nx.onclick=function(){
-    P=ensure();
-    if(P.wishMod.wishes.length>=3) setScene('pair');
-    else setScene('choose');
-  };
-  setTimeout(function(){try{inp.focus()}catch(e){}},200);
+function mapHtml(P, opts){
+  opts=opts||{};
+  var wishes=liveWishes(P), lit=!!(P.wishMod.big&&P.wishMod.big.text);
+  var h='<div class="cmap" id="cmap">';
+  CONS.forEach(function(c,i){
+    var pos=constPos(i), n=wishes.filter(function(w){return w.cid===c.id&&!w.done}).length;
+    var dn=wishes.filter(function(w){return w.cid===c.id&&w.done}).length;
+    h+='<button type="button" class="cnode'+(n?' has':'')+'" data-cid="'+c.id+'" style="left:'+pos.x+'px;top:'+pos.y+'px;--cc:'+c.color+'">';
+    h+='<span class="cdot"></span><span class="cnm">'+esc(c.name)+'</span>';
+    if(n||dn)h+='<span class="ccnt">'+(n?n+'★':'')+(dn?' · '+dn+' сбылось':'')+'</span>';
+    h+='</button>';
+    /* маленькие звезды вокруг узла */
+    var mine=wishes.filter(function(w){return w.cid===c.id}).slice(0,5);
+    mine.forEach(function(w,k){
+      var ang=(k/Math.max(mine.length,1))*Math.PI*1.6-0.8, r=28+k*6;
+      var x=pos.x+Math.cos(ang)*r, y=pos.y+Math.sin(ang)*r+10;
+      h+='<button type="button" class="star mini'+(w.important?' gold':'')+(w.done?' dim':'')+'" data-wid="'+w.id+'" style="left:'+x+'px;top:'+y+'px" title="'+esc(labelOf(w))+'">'+starSvg()+'</button>';
+    });
+  });
+  h+='<button type="button" class="big-star'+(lit?' on':'')+(opts.center?' pulse':'')+'" id="bigStar" style="left:'+cx()+'px;top:'+cy()+'px">'+starSvg()+'<span>'+(lit?'Главное':'Центр')+'</span></button>';
+  h+='</div>';
+  return h;
 }
 
-function pairView(){
-  var P=ensure(), W=P.wishMod.wishes;
-  if(W.length<2){setScene('choose');return}
-  if(!P.wishMod.pairI)P.wishMod.pairI=0;
-  var i=P.wishMod.pairI;
-  if(i>=Math.min(3,W.length-1)){setScene('discover');return}
-  var a=W[i], b=W[i+1]||W[0];
-  drawStars({dim:false,glow:{},viewonly:true});
+function bindMap(P, after){
+  document.querySelectorAll('.cnode').forEach(function(b){
+    b.onclick=function(){P=ensure();P.wishMod.openCid=b.getAttribute('data-cid');save(P);setScene('const')};
+  });
+  document.querySelectorAll('.star.mini[data-wid]').forEach(function(b){
+    b.onclick=function(){openWishCard(b.getAttribute('data-wid'))};
+  });
+  var big=document.getElementById('bigStar');
+  if(big)big.onclick=function(){setScene('center')};
+  if(after)after();
+}
+
+function skyView(){
+  var P=ensure(); clearStars();
+  var n=liveWishes(P).filter(function(w){return w.cid&&w.cid!=='legacy'&&!w.done}).length;
   shell(
-    '<p class="kicker">Чуть ближе</p>'+
-    '<h2>Какое из двух сейчас живее?</h2>'+
-    '<p class="line mute">Это не отказ от второго. Просто почувствуй, какое откликается сильнее.</p>'+
-    '<div class="pair-vals"><button class="pick-val" data-id="'+a.id+'">'+esc(a.text)+'</button><button class="pick-val" data-id="'+b.id+'">'+esc(b.text)+'</button></div>'
+    '<div class="kicker">Небо моих желаний</div>'+
+    '<p class="hint sky-hint">Нажми на созвездие и зажги звезду</p>'+
+    mapHtml(P)+
+    '<div class="composer sky-bar">'+
+      (n?'<p class="mute">Звезд: '+n+'</p>':'<p class="mute">Можно начать с любого созвездия. Не обязательно заполнять все.</p>')+
+      '<button class="go" id="goCenter">К главному желанию</button>'+
+    '</div>',
+    'sky-sc'
   );
-  app.querySelectorAll('.pick-val').forEach(function(btn){
-    btn.onclick=function(){
-      P=ensure();
-      var w=P.wishMod.wishes.find(function(x){return x.id===btn.dataset.id});
-      if(w)w.closer=(w.closer||0)+1;
-      P.wishMod.pairI=i+1; save(P); pairView();
+  bindMap(P);
+  document.getElementById('goCenter').onclick=function(){setScene('center')};
+  window.gBack=function(){return false};
+}
+
+function constView(){
+  var P=ensure(), c=consOf(P.wishMod.openCid)||CONS[0];
+  clearStars();
+  var mine=liveWishes(P).filter(function(w){return w.cid===c.id});
+  var list=mine.map(function(w){
+    return '<div class="wcard'+(w.done?' done':'')+'" data-wid="'+w.id+'">'+
+      '<b>'+esc(labelOf(w))+'</b>'+
+      '<small>'+esc(hzName(w.horizon)||'без горизонта')+(w.important?' · важно':'')+(w.done?' · сбылось':'')+'</small>'+
+      '</div>';
+  }).join('')||'<p class="mute">В этом созвездии пока нет звезд.</p>';
+  shell(
+    '<button type="button" class="quiet back" id="backSky">К небу</button>'+
+    '<div class="kicker" style="color:'+c.color+'">'+esc(c.name)+'</div>'+
+    '<p class="q-line">'+esc(c.q)+'</p>'+
+    '<div class="chips" id="chips">'+c.chips.map(function(t){return '<button type="button" class="chip" data-t="'+esc(t)+'">'+esc(t)+'</button>'}).join('')+'</div>'+
+    '<textarea id="wtx" rows="2" maxlength="200" placeholder="Свой вариант: чего ты хочешь здесь"></textarea>'+
+    '<p class="mute hz-lab">Когда хочешь к этому приблизиться</p>'+
+    '<div class="chips" id="hz">'+HZ.map(function(h){return '<button type="button" class="chip" data-h="'+h.id+'">'+esc(h.t)+'</button>'}).join('')+'</div>'+
+    '<label class="imp"><input type="checkbox" id="wimp"> Это для меня важно</label>'+
+    '<button class="go" id="addStar">Зажечь новую звезду</button>'+
+    '<div class="wlist">'+list+'</div>',
+    'const-sc'
+  );
+  var hz='now';
+  document.querySelectorAll('#hz .chip').forEach(function(b){
+    if(b.getAttribute('data-h')==='now')b.classList.add('on');
+    b.onclick=function(){hz=b.getAttribute('data-h');document.querySelectorAll('#hz .chip').forEach(function(x){x.classList.toggle('on',x===b)})};
+  });
+  document.querySelectorAll('#chips .chip').forEach(function(b){
+    b.onclick=function(){
+      var ta=document.getElementById('wtx'); ta.value=b.getAttribute('data-t'); ta.focus();
+      document.querySelectorAll('#chips .chip').forEach(function(x){x.classList.toggle('on',x===b)});
     };
   });
-}
-
-function discoverView(){
-  var P=ensure();
-  var glow={};
-  P.wishMod.wishes.forEach(function(w){if(w.closer)glow[w.id]=1});
-  drawStars({glow:glow,viewonly:true});
-  shell(
-    '<h2>Посмотри: некоторые звезды сами стали ярче</h2>'+
-    '<p class="line mute">Когда ты '+GG('выбирал','выбирала')+', небо уже подсказало, что откликается живее. Теперь выбери одно желание, которое загадаешь прямо сейчас.</p>'+
-    '<button class="go" id="goCh">Выбрать одно желание</button>'
-  );
-  document.getElementById('goCh').onclick=function(){setScene('choose')};
-}
-
-function chooseView(){
-  var P=ensure();
-  clearStars();
-  shell(
-    '<h2>Выбери одно желание, которое загадаешь прямо сейчас</h2>'+
-    '<p class="line mute">Остальные не пропадут, с ними разберемся дальше. Нажми на звезду или на строку.</p>'+
-    '<div class="chips">'+P.wishMod.wishes.map(function(w){
-      return '<button class="chip" data-id="'+w.id+'">'+esc(w.text)+'</button>';
-    }).join('')+'</div>'
-  );
-  app.querySelectorAll('.chip').forEach(function(b){b.onclick=function(){pickWish(b.dataset.id)}});
-}
-function pickWish(id){
-  var P=ensure();
-  P.wishMod.chosenId=id;
-  var w=P.wishMod.wishes.find(function(x){return x.id===id});
-  if(w&&!w.form)w.form=w.text;
-  save(P); setScene('clarify');
-}
-
-function clarifyView(){
-  var P=ensure();
-  var w=P.wishMod.wishes.find(function(x){return x.id===P.wishMod.chosenId});
-  if(!w){setScene('choose');return}
-  clearStars();
-  shell(
-    '<p class="kicker">Формулировка</p>'+
-    '<h2>Скажи это так, будто оно уже происходит</h2>'+
-    '<p class="line mute">В настоящем времени, своими словами. Потом ты удержишь золотой круг — и заявка запишется в трекер.</p>'+
-    '<textarea id="formW" rows="3" maxlength="220">'+esc(w.form||w.text)+'</textarea>'+
-    '<div class="row" style="width:min(92vw,420px);margin:0 auto 8px;display:flex;flex-direction:column;gap:6px">'+
-    '<label>Ярче <input type="range" id="smB" min="1" max="10" value="'+(w.bright||6)+'"></label>'+
-    '<label>Ближе <input type="range" id="smC" min="1" max="10" value="'+(w.close||6)+'"></label>'+
-    '<label>Больше <input type="range" id="smS" min="1" max="10" value="'+(w.size||6)+'"></label></div>'+
-    '<button class="go" id="goDec">К заявке</button>'
-  );
-  document.getElementById('goDec').onclick=function(){
-    P=ensure(); w=P.wishMod.wishes.find(function(x){return x.id===P.wishMod.chosenId});
-    w.form=(document.getElementById('formW').value||'').trim()||w.text;
-    w.bright=+document.getElementById('smB').value;
-    w.close=+document.getElementById('smC').value;
-    w.size=+document.getElementById('smS').value;
-    save(P); setScene('declare');
-  };
-}
-
-function bindHold(el,done){
-  var t0=0,raf=0,fill=el.querySelector('.declare-fill');
-  function p(v){if(fill)fill.style.setProperty('--p',Math.max(0,Math.min(100,v)))}
-  function stop(){t0=0;el.classList.remove('holding');if(raf)cancelAnimationFrame(raf);p(0)}
-  function tick(){if(!t0)return;var k=(performance.now()-t0)/HOLD_MS;p(k*100);if(k>=1){stop();done();return}raf=requestAnimationFrame(tick)}
-  function start(e){e.preventDefault();t0=performance.now();el.classList.add('holding');tick()}
-  el.addEventListener('pointerdown',start);
-  el.addEventListener('pointerup',stop);
-  el.addEventListener('pointerleave',stop);
-  el.addEventListener('pointercancel',stop);
-}
-
-function declareView(){
-  var P=ensure();
-  var w=P.wishMod.wishes.find(function(x){return x.id===P.wishMod.chosenId});
-  if(!w){setScene('choose');return}
-  clearStars();
-  shell(
-    '<p class="line">'+esc(w.form||w.text)+'</p>'+
-    '<p class="mute">Удерживай круг, пока он не заполнится. Это заявка.</p>'+
-    '<div class="declare-wrap"><button class="declare-btn" id="holdBtn" type="button"><span class="declare-fill"></span><span class="lbl">Заявляю<small>удерживай</small></span></button></div>',
-    'ctr'
-  );
-  bindHold(document.getElementById('holdBtn'),function(){
+  document.getElementById('addStar').onclick=function(){
+    var t=(document.getElementById('wtx').value||'').trim(); if(!t)return;
     P=ensure();
-    P.wishMod.declaredId=P.wishMod.chosenId;
-    P.wishMod.declaredAt=now();
-    writeDeclared(P);
-    var chg=false;try{chg=sessionStorage.getItem('alch_v5_wishChange')==='1';sessionStorage.removeItem('alch_v5_wishChange')}catch(e){}
-    if(chg){save(P);location.href='slot.html?id=wish_back';return}
-    setScene('accepted');
+    var w={id:uid(), text:t, raw:t, cid:c.id, horizon:hz, important:!!document.getElementById('wimp').checked, done:false, at:now()};
+    P.wishMod.wishes.push(w);
+    refreshLinks(P,w);
+    save(P);
+    constView();
+  };
+  document.getElementById('backSky').onclick=function(){setScene('sky')};
+  document.querySelectorAll('.wcard').forEach(function(el){el.onclick=function(){openWishCard(el.getAttribute('data-wid'))}});
+  window.gBack=function(){setScene('sky');return true};
+}
+
+function openWishCard(id){
+  var P=ensure(), w=wishById(P,id); if(!w)return;
+  var overlay=document.createElement('div'); overlay.className='wpop';
+  overlay.innerHTML='<div class="panel wpop-in">'+
+    '<b>'+esc(labelOf(w))+'</b>'+
+    '<p class="mute">'+esc((consOf(w.cid)||{}).name||'Желание')+'</p>'+
+    '<p class="mute hz-lab">Горизонт</p>'+
+    '<div class="chips" id="phz">'+HZ.map(function(h){return '<button type="button" class="chip'+(w.horizon===h.id?' on':'')+'" data-h="'+h.id+'">'+esc(h.t)+'</button>'}).join('')+'</div>'+
+    '<label class="imp"><input type="checkbox" id="pimp"'+(w.important?' checked':'')+'> Это для меня важно</label>'+
+    '<label class="imp"><input type="checkbox" id="pdone"'+(w.done?' checked':'')+'> Уже сбылось</label>'+
+    '<button class="go" id="psave">Сохранить</button>'+
+    '<button type="button" class="quiet" id="pclose">Закрыть</button>'+
+    '</div>';
+  document.body.appendChild(overlay);
+  function close(){overlay.remove()}
+  document.getElementById('pclose').onclick=close;
+  overlay.addEventListener('click',function(e){if(e.target===overlay)close()});
+  document.getElementById('psave').onclick=function(){
+    P=ensure(); w=wishById(P,id); if(!w)return;
+    var on=document.querySelector('#phz .chip.on'); if(on)w.horizon=on.getAttribute('data-h');
+    w.important=!!document.getElementById('pimp').checked;
+    w.done=!!document.getElementById('pdone').checked;
+    save(P); close(); render();
+  };
+  document.querySelectorAll('#phz .chip').forEach(function(b){
+    b.onclick=function(){document.querySelectorAll('#phz .chip').forEach(function(x){x.classList.toggle('on',x===b)})};
   });
+}
+
+function centerView(){
+  var P=ensure(); clearStars();
+  var lit=!!(P.wishMod.big&&P.wishMod.big.text);
+  var txt=lit?(P.wishMod.big.text||P.wishMod.big.raw):'';
+  shell(
+    '<button type="button" class="quiet back" id="backSky">К небу</button>'+
+    '<div class="kicker">Главное желание</div>'+
+    '<p class="q-line">А теперь напиши свое главное, тайное или масштабное желание</p>'+
+    '<button type="button" class="big-star huge'+(lit?' on pulse':'')+'" id="bigStar" style="position:relative;left:auto;top:auto;transform:none;margin:12px auto">'+starSvg()+'<span>'+(lit?'Зажечь снова':'Зажечь')+'</span></button>'+
+    '<div class="composer">'+
+      '<textarea id="btx" rows="3" maxlength="240" placeholder="Напиши здесь свое главное желание">'+esc(txt)+'</textarea>'+
+      '<p class="mute">Сама звезда в центре — кнопка. Она зажжется, когда желание будет записано.</p>'+
+    '</div>',
+    'center-sc'
+  );
+  function activate(){
+    var t=(document.getElementById('btx').value||'').trim(); if(!t){document.getElementById('btx').focus();return}
+    P=ensure();
+    P.wishMod.big={id:P.wishMod.big&&P.wishMod.big.id||uid(), text:t, raw:(P.wishMod.big&&P.wishMod.big.raw)||t, at:now()};
+    writeDeclared(P);
+    setScene('accepted');
+  }
+  document.getElementById('bigStar').onclick=activate;
+  document.getElementById('backSky').onclick=function(){setScene('sky')};
+  window.gBack=function(){setScene('sky');return true};
 }
 
 function acceptedView(){
-  var P=ensure(), w=declaredWish(P);
   clearStars();
+  var P=ensure(), t=(P.wishMod.big&&(P.wishMod.big.text||P.wishMod.big.raw))||'';
   shell(
-    '<p class="kicker">Принято</p>'+
-    '<h2>Твое желание принято и реализуется в максимально возможные сроки наилучшим образом для тебя</h2>'+
-    '<div class="track-note">Заявленное желание уже записано в трекер отдельной строкой:<br><b>'+esc(w?(w.form||w.text):'')+'</b></div>'+
-    '<p class="line mute">Теперь разберем остальные желания: сначала колесо баланса, затем цветной круг героев. Потом ты выберешь три целевых направления — они тоже попадут в трекер.</p>'+
-    '<button class="go" id="goEx">Разобраться с остальными желаниями</button>',
-    'ctr'
+    '<div class="kicker">Центральная звезда</div>'+
+    '<div class="big-star huge on pulse" style="position:relative;left:auto;top:auto;transform:none;margin:16px auto">'+starSvg()+'</div>'+
+    '<h2>Твое желание принято</h2>'+
+    '<p class="line">Твой запрос принят.</p>'+
+    '<p class="line mute">Следуй импульсам души и наблюдай, как желание проявляется.</p>'+
+    (t?'<p class="wish-echo">«'+esc(t)+'»</p>':'')+
+    '<button class="go" id="goCmp">Дальше</button>'
   );
-  if(window.GSupport)GSupport.after(app.querySelector('.wsc')||app,'step',document.getElementById('goEx'));
-  document.getElementById('goEx').onclick=function(){setScene('wheel')};
+  document.getElementById('goCmp').onclick=function(){setScene('compare')};
+  window.gBack=function(){setScene('center');return true};
 }
 
-function polar(cx,cy,r,a){return [cx+r*Math.cos(a),cy+r*Math.sin(a)]}
-function sector(cx,cy,r0,r1,a0,a1){
-  var p1=polar(cx,cy,r1,a0),p2=polar(cx,cy,r1,a1),p3=polar(cx,cy,r0,a1),p4=polar(cx,cy,r0,a0);
-  var large=a1-a0>Math.PI?1:0;
-  return 'M'+p1[0]+','+p1[1]+' A'+r1+','+r1+' 0 '+large+' 1 '+p2[0]+','+p2[1]+' L'+p3[0]+','+p3[1]+' A'+r0+','+r0+' 0 '+large+' 0 '+p4[0]+','+p4[1]+' Z';
-}
-
-function balanceSvg(scores,opts){
-  opts=opts||{};
-  var cx=100,cy=100,R=78;
-  var parts=[];
-  SPH.forEach(function(s,i){
-    var a0=-Math.PI/2+i*Math.PI/4, a1=a0+Math.PI/4;
-    var sc=scores?scores[i]:0, zr=18+((isFinite(sc)?sc:0)/10)*60;
-    parts.push('<path d="'+sector(cx,cy,18,zr,a0,a1)+'" fill="'+s.color+'" opacity=".95" data-i="'+i+'"></path>');
-    parts.push('<path d="'+sector(cx,cy,18,R,a0,a1)+'" fill="none" stroke="rgba(240,200,112,.25)" stroke-width=".7"></path>');
-    var mid=a0+Math.PI/8, lp=polar(cx,cy,R+14,mid);
-    parts.push('<text class="wlab" text-anchor="middle" x="'+lp[0]+'" y="'+lp[1]+'">'+esc(s.name)+'</text>');
+function compareView(){
+  var P=ensure(); clearStars();
+  var notes=buildInsights(P); save(P);
+  var info=wheelInfo(P), wishes=liveWishes(P);
+  var rows='';
+  CONS.forEach(function(c){
+    var list=wishes.filter(function(w){return w.cid===c.id&&!w.done});
+    var g=info.filter(function(x){return x.id===c.id})[0]||{};
+    var mark=g.unsatisfied?' unsat':'';
+    rows+='<tr class="'+mark+'"><th>'+esc(c.name)+(g.score!=null?'<small> сфера: '+g.wheel+' · '+g.score+'</small>':'')+'</th><td>';
+    if(!list.length) rows+='<span class="mute">'+(g.unsatisfied?'Звезд пока нет':'—')+'</span>';
+    else rows+=list.map(function(w){
+      var ln=linksOf(P,w).filter(function(id){return id!==c.id}).map(function(id){return (consOf(id)||{}).name}).filter(Boolean);
+      return '<div class="td-w">'+esc(labelOf(w))+(w.important?' · важно':'')+(w.horizon?' · '+hzName(w.horizon):'')+(ln.length?' <small>еще: '+esc(ln.join(', '))+'</small>':'')+'</div>';
+    }).join('');
+    rows+='</td></tr>';
   });
-  parts.push('<text class="me" text-anchor="middle" x="'+cx+'" y="'+(cy+4)+'">ты</text>');
-  return '<div class="wheel-wrap"><svg viewBox="-24 -24 248 248">'+parts.join('')+'</svg></div>';
-}
-
-function wheelView(){
-  clearStars();
-  var P=ensure(), scores=wheelScores(P);
-  if(scores){
-    shell(
-      '<p class="kicker">Колесо баланса</p>'+
-      '<h2>Вот твое колесо из Точки А</h2>'+
-      '<p class="line mute">Мы не рисуем второе колесо и не переписываем твои оценки. Темные зоны — «не хватает», средние — «терпимо», яркие — «нравится».</p>'+
-      balanceSvg(scores)+
-      '<p class="mute">не хватает 0–4 · терпимо 5–7 · нравится 8–10</p>'+
-      '<button class="go" id="goPl">Разложить желания по сферам</button>'
-    );
-    document.getElementById('goPl').onclick=function(){setScene('place')};
-    return;
+  var legacy=wishes.filter(function(w){return w.cid==='legacy'&&!w.done});
+  if(legacy.length){
+    rows+='<tr><th>Ранее записанные</th><td>'+legacy.map(function(w){return '<div class="td-w">'+esc(labelOf(w))+'</div>'}).join('')+'</td></tr>';
   }
-  /* Нет сохраненного колеса Точки А — короткая оценка только в wishMod.wheelLocal, P.wheel не трогаем. */
-  if(!P.wishMod.wheelLocal)P.wishMod.wheelLocal=[5,5,5,5,5,5,5,5];
-  var loc=P.wishMod.wheelLocal;
+  var obs=notes.map(function(n){return '<p class="obs">'+esc(n.t)+'</p>'}).join('');
   shell(
-    '<p class="kicker">Колесо баланса</p>'+
-    '<h2>Коротко отметь, как сейчас живется в восьми сферах</h2>'+
-    '<p class="line mute">Полного колеса Точки А в сохранении нет, поэтому здесь укороченная оценка. В основное колесо игры она не записывается.</p>'+
-    balanceSvg(loc)+
-    '<div class="zones">'+SPH.map(function(s,i){
-      return '<div><b>'+esc(s.name)+'</b> · '+zoneName(zoneOf(loc[i]))+'<input type="range" min="0" max="10" value="'+loc[i]+'" data-i="'+i+'"><div class="zone-lab"><span>не хватает</span><span>терпимо</span><span>нравится</span></div></div>';
-    }).join('')+'</div>'+
-    '<button class="go" id="goPl">Дальше</button>'
+    '<button type="button" class="quiet back" id="backC">К главной звезде</button>'+
+    '<div class="kicker">Сопоставление</div>'+
+    '<h2>Вот что у тебя есть</h2>'+
+    '<p class="line mute">Слева — созвездие, справа — твои звезды. Подсветка показывает совпадения со сферами колеса. Это наблюдения, не выводы о мотивах.</p>'+
+    '<div class="sky-table-wrap"><table class="sky-table">'+rows+'</table></div>'+
+    (obs?'<div class="obs-box">'+obs+'</div>':'')+
+    '<button class="go" id="go3">Выбрать три звезды</button>',
+    'cmp-sc'
   );
-  app.querySelectorAll('input[type=range]').forEach(function(r){
-    r.oninput=function(){P=ensure();P.wishMod.wheelLocal[+r.dataset.i]=+r.value;save(P)};
-  });
-  document.getElementById('goPl').onclick=function(){setScene('place')};
-}
-
-function placeView(){
-  var P=ensure(), scores=wheelScores(P)||[5,5,5,5,5,5,5,5];
-  var rest=remaining(P);
-  var html=rest.map(function(w){
-    var cur=(P.wishMod.research.places||{})[w.id]||'';
-    return '<div class="place-row"><b>'+esc(w.form||w.text)+'</b>'+
-      '<select data-id="'+w.id+'"><option value="">сфера...</option>'+SPH.map(function(s,i){
-        var z=zoneName(zoneOf(scores[i]));
-        return '<option value="'+s.id+'"'+(cur===s.id?' selected':'')+'>'+esc(s.name)+' — '+z+'</option>';
-      }).join('')+'</select></div>';
-  }).join('');
-  shell(
-    '<p class="kicker">Потребности и желания</p>'+
-    '<h2>Куда ложится каждое оставшееся желание?</h2>'+
-    '<p class="line mute">Если сфера «не хватает» — это скорее потребность. Если «нравится» — желание идет дальше уже наполненного.</p>'+
-    balanceSvg(scores)+
-    '<div class="panel">'+html+'</div>'+
-    '<button class="go" id="goH">К карте потребностей</button>'
-  );
-  app.querySelectorAll('select').forEach(function(s){
-    s.onchange=function(){P=ensure();P.wishMod.research.places[s.dataset.id]=s.value;save(P)};
-  });
-  document.getElementById('goH').onclick=function(){
-    P=ensure();
-    var ok=rest.every(function(w){return P.wishMod.research.places[w.id]});
-    if(!ok){/* мягко, но можно идти: не анкета */ }
-    setScene('needs');
-  };
-}
-
-function heroIntroView(){
-  clearStars();
-  shell(
-    '<p class="kicker">Круг героев</p>'+
-    '<h2>Кто в тебе загадывает и кто тормозит</h2>'+
-    '<p class="line mute">Двадцать четыре коротких утверждения. Это не оценка личности, а карта: какие герои сейчас желают, а какие охраняют.</p>'+
-    heroWheelSvg(null)+
-    '<button class="go" id="goQ">Начать</button>'
-  );
-  document.getElementById('goQ').onclick=function(){var P=ensure();P.wishMod.research.heroI=0;save(P);setScene('heroQ')};
-}
-
-function heroScores(P){
-  var ans=P.wishMod.research.heroAns||[], map={};
-  HEROES.forEach(function(h){map[h.id]=[]});
-  HERO_Q.forEach(function(q,i){if(ans[i]!=null)map[q.hero].push(+ans[i])});
-  var out={};
-  HEROES.forEach(function(h){
-    var a=map[h.id], s=a.length?a.reduce(function(x,y){return x+y},0)/a.length:0;
-    out[h.id]=s;
-  });
-  return out;
-}
-
-function heroWheelSvg(scores){
-  var cx=100,cy=100,r0=28,r1=52,r2=86;
-  var parts=[], i, mid, lp;
-  QUADS.forEach(function(q,qi){
-    var a0=-Math.PI/2+qi*Math.PI/2, a1=a0+Math.PI/2;
-    parts.push('<path d="'+sector(cx,cy,r0,r1,a0,a1)+'" fill="'+q.color+'" opacity=".9"></path>');
-    mid=a0+Math.PI/4; lp=polar(cx,cy,(r0+r1)/2,mid);
-    parts.push('<text class="qlab" text-anchor="middle" x="'+lp[0]+'" y="'+lp[1]+'">'+esc(q.name)+'</text>');
-  });
-  HEROES.forEach(function(h,hi){
-    var a0=-Math.PI/2+hi*Math.PI/6, a1=a0+Math.PI/6;
-    var sc=scores?scores[h.id]:3, op=.25+(sc?((sc-1)/4)*.75:0);
-    parts.push('<path d="'+sector(cx,cy,r1,r2,a0,a1)+'" fill="'+h.color+'" opacity="'+op+'"></path>');
-    mid=a0+Math.PI/12; lp=polar(cx,cy,r2+16,mid);
-    parts.push('<text class="wlab" text-anchor="middle" x="'+lp[0]+'" y="'+lp[1]+'">'+esc(h.name)+'</text>');
-  });
-  parts.push('<text class="me" text-anchor="middle" x="'+cx+'" y="'+(cy+4)+'">ты</text>');
-  return '<div class="wheel-wrap"><svg viewBox="-36 -36 272 272">'+parts.join('')+'</svg></div>';
-}
-
-function heroQView(){
-  var P=ensure();
-  var i=P.wishMod.research.heroI||0;
-  if(i>=HERO_Q.length){setScene('heroResult');return}
-  var q=HERO_Q[i], ans=P.wishMod.research.heroAns||[];
-  shell(
-    '<p class="mute">'+(i+1)+' из '+HERO_Q.length+'</p>'+
-    '<p class="q-line">'+esc(gx(q.text))+'</p>'+
-    '<div class="likert">'+[1,2,3,4,5].map(function(n){
-      return '<button class="lik'+(ans[i]===n?' on':'')+'" data-n="'+n+'">'+n+'</button>';
-    }).join('')+'</div>'+
-    '<p class="mute">1 — почти не про меня · 5 — очень про меня</p>'
-  );
-  app.querySelectorAll('.lik').forEach(function(b){
-    b.onclick=function(){
-      P=ensure();
-      P.wishMod.research.heroAns=P.wishMod.research.heroAns||[];
-      P.wishMod.research.heroAns[i]=+b.dataset.n;
-      P.wishMod.research.heroI=i+1;
-      save(P); heroQView();
-    };
-  });
-}
-
-function heroResultView(){
-  var P=ensure(), sc=heroScores(P);
-  var list=HEROES.slice().sort(function(a,b){return (sc[b.id]||0)-(sc[a.id]||0)});
-  var wishers=list.filter(function(h){return (sc[h.id]||0)>=4}).slice(0,3);
-  var holds=list.slice().reverse().filter(function(h){return (sc[h.id]||0)>0&&(sc[h.id]||0)<=2.5}).slice(0,2);
-  if(!wishers.length)wishers=list.slice(0,2);
-  if(!holds.length)holds=[list[list.length-1]];
-  shell(
-    '<p class="kicker">Круг героев</p>'+
-    '<h2>Кто в тебе загадывает</h2>'+
-    heroWheelSvg(sc)+
-    '<div class="panel">'+
-    wishers.map(function(h){return '<p><b>'+esc(h.name)+'</b> — живое желание. Движет: '+esc(h.drive)+'.</p>'}).join('')+
-    '<h2 style="margin-top:12px">Кто тормозит и что он охраняет</h2>'+
-    '<p class="mute">Это не враг. Он бережет то, что ему важно.</p>'+
-    holds.map(function(h){return '<p><b>'+esc(h.name)+'</b> охраняет '+esc(h.guard)+'.'+(h.wound?' Может беречь и это: '+esc(h.wound)+'.':'')+'</p>'}).join('')+'<p class="mute">Это не диагноз. Только узнавание, если откликается.</p>'+
-    '</div>'+
-    '<button class="go" id="goS">Дальше</button>'
-  );
-  document.getElementById('goS').onclick=function(){setScene('source')};
-}
-
-function sourceView(){
-  var P=ensure(), rest=remaining(P);
-  if(!rest.length){setScene('values');return}
-  var cur=P.wishMod.research.source||{};
-  var idx=rest.findIndex(function(w){return !cur[w.id]});
-  if(idx<0){setScene('values');return}
-  var w=rest[idx];
-  shell(
-    '<p class="kicker">Источник</p>'+
-    '<h2>'+esc(w.form||w.text)+'</h2>'+
-    '<p class="line mute">Откуда это желание приходит? Без оценки, просто заметь источник.</p>'+
-    '<div class="orbs">'+SOURCE.map(function(s){
-      return '<button class="orb" data-id="'+s.id+'"><b>'+esc(s.t)+'</b><small>'+esc(s.d)+'</small></button>';
-    }).join('')+'</div>'
-  );
-  app.querySelectorAll('.orb').forEach(function(b){
-    b.onclick=function(){P=ensure();P.wishMod.research.source[w.id]=b.dataset.id;save(P);sourceView()};
-  });
-}
-
-function valuesView(){
-  var P=ensure(), sel=P.wishMod.research.values||[];
-  shell(
-    '<p class="kicker">Ценности</p>'+
-    '<h2>Что для тебя сейчас важнее всего?</h2>'+
-    '<p class="line mute">Отметь от трех до пяти ориентиров. Потом сверим их с оставшимися желаниями.</p>'+
-    '<div class="chips">'+VALS.map(function(v){
-      return '<button class="chip'+(sel.indexOf(v)>=0?' on':'')+'" data-v="'+esc(v)+'">'+esc(v)+'</button>';
-    }).join('')+'</div>'+
-    '<button class="go" id="goC">Дальше</button>'
-  );
-  app.querySelectorAll('.chip').forEach(function(b){
-    b.onclick=function(){
-      P=ensure(); sel=P.wishMod.research.values||[];
-      var v=b.getAttribute('data-v'), i=sel.indexOf(v);
-      if(i>=0)sel.splice(i,1); else if(sel.length<5)sel.push(v);
-      P.wishMod.research.values=sel; save(P); valuesView();
-    };
-  });
-  document.getElementById('goC').onclick=function(){if((ensure().wishMod.research.values||[]).length>=3)setScene('contra')};
-}
-
-function contraView(){
-  var P=ensure(), rest=remaining(P), places=P.wishMod.research.places||{}, scores=wheelScores(P)||[];
-  var notes=rest.map(function(w){
-    var sid=places[w.id], i=SPH.findIndex(function(s){return s.id===sid});
-    var z=i>=0?zoneOf(scores[i]):'none';
-    var tag=z==='need'?'скорее потребность':z==='like'?'желание сверх наполненного':'желаемое направление';
-    return '<p><b>'+esc(w.form||w.text)+'</b> — '+tag+(i>=0?' ('+esc(SPH[i].name)+')':'')+'.</p>';
-  }).join('');
-  shell(
-    '<p class="kicker">Приоритеты</p>'+
-    '<h2>Где потребность, а где желание</h2>'+
-    '<div class="panel">'+notes+'</div>'+
-    '<p class="line mute">Если два желания тянут в разные стороны, просто заметь это. Потом ты выберешь три направления, с которыми пойдешь дальше.</p>'+
-    '<textarea id="cNote" rows="2" placeholder="Если есть напряжение между желаниями, напиши его здесь (необязательно)">'+esc(P.wishMod.research.contra||'')+'</textarea>'+
-    '<button class="go" id="go3">Выбрать три направления</button>'
-  );
-  document.getElementById('go3').onclick=function(){
-    P=ensure();P.wishMod.research.contra=document.getElementById('cNote').value||'';save(P);setScene('rings');
-  };
+  document.getElementById('backC').onclick=function(){setScene('center')};
+  document.getElementById('go3').onclick=function(){setScene('pick3')};
+  window.gBack=function(){setScene('center');return true};
 }
 
 function pick3View(){
-  var P=ensure(), rest=remaining(P);
-  if(rest.length<3){
+  var P=ensure(); clearStars();
+  var list=ranked(P);
+  if(list.length<3){
     shell(
-      '<h2>Чтобы выбрать три направления, нужно еще чуть больше желаний</h2>'+
-      '<p class="line mute">Заявленное желание уже в трекере и не входит в эти три. Вернись к небу и добавь недостающие звезды.</p>'+
-      '<button class="go" id="backSky">Вернуться к небу</button>'
+      '<button type="button" class="quiet back" id="backCmp">К таблице</button>'+
+      '<div class="kicker">Три звезды моего ближайшего пути</div>'+
+      '<p class="line">Чтобы выбрать три желания, зажги еще звезды в созвездиях. Сейчас их '+list.length+'.</p>'+
+      '<button class="go" id="goSky">К небу</button>'
     );
-    document.getElementById('backSky').onclick=function(){setScene('sky')};
+    document.getElementById('backCmp').onclick=function(){setScene('compare')};
+    document.getElementById('goSky').onclick=function(){setScene('sky')};
+    window.gBack=function(){setScene('compare');return true};
     return;
   }
-  var dirs=P.wishMod.research.dirs||[];
+  var pick=P.wishMod.pick&&P.wishMod.pick.length===3?P.wishMod.pick.slice():list.slice(0,3).map(function(w){return w.id});
+  P.wishMod.pick=pick; save(P);
+  var bigId=P.wishMod.big&&P.wishMod.big.id;
+  var rows=list.map(function(w,i){
+    var on=pick.indexOf(w.id)>=0;
+    var hint=[];
+    if(i<3)hint.push('подсказка');
+    if(w.important)hint.push('важно');
+    if(w.horizon==='now')hint.push('сейчас');
+    var unsat=linksOf(P,w).some(function(id){var g=wheelInfo(P).filter(function(x){return x.id===id})[0];return g&&g.unsatisfied});
+    if(unsat)hint.push('совпадает со сферой, где тесно');
+    return '<button type="button" class="pick-row'+(on?' on':'')+'" data-id="'+w.id+'">'+
+      '<span class="tick"></span><span class="ptx"><b>'+esc(labelOf(w))+'</b>'+
+      '<small>'+esc((consOf(w.cid)||{}).name||'')+(hint.length?' · '+hint.join(' · '):'')+'</small></span></button>';
+  }).join('');
   shell(
-    '<p class="kicker">Три направления</p>'+
-    '<h2>Выбери ровно три целевых направления</h2>'+
-    '<p class="line mute">Заявленное желание уже идет своей строкой и в эти три не входит. Три направления тоже запишутся в трекер.</p>'+
-    '<div class="chips">'+rest.map(function(w){
-      return '<button class="chip'+(dirs.indexOf(w.id)>=0?' on':'')+'" data-id="'+w.id+'">'+esc(w.form||w.text)+'</button>';
-    }).join('')+'</div>'+
-    '<p class="mute">Выбрано: '+dirs.length+' из 3</p>'+
-    (dirs.length===3?'<button class="go" id="goSum">Записать в трекер</button>':'')
+    '<button type="button" class="quiet back" id="backCmp">К таблице</button>'+
+    '<div class="kicker">Три звезды моего ближайшего пути</div>'+
+    '<h2>Выбери три желания на 28 дней</h2>'+
+    '<p class="line mute">Список идет по приоритету: совпадение с неудовлетворенными сферами, важность и горизонт «Сейчас». Верхние три отмечены как подсказка. Главное желание в трекер само не входит — только то, что ты отметишь и подтвердишь.</p>'+
+    '<div class="plist">'+rows+'</div>'+
+    '<p class="mute" id="pcnt">Выбрано: '+pick.length+' из 3</p>'+
+    '<button class="go" id="goYes" '+(pick.length===3?'':'disabled')+'>Да, работаю над этим</button>',
+    'pick-sc'
   );
-  app.querySelectorAll('.chip').forEach(function(b){
-    b.onclick=function(){
-      P=ensure(); dirs=P.wishMod.research.dirs||[];
-      var i=dirs.indexOf(b.dataset.id);
-      if(i>=0)dirs.splice(i,1); else if(dirs.length<3)dirs.push(b.dataset.id);
-      P.wishMod.research.dirs=dirs; save(P); pick3View();
-    };
-  });
-  var g=document.getElementById('goSum');
-  if(g)g.onclick=function(){writeDirections(ensure());setScene('summary')};
-}
-
-function summaryView(){
-  var P=ensure(), w=declaredWish(P), dirs=P.tracker&&P.tracker.directions||[];
-  var scores=wheelScores(P);
-  clearStars();
-  shell(
-    '<p class="kicker">Собрано</p>'+
-    '<h2>Заявка и три направления уже в трекере</h2>'+
-    (scores?balanceSvg(scores):'')+
-    heroWheelSvg(heroScores(P))+
-    '<div class="track-note"><b>Заявленное желание</b><br>'+esc(w?(w.form||w.text):'—')+'</div>'+
-    '<div class="track-note"><b>Три направления</b><ol style="margin:6px 0 0 18px;padding:0">'+dirs.map(function(d){return '<li>'+esc(d.text)+'</li>'}).join('')+'</ol></div>'+
-    '<button class="go" id="goOn">'+((window.GFLOW&&flowNext())?'Дальше':'К трекеру')+'</button>'+
-    '<button class="quiet" id="toReac">Открыть трекер</button>'
-  );
-  if(window.GQuote)GQuote.add(app.querySelector('.wsc')||app,'wish.html',document.getElementById('goOn'));
-  if(window.GSupport)GSupport.after(app.querySelector('.wsc')||app,'praise',document.getElementById('goOn'));
-  document.getElementById('goOn').onclick=finishStep;
-  document.getElementById('toReac').onclick=function(){finishStep('wish-track.html')};
-}
-
-function finishStep(to){
-  var P=ensure();
-  if(!(P.tracker&&P.tracker.declared&&(P.tracker.directions||[]).length===3))return;
-  if(window.GRoute){
-    if(!GRoute.complete('wish.html'))GRoute.complete();
-    if(GRoute.markAdvance)GRoute.markAdvance();
+  function sync(){
+    document.querySelectorAll('.pick-row').forEach(function(b){b.classList.toggle('on',pick.indexOf(b.getAttribute('data-id'))>=0)});
+    document.getElementById('pcnt').textContent='Выбрано: '+pick.length+' из 3';
+    document.getElementById('goYes').disabled=pick.length!==3;
   }
-  var n=to||((window.flowNext)&&flowNext())||'reactor.html';
-  location.href=n;
-}
-
-
-function deficitName(P, sid){
-  var scores=wheelScores(P)||[];
-  var i=SPH.findIndex(function(s){return s.id===sid});
-  if(i<0)return 'none';
-  return zoneOf(scores[i]);
-}
-function originOf(P,w){
-  var R=P.wishMod.research||{}, sid=(R.places||{})[w.id], z=deficitName(P,sid);
-  var src=(R.source||{})[w.id];
-  var hits=0;
-  if(z==='like')hits++;
-  if(src&&src!=='relation')hits++;
-  if((w.closer||0)>0)hits++;
-  var kind=hits>=2?'mine':hits===1?'mixed':'outer';
-  var explain=kind==='mine'?'По сигналам это больше похоже на твое: оно опирается на уже живой отклик и не закрывает только дыру.':kind==='mixed'?'Здесь смешано свое и внешнее: часть идет из дефицита или из связи с другими, часть — из живого желания.':'Пока больше похоже, что желание пришло извне или из нехватки. Это не приговор, просто заметка по сигналам.';
-  return {kind:kind, label:kind==='mine'?'мое':kind==='mixed'?'смешанное':'пришло извне', explain:explain};
-}
-function needsView(){
-  clearStars();
-  var P=ensure(), scores=wheelScores(P)||[], rest=remaining(P), places=P.wishMod.research.places||{};
-  var html=rest.map(function(w){
-    var sid=places[w.id], i=SPH.findIndex(function(s){return s.id===sid});
-    var z=i>=0?zoneOf(scores[i]):'none';
-    var tag=z==='need'?'потребность: закрывает дефицит':z==='like'?'желание сверх уже наполненного':'направление';
-    var o=originOf(P,w);
-    return '<p><b>'+esc(w.form||w.text)+'</b> — '+tag+(i>=0?' ('+esc(SPH[i].name)+')':'')+'. Метка: <i>'+esc(o.label)+'</i>. '+esc(o.explain)+'</p>';
-  }).join('')||'<p class="mute">Сначала вернись к небу и добавь желания.</p>';
-  /* фон и самоценность, если есть */
-  var extra='';
-  if(P.ego) extra+='<p class="mute">Учитывается и фоновое состояние из пути героя, если оно уже собрано.</p>';
-  if(P.selfWorth||P.sv) extra+='<p class="mute">Учитывается и самоценность, если этот шаг уже пройден.</p>';
-  shell('<p class="kicker">Слой потребностей</p><h2>Где желание закрывает нехватку, а где идет дальше</h2><p class="line mute">Дефициты читаются из колеса баланса. Мы не спрашиваем «чье это». Метки появляются по сигналам.</p><div class="panel">'+html+extra+'</div><button class="go" id="goSc">К сцене с символами</button>');
-  document.getElementById('goSc').onclick=function(){setScene('scene')};
-}
-function sceneView(){
-  clearStars();
-  var P=ensure();
-  var sy=P.wishMod.research.scene||{self:'',sym:''};
-  var SYMS=[{id:'house',t:'дом'},{id:'road',t:'дорога'},{id:'water',t:'вода'},{id:'door',t:'дверь'},{id:'light',t:'свет'},{id:'figures',t:'фигуры'}];
-  var PL=[{id:'center',t:'в центре'},{id:'near',t:'рядом'},{id:'path',t:'на пути'},{id:'edge',t:'у края'}];
-  shell('<p class="kicker">Сцена</p><h2>Поставь себя в сцену, потом появится символ желания</h2><p class="line mute">Это не тест. Просто почувствуй место и образ.</p>'+
-    '<p class="mute">Где ты сейчас в сцене?</p><div class="chips">'+PL.map(function(x){return '<button class="chip'+(sy.self===x.id?' on':'')+'" data-self="'+x.id+'">'+x.t+'</button>'}).join('')+'</div>'+
-    '<p class="mute">Какой символ появляется как желание?</p><div class="chips">'+SYMS.map(function(x){return '<button class="chip'+(sy.sym===x.id?' on':'')+'" data-sym="'+x.id+'">'+x.t+'</button>'}).join('')+'</div>'+
-    '<button class="go" id="goH">К кругу героев</button>');
-  app.querySelectorAll('[data-self]').forEach(function(b){b.onclick=function(){P=ensure();P.wishMod.research.scene=P.wishMod.research.scene||{};P.wishMod.research.scene.self=b.getAttribute('data-self');save(P);sceneView()}});
-  app.querySelectorAll('[data-sym]').forEach(function(b){b.onclick=function(){P=ensure();P.wishMod.research.scene=P.wishMod.research.scene||{};P.wishMod.research.scene.sym=b.getAttribute('data-sym');save(P);sceneView()}});
-  document.getElementById('goH').onclick=function(){setScene('heroIntro')};
-}
-function ringsView(){
-  clearStars();
-  var P=ensure(), rest=remaining(P);
-  var rings=P.wishMod.research.rings||{inner:null, mid:[]};
-  function cls(id){return 'chip'+(rings.inner===id?' on':'')+(rings.mid.indexOf(id)>=0?' has':'')}
-  shell('<p class="kicker">Кольца близости</p><h2>Что сейчас ближе всего к тебе</h2><p class="line mute">Во внутреннем кольце — одно желание, в среднем — два, остальные остаются во внешнем. Это про близость сейчас, не про важность навсегда. Заявленное желание сюда не входит.</p>'+
-    '<div class="chips">'+rest.map(function(w){return '<button class="'+cls(w.id)+'" data-id="'+w.id+'">'+esc(w.form||w.text)+'</button>'}).join('')+'</div>'+
-    '<p class="mute">Внутри: '+(rings.inner?1:0)+' из 1 · рядом: '+(rings.mid||[]).length+' из 2</p>'+
-    ((rings.inner&&rings.mid.length===2)||rest.length<3?'<button class="go" id="go3">Выбрать три направления</button>':''));
-  app.querySelectorAll('[data-id]').forEach(function(b){
+  document.querySelectorAll('.pick-row').forEach(function(b){
     b.onclick=function(){
-      P=ensure(); rings=P.wishMod.research.rings||{inner:null, mid:[]};
-      var id=b.getAttribute('data-id');
-      if(rings.inner===id) rings.inner=null;
-      else if(rings.mid.indexOf(id)>=0) rings.mid=rings.mid.filter(function(x){return x!==id});
-      else if(!rings.inner) rings.inner=id;
-      else if(rings.mid.length<2) rings.mid.push(id);
-      P.wishMod.research.rings=rings; save(P); ringsView();
+      var id=b.getAttribute('data-id'), i=pick.indexOf(id);
+      if(i>=0)pick.splice(i,1);
+      else if(pick.length<3)pick.push(id);
+      P=ensure();P.wishMod.pick=pick.slice();save(P);sync();
     };
   });
-  var g=document.getElementById('go3'); if(g)g.onclick=function(){setScene('pick3')};
+  document.getElementById('backCmp').onclick=function(){setScene('compare')};
+  document.getElementById('goYes').onclick=function(){
+    if(pick.length!==3)return;
+    P=ensure();
+    P.wishMod.pick=pick.slice();
+    P.wishMod.confirmed=pick.slice();
+    P.wishMod.confirmedAt=now();
+    writeDeclared(P);
+    writeDirections(P);
+    P.wishMod.scene='map'; save(P);
+    finishAndGo();
+  };
+  window.gBack=function(){setScene('compare');return true};
+}
+
+function finishAndGo(){
+  var P=ensure();
+  shell(
+    '<div class="kicker">Три звезды</div>'+
+    '<h2>Выбор подтвержден</h2>'+
+    '<p class="line">Три желания записаны в путь на 28 дней. Главная звезда остается в центре неба — это отдельная практика.</p>'+
+    '<ul class="sum3">'+((P.tracker.directions)||[]).map(function(d){return '<li>'+esc(d.text)+'</li>'}).join('')+'</ul>'+
+    ((P.tracker.declared&&(P.tracker.declared.text||P.tracker.declared.raw))?'<p class="mute">Центральная звезда: «'+esc(P.tracker.declared.text||P.tracker.declared.raw)+'»</p>':'')+
+    '<button class="go" id="nx">Дальше</button>'+
+    '<button type="button" class="quiet" id="stay">Остаться в небе</button>'
+  );
+  var nx=document.getElementById('nx');
+  if(window.GQuote)try{GQuote.add(app.querySelector('.wsc')||app,'wish.html',nx)}catch(e){}
+  nx.onclick=function(){
+    if(window.GReview){location.href='tasks.html';return}
+    if(window.GRoute){
+      if(!GRoute.complete('wish.html'))GRoute.complete();
+      location.href=GRoute.advance();
+      return;
+    }
+    location.href='reactor.html';
+  };
+  document.getElementById('stay').onclick=function(){setScene('map')};
+}
+
+function mapView(){
+  var P=ensure(); clearStars();
+  var dirs=(P.tracker&&P.tracker.directions)||[];
+  var big=P.wishMod.big||P.tracker&&P.tracker.declared;
+  shell(
+    '<div class="kicker">Небо моих желаний</div>'+
+    (big&&(big.text||big.raw)?'<p class="wish-echo">«'+esc(big.text||big.raw)+'»</p>':'')+
+    mapHtml(P)+
+    '<div class="composer sky-bar">'+
+      (dirs.length?'<p class="mute">Три звезды: '+dirs.map(function(d){return esc(d.text||d)}).join(' · ')+'</p>':'')+
+      '<button class="go" id="go3">Выбрать следующие три</button>'+
+      '<button type="button" class="quiet" id="goC">Главная звезда</button>'+
+    '</div>',
+    'sky-sc'
+  );
+  bindMap(P);
+  document.getElementById('go3').onclick=function(){setScene('pick3')};
+  document.getElementById('goC').onclick=function(){setScene('center')};
+  window.gBack=function(){return false};
 }
 
 var VIEWS={
-  invite:inviteView, sky:skyView, pair:pairView, discover:discoverView,
-  choose:chooseView, clarify:clarifyView, declare:declareView, accepted:acceptedView,
-  wheel:wheelView, place:placeView, needs:needsView, scene:sceneView, heroIntro:heroIntroView, heroQ:heroQView,
-  heroResult:heroResultView, source:sourceView, values:valuesView, contra:contraView,
-  rings:ringsView, pick3:pick3View, summary:summaryView
+  invite:inviteView, sky:skyView, 'const':constView, center:centerView,
+  accepted:acceptedView, compare:compareView, pick3:pick3View, map:mapView
 };
 
 function render(){
   var P=ensure();
-  var sc=P.wishMod.scene||'invite';
-  if(P.tracker&&P.tracker.declared&&(P.tracker.directions||[]).length===3&&!['summary','sky','pick3'].includes(sc)){
-    /* уже собрано — можно показать итог, если маршрут открыл шаг для просмотра */
-  }
-  (VIEWS[sc]||inviteView)();
+  (VIEWS[P.wishMod.scene]||inviteView)();
 }
 
-if(new URLSearchParams(location.search).get('change')==='1'){try{sessionStorage.setItem('alch_v5_wishChange','1')}catch(e){}var P0=ensure();P0.wishMod.scene='choose';save(P0);history.replaceState(null,'','wish.html')}
+var q=new URLSearchParams(location.search);
+if(q.get('change')==='1'){
+  try{sessionStorage.setItem('alch_v5_wishChange','1')}catch(e){}
+  var P0=ensure();P0.wishMod.scene='center';save(P0);
+  history.replaceState(null,'','wish.html'+(q.get('u')?'?u='+encodeURIComponent(q.get('u')):''));
+}
+if(q.get('pick')==='1'){
+  var P1=ensure();P1.wishMod.scene='pick3';save(P1);
+}
+
 drawSky();
-window.addEventListener('resize',function(){drawSky();var P=ensure();if(['sky','pair','discover','choose','clarify','declare'].indexOf(P.wishMod.scene)>=0)render()});
+window.addEventListener('resize',function(){drawSky();var P=ensure();if(['sky','map','center'].indexOf(P.wishMod.scene)>=0)render()});
 render();
 })();
