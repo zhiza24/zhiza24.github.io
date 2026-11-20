@@ -173,7 +173,7 @@ function opts(f){return f.split(';').map(function(x){x=x.trim();return x.charAt(
 var LDq={};T.ld.q.forEach(function(x){LDq[x.id]=x});
 function txt(a){return typeof a==='string'&&a!=='dk'&&a!=='skip'&&a.trim()?a.trim():null}
 function arr(a){return Array.isArray(a)?a:[]}
-BUILD.lab_d=function(ans){var out={v:VER,answers:ans,at:Date.now()},R=T.ld.res;
+BUILD.lab_d=function(ans){if(window.GLabD&&GLabD.build)return GLabD.build(ans);var out={v:VER,answers:ans,at:Date.now()},R=(T.ld.legacy||T.ld).res;
  var dk=function(id){var a=ans[id];return a==null||a==='dk'||a==='skip'||(typeof a==='string'&&!a.trim())};
  var filled=['LD01','LD02','LD03','LD04','LD05','LD06','LD07','LD08'].filter(function(id){var a=ans[id];return a!=null&&a!=='skip'&&!(typeof a==='string'&&!a.trim())}).length;
  var ld06=ans.LD06,conc06=typeof ld06==='string'&&ld06!=='Пока не могу выбрать'&&ld06!=='skip';
@@ -188,7 +188,7 @@ BUILD.lab_d=function(ans){var out={v:VER,answers:ans,at:Date.now()},R=T.ld.res;
  else r='Сейчас трудно услышать собственное желание.';
  out.result=r;out.status=r==='Недостаточно данных.'?'insufficient':r==='Направление уже обозначено.'?'supported':'tentative';
  var GM={'Защиту от риска или оценки':'Защита.','Предсказуемость':'Предсказуемость.','Сохранение принадлежности к людям или группе':'Принадлежность.','Сохранение привычного представления о себе':'Привычная идентичность.','Немедленное облегчение':'Немедленное облегчение.'};
- var gh=arr(ans.LD11).indexOf('Пока не знаю')>=0&&!gain.length?'<p>'+esc(W.ldUnknown)+'</p>':gain.map(function(x){var k=GM[x];return '<div class="gt-lv">'+esc(k?k.replace('.',''):'Сохранение ресурсов')+'</div>'+P_(esc(k?g(T.ld.gain[k]):W.ldSave))}).join('');
+ var gh=arr(ans.LD11).indexOf('Пока не знаю')>=0&&!gain.length?'<p>'+esc(W.ldUnknown)+'</p>':gain.map(function(x){var k=GM[x];return '<div class="gt-lv">'+esc(k?k.replace('.',''):'Сохранение ресурсов')+'</div>'+P_(esc(k?g((T.ld.legacy||T.ld).gain[k]):W.ldSave))}).join('');
  var prac=arr(ans.LD12).filter(function(x){return /не хватает (времени|денег|навыка|поддержки)/i.test(x)});
  var price=arr(ans.LD13),pr=ans.LD14||{},PL={real:'реально неизбежно',maybe:'пока предполагаю',dk:'не знаю'};
  out.desire=txt(ans.LD07)||(conc06?ld06:null)||txt(ans.LD01);out.step=txt(ans.LD15);out.gains=gain;out.risks=risk;out.obstacles=arr(ans.LD12);out.price=price.map(function(p){return {item:p,status:pr[p]||null}});
@@ -196,8 +196,8 @@ BUILD.lab_d=function(ans){var out={v:VER,answers:ans,at:Date.now()},R=T.ld.res;
  var main='<div class="al">Что видно сейчас</div><div class="aq">'+esc(r.replace('.',''))+'</div>'+P_(esc(g(R[r])))+(out.step?'<p class="ar-pt">Твой маленький шаг: '+esc(out.step)+'</p>':'');
  var det=(mine.length?'<details class="ar-det"><summary>Твои ответы</summary>'+mine.map(function(x){return '<p><b>'+esc(x[0])+':</b> '+esc(x[1])+'</p>'}).join('')+'</details>':'')+
   (gh?'<details class="ar-det"><summary>Что дает привычное положение</summary>'+gh+'</details>':'')+
-  (prac.length?'<details class="ar-det"><summary>Препятствия</summary><p>'+esc(prac.join(', '))+'</p>'+P_(esc(g(T.ld.gain['Реальное ограничение ресурса.'])))+'</details>':'')+
-  (price.length?'<details class="ar-det"><summary>Цена перемен</summary>'+P_(esc(g(T.ld.price)))+'<ul class="gt-sum">'+price.map(function(p){return '<li>'+esc(p)+(pr[p]?': '+esc(PL[pr[p]]):'')+'</li>'}).join('')+'</ul></details>':'');
+  (prac.length?'<details class="ar-det"><summary>Препятствия</summary><p>'+esc(prac.join(', '))+'</p>'+P_(esc(g((T.ld.legacy||T.ld).gain['Реальное ограничение ресурса.'])))+'</details>':'')+
+  (price.length?'<details class="ar-det"><summary>Цена перемен</summary>'+P_(esc(g((T.ld.legacy||T.ld).price)))+'<ul class="gt-sum">'+price.map(function(p){return '<li>'+esc(p)+(pr[p]?': '+esc(PL[pr[p]]):'')+'</li>'}).join('')+'</ul></details>':'');
  out.top=r.replace('.','')+(out.desire?': '+out.desire:'');
  return {res:out,html:'<span class="tag">Точка Б</span><span class="tag">Лабиринт желаний</span>'+main+det,log:'Лабиринт желаний: '+out.top}};
 
@@ -239,12 +239,15 @@ function result(box,k,built,retake){var S=STEP[k],n=nextOf(S.u);box.innerHTML=bu
  if(window.GResultCard){
   var _tmp=document.createElement('div');_tmp.innerHTML=built.html||'';
   var _h=_tmp.querySelector('h1,h2,.aq'),_ps=Array.prototype.slice.call(_tmp.querySelectorAll('p')).map(function(x){return x.textContent.trim()}).filter(Boolean);
+  var _d=built.diary||{};
   GResultCard.attachDiaryBar(box,{
-   id:'test_'+k,step:S.u,title:(_h?_h.textContent.trim():S.t||k),
-   lead:_ps[0]||'',strong:_ps[1]||'',insight:_ps[2]||'',
+   id:_d.id||('test_'+k),step:_d.step||S.u,title:_d.title||(_h?_h.textContent.trim():S.name||k),
+   passed:_d.passed||'',lead:_d.lead||_ps[0]||'',strong:_d.strong||_ps[1]||'',insight:_d.insight||_ps[2]||'',
+   insightMore:_d.insightMore||'',insightLabel:_d.insightLabel||'',answers:_d.answers||[],
    preview:preview,before:box.querySelector('#nx')
   });
  }
+ if(built.bind)try{built.bind(box)}catch(e){}
  if(window.GSupport)GSupport.after(box,'test',box.querySelector('#nx'));
  var nx=box.querySelector('#nx');window.nx=nx;nx.onclick=function(){if(preview){location.href=n&&STEP[Object.keys(STEP).filter(function(x){return STEP[x].u===n.u})[0]]?n.u+'&preview=1':'tasks.html';return}if(window.GReview||retakeMode){location.href='tasks.html'+(retakeMode?'#skipped':'');return}location.href=GRoute.advance()};
  var re=box.querySelector('#gtRe');if(re)re.onclick=function(){retake()};scrollTo(0,0)}
@@ -267,5 +270,5 @@ function mountValues(box){css();var P=load(),have=P.valuesCore,V=(P.values&&P.va
  function show(res){result(box,'vsort',{html:'<span class="tag">Точка Б</span><span class="tag">Ценности</span><div class="al">Твои три ориентира</div><ol class="gt-sum">'+res.top3.map(function(v){return '<li><b>'+esc(v)+'</b></li>'}).join('')+'</ol>'+P_(h(T.link.valuesToReactor))+'<details class="ar-det"><summary>Как ты '+g('{разложил|разложила}')+' ценности</summary>'+[['imp','Важно сейчас'],['later','Отложить'],['cross','Вычеркнуть']].map(function(o){var l=Object.keys(res.sort).filter(function(v){return res.sort[v]===o[0]});return l.length?'<p><b>'+o[1]+':</b> '+esc(l.join(', '))+'</p>':''}).join('')+'</details>'},function(){sort={};i=0;pick=[];intro()})}
  if(have&&have.top3&&!preview){show(have);return}intro()}
 
-window.GTests={STEP:STEP,BUILD:BUILD,ITEMS:ITEMS,reactorIn:reactorIn,mount:function(k,box){if(k==='vsort')mountValues(box);else mountTest(k,box)},keys:Object.keys(STEP),W:W};
+window.GTests={STEP:STEP,BUILD:BUILD,ITEMS:ITEMS,reactorIn:reactorIn,mount:function(k,box){if(k==='vsort')mountValues(box);else if(k==='lab_d'&&window.GLabD)GLabD.mount(box);else mountTest(k,box)},keys:Object.keys(STEP),W:W,css:css,store:store,result:result,load:load,persist:persist,g:g,h:h,esc:esc,P_:P_,fem:fem,preview:preview,retakeMode:retakeMode,VER:VER};
 })();

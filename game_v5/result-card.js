@@ -64,7 +64,7 @@ function saveToDiary(entry){
   strongMore:entry.strongMore||'',
   insight:entry.insight||'',
   insightMore:entry.insightMore||'',
-  answers:Array.isArray(entry.answers)?entry.answers.slice(0,24):[],
+  answers:Array.isArray(entry.answers)?entry.answers.slice():[],
   at:Date.now()
  };
  var idx=P.diary.blocks.findIndex(function(b){return b.id===rec.id});
