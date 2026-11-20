@@ -3,7 +3,7 @@
 <head>
 <script src="theme.js?v=8"></script>
 <script src="sound.js?v=1"></script>
-<script src="flow.js?v=im1"></script>
+<script src="flow.js?v=contact1"></script>
 <script src="opening.js?v=opening2"></script>
 <script src="route.js?v=im1"></script>
 <script src="profile-layer.js?v=art1"></script>
@@ -38,7 +38,7 @@
 <script src="texts_fr.js?v=mf2"></script>
 <script src="result-card.js?v=fx1"></script><script src="nav.js?v=sky1"></script>
 <script src="support.js?v=wish1"></script>
-<script src="betraywheel.js?v=bw2"></script>
+<script src="betraywheel.js?v=contact1"></script>
 <script>
 (function(){
 var KEY='alch_v5_profile',Q=new URLSearchParams(location.search),AGAIN=!!window.GRetake;
@@ -72,7 +72,7 @@ function step(){
  var h='<p class="mute">'+(st.i+1)+' из 12 · '+(isSp?'опора':'тень')+'</p>';
  h+=GBW.svg(GBW.fromRates(st),{size:220,hi:sec.id});
  h+='<h1 style="font-size:25px">'+esc(isSp?sec.m.t:sec.t)+'</h1>';
- if(!isSp)h+='<p class="mute" style="margin:-4px 0 8px">Зачем это включается: '+esc(sec.goal.toLowerCase())+'</p>';
+ 
  h+='<p class="lead" style="margin-bottom:12px">'+esc(gx(isSp?sec.m.how:sec.how))+'</p>';
  h+='<p style="text-align:center;margin:0 0 6px;color:#f0c870">'+esc(isSp?'Как часто это проявляется в твоей жизни?':'Как часто это проявляется в твоей жизни?')+'</p>';
  h+='<div class="cards rate">'+RATE.map(function(r){var on=String(cur)===String(r[0])||(cur===null&&r[0]==='dk');return '<button type="button" class="'+(on?'on':'')+'" data-v="'+r[0]+'"><b style="margin:0">'+r[1]+'</b></button>'}).join('')+'</div>';
