@@ -65,6 +65,8 @@ var S=[
 ]}
 ]}
 ];
+var LEGACY_SUPPORT={perf:{id:'enough',t:'Достаточно хорошо'},please:{id:'bound',t:'Собственные границы'},numb:{id:'alive',t:'Замечать и проживать чувства'},detach:{id:'near',t:'Присутствие и близость'},over:{id:'care',t:'Забота о себе'},ctrl:{id:'trust',t:'Доверие и разделение ответственности'}};
+S.forEach(function(s){s.m=LEGACY_SUPPORT[s.id]});
 var FORMS=[];S.forEach(function(s){s.forms.forEach(function(f){f.sector=s;FORMS.push(f)})});
 var QUESTIONS=[];FORMS.forEach(function(f){f.q.forEach(function(q,i){QUESTIONS.push({id:f.id+'_'+(i+1),form:f.id,sector:f.sector.id,text:q[0],left:q[1],right:q[2]})})});
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
