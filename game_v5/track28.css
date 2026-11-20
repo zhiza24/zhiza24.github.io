@@ -81,3 +81,6 @@
 .swap{font-size:13px;color:#e0a940;margin:6px 0 0}
 .day-card .go{margin-top:16px}
 .res .card{margin:16px 0;padding:4px 0}
+
+.t28 .cap28{margin:-14px 0 16px;color:#c9a46a;font:500 13px/1.4 Manrope,sans-serif;text-align:center}.t28 .cap28.soft{margin-top:-8px;color:#e8cf9a}
+.res .card input[data-act=mid]{display:block;width:100%;box-sizing:border-box;margin:6px 0;padding:8px;background:transparent;color:inherit;border:1px solid #5a4428;border-radius:8px;font:inherit}

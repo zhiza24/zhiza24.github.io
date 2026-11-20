@@ -88,7 +88,7 @@ var SRC=[
  [7,'focuses','Направления на месяц','values.html',function(P){var f=arr(P.focuses).map(function(x){return typeof x==='string'?x:(x&&(x.t||x.name))||''}).filter(Boolean);if(!f.length)return null;return '<ol class="hm-ul">'+f.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ol>'}],
  [7,'archD','Архитектор: выбранное состояние','slot.html?id=arch_d',function(P){var d=P.archD;if(!d||!d.d1t)return null;
    return '<div class="hm-q">'+esc(d.d1t)+'</div>'+(d.d2t||d.d2own?p('<b>Первый признак:</b> '+esc(d.d2own||d.d2t)):'')+(d.d3t||d.d3own?p('<b>Действие на два дня:</b> '+esc(d.d3own||d.d3t)):'')}],
- [7,'reactor','Реактор','reactor.html',function(P){var r=P.reactor,n=r?Object.keys(r.days||{}).length:0;if(!n)return null;return p(esc('Засчитано дней: '+n+' из 21.'))}],
+ [7,'reactor','Реактор','reactor.html',function(P){var n=window.GTrackDay?GTrackDay(P).filled:0;if(!n)return null;return p(esc('Заполнено дней: '+n+' из 28.'))}],
  [7,'compare','Было и стало','slot.html?id=compare',function(P){var r=P.retest;if(!r||!arr(r.wheel).length||!Array.isArray(P.wheel))return null;
    var up=[],dn=[];r.wheel.forEach(function(v,i){var a=P.wheel[i];if(typeof a!=='number')return;if(v-a>=1)up.push(WN[i]+' '+a+' → '+v);if(a-v>=1)dn.push(WN[i]+' '+a+' → '+v)});
    if(!up.length&&!dn.length)return p('Колесо осталось почти таким же, как в начале пути.');return (up.length?p('<b>Выросло:</b> '+esc(up.join(', '))):'')+(dn.length?p('<b>Стало меньше:</b> '+esc(dn.join(', '))):'')}]

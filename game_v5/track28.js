@@ -276,6 +276,9 @@ function viewMonth(P,T){
   var html='<div class="t28">'+growthHtml(T);
   var wish=wishText(T);
   html+=wish?'<p class="wishline">'+esc(wish)+'</p>':'<p class="wishline">Трекер 28 дней</p>';
+  var res=(P.pathPlan&&P.pathPlan.result)||'';
+  html+='<p class="cap28">'+(res?'Результат цикла: '+esc(res):'28 дней · четыре недели последовательных действий')+'</p>';
+  var fc=filledCount(T);if(fc>0&&streakOf(T)===0&&today>1&&!T.finale)html+='<p class="cap28 soft">Пропуск ничего не обнуляет. Продолжи с сегодняшнего дня, с минимального шага'+(P.pathPlan&&P.pathPlan.min?': '+esc(P.pathPlan.min):'')+'.</p>';
   html+='<div class="cal"><span></span>';
   WD.forEach(function(w){html+='<span class="hd">'+w+'</span>'});
   for(var w=0;w<4;w++){
@@ -288,7 +291,7 @@ function viewMonth(P,T){
   html+='</div>';
   if(open>=1&&open<=28)html+=dayPanel(P,T,open);
   html+='<button class="go" type="button" data-act="today">Сегодня</button>';
-  html+='<button type="button" class="quiet-btn" data-act="monthg">Итоги и график</button></div>';
+  html+='<button type="button" class="quiet-btn" data-act="monthg">'+(today>=21&&!(T.mid&&T.mid.done)&&!T.finale?'Итоги · сверка 21 дня':'Итоги и график')+'</button></div>';
   return html;
 }
 
@@ -482,6 +485,8 @@ function viewResults(P,T){
   var html='<div class="t28 res"><h1>Итоги</h1>'+svgChart(T,1,28,T.hiddenMet||{},'')+recipeOf(T);
   var rew=[7,14,21,28].filter(function(d){return T.rewards[d]}).map(function(d){return '<p>День '+d+': '+esc(T.rewards[d])+'</p>'}).join('');
   html+='<div class="row-line"><b>Награда за цикл</b><input type="text" data-act="reward" data-d="28" maxlength="160" placeholder="награда себе за 28 дней" value="'+esc(T.rewards[28]||'')+'">'+rew+'</div>';
+  if(today>=21){var M=T.mid||{};html+='<div class="card"><b>Сверка 21 дня</b><p class="mute">Три недели позади. Короткая сверка поможет пройти последнюю неделю точнее.</p>'+
+    [['ok','Что получается'],['ch','Что изменилось'],['fix','Что скорректировать на последнюю неделю']].map(function(x){return '<input type="text" data-act="mid" data-f="'+x[0]+'" maxlength="200" placeholder="'+x[1]+'" value="'+esc(M[x[0]]||'')+'">'}).join('')+'</div>';}
   if(today>=28||T.finale)html+=finaleBlock(P,T);
   html+='<button type="button" class="quiet-btn" data-act="settings">Настройки</button>';
   html+='<button type="button" class="quiet-btn" data-act="back">К сетке</button></div>';
@@ -655,7 +660,7 @@ function bind(){
     if(act==='fate'){
       T.finale=T.finale||{}; T.finale.fate=b.getAttribute('data-v'); T.finale.done=true; T.finale.at=Date.now();
       if(window.GRoute)GRoute.complete('reactor.html');
-      save(P); render(); return;
+      save(P); if(window.GArts)GArts.grant('proof_sign'); render(); return;
     }
     if(act==='newcycle'){
       T.prev=(T.prev||[]).concat([{start:T.start,finale:T.finale,days:T.days,weekPlans:T.weekPlans,rewards:T.rewards}]);
@@ -683,6 +688,7 @@ function bind(){
     if(act==='notify-time'){T.notifyTime=el.value; if(T.notifyOn&&T.notifyOk)scheduleNote(T); save(P); return}
     if(act==='plan-text'){var plan=weekPlan(T,(T.weekN||0)+1); plan.actions[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='wrev'){var plan=weekPlan(T,(T.weekN||0)+1); plan.review[el.getAttribute('data-f')]=el.value; save(P); return}
+    if(act==='mid'){T.mid=T.mid||{}; T.mid[el.getAttribute('data-f')]=el.value; T.mid.done=!!(T.mid.ok||T.mid.ch||T.mid.fix); save(P); return}
     if(act==='reward'){T.rewards=T.rewards||{}; T.rewards[el.getAttribute('data-d')]=el.value; save(P); return}
   };
 }

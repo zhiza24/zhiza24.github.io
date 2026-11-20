@@ -24,6 +24,10 @@
     guardian_clarity: { name: 'Печать трезвости', icon: '◎', aliases: ['Печать трезвости'] },
     guardian_boundaries: { name: 'Печать границ', icon: '◇', aliases: ['Печать границ'] },
     guardian_pace: { name: 'Печать темпа', icon: '◍', aliases: ['Печать темпа'] },
+    hero_passport: { name: 'Паспорт Героя', icon: '📜', aliases: ['Паспорт Героя'] },
+    wish_star: { name: 'Звезда желания', icon: '⭐', aliases: ['Звезда желания'] },
+    proof_sign: { name: 'Знак подтверждения', icon: '🏅', aliases: ['Знак подтверждения'] },
+    path_map: { name: 'Личная карта пути', icon: '🗺', aliases: ['Личная карта пути'] },
     guardian_companion: { name: 'Хранитель опыта', nameF: 'Хранительница опыта', icon: '🛡', aliases: ['Хранитель опыта', 'Хранительница опыта'] }
   };
   var MODULES = {

@@ -38,6 +38,9 @@ function ready(u,p){
  if(u==='slot.html?id=leverage')return !!(p.fractal&&p.fractal.lever);
  if(u==='slot.html?id=guard')return !!(p.guard&&p.guard.answers&&p.guard.answers.length);
  if(u==='slot.html?id=retest')return !!p.retest;
+ if(u==='slot.html?id=wish_back')return !!(p.wishBack&&p.wishBack.done);
+ if(u==='slot.html?id=builder')return !!(p.pathPlan&&p.pathPlan.done);
+ if(u==='fin.html')return !!(p.portrait&&p.portrait.done);
  if(u==='slot.html?id=arch_b')return !!p.archB;
  if(u==='slot.html?id=arch_v')return !!p.archV;
  if(u==='slot.html?id=arch_p')return !!p.archP;
@@ -121,5 +124,12 @@ function snapshot(u,p){
  const logs=(p.log||[]).slice(-3);return JSON.parse(JSON.stringify({data,logs}));
 }
 function reading(u){if(isVisualReview())return false;return u==='elder.html'||u==='hero.html'||u==='sum.html'||u==='fin.html'||u.startsWith('scene.html')||['pa_end','pb_intro','pc_intro','compare'].some(k=>u==='slot.html?id='+k)}
+/* день трекера: по дате начала, завершенный финал считается как 28 */
+function trackDay(p){p=p||load();const T=p.tracker||{};let day=0,filled=0;
+ if(T.finale&&T.finale.done)day=28;else if(T.start){day=Math.floor((Date.now()-T.start)/86400000)+1;day=Math.max(1,Math.min(28,day));}
+ else day=Math.min(28,+(p.reactor||{}).day||0);
+ const D=T.days||{};for(const k in D){const d=D[k]||{};if(Object.keys(d).length)filled++;}
+ return {day,filled:Math.min(28,filled),done:!!(T.finale&&T.finale.done)||day>=28};}
+window.GTrackDay=trackDay;
 window.GRoute={load,resume,complete,advance,markAdvance,justAdvanced,init,recordVisit,currentUrl,ready,reading,state,status,reviewUrl,snapshot,visualReview,isVisualReview};
 })();

@@ -321,6 +321,8 @@ function declareView(){
     P.wishMod.declaredId=P.wishMod.chosenId;
     P.wishMod.declaredAt=now();
     writeDeclared(P);
+    var chg=false;try{chg=sessionStorage.getItem('alch_v5_wishChange')==='1';sessionStorage.removeItem('alch_v5_wishChange')}catch(e){}
+    if(chg){save(P);location.href='slot.html?id=wish_back';return}
     setScene('accepted');
   });
 }
@@ -734,6 +736,7 @@ function render(){
   (VIEWS[sc]||inviteView)();
 }
 
+if(new URLSearchParams(location.search).get('change')==='1'){try{sessionStorage.setItem('alch_v5_wishChange','1')}catch(e){}var P0=ensure();P0.wishMod.scene='choose';save(P0);history.replaceState(null,'','wish.html')}
 drawSky();
 window.addEventListener('resize',function(){drawSky();var P=ensure();if(['sky','pair','discover','choose','clarify','declare'].indexOf(P.wishMod.scene)>=0)render()});
 render();
