@@ -474,7 +474,7 @@ function mountLab(box){
 
   function paintIntro(){
    var I=D.intro;
-   fade('<div class="gt-ph"><b>'+esc(I.z)+'</b>'+esc(I.who)+' · здесь будет картинка или видео<small>'+esc(I.zdesc)+'</small></div><div class="aq">'+h(I.title)+'</div>'+I.text.split('\n').filter(Boolean).map(function(p){return P_(h(p))}).join('')+'<button class="next" id="gtGo">'+esc(I.btn)+'</button>',
+   fade('<div class="gt-ph"><b>'+esc(I.who)+'</b><small>'+esc(I.zdesc)+'</small></div><div class="aq">'+h(I.title)+'</div>'+I.text.split('\n').filter(Boolean).map(function(p){return P_(h(p))}).join('')+'<button class="next" id="gtGo">'+esc(I.btn)+'</button>',
     function(){box.querySelector('#gtGo').onclick=function(){fwd()}});
   }
   function paintGate(st){

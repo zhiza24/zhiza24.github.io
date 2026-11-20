@@ -15,6 +15,7 @@ window.GFLOW=[
 {u:'betray.html',pt:'0',t:'Колесо самопредательства'},
 {u:'slot.html?id=arch_b',pt:'0',t:'Эхо: привычный ход'},
 {u:'slot.html?id=fs',pt:'0',t:'Тест: Первые настройки'},
+{u:'slot.html?id=im',pt:'0',t:'Тест: Зеркало внутреннего мира'},
 {u:'swipe.html',pt:'0',t:'Практика: свайп хорошего'},
 {u:'res.html',pt:'0',t:'Ресурсы и тело'},
 {u:'breath.html',pt:'0',t:'Дыхание'},

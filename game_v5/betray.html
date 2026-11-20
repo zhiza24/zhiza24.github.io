@@ -3,16 +3,16 @@
 <head>
 <script src="theme.js?v=8"></script>
 <script src="sound.js?v=1"></script>
-<script src="flow.js?v=map1"></script>
+<script src="flow.js?v=im1"></script>
 <script src="opening.js?v=opening2"></script>
-<script src="route.js?v=map1"></script>
+<script src="route.js?v=im1"></script>
 <script src="profile-layer.js?v=art1"></script>
-<script src="route-gate.js?v=wish2"></script>
+<script src="route-gate.js?v=im1"></script>
 <script src="gender.js?v=2"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <script src="upd.js?v=1794512684"></script>
-<title>Что узнаешь в себе</title>
+<title>Колесо тени и опоры</title>
 <link rel="icon" href="favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="g.css?v=1f19">
@@ -24,6 +24,7 @@
 .bt .mute{color:#c9a46a;font-size:14px;text-align:center}
 .cards{display:flex;flex-direction:column;gap:10px;margin:8px 0 22px}
 .cards button{text-align:left;border:1px solid #6a4e28;background:#120e08;color:#f4ecdf;border-radius:16px;padding:14px 16px;font:inherit;cursor:pointer}
+.cards.rate{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cards.rate button{text-align:center;padding:12px}
 .cards button.on{border-color:#f0c870;background:rgba(240,200,112,.12)}
 .cards b{display:block;font:600 18px 'Cormorant Garamond',serif;color:#f0c870;margin:0 0 4px}
 .bt .go{display:block;width:100%;box-sizing:border-box;margin:8px 0 0;padding:15px 18px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope,sans-serif}
@@ -37,52 +38,75 @@
 <script src="texts_fr.js?v=mf2"></script>
 <script src="result-card.js?v=fix1"></script><script src="nav.js?v=sky1"></script>
 <script src="support.js?v=wish1"></script>
+<script src="betraywheel.js?v=bw1"></script>
 <script>
 (function(){
-var KEY='alch_v5_profile';
-var ITEMS=[
-  {id:'perf', t:'Перфекционизм', d:'Еще не идеально — и поэтому можно не начинать.'},
-  {id:'ctrl', t:'Контроль', d:'{Если не удержу все сам, развалится.|Если не удержу все сама, развалится.}'},
-  {id:'please', t:'Угождение', d:'Сначала другим, свое подождет.'},
-  {id:'numb', t:'Онемение', d:'Лучше не чувствовать, тогда не так уязвимо.'}
-];
+var KEY='alch_v5_profile',Q=new URLSearchParams(location.search),AGAIN=!!window.GRetake;
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
 function save(P){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+var esc=GBW.esc;
 function gx(s){return String(s).replace(/\{([^|]*)\|([^}]*)\}/g,function(_,m,f){return window.GG?GG(m,f):m})}
 function tick(){if(window.GSound&&!GSound.isOn())return;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=660;g.gain.value=0.04;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+0.05)}catch(e){}}
-function Pget(){var P=load(); P.betray=P.betray||{picked:[]}; if(!P.betray.picked)P.betray.picked=[]; return P}
-function draw(){
-  var P=Pget(), sel=P.betray.picked||[];
-  var h='<p class="mute">После Мага</p><h1>Что узнаешь в себе</h1>';
-  h+='<p class="lead">Отметь, что откликается. Это не тест и не диагноз.</p><div class="cards">';
-  ITEMS.forEach(function(it){
-    var on=sel.indexOf(it.id)>=0;
-    h+='<button type="button" class="'+(on?'on':'')+'" data-id="'+it.id+'"><b>'+esc(it.t)+'</b>'+esc(gx(it.d))+'</button>';
-  });
-  h+='</div><button class="go" type="button" id="go">Дальше</button>';
-  h+='<button type="button" class="quiet" id="skip">Пропустить</button>';
-  document.getElementById('bt').innerHTML=h;
-  document.querySelectorAll('.cards button').forEach(function(b){
-    b.onclick=function(){
-      tick();
-      var P=Pget(), id=b.getAttribute('data-id'), a=P.betray.picked, i=a.indexOf(id);
-      if(i>=0)a.splice(i,1); else a.push(id);
-      save(P); draw();
-    };
-  });
-  function done(skipped){
-    tick();
-    var P=Pget();
-    if(skipped)P.betray.skipped=Date.now();
-    else P.betray.done=Date.now();
-    save(P);
-    if(window.GRoute)GRoute.complete('betray.html');
-    location.href=window.GRoute?GRoute.advance():'tasks.html';
-  }
-  document.getElementById('go').onclick=function(){done(false)};
-  document.getElementById('skip').onclick=function(){done(true)};
+GBW.css();
+var box=document.getElementById('bt');
+/* 12 шагов: для каждого сектора сначала тень, потом зеркальная опора */
+var STEPS=[];GBW.S.forEach(function(s){STEPS.push({k:'sh',s:s,id:s.id});STEPS.push({k:'sp',s:s,id:s.m.id})});
+var RATE=[[1,'Редко'],[2,'Иногда'],[3,'Часто'],['dk','Не знаю']];
+function Pget(){var P=load();P.betray=P.betray||{picked:[]};if(!P.betray.picked)P.betray.picked=[];return P}
+var P0=Pget(),dr=(AGAIN?P0.betray.draftEnd:P0.betray.draft)||{i:-1,sh:{},sp:{}};
+var st={i:dr.i==null?-1:dr.i,sh:dr.sh||{},sp:dr.sp||{}};
+function keep(){var P=Pget();P.betray[AGAIN?'draftEnd':'draft']={i:st.i,sh:st.sh,sp:st.sp,at:Date.now()};save(P)}
+window.gBack=function(){if(st.i>=0){st.i--;keep();draw();return true}return false};
+function intro(){
+ var h='<p class="mute">'+(AGAIN?'Финал · второй круг':'После Мага')+'</p><h1>'+(AGAIN?'Колесо еще раз':'Где ты теряешь себя и где опираешься на себя')+'</h1>';
+ h+='<p class="lead">'+esc(gx(AGAIN?'Пройди колесо заново, не глядя на прошлый круг. Потом увидишь оба рядом.':'В каждом секторе две стороны. Тень — как ты иногда предаешь себя. Опора — как ты уже умеешь себя поддерживать. Отвечай про обычную жизнь. Ничего не назначено заранее: колесо закрасится только твоими ответами.'))+'</p>';
+ h+=GBW.svg(GBW.fromRates(st),{size:300})+GBW.legend();
+ h+='<button class="go" type="button" id="go">'+(st.i>=0?'Продолжить':'Начать')+'</button>';
+ if(!AGAIN)h+='<button type="button" class="quiet" id="skip">Пропустить</button>';
+ box.innerHTML=h;
+ document.getElementById('go').onclick=function(){tick();if(st.i<0)st.i=0;keep();draw()};
+ var sk=document.getElementById('skip');if(sk)sk.onclick=function(){finish(true)};
 }
+function step(){
+ var S=STEPS[st.i],sec=S.s,isSp=S.k==='sp',cur=st[S.k][S.id];
+ var h='<p class="mute">'+(st.i+1)+' из 12 · '+(isSp?'опора':'тень')+'</p>';
+ h+=GBW.svg(GBW.fromRates(st),{size:220,hi:sec.id});
+ h+='<h1 style="font-size:25px">'+esc(isSp?sec.m.t:sec.t)+'</h1>';
+ if(!isSp)h+='<p class="mute" style="margin:-4px 0 8px">Зачем это включается: '+esc(sec.goal.toLowerCase())+'</p>';
+ h+='<p class="lead" style="margin-bottom:12px">'+esc(gx(isSp?sec.m.how:sec.how))+'</p>';
+ h+='<p style="text-align:center;margin:0 0 6px;color:#f0c870">'+esc(isSp?'Как часто у тебя так получается?':'Как часто это с тобой бывает?')+'</p>';
+ h+='<div class="cards rate">'+RATE.map(function(r){var on=String(cur)===String(r[0])||(cur===null&&r[0]==='dk');return '<button type="button" class="'+(on?'on':'')+'" data-v="'+r[0]+'"><b style="margin:0">'+r[1]+'</b></button>'}).join('')+'</div>';
+ if(st.i>0)h+='<button type="button" class="quiet" id="back">Назад</button>';
+ box.innerHTML=h;
+ box.querySelectorAll('.rate button').forEach(function(b){b.onclick=function(){tick();var v=b.getAttribute('data-v');st[S.k][S.id]=v==='dk'?null:+v;st.i++;keep();try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}draw();scrollTo(0,0)}});
+ var bk=document.getElementById('back');if(bk)bk.onclick=function(){window.gBack()};
+}
+function result(){
+ var r={sh:st.sh,sp:st.sp},P=Pget(),prev=AGAIN?P.betray.start:null;
+ var h='<p class="mute">'+(AGAIN?'Было и стало':'Твоя стартовая картина')+'</p><h1>'+(AGAIN?'Два круга рядом':'Твое колесо')+'</h1>';
+ if(prev&&prev.sh){h+='<div class="bw-pair"><div>Было'+GBW.svg(GBW.fromRates(prev),{size:160,labels:false})+'</div><div>Стало'+GBW.svg(GBW.fromRates(r),{size:160,labels:false})+'</div></div>'+GBW.legend()}
+ else h+=GBW.svg(GBW.fromRates(r),{size:320})+GBW.legend();
+ h+=GBW.summaryHtml(r,gx);
+ h+='<p class="mute" style="text-align:left;margin-top:10px">'+esc(gx('Это не оценка и не диагноз. Тень когда-то помогала тебе справляться. Опора — то, что уже работает и что можно укреплять. В трекере ты будешь одним касанием отмечать и то, и другое.'))+'</p>';
+ h+='<button class="go" type="button" id="go">'+(AGAIN?'Вернуться к итогам':'Дальше')+'</button>';
+ box.innerHTML=h;
+ document.getElementById('go').onclick=function(){finish(false)};
+}
+function finish(skipped){
+ tick();var P=Pget(),B=P.betray;
+ if(skipped){B.skipped=Date.now()}
+ else{
+  var rec={v:1,at:Date.now(),sh:st.sh,sp:st.sp};
+  if(AGAIN){if(B.end){(B.history=B.history||[]).push(B.end)}B.end=rec;delete B.draftEnd}
+  else{if(B.start){(B.history=B.history||[]).push(B.start)}B.start=rec;B.done=Date.now();delete B.draft;
+   var lp=GBW.legacyPicked(rec);if(lp.length)B.picked=lp}
+ }
+ save(P);
+ if(AGAIN){location.href='slot.html?id=compare';return}
+ if(window.GRoute)GRoute.complete('betray.html');
+ location.href=window.GRoute?GRoute.advance():'tasks.html';
+}
+function draw(){if(st.i<0)return intro();if(st.i>=STEPS.length)return result();step()}
 draw();
 })();
 </script>

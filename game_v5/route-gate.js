@@ -8,8 +8,8 @@ for(const step of GFLOW){const [name,query]=step.u.split('?'),params=new URLSear
 const resource=['index.html','cover_v1.html','map.html','diary.html','hero.html','tasks.html','wish-track.html','herocard.html','reactor.html'].includes(file);
 if(['path.html','stage.html','wheel.html','crystal.html'].includes(file)||file==='slot.html'&&q.get('id')==='map_all')target='tasks.html';
 if(!u&&['scene.html','slot.html'].includes(file)&&!['info','theme'].includes(q.get('id')))target='tasks.html';
-const archPreview=q.get('preview')==='1'&&['ego.html','slot.html?id=arch_b','slot.html?id=arch_v','slot.html?id=arch_p','slot.html?id=arch_d','slot.html?id=km','slot.html?id=fs','slot.html?id=lab_d','slot.html?id=pi','slot.html?id=rs','slot.html?id=ct','slot.html?id=sv','slot.html?id=vsort','slot.html?id=dialog'].includes(u);
-const retake=q.get('retake')==='1'&&['slot.html?id=arch_b','slot.html?id=arch_v','slot.html?id=arch_p','slot.html?id=arch_d','slot.html?id=km','slot.html?id=fs','slot.html?id=lab_d','slot.html?id=pi','slot.html?id=rs','slot.html?id=ct','slot.html?id=sv','slot.html?id=vsort','wish.html'].includes(u)&&GRoute.status(u)==='done';
+const archPreview=q.get('preview')==='1'&&['ego.html','slot.html?id=arch_b','slot.html?id=arch_v','slot.html?id=arch_p','slot.html?id=arch_d','slot.html?id=km','slot.html?id=fs','slot.html?id=lab_d','slot.html?id=pi','slot.html?id=rs','slot.html?id=ct','slot.html?id=sv','slot.html?id=vsort','slot.html?id=dialog','slot.html?id=im'].includes(u);
+const retake=q.get('retake')==='1'&&['slot.html?id=arch_b','slot.html?id=arch_v','slot.html?id=arch_p','slot.html?id=arch_d','slot.html?id=km','slot.html?id=fs','slot.html?id=lab_d','slot.html?id=pi','slot.html?id=rs','slot.html?id=ct','slot.html?id=sv','slot.html?id=vsort','wish.html','betray.html','slot.html?id=im'].includes(u)&&GRoute.status(u)==='done';
 window.GRetake=retake;
 if(u&&!resource&&!archPreview&&!retake){
  const status=GRoute.status(u),preview=(u==='slot.html?id=mirrors'||file==='breath.html')&&q.get('preview')==='1';

@@ -16,7 +16,8 @@ function P_(html){return '<p>'+html+'</p>'}
 var STEP={km:{u:'slot.html?id=km',f:'kmTest',mod:'km',name:'Кривой Мир'},fs:{u:'slot.html?id=fs',f:'firstSet',mod:'firstSet',name:'Первые настройки'},
  lab_d:{u:'slot.html?id=lab_d',f:'desireLab',mod:'desireLab',name:'Лабиринт желаний'},pi:{u:'slot.html?id=pi',f:'interact',mod:'interact',name:'Профиль взаимодействия'},
  rs:{u:'slot.html?id=rs',f:'respTest',mod:'respTest',name:'Ответственность'},ct:{u:'slot.html?id=ct',f:'ctTest',mod:'ctTest',name:'Критическое мышление'},
- sv:{u:'slot.html?id=sv',f:'selfWorth',mod:'selfWorth',name:'Самоценность'},vsort:{u:'slot.html?id=vsort',f:'valuesCore',mod:'valuesCore',name:'Три ориентира'}};
+ sv:{u:'slot.html?id=sv',f:'selfWorth',mod:'selfWorth',name:'Самоценность'},vsort:{u:'slot.html?id=vsort',f:'valuesCore',mod:'valuesCore',name:'Три ориентира'},
+ im:{u:'slot.html?id=im',f:'backgroundProfile',mod:'backgroundProfile',name:'Зеркало внутреннего мира'}};
 var SHORT={'scene.html?k=ego':'Маг','slot.html?id=fs':'Первые настройки','swipe.html':'свайп хорошего','slot.html?id=arch_p':'Страж, точка переключения',
  'slot.html?id=fractal':'Фрактальная карта','slot.html?id=ct':'Критическое мышление','slot.html?id=leverage':'Точка влияния','slot.html?id=vsort':'три ориентира',
  'slot.html?id=guard':'Встреча со Стражем','slot.html?id=rs':'Ответственность','slot.html?id=pi':'Профиль взаимодействия','slot.html?id=sv':'Самоценность'};
@@ -53,7 +54,7 @@ W.ldUnknown='Пока не определено. Ответ «Пока не зн
 
 /* ---------- стиль ---------- */
 function css(){if(window.GArch&&GArch.css)GArch.css();if(document.getElementById('gt-css'))return;var s=document.createElement('style');s.id='gt-css';s.textContent=
-'.gt-ph{margin:12px 0 14px;border:2px dashed #b8893f;border-radius:16px;padding:18px 14px;text-align:center}.gt-ph b{display:block;font:800 19px Manrope,sans-serif;color:#a8762f;margin-bottom:4px}.gt-ph small{display:block;margin-top:6px;font-size:15px;line-height:1.4;opacity:.8}'+
+'.gt-ph{margin:12px 0 14px;border:1px solid #b8893f;background:radial-gradient(circle at 50% 20%,rgba(240,200,112,.16),transparent 70%);border-radius:16px;padding:18px 14px;text-align:center}.gt-ph b{display:block;font:800 19px Manrope,sans-serif;color:#a8762f;margin-bottom:4px}.gt-ph small{display:block;margin-top:6px;font-size:15px;line-height:1.4;opacity:.8}'+
 '.gt-row{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}.gt-row button{flex:1 1 30%;min-height:44px;padding:8px;border:1px solid #9e783a;border-radius:10px;background:transparent;color:inherit;font:600 16px Manrope,sans-serif}.gt-row button.ar-on{border-color:#6a3a12}'+
 '.gt-ex{margin:12px 0;padding:12px;border-left:3px solid #c99a45;line-height:1.5}.gt-ok{font-weight:700}.gt-lv{font-size:15px;opacity:.75;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 2px}'+
 '.gt-links{margin-top:12px;display:flex;gap:18px;flex-wrap:wrap}.gt-links a,.gt-links button{background:none;border:0;padding:0;color:#a8762f;font:500 15px Manrope,sans-serif;text-decoration:underline;cursor:pointer;min-height:0;width:auto}'+
@@ -70,7 +71,7 @@ Runner.prototype.draw=function(){var it=this.items[this.i],self=this,b=this.box;
  var head=(ix>=0?'<div class="al">Вопрос '+(ix+1)+' из '+qs.length+'</div>':'')+(it.h?'<div class="al" style="opacity:.8">'+h(it.h)+'</div>':'')+(it.t?'<div class="aq">'+h(it.t)+'</div>':'')+(it.ctx?'<p class="ar-ctx">'+h(it.ctx)+'</p>':'');
  var skip='<button class="ar-skip" id="gtSk">Пропустить</button>';
  function bindSkip(){var s=b.querySelector('#gtSk');if(s)s.onclick=function(){self.set(it.id,'skip');self.next()}}
- if(it.kind==='intro'){var I=it.I;b.innerHTML='<div class="gt-ph"><b>'+esc(I.z)+'</b>'+esc(I.who)+' · здесь будет картинка или видео<small>'+esc(I.zdesc)+'</small></div><div class="aq">'+h(I.title)+'</div><p>'+h(I.text)+'</p>'+(I.hint?'<p class="ar-ctx">'+h(I.hint)+'</p>':'')+'<button class="next" id="gtGo">'+esc(I.btn)+'</button>';b.querySelector('#gtGo').onclick=function(){self.next()};return}
+ if(it.kind==='intro'){var I=it.I;b.innerHTML='<div class="gt-ph"><b>'+esc(I.who)+'</b><small>'+esc(I.zdesc)+'</small></div><div class="aq">'+h(I.title)+'</div><p>'+h(I.text)+'</p>'+(I.hint?'<p class="ar-ctx">'+h(I.hint)+'</p>':'')+'<button class="next" id="gtGo">'+esc(I.btn)+'</button>';b.querySelector('#gtGo').onclick=function(){self.next()};return}
  if(it.kind==='screen'){b.innerHTML=it.html()+'<button class="next" id="gtGo">'+esc(it.btn||'Дальше')+'</button>';b.querySelector('#gtGo').onclick=function(){self.next()};return}
  if(it.kind==='one'){b.innerHTML=head+'<div id="gtOp">'+it.o.map(function(o){return '<button class="ao'+(String(self.ans[it.id])===String(o[0])?' ar-on':'')+'" data-c="'+esc(o[0])+'">'+h(o[1])+'</button>'}).join('')+'</div><div id="gtEx"></div>'+(it.noskip?'':skip);bindSkip();
   b.querySelectorAll('#gtOp button').forEach(function(x){x.onclick=function(){var c=x.dataset.c,o=it.o.filter(function(z){return String(z[0])===c})[0];var v=typeof o[0]==='number'?o[0]:c;
@@ -251,7 +252,7 @@ var drawBase=Runner.prototype.draw;Runner.prototype.draw=function(){var it=this.
  this.items[this.i]=Object.assign({},it,{kind:'multi',o:o,max:2,other:'Свое направление'})}return drawBase.call(this)};
 
 /* ---------- сохранение, вход в Реактор, дневник ---------- */
-function reactorIn(P){var r={v:VER,at:Date.now(),tests:{}};Object.keys(STEP).forEach(function(k){var x=P[STEP[k].f];if(!x||k==='vsort')return;r.tests[k]={status:x.status||'tentative',top:x.top||null,leadingScales:x.leadingScales||x.leading||[]}});if(P.valuesCore)r.values3=P.valuesCore.top3;if(P.desireLab&&P.desireLab.step)r.desireStep=P.desireLab.step;return r}
+function reactorIn(P){var r={v:VER,at:Date.now(),tests:{}};Object.keys(STEP).forEach(function(k){var x=P[STEP[k].f];if(!x||k==='vsort'||k==='im')return;r.tests[k]={status:x.status||'tentative',top:x.top||null,leadingScales:x.leadingScales||x.leading||[]}});if(P.valuesCore)r.values3=P.valuesCore.top3;if(P.desireLab&&P.desireLab.step)r.desireStep=P.desireLab.step;return r}
 function store(k,res,log){if(preview)return;var P=load(),S=STEP[k];if(window.GProfile){try{P=GProfile.saveResult(S.mod,res,{version:VER},{profile:P,save:false})}catch(e){P[S.f]=res}}else P[S.f]=res;
  P[S.f]=res;P.reactorIn=reactorIn(P);(P.log=P.log||[]).push({t:Date.now(),x:log});persist(P)}
 function quoteKey(k){return STEP[k].u}
@@ -291,5 +292,5 @@ function mountValues(box){css();var P=load(),have=P.valuesCore,V=(P.values&&P.va
  function show(res){result(box,'vsort',{html:'<span class="tag">Точка Б</span><span class="tag">Ценности</span><div class="al">Твои три ориентира</div><ol class="gt-sum">'+res.top3.map(function(v){return '<li><b>'+esc(v)+'</b></li>'}).join('')+'</ol>'+P_(h(T.link.valuesToReactor))+'<details class="ar-det"><summary>Как ты '+g('{разложил|разложила}')+' ценности</summary>'+[['imp','Важно сейчас'],['later','Отложить'],['cross','Вычеркнуть']].map(function(o){var l=Object.keys(res.sort).filter(function(v){return res.sort[v]===o[0]});return l.length?'<p><b>'+o[1]+':</b> '+esc(l.join(', '))+'</p>':''}).join('')+'</details>'},function(){sort={};i=0;pick=[];intro()})}
  if(have&&have.top3&&!preview){show(have);return}intro()}
 
-window.GTests={STEP:STEP,BUILD:BUILD,ITEMS:ITEMS,reactorIn:reactorIn,mount:function(k,box){if(k==='vsort')mountValues(box);else if(k==='lab_d'&&window.GLabD)GLabD.mount(box);else mountTest(k,box)},keys:Object.keys(STEP),W:W,css:css,store:store,result:result,load:load,persist:persist,g:g,h:h,esc:esc,P_:P_,fem:fem,preview:preview,retakeMode:retakeMode,VER:VER};
+window.GTests={STEP:STEP,BUILD:BUILD,ITEMS:ITEMS,reactorIn:reactorIn,mount:function(k,box){if(k==='im'&&window.GInner){GInner.mount(box);return}if(k==='vsort')mountValues(box);else if(k==='lab_d'&&window.GLabD)GLabD.mount(box);else mountTest(k,box)},keys:Object.keys(STEP),W:W,css:css,store:store,result:result,load:load,persist:persist,g:g,h:h,esc:esc,P_:P_,fem:fem,preview:preview,retakeMode:retakeMode,VER:VER};
 })();
