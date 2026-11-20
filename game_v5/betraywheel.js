@@ -68,7 +68,21 @@ var S=[
 var LEGACY_SUPPORT={perf:{id:'enough',t:'Достаточно хорошо'},please:{id:'bound',t:'Собственные границы'},numb:{id:'alive',t:'Замечать и проживать чувства'},detach:{id:'near',t:'Присутствие и близость'},over:{id:'care',t:'Забота о себе'},ctrl:{id:'trust',t:'Доверие и разделение ответственности'}};
 S.forEach(function(s){s.m=LEGACY_SUPPORT[s.id]});
 var FORMS=[];S.forEach(function(s){s.forms.forEach(function(f){f.sector=s;FORMS.push(f)})});
-var QUESTIONS=[];FORMS.forEach(function(f){f.q.forEach(function(q,i){QUESTIONS.push({id:f.id+'_'+(i+1),form:f.id,sector:f.sector.id,text:q[0],left:q[1],right:q[2]})})});
+var LEAF_LABELS={
+ ideal:[['Дорабатывать до идеала','Остановиться на достаточном'],['Возвращаться к неточностям','Исправлять без обесценивания']],
+ approval:[['Ждать признания','Замечать собственный вклад'],['Искать внешнее подтверждение','Доверять своей оценке']],
+ peace:[['Соглашаться ради тишины','Обсуждать несогласие'],['Сглаживать любой ценой','Выдерживать сложный разговор']],
+ pleasant:[['Обещать сверх своих сил','Честно обозначать возможности'],['Менять мнение ради симпатии','Говорить уважительно и прямо']],
+ busy:[['Заполнять свободное время','Оставлять место паузе'],['Уходить в дела после стресса','Сначала замечать свое состояние']],
+ disconnect:[['Глушить чувства отвлечением','Замечать и называть чувства'],['Снова переключаться от переживаний','Искать подходящую поддержку']],
+ closed:[['Скрывать, что тебя задело','Делиться переживанием'],['Уводить разговор от близости','Самому выбирать степень открытости']],
+ alone:[['Тянуть все самостоятельно','Разделять нагрузку'],['Отказываться от помощи','Принимать конкретную помощь']],
+ love:[['Становиться нужным ради внимания','Просить о близости прямо'],['Тревожиться, если нечего дать','Принимать тепло без заслуг']],
+ good:[['Помогать вопреки своим возможностям','Учитывать собственные силы'],['Ставить чужие дела выше своих','Не отменять собственные потребности']],
+ safety:[['Проверять все варианты','Определять свою зону влияния'],['Возвращать все к прежнему плану','Перестраиваться по обстоятельствам']],
+ chief:[['Забирать управление себе','Доверять чужому способу'],['Вмешиваться в чужие решения','Отвечать за свою часть']]
+};
+var QUESTIONS=[];FORMS.forEach(function(f){f.q.forEach(function(q,i){var labels=LEAF_LABELS[f.id][i];QUESTIONS.push({id:f.id+'_'+(i+1),form:f.id,sector:f.sector.id,text:q[0],left:q[1],right:q[2],leftLeaf:{id:f.id+'_'+(i+1)+'_sh',title:labels[0],side:'sh',detail:q[1]},rightLeaf:{id:f.id+'_'+(i+1)+'_sp',title:labels[1],side:'sp',detail:q[2]}})})});
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function pt(r,a){a=(a-90)*Math.PI/180;return [Math.round(r*Math.cos(a)*10)/10,Math.round(r*Math.sin(a)*10)/10]}
 function wedge(r0,r1,a0,a1){var p1=pt(r1,a0),p2=pt(r1,a1),p3=pt(r0,a1),p4=pt(r0,a0);return 'M'+p1+' A'+r1+' '+r1+' 0 0 1 '+p2+' L'+p3+' A'+r0+' '+r0+' 0 0 0 '+p4+'Z'}
@@ -78,38 +92,28 @@ function aggregate(answers){var cells=blank();QUESTIONS.forEach(function(q){var 
 function cellValue(c,side){return c.answered?Math.min(1,c[side]/c.answered):null}
 function wheelValues(answers){var c=aggregate(answers),out={};FORMS.forEach(function(f){out[f.id]={sh:cellValue(c[f.id],'sh'),sp:cellValue(c[f.id],'sp')}});return out}
 function svg(answers,o){
- o=o||{};var cells=aggregate(answers||{}),R=160,id='bw'+(++uid),size=o.size||340;
- var r0=34,r1=70,r2=112,r3=160;
- var h='<svg class="bw-svg" viewBox="-170 -170 340 340" width="'+size+'" height="'+size+'" role="img" aria-label="Круговая карта шести направлений, двенадцати способов и двадцати четырех проявлений">';
- h+='<defs><linearGradient id="'+id+'sh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d87970"/><stop offset="1" stop-color="#8d3438"/></linearGradient><linearGradient id="'+id+'sp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0bd"/><stop offset="1" stop-color="#b9c9a2"/></linearGradient></defs>';
- h+='<circle r="'+R+'" fill="#17110a"/>';
+ o=o||{};answers=answers||{};var R=160,id='bw'+(++uid),size=o.size||340,r0=34,r1=70,r2=112,r3=160;
+ var h='<svg class="bw-svg" viewBox="-170 -170 340 340" width="'+size+'" height="'+size+'" role="img" aria-label="Круговая карта: шесть направлений, двенадцать способов и сорок восемь конкретных проявлений">';
+ h+='<defs><linearGradient id="'+id+'sh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e18a80"/><stop offset="1" stop-color="#963b40"/></linearGradient><linearGradient id="'+id+'sp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0bd"/><stop offset="1" stop-color="#b9c9a2"/></linearGradient></defs><circle r="'+R+'" fill="#17110a"/>';
  S.forEach(function(s,i){
-  var a=i*60,mid=a+30,sectorPath=wedge(r0,r1,a+.7,a+59.3);
-  h+='<path d="'+sectorPath+'" fill="#594532" stroke="#c9a46a" stroke-width=".8"/>';
-  if(o.labels){
-   var p=pt(52,mid),rot=mid+90;if(mid>90&&mid<270)rot+=180;
-   var short=s.t==='Чрезмерная отдача'?'Отдача':s.t==='Угождение людям'?'Угождение':s.t==='Перфекционизм'?'Перфекц.':s.t==='Гиперконтроль'?'Контроль':s.t;
-   h+='<text x="'+p[0]+'" y="'+p[1]+'" transform="rotate('+rot+' '+p[0]+' '+p[1]+')" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="6.5" font-weight="800" fill="#fff0d5">'+esc(short)+'</text>';
-  }
+  var a=i*60,mid=a+30;
+  h+='<path d="'+wedge(r0,r1,a+.7,a+59.3)+'" fill="#594532" stroke="#c9a46a" stroke-width=".8"/>';
+  if(o.labels){var p=pt(52,mid),rot=mid+90;if(mid>90&&mid<270)rot+=180;var short=s.t==='Чрезмерная отдача'?'Отдача':s.t==='Угождение людям'?'Угождение':s.t==='Перфекционизм'?'Перфекц.':s.t==='Гиперконтроль'?'Контроль':s.t;h+='<text x="'+p[0]+'" y="'+p[1]+'" transform="rotate('+rot+' '+p[0]+' '+p[1]+')" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="6.5" font-weight="800" fill="#fff0d5">'+esc(short)+'</text>'}
   s.forms.forEach(function(f,j){
-   var a0=a+j*30,a1=a0+30,mp=a0+15;
-   h+='<path d="'+wedge(r1,r2,a0+.55,a1-.55)+'" fill="#30251b" stroke="#9c7b4c" stroke-width=".7"/>';
-   if(o.labels){
-    var pp=pt(90,mp),branch=f.sh;
-    var shortBranch=branch.length>17?branch.slice(0,16)+'…':branch;
-    h+='<text x="'+pp[0]+'" y="'+pp[1]+'" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="5.6" fill="#ead9bd">'+esc(shortBranch)+'</text>';
-   }
-   [['sh',a0,a0+15],['sp',a0+15,a1]].forEach(function(z,k){
-    var v=cellValue(cells[f.id],z[0]),base=z[0]==='sh'?'#643a36':'#646b4f';
-    h+='<path d="'+wedge(r2,r3,z[1]+.45,z[2]-.45)+'" fill="'+base+'" stroke="#b89b70" stroke-width=".55"/>';
-    if(v!=null&&v>0){
-     var color=z[0]==='sh'?'url(#'+id+'sh)':'url(#'+id+'sp)';
-     h+='<path d="'+wedge(r2,r2+(r3-r2)*v,z[1]+.8,z[2]-.8)+'" fill="'+color+'" opacity=".98"/>';
-    }
-    if(o.labels){
-     var lp=pt(135,z[1]+7.5),num=i*4+j*2+k+1;
-     h+='<text x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="7" font-weight="800" fill="#fff8e8">'+num+'</text>';
-    }
+   var formStart=a+j*30,formMid=formStart+15;
+   h+='<path d="'+wedge(r1,r2,formStart+.5,formStart+29.5)+'" fill="#30251b" stroke="#9c7b4c" stroke-width=".7"/>';
+   if(o.labels){var pp=pt(90,formMid);var nm=f.sh.length>17?f.sh.slice(0,16)+'…':f.sh;h+='<text x="'+pp[0]+'" y="'+pp[1]+'" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="5.5" fill="#ead9bd">'+esc(nm)+'</text>'}
+   var qs=QUESTIONS.filter(function(q){return q.form===f.id});
+   qs.forEach(function(q,k){
+    var qa=formStart+k*15;
+    [['left','sh',q.leftLeaf],['right','sp',q.rightLeaf]].forEach(function(z,m){
+     var a0=qa+m*7.5,a1=a0+7.5,v=answers[q.id],fill=0;
+     if(v===z[0])fill=1;else if(v==='both')fill=.5;
+     var base=z[1]==='sh'?'#653d3a':'#626b50';
+     h+='<path d="'+wedge(r2,r3,a0+.35,a1-.35)+'" fill="'+base+'" stroke="#b89b70" stroke-width=".48"/>';
+     if(fill>0){var color=z[1]==='sh'?'url(#'+id+'sh)':'url(#'+id+'sp)';h+='<path d="'+wedge(r2,r2+(r3-r2)*fill,a0+.55,a1-.55)+'" fill="'+color+'" opacity=".98"/>'}
+     if(o.labels){var lp=pt(136,a0+3.75),num=QUESTIONS.indexOf(q)*2+m+1;h+='<text x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="5.8" font-weight="800" fill="#fff8e8">'+num+'</text>'}
+    });
    });
   });
   h+='<path d="'+wedge(r0,r3,a,a+60)+'" fill="none" stroke="#c9a46a" stroke-width="1.15"/>';
@@ -117,15 +121,15 @@ function svg(answers,o){
  h+='<circle r="'+r0+'" fill="#120d07" stroke="#c9a46a" stroke-width="1.2"/><text x="0" y="6" text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="700" fill="#f0c870" font-size="23">Я</text></svg>';
  return h
 }
-function result(answers){var c=aggregate(answers||{}),sectors=[];S.forEach(function(s){sectors.push({id:s.id,title:s.t,forms:s.forms.map(function(f){var x=c[f.id],den=x.answered||0;return {id:f.id,shadow:{title:f.sh,score:den?x.sh/den*100:null,how:f.shHow},support:{title:f.sp,score:den?x.sp/den*100:null,how:f.spHow},answered:x.answered,why:f.why}})})});return {version:2,sectors:sectors,cells:c,answers:answers||{},completedAt:Date.now()}}
-function detailsHtml(r){var h='',n=0;(r.sectors||[]).forEach(function(s){h+='<section class="bw-sector"><h2>'+esc(s.title)+'</h2>';s.forms.forEach(function(f){n++;var a=f.shadow.score==null?'нет данных':Math.round(f.shadow.score)+'%';h+='<article><h3>'+n+'. '+esc(f.shadow.title)+' · '+a+'</h3><p>'+esc(f.shadow.how)+'</p>';n++;var b=f.support.score==null?'нет данных':Math.round(f.support.score)+'%';h+='<h3>'+n+'. '+esc(f.support.title)+' · '+b+'</h3><p>'+esc(f.support.how)+'</p><p class="bw-why">'+esc(f.why)+'</p></article>'});h+='</section>'});return h}
+function result(answers){answers=answers||{};var c=aggregate(answers),sectors=[];S.forEach(function(s){sectors.push({id:s.id,title:s.t,forms:s.forms.map(function(f){var x=c[f.id],den=x.answered||0,qs=QUESTIONS.filter(function(q){return q.form===f.id});return {id:f.id,title:f.sh+' / '+f.sp,shadow:{title:f.sh,score:den?x.sh/den*100:null,how:f.shHow},support:{title:f.sp,score:den?x.sp/den*100:null,how:f.spHow},answered:x.answered,why:f.why,items:qs.map(function(q){var v=answers[q.id];return {id:q.id,question:q.text,choice:v||'none',label:v==='right'?q.rightLeaf.title:q.leftLeaf.title,detail:v==='right'?q.rightLeaf.detail:q.leftLeaf.detail,alternative:v==='right'?q.leftLeaf.title:q.rightLeaf.title,leafLeft:q.leftLeaf,leafRight:q.rightLeaf}})}})})});return {version:3,sectors:sectors,cells:c,answers:answers,completedAt:Date.now()}}
+function detailsHtml(r){var h='',n=0;(r.sectors||[]).forEach(function(s){h+='<section class="bw-sector"><h2>'+esc(s.title)+'</h2>';s.forms.forEach(function(f){h+='<article><h3>'+esc(f.title)+'</h3><p class="bw-why">'+esc(f.why)+'</p>';f.items.forEach(function(it){n++;var status=it.choice==='left'?'выбран этот способ':it.choice==='right'?'выбран альтернативный способ':it.choice==='both'?'оба способа бывают':'ответ не дан';h+='<div class="bw-leaf"><b>'+n+'. '+esc(it.label)+'</b><p>'+esc(it.detail)+'</p><small>'+status+'</small></div>'});h+='<p><b>Самопредательство:</b> '+(f.shadow.score==null?'недостаточно ответов':Math.round(f.shadow.score)+'%')+' · <b>Опора:</b> '+(f.support.score==null?'недостаточно ответов':Math.round(f.support.score)+'%')+'</p></article>'});h+='</section>'});return h}
 function intro(){return 'Иногда один и тот же человек в одних обстоятельствах отодвигает себя, а в других умеет опираться на себя. Здесь мы посмотрим на конкретные ситуации из обычной жизни. Выбирай то, что чаще похоже на твое поведение сейчас. Здесь нет правильных ответов.'}
 function shuffleSeed(seed){var x=2166136261;seed=String(seed||'');for(var i=0;i<seed.length;i++){x^=seed.charCodeAt(i);x=Math.imul(x,16777619)}return x>>>0}
 function ordered(seed){var a=QUESTIONS.slice(),x=shuffleSeed(seed)||1;for(var i=a.length-1;i>0;i--){x^=x<<13;x>>>=0;x^=x>>>17;x^=x<<5;x>>>=0;var j=x%(i+1),t=a[i];a[i]=a[j];a[j]=t}return a}
 function progress(answers){return Object.keys(answers||{}).filter(function(k){return QUESTIONS.some(function(q){return q.id===k})}).length}
 function legacyPicked(rec){var out=[];S.forEach(function(s){var v=rec&&rec.sectors&&rec.sectors.filter(function(x){return x.id===s.id})[0];if(v&&v.forms.some(function(f){return f.shadow.score>=50}))out.push(s.id)});return out}
 function summaryHtml(r){var h='<div class="bw-sum"><p><b class="bw-gold">Как читать карту.</b> Проценты показывают долю каждого способа среди отвеченных ситуаций, относящихся к этой паре. Это не процент личности и не оценка человека.</p>';(r.sectors||[]).forEach(function(s){h+='<p><b>'+esc(s.title)+':</b> ';h+=s.forms.map(function(f){return esc(f.shadow.title)+' — '+(f.shadow.score==null?'нет данных':Math.round(f.shadow.score)+'%')+'; '+esc(f.support.title)+' — '+(f.support.score==null?'нет данных':Math.round(f.support.score)+'%')}).join('. ')+'.</p>'});return h+'</div>'}
-function css(){if(document.getElementById('bw-css'))return;var st=document.createElement('style');st.id='bw-css';st.textContent='.bw-svg{display:block;margin:8px auto;max-width:100%;height:auto}.bw-gold{color:#f0c870}.bw-sum p{line-height:1.55}.bw-sector{margin:20px 0}.bw-sector h2{color:#f0c870}.bw-sector article{padding:12px 0;border-top:1px solid #6a4e28}.bw-sector h3{font-size:18px;color:#f0c870;margin:12px 0 5px}.bw-sector p{font-size:16px;line-height:1.55}.bw-why{color:#c9a46a}.bw-leg{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;font-size:13px;color:#c9a46a;margin:8px 0}.bw-leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}.bw-card{border:1px solid #9e783a;border-radius:16px;padding:16px;background:#17110a;margin:14px 0}.bw-choice{display:block;width:100%;text-align:left;margin:9px 0;padding:14px;border:1px solid #6a4e28;border-radius:14px;background:#120e08;color:#f4ecdf;font:500 16px/1.5 Manrope,sans-serif}.bw-choice small{display:block;color:#c9a46a;font-size:12px;margin-bottom:5px}.bw-mid{display:block;margin:8px auto;background:none;border:0;color:#c9a46a;font:500 14px Manrope;padding:8px}.bw-progress{height:6px;background:#3a2a18;border-radius:8px;overflow:hidden}.bw-progress i{display:block;height:100%;background:#e0a940}.bw-legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-size:13px;color:#c9a46a}.bw-legend span{white-space:nowrap}.bw-map-key{text-align:center;color:#c9a46a;font-size:12px;line-height:1.45;margin:6px 0 12px}';document.head.appendChild(st)}
-function legend(){return '<div class="bw-legend"><span><i style="background:linear-gradient(135deg,#d87970,#8d3438)"></i>Самопредательство</span><span><i style="background:linear-gradient(135deg,#fff0bd,#b9c9a2)"></i>Опоры</span></div><p class="bw-map-key">Внутренний круг — 6 направлений. Средний — 12 способов. Внешний — 24 проявления. Номера на внешнем круге соответствуют названиям и пояснениям ниже.</p>'}
+function css(){if(document.getElementById('bw-css'))return;var st=document.createElement('style');st.id='bw-css';st.textContent='.bw-svg{display:block;margin:8px auto;max-width:100%;height:auto}.bw-gold{color:#f0c870}.bw-sum p{line-height:1.55}.bw-sector{margin:20px 0}.bw-sector h2{color:#f0c870}.bw-sector article{padding:12px 0;border-top:1px solid #6a4e28}.bw-sector h3{font-size:18px;color:#f0c870;margin:12px 0 5px}.bw-sector p{font-size:16px;line-height:1.55}.bw-why{color:#c9a46a}.bw-leg{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;font-size:13px;color:#c9a46a;margin:8px 0}.bw-leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}.bw-card{border:1px solid #9e783a;border-radius:16px;padding:16px;background:#17110a;margin:14px 0}.bw-choice{display:block;width:100%;text-align:left;margin:9px 0;padding:14px;border:1px solid #6a4e28;border-radius:14px;background:#120e08;color:#f4ecdf;font:500 16px/1.5 Manrope,sans-serif}.bw-choice small{display:block;color:#c9a46a;font-size:12px;margin-bottom:5px}.bw-mid{display:block;margin:8px auto;background:none;border:0;color:#c9a46a;font:500 14px Manrope;padding:8px}.bw-progress{height:6px;background:#3a2a18;border-radius:8px;overflow:hidden}.bw-progress i{display:block;height:100%;background:#e0a940}.bw-legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-size:13px;color:#c9a46a}.bw-legend span{white-space:nowrap}.bw-map-key{text-align:center;color:#c9a46a;font-size:12px;line-height:1.45;margin:6px 0 12px}.bw-leaf{padding:9px 0;border-top:1px solid rgba(201,164,106,.2)}.bw-leaf b{color:#f0c870}.bw-leaf p{margin:4px 0}.bw-leaf small{color:#c9a46a;font-size:12px}';document.head.appendChild(st)}
+function legend(){return '<div class="bw-legend"><span><i style="background:linear-gradient(135deg,#e18a80,#963b40)"></i>Самопредательство</span><span><i style="background:linear-gradient(135deg,#fff0bd,#b9c9a2)"></i>Опоры</span></div><p class="bw-map-key">Внутренний круг — 6 направлений. Средний — 12 способов. Внешний — 48 конкретных проявлений. Номера соответствуют пояснениям ниже.</p>'}
 window.GBW={S:S,FORMS:FORMS,QUESTIONS:QUESTIONS,blank:blank,aggregate:aggregate,svg:svg,result:result,detailsHtml:detailsHtml,intro:intro,ordered:ordered,progress:progress,legacyPicked:legacyPicked,summaryHtml:summaryHtml,css:css,legend:legend};
 })();
