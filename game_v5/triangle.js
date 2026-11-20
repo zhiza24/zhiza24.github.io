@@ -60,16 +60,26 @@ function css(){
   '.tri-cut-au.on{background:#6e4314;color:#fff7e4;border-color:#6e4314}'+
   '.tri-cut-txt{margin:0 0 12px;font:500 16.5px/1.44 Manrope,sans-serif;color:#2c1808}'+
   '.tri-cut-go{display:block;width:100%;min-height:48px;padding:12px 18px;border:0;border-radius:999px;background:linear-gradient(180deg,#f5d68a,#cfa046);color:#261606;font:800 17px Manrope,sans-serif;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.28)}'+
+  '.tri-cut-hint{margin:0 0 12px;font:600 15px/1.4 Manrope,sans-serif;color:#5c350c;text-align:center}'+
+  '.tri-demo{position:relative;height:48px;margin:2px auto 10px;width:100%;max-width:260px}.tri-demo b{position:absolute;left:50%;top:6px;width:104px;margin-left:-52px;height:36px;border-radius:10px;background:linear-gradient(#fff8e4,#e0a940);box-shadow:0 4px 10px rgba(80,40,8,.28);animation:triDemo 2.6s ease-in-out infinite}.tri-demo b:after{content:"\\261D";position:absolute;left:40px;top:16px;font-size:22px}.tri-demo span{position:absolute;top:12px;font-size:22px;color:#7a4e1c;font-weight:800}.tri-demo .a1{left:0}.tri-demo .a2{right:0}@keyframes triDemo{0%,100%{transform:translateX(0)}25%{transform:translateX(-64px) rotate(-10deg)}50%{transform:translateX(0)}75%{transform:translateX(64px) rotate(10deg)}}'+
   /* Сцена треугольника */
   '.tri-img{position:relative;width:100%;height:clamp(250px,calc(100svh - 330px),520px);background:#0d0905 center 14%/cover no-repeat;overflow:hidden}'+
   '.tri-img i{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .28s ease}'+
-  /* Темная сторона — настоящая тень и затемнение (никакого яркого света!) */
-  '.tri-img .shDark{background:radial-gradient(ellipse 85% 75% at 24% 48%,rgba(2,1,0,.25),rgba(2,1,0,.88) 72%),linear-gradient(90deg,rgba(4,2,1,.88) 0%,rgba(4,2,1,.68) 52%,rgba(4,2,1,.86) 100%)}'+
-  '.tri-img .shSmoke{background:radial-gradient(circle at 26% 42%,rgba(32,20,16,.75),rgba(4,2,1,.85) 68%)}'+
+  /* Темная сторона — видимая тень и дым слева, той же силы, что и свет справа */
+  '.tri-img .shDark{background:radial-gradient(ellipse 70% 82% at 18% 52%,rgba(0,0,0,.94) 0%,rgba(4,2,1,.78) 38%,rgba(4,2,1,.2) 62%,transparent 78%),linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.5) 28%,transparent 60%);mix-blend-mode:multiply}'+
+  '.tri-img .shSmoke{background:radial-gradient(ellipse 52% 68% at 20% 46%,rgba(10,6,4,.88),rgba(18,10,6,.4) 48%,transparent 74%);mix-blend-mode:multiply;transform-origin:20% 48%}'+
+  '.tri-img .shHero{background:radial-gradient(ellipse 64% 52% at 50% 32%,rgba(0,0,0,.82),rgba(0,0,0,.4) 58%,transparent 76%);mix-blend-mode:multiply}'+
   /* Светлая сторона — мягкое золотое свечение справа и вокруг героя */
   '.tri-img .glLight{background:radial-gradient(ellipse 68% 62% at 74% 48%,rgba(255,226,148,.66),rgba(255,204,110,.24) 52%,transparent 76%);mix-blend-mode:screen}'+
   '.tri-img .glHero{background:radial-gradient(ellipse 60% 48% at 50% 34%,rgba(255,232,168,.55),transparent 72%);mix-blend-mode:screen}'+
   '.tri-img .dimLeft{background:linear-gradient(90deg,rgba(6,4,2,.72),transparent 54%)}'+
+  '.tri-img.fx-dark .shDark{opacity:1}.tri-img.fx-dark .shSmoke{opacity:.96;animation:triSmoke .7s ease-out}.tri-img.fx-dark .shHero{opacity:.9}'+
+  '.tri-img.fx-dark-soft .shDark{opacity:.62}.tri-img.fx-dark-soft .shSmoke{opacity:.55}.tri-img.fx-dark-soft .shHero{opacity:.55}'+
+  '.tri-img.fx-light .glLight{opacity:.95}.tri-img.fx-light .glHero{opacity:.85}.tri-img.fx-light .dimLeft{opacity:.7}'+
+  '.tri-img.fx-light-soft .glLight{opacity:.55}.tri-img.fx-light-soft .glHero{opacity:.45}.tri-img.fx-light-soft .dimLeft{opacity:.4}'+
+  '.tri-img.drag i{transition:none}'+
+  '@keyframes triSmoke{from{filter:blur(16px);transform:scale(.82)}to{filter:blur(0);transform:scale(1)}}'+
+  '@keyframes triWig{0%,100%{transform:translateX(0)}20%{transform:translateX(-16px) rotate(-2deg)}50%{transform:translateX(16px) rotate(2deg)}75%{transform:translateX(-6px)}}.tri-card.wig{animation:triWig 1.1s ease}'+
   /* Плашка раскрытия стороны поверх сцены */
   '.tri-rev{position:absolute;left:50%;top:14px;transform:translate(-50%,-6px);z-index:4;padding:6px 16px;border-radius:999px;font:800 13px Manrope,sans-serif;letter-spacing:.09em;text-transform:uppercase;opacity:0;transition:opacity .2s ease,transform .2s ease;pointer-events:none;white-space:nowrap}'+
   '.tri-rev.on{opacity:1;transform:translate(-50%,0)}'+
@@ -78,7 +88,7 @@ function css(){
   /* Нижняя панель карточек */
   '.tri-p{position:relative;margin-top:-18%;padding:18px 16px 20px;background:linear-gradient(rgba(13,9,5,0),rgba(13,9,5,.86) 18%,#0d0905 40%)}'+
   '.tri-meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px;font:700 12.5px Manrope,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#d6b272}'+
-  '.tri-card{position:relative;margin:4px 0 12px;padding:20px 16px;border-radius:18px;background:linear-gradient(#f6e6bf,#e2c78e);color:#2c1808;font:700 19.5px/1.38 Manrope,sans-serif;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .24s ease,opacity .24s ease,background .24s ease,color .24s ease,box-shadow .24s ease;box-shadow:0 8px 24px rgba(0,0,0,.55);min-height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center}'+
+  '.tri-card{position:relative;margin:4px 0 12px;padding:20px 16px;border-radius:18px;background:linear-gradient(#f6e6bf,#e2c78e);color:#2c1808;font:700 19.5px/1.38 Manrope,sans-serif;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .34s ease,opacity .3s ease,background .24s ease,color .24s ease,box-shadow .24s ease;box-shadow:0 8px 24px rgba(0,0,0,.55);min-height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center}'+
   '.tri-card.fl-dark{background:linear-gradient(#261c17,#140e0b);color:#e6d8c6;box-shadow:0 10px 30px rgba(0,0,0,.85),inset 0 0 0 1px rgba(170,140,110,.35)}'+
   '.tri-card.fl-light{background:linear-gradient(#fff6d8,#f0cb72);color:#2c1808;box-shadow:0 0 28px rgba(255,216,118,.75)}'+
   '.tri-card small{display:block;margin-top:6px;font:700 12px Manrope,sans-serif;letter-spacing:.08em;text-transform:uppercase;opacity:.85}'+
@@ -112,6 +122,8 @@ function mount(box){
      '<button type="button" class="tri-cut-au" id="triAu" aria-label="Озвучка Старца">♪ Слушать</button>'+
     '</div>'+
     '<p class="tri-cut-txt">В каждом из нас есть светлая и темная стороны. В разных ситуациях выбирает то одна, то другая. Давай посмотрим, кто чаще выбирает в тебе.</p>'+
+    '<div class="tri-demo" aria-hidden="true"><span class="a1">←</span><b></b><span class="a2">→</span></div>'+
+    '<p class="tri-cut-hint">Свайпай фразу влево или вправо, если она тебе откликается. Кнопки внизу тоже можно нажать.</p>'+
     '<button type="button" class="tri-cut-go" id="triGo">Начать</button>'+
    '</div></div></div>';
   var auBtn=box.querySelector('#triAu');
@@ -132,7 +144,7 @@ function mount(box){
   step='deck';
   box.innerHTML='<div class="tri">'+
    '<div class="tri-img" id="triImg" style="background-image:url('+pic+')">'+
-    '<i class="shDark"></i><i class="shSmoke"></i><i class="glLight"></i><i class="glHero"></i><i class="dimLeft"></i>'+
+    '<i class="shDark"></i><i class="shSmoke"></i><i class="shHero"></i><i class="glLight"></i><i class="glHero"></i><i class="dimLeft"></i>'+
     '<div class="tri-rev" id="triRev"></div>'+
    '</div>'+
    '<div class="tri-p" id="triPan"></div>'+
@@ -142,12 +154,8 @@ function mount(box){
  }
  function setFx(mode){
   if(!imgEl)return;
-  var op=function(c,v){var e=imgEl.querySelector('.'+c);if(e)e.style.opacity=v};
-  op('shDark',mode==='dark'?0.92:mode==='dark-soft'?0.52:0);
-  op('shSmoke',mode==='dark'?0.8:0);
-  op('glLight',mode==='light'?0.95:mode==='light-soft'?0.55:0);
-  op('glHero',mode==='light'?0.85:0);
-  op('dimLeft',mode==='light'?0.7:0);
+  imgEl.classList.remove('fx-dark','fx-dark-soft','fx-light','fx-light-soft');
+  if(mode==='dark'||mode==='dark-soft'||mode==='light'||mode==='light-soft')imgEl.classList.add('fx-'+mode);
  }
  function drawCard(){
   if(idx>=CARDS.length){finish();return}
@@ -166,57 +174,67 @@ function mount(box){
 
   var card=panEl.querySelector('#triC');
   panEl.querySelectorAll('[data-pick]').forEach(function(b){
-   b.onclick=function(){choose(b.dataset.pick,card,item,txt)};
+   b.onclick=function(){choose(b.dataset.pick,card,item,txt,idle)};
   });
 
-  var sx=0,sy=0,dx=0,dy=0,drag=false;
+  var sx=0,sy=0,dx=0,dy=0,drag=false,idle=null;
+  function wig(){if(drag||locked)return;card.classList.remove('wig');void card.offsetWidth;card.classList.add('wig')}
+  idle=setInterval(wig,3200);setTimeout(wig,800);
   card.onpointerdown=function(e){
    if(locked)return;drag=true;sx=e.clientX;sy=e.clientY;dx=0;dy=0;
-   card.style.transition='none';
+   card.classList.remove('wig');card.style.transition='none';
+   if(imgEl)imgEl.classList.add('drag');
    try{card.setPointerCapture(e.pointerId)}catch(err){}
   };
   card.onpointermove=function(e){
    if(!drag||locked)return;
    dx=e.clientX-sx;dy=e.clientY-sy;
-   card.style.transform='translate('+dx+'px,'+(dy*.22)+'px) rotate('+(dx*.045)+'deg)';
+   card.style.transform='translate('+dx+'px,'+Math.max(-12,dy*.4)+'px) rotate('+(dx/18)+'deg)';
+   if(dx>28||dy>48)setFx(item.side==='ego'?'dark-soft':'light-soft');
+   else setFx('');
   };
   function endDrag(){
-   if(!drag)return;drag=false;
+   if(!drag||locked)return;drag=false;
+   if(imgEl)imgEl.classList.remove('drag');
    card.style.transition='';
-   if(dx>58)choose('yes',card,item,txt);
-   else if(dx<-58)choose('no',card,item,txt);
-   else if(dy>70)choose('mid',card,item,txt);
-   else card.style.transform='';
+   if(dx>56)choose('yes',card,item,txt,idle);
+   else if(dx<-56)choose('no',card,item,txt,idle);
+   else if(dy>70)choose('mid',card,item,txt,idle);
+   else{card.style.transform='';setFx('')}
   }
   card.onpointerup=endDrag;card.onpointercancel=endDrag;
  }
 
- function choose(pick,card,item,txt){
+ function choose(pick,card,item,txt,idle){
   if(locked)return;locked=true;
+  if(idle)clearInterval(idle);
   var ms=Date.now()-t0;
   ans.push({id:item.id,text:txt,side:item.side,pick:pick,word:item.word||'',wound:item.wound||'',pillar:item.pillar||'',ms:ms});
   vib(pick==='yes'?26:16);
+  if(imgEl)imgEl.classList.remove('drag');
 
   if(pick==='yes'||pick==='mid'){
    var isDark=item.side==='ego';
    var soft=pick==='mid';
    setFx(isDark?(soft?'dark-soft':'dark'):(soft?'light-soft':'light'));
+   card.classList.remove('wig');
    card.classList.add(isDark?'fl-dark':'fl-light');
    card.innerHTML=esc(txt)+'<small>'+(isDark?'Темная сторона':'Светлая сторона')+'</small>';
-   card.style.transform=pick==='yes'?'translate(24px,0) scale(1.02)':'scale(.98)';
+   card.style.transform=pick==='yes'?'translate(28px,0) scale(1.03)':'scale(.98)';
    if(revEl){
     revEl.textContent=isDark?'Темная сторона':'Светлая сторона';
     revEl.className='tri-rev on '+(isDark?'dark':'light');
    }
    setTimeout(function(){
     card.style.opacity='0';
-    card.style.transform=pick==='yes'?'translate(140px,0) rotate(8deg)':'translate(0,40px)';
-    setTimeout(function(){idx++;drawCard()},180);
-   },580);
+    card.style.transform=pick==='yes'?'translate(420px,0) rotate(18deg)':'translate(0,160px) scale(.9)';
+    setTimeout(function(){idx++;drawCard()},280);
+   },isDark?520:420);
   }else{
-   card.style.transform='translate(-160px,0) rotate(-10deg)';
+   card.classList.remove('wig');
+   card.style.transform='translate(-420px,0) rotate(-18deg)';
    card.style.opacity='0';
-   setTimeout(function(){idx++;drawCard()},220);
+   setTimeout(function(){idx++;drawCard()},280);
   }
  }
 

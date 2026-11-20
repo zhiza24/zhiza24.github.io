@@ -17,7 +17,7 @@ function arr(a){return Array.isArray(a)?a:[]}
 function word(n,a,b,c){n=Math.abs(n)%100;var x=n%10;if(n>10&&n<20)return c;if(x>1&&x<5)return b;if(x===1)return a;return c}
 
 /* ---------- зависимости: подгружаются, если страница их не подключила ---------- */
-var DEPS=[['GPAT','engine.js?v=arch1'],['GPassportData','passport-data.js?v=1'],['GPassport','passport.js?v=opening2'],['GARCH','arch-data.js?v=1'],['GARCH_UPD','arch-copy-updates.js?v=kit1'],['POCHERK_TEXT','pocherk-data.js?v=1794440811'],['GMirrorData','mirrors-data.js?v=2'],['GTESTS','tests-data.js?v=kit2'],['GTests','tests.js?v=kit2']];
+var DEPS=[['GPAT','engine.js?v=arch1'],['GPassportData','passport-data.js?v=1'],['GPassport','passport.js?v=opening2'],['GARCH','arch-data.js?v=1'],['GARCH_UPD','arch-copy-updates.js?v=kit1'],['POCHERK_TEXT','pocherk-data.js?v=1794440811'],['GMirrorData','mirrors-data.js?v=2'],['GTESTS','tests-data.js?v=kit2'],['GTests','tests.js?v=fx1']];
 function loaded(src){return [].some.call(document.scripts,function(s){return (s.getAttribute('src')||'').split('?')[0]===src.split('?')[0]})}
 function ready(cb){var q=DEPS.filter(function(d){return d[0]==='GARCH_UPD'?!loaded(d[1]):!window[d[0]]&&!loaded(d[1])}).map(function(d){return d[1]});
  (function next(){if(!q.length){cb();return}var s=document.createElement('script');s.src=q.shift();s.onload=s.onerror=next;document.head.appendChild(s)})()}

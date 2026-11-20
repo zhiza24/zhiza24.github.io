@@ -76,7 +76,7 @@ function openBook(stepKey){
  var q=window.GQuote&&GQuote.Q&&GQuote.Q[stepKey];if(!q)return;
  function go(){window.GBook&&GBook.openChapter(q[0],q[1],'path')}
  if(window.GBook)return go();
- var s=document.createElement('script');s.src='book.js?v=b6';s.onload=go;document.head.appendChild(s);
+ var s=document.createElement('script');s.src='book.js?v=fx1';s.onload=go;document.head.appendChild(s);
 }
 
 /* Рендер единой карточки результата блока */
@@ -104,14 +104,10 @@ function render(container,opts){
   html+='</div>';
  }
 
- if(opts.insight||opts.insightMore||(opts.answers&&opts.answers.length)){
+ if(opts.insight||opts.insightMore){
   html+='<div class="grc-sec"><div class="grc-l">'+(opts.insightLabel||'Мы узнали о тебе · на что обратить внимание')+'</div>';
   if(opts.insight)html+='<p class="grc-p">'+esc(opts.insight)+'</p>';
   if(opts.insightMore)html+='<details class="grc-det"><summary>'+(opts.insightDetLabel||'Развернуть объяснение')+'</summary><div class="grc-det-b">'+opts.insightMore+'</div></details>';
-  if(opts.answers&&opts.answers.length){
-   html+='<details class="grc-det"><summary>Твои ответы ('+opts.answers.length+')</summary><div class="grc-det-b"><ul>'+
-    opts.answers.map(function(a){return '<li>'+esc(a)+'</li>'}).join('')+'</ul></div></details>';
-  }
   html+='</div>';
  }
 

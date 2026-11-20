@@ -36,7 +36,7 @@ function css(){if(document.getElementById('gq-css'))return;var s=document.create
 document.head.appendChild(s)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function openCh(q){function go(){window.GBook&&GBook.openChapter(q[0],q[1],'path')}
- if(window.GBook)return go();var s=document.createElement('script');s.src='book.js?v=b6';s.onload=go;document.head.appendChild(s)}
+ if(window.GBook)return go();var s=document.createElement('script');s.src='book.js?v=fx1';s.onload=go;document.head.appendChild(s)}
 /* add(контейнер, ключ шага, [элемент, перед которым вставить]) — не больше одной цитаты на экран */
 function add(box,key,before){var q=Q[key];if(!q||!box||document.querySelector('.gq'))return null;css();
  var d=document.createElement('div');d.className='gq';

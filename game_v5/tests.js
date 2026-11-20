@@ -214,9 +214,8 @@ BUILD.lab_d=function(ans){if(window.GLabD&&GLabD.build)return GLabD.build(ans);v
  var prac=arr(ans.LD12).filter(function(x){return /не хватает (времени|денег|навыка|поддержки)/i.test(x)});
  var price=arr(ans.LD13),pr=ans.LD14||{},PL={real:'реально неизбежно',maybe:'пока предполагаю',dk:'не знаю'};
  out.desire=txt(ans.LD07)||(conc06?ld06:null)||txt(ans.LD01);out.step=txt(ans.LD15);out.gains=gain;out.risks=risk;out.obstacles=arr(ans.LD12);out.price=price.map(function(p){return {item:p,status:pr[p]||null}});
- var mine=[['Что хочется изменить',txt(ans.LD01)],['Направление',conc06?ld06:null],['Желаемый результат',txt(ans.LD07)],['Признак изменения',txt(ans.LD08)],['Маленький шаг',txt(ans.LD15)]].filter(function(x){return x[1]});
  var main='<div class="al">Что видно сейчас</div><div class="aq">'+esc(r.replace('.',''))+'</div>'+P_(esc(g(R[r])))+(out.step?'<p class="ar-pt">Твой маленький шаг: '+esc(out.step)+'</p>':'');
- var det=(mine.length?'<details class="ar-det"><summary>Твои ответы</summary>'+mine.map(function(x){return '<p><b>'+esc(x[0])+':</b> '+esc(x[1])+'</p>'}).join('')+'</details>':'')+
+ var det=
   (gh?'<details class="ar-det"><summary>Что дает привычное положение</summary>'+gh+'</details>':'')+
   (prac.length?'<details class="ar-det"><summary>Препятствия</summary><p>'+esc(prac.join(', '))+'</p>'+P_(esc(g((T.ld.legacy||T.ld).gain['Реальное ограничение ресурса.'])))+'</details>':'')+
   (price.length?'<details class="ar-det"><summary>Цена перемен</summary>'+P_(esc(g((T.ld.legacy||T.ld).price)))+'<ul class="gt-sum">'+price.map(function(p){return '<li>'+esc(p)+(pr[p]?': '+esc(PL[pr[p]]):'')+'</li>'}).join('')+'</ul></details>':'');

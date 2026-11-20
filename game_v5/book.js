@@ -2,7 +2,7 @@
    Тексты в tochka-book.js (дословно), грузятся по нажатию. Кнопка в верхней панели .gtop. */
 (function(){
 if(window.GBook)return;
-var V='b5';
+var V='fx1';
 /* шаг GFLOW (u) -> [глава 0..11, раздел или -1] */
 var MAP={
 'index.html':[0,-1],'form.html':[0,-1],'elder.html':[0,-1],
@@ -46,7 +46,11 @@ var LVN={0:['ПРАКТИКУМ','ВМЕСТО ПРЕДИСЛОВИЯ'],1:['ПР
 var CHIMG=['cover','stage1','stage2','stage1','stage3','stage5','stage4','stage2','stage4','stage5','stage6','stage6'];
 var SK='alch_v5_book_seen';
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function SL(t){if(/^Вступление/.test(t))return'Вступление';var m=/^Принцип (\d+)/.exec(t);if(m)return'Принцип '+m[1];var w=t.replace(/[«»✦]/g,'').split(' ').filter(function(x){return/[А-Яа-я]/.test(x)});if(!w.length)return t;if(w[0].length<5||(w[1]&&(w[0]+' '+w[1]).length<=13))return w.slice(0,2).join(' ');return w[0]}
+function SL(t){if(/^Вступление/.test(t))return'Вступление';var m=/^Принцип \d+\.\s*(.+)$/.exec(t);if(m){var w=m[1].replace(/[«»✦]/g,'').trim();if(w.length<=24)return w;return w.split(' ').slice(0,3).join(' ')}var w=t.replace(/[«»✦]/g,'').split(' ').filter(function(x){return/[А-Яа-я]/.test(x)});if(!w.length)return t;if(w[0].length<5||(w[1]&&(w[0]+' '+w[1]).length<=13))return w.slice(0,2).join(' ');return w[0]}
+function tabLabs(L){var n=0;return L.map(function(x){if(/^Вступление/.test(x.t))return'Вступление';if(/^Принцип \d+/.test(x.t)){n++;return'Принцип '+n}return SL(x.t)})}
+function localHead(t,lab){var m=/^Принцип \d+\.\s*(.+)$/.exec(t);if(m&&/^Принцип \d+$/.test(lab))return lab+'. '+m[1];return t}
+function chTitles(ch){var t=ch.t||'',short=t.replace(/^Уровень\s+[IVXCLC]+[\.\s]*/,'');return [t,short,ch.s,'Уровень I.','Уровень II.','Уровень III.','Уровень IV.','Уровень 1','Уровень 2','Уровень 3','Уровень 4'].filter(function(x){return x})}
+function bareTitle(p,titles){var s=String(p||'');if(!s||s.charAt(0)==='#')return s;for(var i=0;i<titles.length;i++){var k=titles[i];if(!k)continue;if(s===k||s===k+'.')return '';if(s.indexOf(k)===0){var rest=s.slice(k.length).replace(/^[.\s]+/,'');if(rest&&/[А-ЯA-Z«]/.test(rest.charAt(0)))return rest}}return s}
 /* разделы главы: для уровней — как в приложении; для остальных — по заголовкам «#✦», иначе по коротким заголовкам «#» */
 function SEC(n,B){var p=B[n].p,L=SUBS[n];
  if(!L){L=[];p.forEach(function(x,i){if(x[0]==='#'&&x[1]==='✦')L.push([i,x.slice(1).replace(/^✦\s*/,'')])});
@@ -72,9 +76,11 @@ function open(){var c=cur();if(!c)return;openAt(c,'path')}
 function openChapter(n,s,src){if(!unlocked(n))return false;openAt({n:n,s:s==null?-1:s},src||'path');return true}
 function openAt(c,src){openSrc=src||'path';try{localStorage.setItem(SK,String(c.n))}catch(e){}if(btn)btn.classList.remove('gbk-glow');ensureFont();load(function(){render(c)})}
 function close(){if(ov){ov.classList.remove('on');document.documentElement.classList.remove('gbk-lock')}}
-function render(c){var B=window.TBOOK,n=c.n,ch=B[n],L=SEC(n,B),H=ch.p.map(para);
- var tabs=L.length>1?'<nav class="gbk-bar" aria-label="Разделы">'+L.map(function(x,j){return'<button class="gbk-sp" data-s="'+j+'" aria-label="'+(j+1)+'. '+esc(x.t)+'"><b>'+(j+1)+'</b> '+esc(SL(x.t))+'</button>'}).join('')+'</nav>':'';
- var secs=L.map(function(x,j){var hp=ch.p[x.a],dup=hp&&hp[0]==='#'&&j>0,t=dup?hp.slice(1).replace(/^✦\s*/,''):x.t;
+function render(c){var B=window.TBOOK,n=c.n,ch=B[n],L=SEC(n,B),labs=tabLabs(L),titles=chTitles(ch);
+ var raw=ch.p.map(function(p,i){return i<6?bareTitle(p,titles):p});
+ var H=raw.map(function(p,i){return p?para(p,i,raw):''});
+ var tabs=L.length>1?'<nav class="gbk-bar" aria-label="Разделы">'+L.map(function(x,j){return'<button class="gbk-sp" data-s="'+j+'" aria-label="'+(j+1)+'. '+esc(labs[j])+'"><b>'+(j+1)+'</b> '+esc(labs[j])+'</button>'}).join('')+'</nav>':'';
+ var secs=L.map(function(x,j){var hp=raw[x.a],isHead=hp&&hp[0]==='#',ht=isHead?hp.slice(1).replace(/^✦\s*/,''):'',dup=isHead&&(j>0||ht===x.t||titles.indexOf(ht)>=0),t=localHead(dup&&ht?ht:x.t,labs[j]);
   return'<section class="gbk-card gbk-sect" id="gbk-s'+j+'"><h3 class="gbk-sh">'+(L.length>1?'<span class="gbk-num">'+(j+1)+'</span>':'')+'<span>'+esc(t)+'</span></h3><div class="gbk-txt">'+H.slice(dup?x.a+1:x.a,x.b).join('')+'</div></section>'}).join('');
  if(!ov){ov=document.createElement('div');ov.className='gbk';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');document.body.appendChild(ov)}
  ov.innerHTML='<div class="gbk-hdr"><div class="gbk-mid">'+esc(LVN[n][0].charAt(0)+LVN[n][0].slice(1).toLowerCase())+'</div><button class="gbk-x" aria-label="Закрыть">✕</button></div>'+
