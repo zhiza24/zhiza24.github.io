@@ -66,6 +66,8 @@ function ensure(){
   if(!T.openDay)T.openDay=0;
   if(!T.view)T.view='month';
   if(T.declared&&T.directions&&T.directions.length===3&&!T.start)T.start=Date.now();
+  if(!T.strategy&&window.GStrategy){try{T.strategy=GStrategy.build(P);if(!T.start)T.start=Date.now()}catch(e){}}
+  if(!T.act){T.act={signs:{from:1,len:28}}}
   return P;
 }
 function Tget(P){return (P||ensure()).tracker}
@@ -171,6 +173,7 @@ function render(){
   if(T.view==='monthg'||T.view==='finale'){host.innerHTML=viewResults(P,T); bind(); return}
   if(T.view==='settings'){host.innerHTML=viewSettings(P,T); bind(); return}
   if(T.view==='review'){host.innerHTML=viewReview(P,T); bind(); return}
+  if(T.view==='practs'){host.innerHTML=viewPracts(P,T); bind(); return}
   host.innerHTML=viewMonth(P,T); bind();
   var pan=host.querySelector('.day-card');
   if(pan)try{pan.scrollIntoView({block:'nearest'})}catch(e){}
@@ -181,7 +184,7 @@ function dirs(T){return T.directions||[]}
 
 function dayFilled(T,n){
   var d=dayRec(T,n);
-  if(d.hintSeen||d.wishMark||d.note)return true;
+  if(d.hintSeen||d.wishMark||d.note||d.res)return true;
   if((d.signs||[]).length||(d.grat||[]).length||(d.choose||[]).length||(d.brakeWords||[]).length||(d.betrayMarks||[]).length)return true;
   if((d.dirState||[]).some(function(s){return s==='done'||s==='do'}))return true;
   if((d.dirMarks||[]).some(function(s){return !!s}))return true;
@@ -271,6 +274,52 @@ var BETRAY=[
   {id:'numb', t:'Онемение', d:'лучше не чувствовать, тогда не так уязвимо'}
 ];
 
+var PRC=[
+  {id:'grat',t:'Дневник благодарности',len:10,d:'Каждый день минимум 10 благодарностей, цель цикла 50.'},
+  {id:'choose',t:'Выбираю — делаю — сделано',len:7,d:'Дела дня по шагам. После каждого третьего появляется строчка с твоим желанием.'},
+  {id:'brake',t:'Слова-тормоза',len:7,d:'Ловишь слово, которое тормозит, и видишь мягкую замену.'},
+  {id:'betray',t:'Что узнаю в себе',len:7,d:'Отмечаешь, где сегодня включились перфекционизм, контроль, угождение или онемение.'},
+  {id:'hours',t:'Блоки времени',len:1,d:'Почасовая сетка дня: куда уходят время, силы и внимание.'},
+  {id:'pract',t:'Вдох-выдох, Я есмь, Тихое внимание',len:7,d:'Короткие практики на 2 часа с отметкой.'},
+  {id:'signs',t:'Знаки дня',len:28,d:'Записываешь, что в жизни откликнулось на твое желание.'}
+];
+function prc(id){return PRC.filter(function(x){return x.id===id})[0]}
+function actOn(T,id,n){var a=(T.act||{})[id];return a&&n>=a.from&&n<a.from+a.len?a:null}
+function prFilled(d,id){if(id==='grat')return (d.grat||[]).length>0;if(id==='choose')return (d.choose||[]).length>0;if(id==='brake')return (d.brakeWords||[]).length>0;if(id==='betray')return (d.betrayMarks||[]).length>0;if(id==='signs')return (d.signs||[]).length>0;if(id==='hours'){for(var k in (d.hours||{}))if(d.hours[k]&&d.hours[k].text)return true;return false}return !!d.practDone}
+function prCount(T,id){var a=(T.act||{})[id];if(!a)return 0;var c=0;for(var i=a.from;i<a.from+a.len&&i<=28;i++)if(prFilled(dayRec(T,i),id))c++;return c}
+var RES=[{id:'done',t:'Сделано'},{id:'part',t:'Частично'},{id:'min',t:'Минимум'},{id:'other',t:'Другой шаг'},{id:'fail',t:'Сегодня не получилось'}];
+function stepCard(P,T,n){
+  var S=T.strategy; if(!S||!window.GStrategy)return '';
+  var st=GStrategy.adapt(T,n); if(!st)return '';
+  var d=dayRec(T,n), w=Math.floor((n-1)/7), W=S.weeks[w]||{}, F=S.focus[st.dir]||S.focus[0], r=d.res||{};
+  var h='<div class="row-line step-card"><p class="wk">Неделя '+(w+1)+' · '+esc(W.t||'')+'</p>';
+  h+='<span class="ftag">'+esc(F.t)+'</span>';
+  if(st.note)h+='<p class="soft-tip">'+esc(st.note)+'</p>';
+  h+='<p class="main">'+esc(st.m)+'</p>';
+  h+='<p class="alt"><small>Минимум</small>'+esc(st.n)+'</p>';
+  h+='<p class="alt"><small>Можно иначе</small>'+esc(st.a)+'</p>';
+  h+='<p class="alt"><small>Наблюдение</small>'+esc(st.o)+'</p>';
+  h+='<div class="chips res">'+RES.map(function(x){return '<button type="button" class="'+(r.v===x.id?'on':'')+'" data-act="res" data-v="'+x.id+'">'+esc(x.t)+'</button>'}).join('')+'</div>';
+  if(r.v){
+    h+='<textarea data-act="res-saw" rows="2" placeholder="Что я '+gx('{заметил|заметила}')+' (по желанию)">'+esc(r.saw||'')+'</textarea>';
+    h+='<textarea data-act="res-proof" rows="2" placeholder="Что сегодня стало подтверждением движения (по желанию)">'+esc(r.proof||'')+'</textarea>';
+  }
+  h+='<details class="own"><summary>Свой шаг на сегодня</summary><input type="text" data-act="custom" maxlength="200" placeholder="напиши свой вариант" value="'+esc((T.custom||{})[n]||'')+'"></details>';
+  return h+'</div>';
+}
+function viewPracts(P,T){
+  var n=todayNum(T);
+  var h='<div class="t28"><p class="dk">Практики</p><h1>Практики на выбор</h1><p class="cap28">Включенная практика появляется в днях, пока идет. Пропуск ничего не обнуляет.</p>';
+  PRC.forEach(function(x){
+    var a=actOn(T,x.id,n), c=prCount(T,x.id);
+    h+='<div class="row-line prc"><b>'+esc(x.t)+'</b><p class="mute">'+esc(x.d)+' '+(x.len>1?x.len+' дней.':'На один день.')+'</p>';
+    if(a)h+='<p class="score ok">Идет · день '+(n-a.from+1)+' из '+a.len+' · заполнено '+c+'</p><button type="button" class="quiet-btn" data-act="pr-off" data-id="'+x.id+'">Остановить</button>';
+    else h+=((T.act||{})[x.id]&&c?'<p class="mute">Прошлый раз заполнено дней: '+c+'</p>':'')+'<button type="button" class="add" data-act="pr-on" data-id="'+x.id+'">Включить с сегодня'+(x.len>1?' на '+x.len+' дней':'')+'</button>';
+    h+='</div>';
+  });
+  h+='<div class="row-line"><b>Мои доказательства</b>'+proofBody(T)+'</div>';
+  return h+'<button class="go" type="button" data-act="back">К календарю</button></div>';
+}
 function viewMonth(P,T){
   var today=todayNum(T), open=+T.openDay||0;
   var html='<div class="t28">'+growthHtml(T);
@@ -304,8 +353,10 @@ function markBtns(cur,attr){
 function dayPanel(P,T,n){
   var d=dayRec(T,n), today=todayNum(T);
   var html='<div class="day-card" data-day="'+n+'"><p class="dk">День '+n+(n===today?' · сегодня':'')+'</p>';
-  html+='<p class="hint">'+esc(hintOf(n))+'</p>';
+  if(!T.strategy)html+='<p class="hint">'+esc(hintOf(n))+'</p>';
+  html+=stepCard(P,T,n);
 
+  if(!T.strategy){
   html+='<div class="row-line">';
   html+='<b>'+esc(wishText(T)||'Главное желание')+'</b>';
   html+=markBtns(d.wishMark,'data-who="wish"');
@@ -322,6 +373,7 @@ function dayPanel(P,T,n){
   });
   if(!dirs(T).length)html+='<div class="row-line"><p class="mute">Направления появятся, когда ты выберешь три после колес.</p></div>';
 
+  }
   html+='<div class="row-line sliders">';
   MET.forEach(function(m){
     var v=d.sliders[m.key]; if(v==null)v=5;
@@ -333,6 +385,7 @@ function dayPanel(P,T,n){
   });
   html+='</div>';
 
+  if(actOn(T,'signs',n)){
   html+='<div class="row-line"><b>Знаки дня</b><div class="signs">';
   (d.signs||[]).forEach(function(s){
     html+='<div class="sign-item">'+esc(s.tag?s.tag+' · ':'')+esc(s.text)+'</div>';
@@ -343,18 +396,13 @@ function dayPanel(P,T,n){
     html+='<button type="button" class="add" data-act="sign-add">Записать</button></div>';
   }
   html+='</div></div>';
+  }
 
-  var nPract=(d.grat||[]).length+(d.choose||[]).length+(d.brakeWords||[]).length+(d.note?1:0);
-  html+=acc('pract-day','Практики дня', nPract?('записей: '+nPract):'по желанию',
-    acc('grat','Благодарности','записей: '+(d.grat||[]).length+' · всего '+allGrat(T)+' из 50', gratBody(d,T))+
-    acc('choose','Выбираю — делаю — сделано', (d.choose||[]).length?'дел: '+d.choose.length:'', chooseBody(d,T,n))+
-    acc('hours','Блоки времени','', hoursBody(d))+
-    acc('brake','Слова-тормоза', (d.brakeWords||[]).length?String(d.brakeWords.length):'', brakeBody(d))+
-    acc('betray','Что узнаю в себе', (d.betrayMarks||[]).length?String(d.betrayMarks.length):'', betrayBody(d))+
-    acc('pract','Другие практики', practLabel(T), practBody(T))+
-    acc('proof','Мои доказательства', String((T.proofs||[]).length), proofBody(T))+
-    acc('note','Заметка', d.note?'есть':'', '<textarea data-act="note" rows="3" placeholder="что важно оставить">'+esc(d.note||'')+'</textarea>')
-  );
+  var BOD={grat:function(){return gratBody(d,T)},choose:function(){return chooseBody(d,T,n)},hours:function(){return hoursBody(d)},brake:function(){return brakeBody(d)},betray:function(){return betrayBody(d)},pract:function(){return practBody(T)}};
+  var pa='';
+  PRC.forEach(function(x){if(x.id==='signs')return;var a=actOn(T,x.id,n);if(!a)return;pa+=acc(x.id,x.t,'день '+(n-a.from+1)+' из '+a.len+' · заполнено '+prCount(T,x.id),BOD[x.id]())});
+  html+=pa;
+  html+='<button type="button" class="quiet-btn" data-act="practs">'+(pa?'Практики':'Включить практику')+'</button>';
   html+='<button class="go" type="button" data-act="done">Готово</button></div>';
   return html;
 }
@@ -431,6 +479,20 @@ function proofBody(T){
   return L||'<p class="mute">Сюда попадают знаки дня и то, что ты '+((window.GG&&GG('заметил','заметила'))||'заметил')+' в бонусной строке.</p>';
 }
 
+function weekStrat(T,w){
+  var S=T.strategy,W=S.weeks[w]||{},a=w*7+1,pts=0,cnt=0,ch=0,mood=[],RT={done:'Сделано',part:'Частично',min:'Минимум',other:'Другой шаг',fail:'Не получилось'},SC={done:1,part:.5,min:.5,other:1,fail:0};
+  var list='';
+  for(var i=a;i<a+7;i++){var d=dayRec(T,i),st=GStrategy.adapt(T,i),r=d.res&&d.res.v;if(r){cnt++;pts+=SC[r]||0}
+    ch+=(d.signs||[]).length+((d.res&&d.res.proof)?1:0)+((d.res&&d.res.saw)?1:0);
+    var sl=d.sliders||{};['mood','presence','well'].forEach(function(k){if(sl[k]!=null)mood.push(+sl[k])});
+    list+='<div class="wd-it'+(r?' on':'')+'"><span>'+i+'</span><p>'+esc(st?st.m:'')+'</p><em>'+(r?RT[r]:'')+'</em></div>'}
+  var ex=Math.round(pts/7*100),inn=mood.length?(mood.reduce(function(x,y){return x+y},0)/mood.length).toFixed(1):'—';
+  return '<div class="row-line"><b>'+esc(W.t)+'</b><p class="mute">'+esc(W.d)+'</p></div>'+
+   '<div class="nums nums3"><div><b>'+ex+'%</b><span>Исполнение</span></div><div><b>'+ch+'</b><span>Изменения</span></div><div><b>'+inn+'</b><span>Внутренний опыт</span></div></div>'+
+   '<p class="cap28 soft">Три отдельных показателя. Исполнение считает, что сделано, изменения — что ты '+gx('{заметил|заметила}')+', внутренний опыт — твои бегунки.</p>'+
+   '<div class="row-line wd-list"><b>Шаги недели</b>'+list+'</div>'+
+   '<p class="cap28">Вопрос недели: '+esc(W.q)+'</p>';
+}
 function viewWeek(P,T){
   var w=T.weekN||0, a=w*7+1, b=a+6, week=w+1, N=weekNums(T,week), plan=weekPlan(T,week), sc=N.score;
   var scoreLine='';
@@ -440,13 +502,13 @@ function viewWeek(P,T){
   var rewDay=week*7;
   T.rewards=T.rewards||{};
   var html='<div class="t28"><p class="dk">Дни '+a+'–'+b+'</p><h1>Неделя '+week+'</h1>'+
-    numsHtml(N)+
-    svgChart(T,a,b,T.hiddenMet||{},'')+
-    '<div class="row-line"><b>План недели</b><div class="plan">';
+    (T.strategy?weekStrat(T,w):numsHtml(N))+
+    svgChart(T,a,b,T.hiddenMet||{},'');
+  if(!T.strategy){html+='<div class="row-line"><b>План недели</b><div class="plan">';
   for(var i=0;i<3;i++){
     html+='<div class="it"><input type="checkbox" data-act="plan-done" data-i="'+i+'" '+(plan.done[i]?'checked':'')+'><input type="text" data-act="plan-text" data-i="'+i+'" maxlength="160" placeholder="'+(i<2?'ключевое действие':'еще одно, если нужно')+'" value="'+esc(plan.actions[i]||'')+'"></div>';
   }
-  html+='</div>'+scoreLine+'</div>';
+  html+='</div>'+scoreLine+'</div>';}
   html+='<div class="row-line"><b>Награда себе</b><input type="text" data-act="reward" data-d="'+rewDay+'" maxlength="160" placeholder="что будет наградой за эту неделю" value="'+esc(T.rewards[rewDay]||'')+'"></div>';
   html+=acc('wrev','Разбор недели','',
     '<input type="text" data-act="wrev" data-f="worked" placeholder="что сработало" value="'+esc(plan.review.worked||'')+'">'+
@@ -545,6 +607,9 @@ function viewReview(P,T){
   if(done)lines.push('Маленький шаг выполнен'+(done>1?': '+done+'.':'.'));
   if(d.wishMark==='better'||(d.dirMarks||[]).indexOf('better')>=0)lines.push('Есть отметка «стало лучше».');
   if((d.brakeWords||[]).length)lines.push(gx('{Поймал|Поймала} слово-тормоз и {увидел|увидела} мягкую замену.'));
+  var RV={done:'Шаг дня сделан.',part:'Шаг сделан частично. Это тоже движение.',min:'Ты {выбрал|выбрала} минимальную версию. Так система держится в трудные дни.',other:'Ты {выбрал|выбрала} другой шаг. Он тоже засчитан.',fail:'Сегодня не получилось. Ничего не обнуляется: завтра игра предложит шаг полегче.'};
+  if(d.res&&RV[d.res.v])lines.unshift(gx(RV[d.res.v]));
+  if(T.strategy&&n<28){var nx=GStrategy.adapt(T,n+1);if(nx)lines.push('Завтра: '+nx.m)}
   if(!lines.length)lines.push('День можно дозаполнить позже. Без штрафа.');
   return '<div class="t28 review"><p class="dk">День '+n+'</p><h1>Короткий разбор</h1>'+
     lines.map(function(s){return '<p>'+esc(s)+'</p>'}).join('')+
@@ -581,6 +646,10 @@ function bind(){
       T.openDay=(T.openDay===nn?0:nn);
       save(P); render(); return;
     }
+    if(act==='res'){var v=b.getAttribute('data-v');d.res=d.res||{};d.res.v=(d.res.v===v?'':v);d.res.t=Date.now();if(!d.res.v)delete d.res;save(P);render();return}
+    if(act==='practs'){T.view='practs';save(P);render();try{window.scrollTo(0,0)}catch(e){}return}
+    if(act==='pr-on'){var id=b.getAttribute('data-id');T.act=T.act||{};T.act[id]={from:todayNum(T),len:prc(id).len,at:Date.now()};save(P);render();return}
+    if(act==='pr-off'){var id=b.getAttribute('data-id');var a=T.act[id];if(a){a.len=Math.max(1,todayNum(T)-a.from+1);a.stopped=Date.now()}save(P);render();return}
     if(act==='today'){T.view='month'; T.openDay=todayNum(T); save(P); render(); return}
     if(act==='done'){d.hintSeen=true; T.reviewDay=n; T.openDay=0; T.view='review'; save(P); render(); return}
     if(act==='weekg'){T.view='week'; T.weekN=+b.getAttribute('data-w'); save(P); render(); return}
@@ -684,6 +753,9 @@ function bind(){
     if(act==='dir-step'){d.dirSteps[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='ifthen'){T.ifthens=T.ifthens||['','','']; T.ifthens[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='note'){d.note=el.value; save(P); return}
+    if(act==='res-saw'){d.res=d.res||{};d.res.saw=el.value;save(P);return}
+    if(act==='res-proof'){d.res=d.res||{};d.res.proof=el.value;T.proofs=(T.proofs||[]).filter(function(x){return !(x.day===n&&x.auto)});if(el.value.trim())T.proofs.push({t:Date.now(),day:n,text:el.value.trim(),auto:true});save(P);return}
+    if(act==='custom'){T.custom=T.custom||{};if(el.value.trim())T.custom[n]=el.value.trim();else delete T.custom[n];save(P);return}
     if(act==='hour-in'){d.hours[el.getAttribute('data-h')]=d.hours[el.getAttribute('data-h')]||{}; d.hours[el.getAttribute('data-h')].text=el.value; save(P); return}
     if(act==='notify-time'){T.notifyTime=el.value; if(T.notifyOn&&T.notifyOk)scheduleNote(T); save(P); return}
     if(act==='plan-text'){var plan=weekPlan(T,(T.weekN||0)+1); plan.actions[+el.getAttribute('data-i')]=el.value; save(P); return}
