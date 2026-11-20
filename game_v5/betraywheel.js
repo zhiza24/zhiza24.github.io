@@ -104,7 +104,7 @@ function svg(answers,o){
    var formStart=a+j*30,qs=QUESTIONS.filter(function(q){return q.form===f.id});
    [['sh',f.sh],['sp',f.sp]].forEach(function(branch,k){
     var ba=formStart+k*15,bmid=ba+7.5;
-    h+='<path d="'+wedge(r1,r2,ba+.45,ba+14.55)+'" fill="'+(branch[0]==='s'&&branch[1]==='h'?'#30211f':'#292b20')+'" stroke="#9c7b4c" stroke-width=".7"/>';
+    h+='<path d="'+wedge(r1,r2,ba+.45,ba+14.55)+'" fill="'+(branch[0]==='sh'?'#30211f':'#292b20')+'" stroke="#9c7b4c" stroke-width=".7"/>';
     if(o.labels){var pp=pt(91,bmid),label=branchShort[branch[1]]||branch[1];h+='<text x="'+pp[0]+'" y="'+pp[1]+'" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-size="5.1" fill="#ead9bd">'+esc(label)+'</text>'}
     qs.forEach(function(q,qi){
      var a0=ba+qi*7.5,a1=a0+7.5,side=k===0?'left':'right',v=answers[q.id],fill=v===side?1:v==='both'?.5:0;
