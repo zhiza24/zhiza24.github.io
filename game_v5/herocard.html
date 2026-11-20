@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><script src="theme.js?v=8"></script><script src="sound.js?v=1"></script><script src="flow.js?v=wish1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=wish1"></script><script src="profile-layer.js?v=kit2"></script><script src="route-gate.js?v=wish1"></script><script src="gender.js?v=2"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Герой</title><script src="upd.js?v=1794512684"></script><link rel="stylesheet" href="nav.css?v=h9f19"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
+<!doctype html><html lang="ru"><head><script src="theme.js?v=8"></script><script src="sound.js?v=1"></script><script src="flow.js?v=wish2"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=wish2"></script><script src="profile-layer.js?v=kit2"></script><script src="route-gate.js?v=wish2"></script><script src="gender.js?v=2"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Герой</title><script src="upd.js?v=1794512684"></script><link rel="stylesheet" href="nav.css?v=h9f19"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
 *{box-sizing:border-box}body{margin:0;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;font-size:18px}
 #hc{max-width:560px;margin:auto;padding:calc(64px + env(safe-area-inset-top)) 14px 150px}
 #hc .top{display:flex;gap:14px;align-items:center;margin-bottom:6px}
@@ -18,6 +18,10 @@
 #hc .art{background:#1c140b;border:1px solid #5a4325;border-radius:12px;padding:10px 6px;text-align:center;font-size:14px;color:#f4ecdf!important;line-height:1.3}
 #hc .art img{width:44px;height:44px;object-fit:contain;display:block;margin:0 auto 4px}#hc .art .ic{font-size:30px;display:block}
 #hc .ql{display:block;margin-top:14px;color:#c9a46a!important;font-size:16px}
+#heroGate{position:fixed;inset:0;z-index:20;background:#0c0804;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 22px;text-align:center}
+#heroGate h1{font:700 32px/1.2 'Cormorant Garamond',serif;color:#f0c870;margin:0 0 28px}
+#heroGate .go{display:block;width:100%;max-width:320px;padding:15px 18px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope,sans-serif}
+
 </style></head><body data-page="hero"><main id="hc"><div class="top"><img class="ph" data-hero-img="portrait" alt=""><div><h1 id="nm">Герой</h1><p class="sub" id="sb"></p></div></div>
 <nav class="tabs"><a href="#portrait">Мой портрет</a><a href="#map">Мои открытия</a><a href="#now">Мой путь сейчас</a><a href="#arts">Артефакты</a></nav>
 <h2 id="portrait">Мой портрет</h2><div id="pr"></div>
@@ -30,6 +34,18 @@
 <script>
 (function(){var P={};try{P=JSON.parse(localStorage.getItem('alch_v5_profile'))||{}}catch(e){}
 var E=GEsc,f=GGender(P)==='f';if(window.GHeroApply)GHeroApply();
+if(!P.heroSeen){
+  var g=document.createElement('div'); g.id='heroGate';
+  var q=(window.GG?GG('Персонаж создан, готов увидеть себя?','Персонаж создан, готова увидеть себя?'):'Персонаж создан, готов увидеть себя?');
+  g.innerHTML='<h1>'+q+'</h1><button type="button" class="go" id="seeHero">Увидеть себя</button>';
+  document.body.appendChild(g);
+  document.getElementById('seeHero').onclick=function(){
+    P.heroSeen=Date.now();
+    try{localStorage.setItem('alch_v5_profile',JSON.stringify(P))}catch(e){}
+    g.remove();
+  };
+}
+
 document.getElementById('nm').textContent=P.name||'Герой';
 var C=(P.flow&&P.flow.completed)||{},n=Object.keys(C).length;
 document.getElementById('sb').textContent=n?('Пройдено шагов: '+n+' из '+(GFLOW.length-1)):'Путь только начинается';

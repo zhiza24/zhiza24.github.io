@@ -14,6 +14,7 @@ window.GFLOW=[
 {u:'slot.html?id=km',pt:'0',t:'Тест: Кривой Мир'},
 {u:'scene.html?k=ego',pt:'0',t:'Маг: вход в тест'},
 {u:'ego.html',pt:'0',t:'Тест: фоновое состояние'},
+{u:'betray.html',pt:'0',t:'Что узнаешь в себе'},
 {u:'slot.html?id=arch_b',pt:'0',t:'Эхо: привычный ход'},
 {u:'slot.html?id=fs',pt:'0',t:'Тест: Первые настройки'},
 {u:'swipe.html',pt:'0',t:'Игра: свайп хорошего'},

@@ -7,7 +7,7 @@ function relocate(p){p=p||{};const f=p.flow;if(!f)return p;let ch=false;if(f.cur
     Заставка «Я есмь» стала шагом маршрута после дыхания; уже просмотренная считается пройденной. */
  const B='breath.html?at=p0',C='cutscene.html';f.completed=f.completed||{};if(f.current==='lanterns.html'){f.current=B;ch=true}if(f.last==='lanterns.html'){f.last=B;ch=true}if(f.completed['lanterns.html']&&!f.completed[B]){f.completed[B]=f.completed['lanterns.html'];ch=true}
  let seen=null;try{seen=localStorage.getItem('alch_v5_cutscene_iam')}catch(e){}if(seen&&f.completed[B]&&!f.completed[C]&&f.current!==B&&f.current!==C){f.completed[C]=+seen||Date.now();ch=true}/* Новые шаги большого теста: если игрок уже прошел что-то дальше по маршруту, шаг не возвращает его назад. */
- const FL=window.GFLOW||[];['slot.html?id=arch_b','slot.html?id=arch_v','slot.html?id=arch_p','slot.html?id=arch_d','slot.html?id=km','slot.html?id=fs','slot.html?id=lab_d','slot.html?id=pi','slot.html?id=rs','slot.html?id=ct','slot.html?id=sv','slot.html?id=vsort','wish.html'].forEach(u=>{const i=FL.findIndex(x=>x.u===u);if(i<0||f.completed[u])return;if(FL.slice(i+1).some(x=>f.completed[x.u])){f.completed[u]=Date.now();f.archSkipped=f.archSkipped||{};f.archSkipped[u]=1;ch=true}});
+ const FL=window.GFLOW||[];['slot.html?id=arch_b','slot.html?id=arch_v','slot.html?id=arch_p','slot.html?id=arch_d','slot.html?id=km','slot.html?id=fs','slot.html?id=lab_d','slot.html?id=pi','slot.html?id=rs','slot.html?id=ct','slot.html?id=sv','slot.html?id=vsort','wish.html','betray.html'].forEach(u=>{const i=FL.findIndex(x=>x.u===u);if(i<0||f.completed[u])return;if(FL.slice(i+1).some(x=>f.completed[x.u])){f.completed[u]=Date.now();f.archSkipped=f.archSkipped||{};f.archSkipped[u]=1;ch=true}});
  if(ch){try{localStorage.setItem(K,JSON.stringify(p))}catch(e){}}return p}
 function load(){try{return relocate(JSON.parse(localStorage.getItem(K))||{})}catch(e){return {}}}
 function save(p){localStorage.setItem(K,JSON.stringify(p))}
@@ -23,6 +23,7 @@ function ready(u,p){
  if((p.flow||{}).completed&&p.flow.completed[u])return true;
  if(u==='choose.html')return !!p.mapStyle;
  if(u==='ego.html')return !!p.ego;
+ if(u==='betray.html')return !!(p.betray&&(p.betray.done||p.betray.skipped));
  if(u==='swipe.html')return !!p.dq;
  if(u==='wheel8.html')return Array.isArray(p.wheel)&&p.wheel.length===8;
  if(u==='wheel-test.html')return !!(p.wheelTest&&p.wheelTest.completed);
@@ -93,7 +94,7 @@ function init(){
 function snapshot(u,p){
  const keys={
   'form.html':['name','birth','gender'], 'choose.html':['mapStyle'], 'bridge.html':['pocherk','hand','handTop'],
-  'ego.html':['ego'], 'swipe.html':['dq'], 'res.html':['res','body'], 'wheel8.html':['wheel'],
+  'ego.html':['ego'], 'betray.html':['betray'], 'swipe.html':['dq'], 'res.html':['res','body'], 'wheel8.html':['wheel'],
   'wheel-test.html':['wheelTest'], 'values.html':['values','egoSelf','focuses'],
   'slot.html?id=mirrors':['mirror_exercise'], 'slot.html?id=dialog':['dialog'],
   'slot.html?id=evidence':['fractal'], 'slot.html?id=sort':['lab'], 'slot.html?id=found':['lab'],

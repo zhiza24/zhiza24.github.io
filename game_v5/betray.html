@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<script src="theme.js?v=8"></script>
+<script src="sound.js?v=1"></script>
+<script src="flow.js?v=wish2"></script>
+<script src="opening.js?v=opening2"></script>
+<script src="route.js?v=wish2"></script>
+<script src="profile-layer.js?v=kit2"></script>
+<script src="route-gate.js?v=wish2"></script>
+<script src="gender.js?v=2"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script src="upd.js?v=1794512684"></script>
+<title>Что узнаешь в себе</title>
+<link rel="icon" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="g.css?v=1f19">
+<link rel="stylesheet" href="nav.css?v=h9f19">
+<style>
+.bt{max-width:420px;margin:0 auto;padding:calc(68px + env(safe-area-inset-top)) 18px 128px;color:#f4ecdf;font:500 17px/1.45 Manrope,sans-serif}
+.bt h1{font:700 28px/1.15 'Cormorant Garamond',serif;color:#f0c870;margin:0 0 10px;text-align:center}
+.bt .lead{margin:0 0 22px;color:#f4ecdf;text-align:center}
+.bt .mute{color:#c9a46a;font-size:14px;text-align:center}
+.cards{display:flex;flex-direction:column;gap:10px;margin:8px 0 22px}
+.cards button{text-align:left;border:1px solid #6a4e28;background:#120e08;color:#f4ecdf;border-radius:16px;padding:14px 16px;font:inherit;cursor:pointer}
+.cards button.on{border-color:#f0c870;background:rgba(240,200,112,.12)}
+.cards b{display:block;font:600 18px 'Cormorant Garamond',serif;color:#f0c870;margin:0 0 4px}
+.bt .go{display:block;width:100%;box-sizing:border-box;margin:8px 0 0;padding:15px 18px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope,sans-serif}
+.bt .quiet{display:block;margin:14px auto 0;background:none;border:0;color:#c9a46a;text-decoration:underline;text-underline-offset:3px;font:600 14px Manrope,sans-serif;text-align:center;width:100%}
+</style>
+</head>
+<body data-page="task">
+<div class="bt" id="bt"></div>
+<script src="engine.js?v=arch1"></script>
+<script src="texts.js?v=mf4"></script>
+<script src="texts_fr.js?v=mf2"></script>
+<script src="nav.js?v=wish2"></script>
+<script src="support.js?v=wish1"></script>
+<script>
+(function(){
+var KEY='alch_v5_profile';
+var ITEMS=[
+  {id:'perf', t:'Перфекционизм', d:'Еще не идеально — и поэтому можно не начинать.'},
+  {id:'ctrl', t:'Контроль', d:'{Если не удержу все сам, развалится.|Если не удержу все сама, развалится.}'},
+  {id:'please', t:'Угождение', d:'Сначала другим, свое подождет.'},
+  {id:'numb', t:'Онемение', d:'Лучше не чувствовать, тогда не так уязвимо.'}
+];
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
+function save(P){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function gx(s){return String(s).replace(/\{([^|]*)\|([^}]*)\}/g,function(_,m,f){return window.GG?GG(m,f):m})}
+function tick(){if(window.GSound&&!GSound.isOn())return;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=660;g.gain.value=0.04;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+0.05)}catch(e){}}
+function Pget(){var P=load(); P.betray=P.betray||{picked:[]}; if(!P.betray.picked)P.betray.picked=[]; return P}
+function draw(){
+  var P=Pget(), sel=P.betray.picked||[];
+  var h='<p class="mute">После Мага</p><h1>Что узнаешь в себе</h1>';
+  h+='<p class="lead">Отметь, что откликается. Это не тест и не диагноз.</p><div class="cards">';
+  ITEMS.forEach(function(it){
+    var on=sel.indexOf(it.id)>=0;
+    h+='<button type="button" class="'+(on?'on':'')+'" data-id="'+it.id+'"><b>'+esc(it.t)+'</b>'+esc(gx(it.d))+'</button>';
+  });
+  h+='</div><button class="go" type="button" id="go">Дальше</button>';
+  h+='<button type="button" class="quiet" id="skip">Пропустить</button>';
+  document.getElementById('bt').innerHTML=h;
+  document.querySelectorAll('.cards button').forEach(function(b){
+    b.onclick=function(){
+      tick();
+      var P=Pget(), id=b.getAttribute('data-id'), a=P.betray.picked, i=a.indexOf(id);
+      if(i>=0)a.splice(i,1); else a.push(id);
+      save(P); draw();
+    };
+  });
+  function done(skipped){
+    tick();
+    var P=Pget();
+    if(skipped)P.betray.skipped=Date.now();
+    else P.betray.done=Date.now();
+    save(P);
+    if(window.GRoute)GRoute.complete('betray.html');
+    location.href=window.GRoute?GRoute.advance():'tasks.html';
+  }
+  document.getElementById('go').onclick=function(){done(false)};
+  document.getElementById('skip').onclick=function(){done(true)};
+}
+draw();
+})();
+</script>
+</body>
+</html>
