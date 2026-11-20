@@ -2,7 +2,7 @@
    Тексты в tochka-book.js, загружаются по нажатию. Кнопка в верхней панели .gtop. */
 (function(){
 if(window.GBook)return;
-var V='fx4';
+var V='fx5';
 /* шаг GFLOW (u) -> [глава 0..11, раздел или -1] */
 var MAP={
 'index.html':[0,-1],'form.html':[0,-1],'elder.html':[0,-1],
@@ -29,7 +29,7 @@ var MAP={
 'slot.html?id=mirage':[4,-1],'slot.html?id=arch_b':[7,-1],'slot.html?id=arch_v':[4,1],'slot.html?id=arch_p':[5,2],'slot.html?id=arch_d':[8,-1],
 'slot.html?id=found':[3,3],
 'slot.html?id=pb_end':[8,-1],
-'slot.html?id=fractal':[4,2],'slot.html?id=sv':[6,-1],'slot.html?id=vsort':[6,-1],'slot.html?id=km':[3,0],'slot.html?id=fs':[3,-1],'slot.html?id=lab_d':[3,-1],'slot.html?id=ct':[4,-1],'slot.html?id=rs':[4,-1],'slot.html?id=pi':[3,-1],
+'slot.html?id=fractal':[4,2],'slot.html?id=sv':[6,2],'slot.html?id=vsort':[6,-1],'slot.html?id=km':[3,0],'slot.html?id=fs':[3,-1],'slot.html?id=lab_d':[3,-1],'slot.html?id=ct':[4,-1],'slot.html?id=rs':[4,-1],'slot.html?id=pi':[3,-1],
 'slot.html?id=leverage':[5,2],
 'slot.html?id=guard':[6,-1],
 'slot.html?id=pc_intro':[10,-1],
