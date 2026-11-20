@@ -80,6 +80,23 @@ $('hist').onclick=function(e){var b=e.target.closest('[data-ch]');if(b)chapter(+
 $('chX').onclick=function(){dlg.close()};dlg.addEventListener('click',function(e){if(e.target===dlg)return dlg.close();var o=e.target.closest('[data-open]'),ar=e.target.closest('[data-art]'),bk=e.target.closest('[data-back]');
  if(o){dlg.close();if(window.openPassport)openPassport(o.dataset.open)}else if(ar)artCard(ar.dataset.art);else if(bk)chapter(+bk.dataset.back);
  else if(e.target.id==='insSave'){var v=$('insTx').value.trim();if(!v){$('insFb').textContent='Сначала напиши пару слов.';return}var c=CH[+e.target.dataset.ch],S=JSON.parse(localStorage.getItem('alch_v5_profile'))||{};S.diary=S.diary||{};S.diary.ins=S.diary.ins||[];var rec={x:v,d:Date.now(),at:'Герой · '+c.name};S.diary.ins.push(rec);localStorage.setItem('alch_v5_profile',JSON.stringify(S));P.diary=P.diary||{};P.diary.ins=P.diary.ins||[];P.diary.ins.push(rec);chapter(+e.target.dataset.ch);$('insFb').textContent='Записано в дневник.'}});
+/* 4b. Мой портрет коротко (перенесено из темного листа) и все артефакты */
+(function(){var L=[],D=window.POCHERK_DIRS||{},CARDS={s:'Тропа молний',n:'Туманная долина',str:'Горный перевал',z:'Река попутчиков',f:'Пусть выберет судьба'};
+ if(CARDS[P.mapStyle])L.push(['Мой путь',CARDS[P.mapStyle]]);
+ if(P.pocherk&&P.pocherk.lead&&(D[P.pocherk.lead]||P.pocherk.leads))L.push(['Моя стратегия выбора',P.pocherk.mixed&&P.pocherk.leads?P.pocherk.leads.map(function(k){return D[k]}).filter(Boolean).join(' и '):D[P.pocherk.lead]]);
+ if(P.ego&&P.ego.top)L.push(['Знакомое состояние','«'+P.ego.top+'»']);
+ if(P.archB&&P.archB.top)L.push(['Привычный ход',P.archB.top]);
+ if(P.lab&&P.lab.lead&&window.GPAT&&GPAT[P.lab.lead])L.push(['Установка в работе',GPAT[P.lab.lead].n]);
+ var v=(P.valuesCore&&P.valuesCore.top3)||[];if(v.length)L.push(['Три ориентира',v.join(', ')]);
+ if(P.fractal&&P.fractal.lever&&P.fractal.lever.title)L.push(['Точка влияния',P.fractal.lever.title]);
+ if(P.archD&&P.archD.top&&P.archD.d1t)L.push(['Выбранное состояние',P.archD.top]);
+ var el=$('hPort');if(el){if(L.length)el.innerHTML='<div class="hh"><b>МОЙ ПОРТРЕТ</b><small>коротко</small></div><div class="prt">'+L.map(function(x){return '<div class="r"><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></div>'}).join('')+'</div>';else el.remove()}
+ var ea=$('hArts');if(ea){if(arts.length)ea.innerHTML='<div class="hh" id="arts"><b>МОИ АРТЕФАКТЫ</b><small>'+arts.length+'</small></div><div class="artgrid">'+arts.map(function(a){return '<button type="button" class="art" data-art="'+esc(a)+'"><span>'+artHtml(a)+'</span><small>'+esc(artName(a))+'</small></button>'}).join('')+'</div>';else ea.remove()}
+ if(ea)ea.addEventListener('click',function(e){var b=e.target.closest('[data-art]');if(!b)return;var t=$('chB');var tmp=document.createElement('div');tmp.innerHTML='<button data-art="'+b.getAttribute('data-art')+'"></button>';if(!dlg.open){open('',artName(b.getAttribute('data-art')))}t.appendChild(tmp.firstChild);t.lastChild.click()});
+ if(location.hash==='#arts'&&ea){setTimeout(function(){try{ea.scrollIntoView({block:'start'})}catch(e){}},300)}
+ if(!P.heroSeen){var gt=document.createElement('div');gt.id='heroGate';gt.innerHTML='<h1>'+esc(g('Персонаж создан, готов увидеть себя?','Персонаж создан, готова увидеть себя?'))+'</h1><button type="button" class="go" id="seeHero">Увидеть себя</button>';document.body.appendChild(gt);
+  $('seeHero').onclick=function(){try{var S=JSON.parse(localStorage.getItem('alch_v5_profile'))||{};S.heroSeen=Date.now();localStorage.setItem('alch_v5_profile',JSON.stringify(S))}catch(e){}P.heroSeen=1;gt.remove()}}
+})();
 /* 5. кнопки */
 function dest(doComplete){if(window.GReview)return 'tasks.html';if(!window.GRoute)return 'choose.html';if(doComplete&&GRoute.resume()==='hero.html')GRoute.complete('hero.html');var href=GRoute.resume();if(href==='hero.html')href='choose.html';return window.GOpening?GOpening.url(href):href}
 $('hGo').onclick=function(){try{location.href=dest(true)}catch(e){location.href='choose.html'}};
