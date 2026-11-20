@@ -184,8 +184,9 @@ function fsCrossHtml(ctx){ctx=ctx||{};var h='<section class="ar-compare"><h3>Ð¡Ð
 BUILD.fs=function(ans){var F=T.fs,names=Object.keys(F.str),P0=load(),out={v:VER,answers:ans,context:{wheel:P0.betray&&P0.betray.start?JSON.parse(JSON.stringify(P0.betray.start)):null,echo:P0.archB?{v:P0.archB.v,status:P0.archB.status,top:P0.archB.top,lead:P0.archB.lead,leaders:P0.archB.leaders,answers:P0.archB.answers}:null},at:Date.now()};
  function per(list){var o={};names.forEach(function(n){var a=list.filter(function(q){return q.s===n}).map(function(q){return ans[q.id]}),v=a.filter(function(x){return typeof x==='number'});o[n]={answered:v.length,mean:v.length?v.reduce(function(x,y){return x+y},0)/v.length:null,notRemember:a.filter(function(x){return x==='nr'}).length,notWas:a.filter(function(x){return x==='nw'}).length,allNotWas:a.length===3&&a.every(function(x){return x==='nw'})}});return o}
  var C=per(F.child),N=per(F.now),R={};
- names.forEach(function(n){var c=C[n],x=N[n],r;if(c.answered<2||x.answered<2)r='few';
+ names.forEach(function(n){var c=C[n],x=N[n],r;if(x.answered<2)r='few';
   else if(c.allNotWas)r=x.mean>=2?'later':'notwas';
+  else if(c.answered<2)r='few';
   else if(c.mean>=2&&x.mean>=2&&(Math.abs(x.mean-c.mean)<1||x.mean>c.mean))r='kept';
   else if(c.mean>=2&&c.mean-x.mean>=1){var other=names.filter(function(m){return m!==n&&C[m].answered>=2&&N[m].answered>=2&&N[m].mean>=2&&N[m].mean-C[m].mean>=1&&N[m].mean>x.mean}).sort(function(a,b){return (N[b].mean-C[b].mean)-(N[a].mean-C[a].mean)})[0];r=other?'changed':'weaker';if(other)R[n+'_to']=other}
   else if(c.mean<1&&x.mean>=2)r='later';else r='none';R[n]=r});
