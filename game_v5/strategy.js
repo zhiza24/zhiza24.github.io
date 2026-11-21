@@ -235,12 +235,30 @@ function practRec(P){
  if(lvl(P,'respTest','RS02')>=2||lvl(P,'selfWorth','SV04')>=2)add('guilt','Вина и чужая ответственность звучат громко.');
  if(lvl(P,'respTest','RS06')>=2)add('letgo','Трудно поручать и доверять.');
  if(L.S2>=2)add('create','Интерес и движение — твоя опора.');
+ /* Новая модель состояний: практику предлагаем только при повторении прямых ситуационных выборов
+    минимум в двух разных ситуациях и без неразрешенного различителя. */
+ var sm=bp&&bp.stateModel,practiceByState={SIG:'mydecision',ABD:'contact',STD:'enough',INC:'myzone',EFF:'create',WRT:'keepgood',SEC:'contact',TRU:'acceptsup',MAS:'create',CUR:'create',GRA:'grat',FLO:'create',PLY:'pract',SCO:'keepgood'};
+ if(sm&&Array.isArray(sm.states)){
+  sm.states.filter(function(x){return x.signals&&x.signals.CH&&x.signals.CH.length>=2&&!x.needsDiscriminator.length})
+   .sort(function(a,b){return b.signals.CH.length-a.signals.CH.length})
+   .some(function(x){var id=practiceByState[x.id];if(!id)return false;add(id,'В двух или более ситуационных выборах повторилась близкая тема «'+x.name+'». Это рабочая гипотеза; проверь, подходит ли практика.');return out.length>=2});
+ }
  return out}
 function testsLayer(P,f){
  var res=[],obst=[],bp=P.backgroundProfile,F=window.GIMD&&GIMD.FAM;
  if(bp&&bp.status!=='insufficient'&&F){
   (bp.resources||[]).slice(0,2).forEach(function(s){if(F[s])res.push({t:F[s].t,x:gx(F[s].x,f)})});
   if(!bp.positive)(bp.vulnerabilities||[]).slice(0,2).forEach(function(s){if(F[s])obst.push({t:F[s].t,x:gx(F[s].g,f)})});
+ }
+ /* Межмодульные различители из каталога 19 состояний. Они показываются как вопросы для проверки,
+    но не превращаются в дополнительную ежедневную задачу. */
+ var sm=bp&&bp.stateModel;
+ if(sm&&Array.isArray(sm.families))sm.families.slice(0,2).forEach(function(x){
+  obst.push({t:'Что важно различить',x:x.question});
+ });
+ if(sm&&Array.isArray(sm.states)){
+  var direct=sm.states.filter(function(x){return x.signals&&x.signals.CH&&x.signals.CH.length>=2&&!x.needsDiscriminator.length});
+  direct.slice(0,2).forEach(function(x){obst.push({t:'Повторяющаяся тема · '+x.name,x.stance+' Это предварительное наблюдение по '+x.signals.CH.length+' ситуационным выборам.'})});
  }
  var r=bwr(P);if(r&&window.GBW){var sm=GBW.summary(r);if(sm.sp.length)res.push({t:'Где ты уже опираешься на себя',x:sm.sp.slice(0,3).map(function(z){return z.s.m.t}).join(', ')+'.'});if(sm.sh.length)obst.push({t:'Где чаще теряешь себя',x:sm.sh.slice(0,3).map(function(z){return z.s.t}).join(', ')+'. В разборе дня это можно отмечать одним касанием.'})}
  function scl(fld,good){var x=P[fld];if(!x||!x.scales||x.status==='insufficient')return;x.scales.forEach(function(q){if(q.level==null)return;if(good(q.level))res.push({t:q.name,x:'Здесь у тебя устойчивая опора.'})})}
