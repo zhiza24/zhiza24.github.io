@@ -23,7 +23,7 @@ function mount(box){
   if(preview){saved=result;return}
   var p=root.GProfile?GProfile.load():G.load(),b=p.backgroundProfile&&typeof p.backgroundProfile==='object'?p.backgroundProfile:{};
   if(b.backgroundState){b.backgroundStateHistory=arr(b.backgroundStateHistory);b.backgroundStateHistory.push(b.backgroundState);if(b.backgroundStateHistory.length>5)b.backgroundStateHistory.shift()}
-  b.backgroundState=result;delete b.backgroundStateDraft;p.backgroundProfile=b;
+  b.backgroundState=result;b.v=b.v||1;b.version=b.version||1;b.algoVersion=1;delete b.backgroundStateDraft;p.backgroundProfile=b;
   if(root.GProfile)GProfile.saveResult('backgroundProfile',b,null,{profile:p,save:true});else localStorage.setItem('alch_v5_profile',JSON.stringify(p));
   saved=result;P=p;profile=b;
  }
@@ -33,7 +33,7 @@ function mount(box){
   var hasSaved=!!saved;
   shell('<span class="tag">Точка 0 · Исследование</span><div class="im-eyebrow">Фоновое состояние</div><h1>Что остается внутри?</h1>'+
    '<p>24 жизненные ситуации помогут увидеть, какие способы воспринимать происходящее повторяются в разных областях жизни. После восьми ключевых ситуаций мы отдельно посмотрим на эмоциональное послевкусие.</p>'+
-   '<p>Здесь нет правильных ответов. Выбирай то, что чаще похоже на твою обычную реакцию, а не на идеальный образ себя. Если не можешь определить — вопрос можно пропустить.</p>'+
+   '<p>Здесь нет правильных ответов. Выбирай то, что чаще похоже на твою обычную реакцию, а не на идеальный образ себя. Если не можешь определить — вопрос можно пропустить; пропуск не считается ответом.</p>'+
    '<div class="im-card"><b>Четыре главы</b><p>Новые обстоятельства · Другие люди · Результаты и достижения · Собственный путь</p><p>24 ситуации + 8 вопросов о послевкусии</p></div>'+
    (hasSaved?'<p class="im-muted">Исследование уже сохранено. Его можно пройти заново — предыдущий результат останется в истории.</p>':'')+
    (n?'<p class="im-muted">Сохранен черновик: '+n+' из 32 ответов.</p>':'')+
@@ -50,7 +50,7 @@ function mount(box){
    '<progress max="'+total()+'" value="'+step+'"></progress><p class="im-muted">'+(isAfter?'Ситуация, к которой относится вопрос: ':'')+esc(text(prompt))+'</p>'+
    '<p>'+(isAfter?'Что чаще остается внутри после такого события?':'Какой вариант ближе к тому, как ты обычно поступаешь?')+'</p>'+
    '<div class="im-bg-choices">'+options+'</div><div class="im-actions"><button type="button" id="bgBack" '+(step===0?'disabled':'')+'>Назад</button><button type="button" id="bgSkip">Пропустить</button><button type="button" id="bgNext" '+(current==null?'disabled':'')+'>'+(step===total()-1?'Завершить':'Далее')+'</button></div>'+
-   '<p class="im-muted">Ответы сохраняются в этом браузере. Вопрос можно пропустить и вернуться к нему позже.</p>');
+   '<p class="im-muted">Ответы сохраняются в этом браузере. Можно пропустить вопрос; пропуск останется без ответа.</p>');
  }
  function result(){
   var r=saved||E.calculate(draft.answers,draft.aftertaste),families=r.families.filter(function(f){return f.situationCount||f.aftertaste>0}),html='<span class="tag">Фоновое состояние · результат</span><div class="im-eyebrow">Предварительная карта</div><h1>Что повторяется в разных ситуациях</h1>'+
@@ -60,7 +60,7 @@ function mount(box){
   else html+='<div class="im-card"><p>Пока недостаточно ответов, чтобы увидеть повторяющиеся сигналы.</p></div>';
   if(r.adaptations.length){html+='<h2>Способы реагирования</h2>';r.adaptations.forEach(function(a){html+='<article class="im-card"><h3>'+esc(a.title)+'</h3><p>'+esc(a.description)+'</p></article>'})}
   if(r.resources.length){html+='<h2>Что уже помогает</h2>';r.resources.forEach(function(a){html+='<article class="im-card"><p>'+esc(a.description)+'</p></article>'})}
-  html+='<p class="im-muted">Сигналы не объясняют причины и не доказывают устойчивую черту. Их можно сверить с другими исследованиями и собственными примерами.</p><button class="next" id="bgContinue">Перейти в зал зеркал</button>';
+  html+='<p class="im-muted">Сигналы не объясняют причины и не доказывают устойчивую черту. Их можно сверить с другими исследованиями и собственными примерами.</p><button class="next" id="bgContinue">Перейти в зал зеркал</button><button type="button" class="im-secondary" id="bgRetake">Пройти исследование заново</button>';
   shell(html);
  }
  function advance(skip){var isAfter=step>=D.Q.length;if(skip){if(isAfter)delete draft.aftertaste[D.AFTER_AT[step-D.Q.length]];else delete draft.answers[D.Q[step][0]]}step++;persist();if(step>=total()){saveResult(E.calculate(draft.answers,draft.aftertaste));result()}else question()}
