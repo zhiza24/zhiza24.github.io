@@ -13,10 +13,8 @@ var FAMILIES=[
  {id:'STD_MAS',states:['STD','MAS'],scales:{RS05:1,SV05:1},question:'Ты продолжаешь улучшать результат из страха несовершенства или из интереса, получая удовлетворение?'},
  {id:'MIS_TRU_AUT',states:['MIS','TRU','AUT'],scales:{SV03:1,RS06:1},question:'От помощи отказываешься из-за страха подвоха, потому что доверяешь по фактам или потому что действительно предпочитаешь справляться сам?'}
 ];
-var DIRECT={
- mage:{A01:'DEF',A02:'SIG',A03:'ABD',A04:'MIS',A06:'INC',A08:'STD',A09:'ABD'},
- echo:{B01:'SIG',B08:'EFF'}
-};
+var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A6:'INC',A8:'STD',A9:'ABD'};
+var ECHO_CODES={B1:'SIG',B8:'EFF'};
 var SCALE_FAMILIES={
  KM02:['SIG_DEF'],KM04:['MIS_TRU'],KM05:['INC_EFF'],
  SV01:['SIG_WRT'],SV02:['DEF_SCO'],SV03:['MIS_TRU_AUT'],SV05:['SIG_WRT','STD_MAS'],
@@ -52,16 +50,17 @@ function evaluate(P){
  /* Ситуационные ответы Магa. A11 — эмоциональный итог, не отдельная ситуация, поэтому не учитывается. */
  var mage=resultOf(P,'ego','ego');
  if(mage&&mage.answers){
-  Object.keys(DIRECT.mage).forEach(function(q){
-   var id=DIRECT.mage[q],v=mage.answers[q];
-   if(v!=null&&v!=='skip'&&v!=='0')add(id,'CH','mage',q,'Выбор в ситуации Магa: '+String(v),false);
+  Object.keys(mage.answers).forEach(function(q){
+   var code=mage.answers[q],id=MAGE_CODES[code];
+   if(id)add(id,'CH','mage',q,'Ситуационный выбор Мага: '+String(code),false);
   });
  }
  /* Эхо: используем только семантически достаточно близкие соответствия. Остальные коды не приравниваем к состояниям. */
  var echo=resultOf(P,'archB','archB');
  if(echo&&echo.answers){
-  Object.keys(DIRECT.echo).forEach(function(q){
-   var v=echo.answers[q];if(v!=null&&v!=='skip'&&v!=='0')add(DIRECT.echo[q],'CH','echo',q,'Выбор в ситуации Эха: '+String(v),false);
+  Object.keys(echo.answers).forEach(function(q){
+   var code=echo.answers[q],id=ECHO_CODES[code];
+   if(id)add(id,'CH','echo',q,'Ситуационный выбор Эха: '+String(code),false);
   });
  }
  /* Шкалы — только слой самоотчета. Один результат шкалы считается одной областью наблюдения, а не четырьмя независимыми пунктами. */
