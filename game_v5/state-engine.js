@@ -99,7 +99,7 @@ function evaluate(P){
  if(P.betray&&P.betray.start)unknown.push('Колесо показывает конкретные формы поведения и опоры. Пока оно используется как контекст, а не как прямой балл одного из 19 состояний: соответствия требуют отдельной проверки.');
  if(P.lab)unknown.push('GLead/GPAT описывают привычный способ реагирования и его стратегию. Они учитываются отдельно и не считаются независимым подтверждением состояния.');
  unknown.push('Нарративный слой пока не оценивается автоматически. Личные записи не анализируются без отдельного явного согласия.');
- var savedAnswers=obj(P.backgroundProfile&&P.backgroundProfile.stateModel&&P.backgroundProfile.stateModel.discriminatorAnswers);
+ var savedProfileState=obj(P.backgroundProfile&&P.backgroundProfile.stateModel),savedAnswers=obj(savedProfileState.discriminatorAnswers),savedGoals=obj(savedProfileState.stateGoals);
  var familyList=Object.keys(families).map(function(k){return families[k]}).filter(function(f){return f.evidence.length}).map(function(f){
   var definition=FAMILIES.filter(function(x){return x.id===f.id})[0],answer=savedAnswers[f.id];
   f.question=definition?definition.question:f.question;
@@ -136,12 +136,13 @@ function evaluate(P){
   states:Object.keys(states).map(function(id){return states[id]}),
   families:familyList,
   discriminatorAnswers:savedAnswers,
+  stateGoals:savedGoals,
   unknown:uniq(unknown),
   coverage:{stateCount:arr(DATA.states).length,statesWithSignals:Object.keys(states).filter(function(id){return states[id].situationsCount>0}).length,narrativeAvailable:false,spheresAvailable:false}
  };
 }
 function getState(id){return arr(DATA.states).filter(function(x){return x.id===id})[0]||null}
-function interventions(id,goal){return arr(DATA.interventions).filter(function(x){return x.state===id&&(!goal||x.goal===goal)})}
+function interventions(id,goal){return arr(DATA.interventions).filter(function(x){return x.state===id&&(!goal||x.goal===goal||String(x.goal||'').indexOf(goal)===0)})}
 function discriminators(id){return arr(DATA.discriminators).filter(function(x){return x.a===id||x.b===id})}
 function falsifiers(id){return arr(DATA.falsifiers).filter(function(x){return x.state===id})}
 global.GStateEngine={data:DATA,evaluate:evaluate,getState:getState,interventions:interventions,discriminators:discriminators,falsifiers:falsifiers,families:FAMILIES};
