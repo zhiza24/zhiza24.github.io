@@ -153,6 +153,7 @@ function evaluate(P){
   if(falsifierCount>0){
    if(s.status==='probable'){s.status='hypothesis';s.confidence='гипотеза, есть контрпримеры; контекст важен';}
    else if(s.status==='hypothesis')s.confidence='гипотеза с исключениями; контекст важен';
+   else if(s.status==='needs_discriminator')s.confidence='гипотеза, требуется различитель; есть контрпримеры';
    else if(s.status==='situational')s.confidence='ситуативная реакция; есть контрпримеры';
   }
   /* Без NR и данных о сферах глобальная устойчивость не присваивается. */
