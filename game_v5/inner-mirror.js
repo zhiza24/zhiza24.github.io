@@ -104,6 +104,8 @@ function collect(P){
  if(!km)out.unknown.push('«Идеальный Кривой Мир» еще не доступен.');
  if(!echo)out.unknown.push('«Эхо» еще не доступно.');
  if(!wheel)out.unknown.push('Колесо самопредательства еще не доступно.');
+ out.stateModel=window.GStateEngine&&GStateEngine.evaluate?GStateEngine.evaluate(P):null;
+ if(out.stateModel&&out.stateModel.coverage.statesWithSignals===0)out.unknown.push('Сопоставление с каталогом 19 состояний пока не выделило прямых сигналов. Это не означает отсутствия этих состояний.');
  return out;
 }
 function mapSvg(data){
@@ -140,6 +142,13 @@ function mount(box){
    html='<div class="im-stage"><div class="im-eyebrow">Первое отражение</div><h1>Пять сторон внутреннего мира</h1>'+mapSvg(data)+'<p>Здесь видны не оценки и не типы личности, а области, по которым уже есть сведения. Светятся только те зеркала, для которых найдены данные.</p>';
    var groups=['Фоновое состояние','Адаптация','Картина мира','Реакции','Самопредательство'];
    groups.forEach(function(g){var a=data.fragments.filter(function(x){return x.domain===g});if(a.length)html+='<section class="im-group"><h2>'+esc(g)+'</h2>'+a.map(function(x){return card(x,-1,false)}).join('')+'</section>'});
+   if(data.stateModel){
+    var active=data.stateModel.states.filter(function(x){return x.status!=='unassessed'});
+    html+='<section class="im-group"><h2>Каталог 19 состояний</h2><p>Здесь отмечены только состояния, для которых нашлись прямые или неоднозначные сигналы в уже пройденных исследованиях. Это предварительные гипотезы, а не типы личности.</p>';
+    if(active.length)html+=active.map(function(x){var count=x.layersConfirmed.length;return '<article class="im-card"><div class="im-card-k">'+esc(x.valence)+' · '+esc(x.confidence)+'</div><h3>'+esc(x.name)+'</h3><p>'+esc(x.stance)+'</p><p>Сигналы: '+count+' слоя · '+x.situationsCount+' ситуаций. '+(x.needsDiscriminator.length?'Нужен различитель: '+x.needsDiscriminator.map(function(k){return (data.stateModel.families.filter(function(f){return f.id===k})[0]||{}).question||k}).join(' '):'')+'</p></article>'}).join('');
+    else html+='<p>Пока нет прямых совпадений. Каталог сохранен, но выводы не подменяются догадками.</p>';
+    html+='<p class="im-muted">Нарратив и сферы жизни пока не учитываются в расчете: они не должны появляться в выводе без отдельного основания.</p></section>';
+   }
    html+='</div><button class="next" id="imNext">Посмотреть связи</button>';
   }
   if(scene===2){
@@ -169,7 +178,14 @@ function mount(box){
   var denied=data.links.concat(data.tensions).filter(function(x,i){return feedback[i]==='no'});
   var status=data.links.length?'Связи найдены':'Пока больше отдельных отражений';
   var map=mapSvg(data);
-  return '<div class="im-stage"><div class="im-eyebrow">Собранное отражение</div><h1>Твоя карта внутренней архитектуры</h1>'+map+'<div class="im-final"><div class="im-final-num">'+data.sources.length+'</div><div>исследований вошло в карту</div><div class="im-final-line"></div><b>'+esc(status)+'</b></div>'+
+  var modelSummary='';
+  if(data.stateModel){
+   var marked=data.stateModel.states.filter(function(x){return x.status!=='unassessed'});
+   modelSummary='<section class="im-group"><h2>Сверка с 19 состояниями</h2><p>Есть сигналы по '+marked.length+' состояниям из 19. Устойчивые выводы пока не присваиваются: нарративный слой и сферы жизни еще не собраны.</p>'+
+    (marked.length?marked.slice(0,8).map(function(x){return '<p><b>'+esc(x.name)+'</b> — '+esc(x.confidence)+(x.needsDiscriminator.length?' · требуется различитель':'')+'</p>'}).join(''):'<p>Прямых совпадений пока нет.</p>')+
+    (data.stateModel.families.length?'<p>Семейства, требующие различения: '+data.stateModel.families.map(function(x){return esc(x.states.join(' / '))}).join('; ')+'.</p>':'')+'</section>';
+  }
+  return '<div class="im-stage"><div class="im-eyebrow">Собранное отражение</div><h1>Твоя карта внутренней архитектуры</h1>'+map+modelSummary+'<div class="im-final"><div class="im-final-num">'+data.sources.length+'</div><div>исследований вошло в карту</div><div class="im-final-line"></div><b>'+esc(status)+'</b></div>'+
   (confirmed.length?'<h2>Что ты подтвердил</h2>'+confirmed.map(function(x){return '<p>✧ '+esc(x.title)+'</p>'}).join(''):'')+
   (denied.length?'<h2>Что ты уточнил</h2>'+denied.map(function(x){return '<p>✧ '+esc(x.title)+' — не совпало с твоим опытом</p>'}).join(''):'')+
   (data.unknown.length?'<h2>Что осталось открытым</h2>'+data.unknown.map(function(x){return '<p>'+esc(x)+'</p>'}).join(''):'')+
@@ -182,7 +198,7 @@ function mount(box){
  }
  function draw(){box.innerHTML=sceneHtml();bind();if(typeof window.scrollTo==='function')window.scrollTo(0,0)}
  function finish(){
-  var all=data.links.concat(data.tensions),rec={v:2,version:2,algoVersion:2,type:'synthesis',sources:data.sources,fragments:data.fragments,links:data.links,tensions:data.tensions,unknown:data.unknown,feedback:feedback,at:Date.now(),legacy:existing&&existing.answers?{answers:existing.answers,at:existing.at||null}:null};
+  var all=data.links.concat(data.tensions),rec={v:3,version:3,algoVersion:3,type:'synthesis',sources:data.sources,fragments:data.fragments,links:data.links,tensions:data.tensions,unknown:data.unknown,stateModel:data.stateModel||null,feedback:feedback,at:Date.now(),legacy:existing&&existing.answers?{answers:existing.answers,at:existing.at||null}:null};
   var lines=['Карта внутренней архитектуры','Источники: '+data.sources.map(function(x){return x.name}).join(', ')];
   var magFragment=data.fragments.filter(function(x){return x.source==='mag'})[0];if(magFragment)lines.push('Маг: '+magFragment.title+' — '+magFragment.detail+(magFragment.evidence&&magFragment.evidence.length?'\\n'+magFragment.evidence.join('\\n'):''));
   if(data.links.length)lines.push('Межмодульные связи: '+data.links.map(function(x){return x.title+' — '+x.detail}).join('\n'));
