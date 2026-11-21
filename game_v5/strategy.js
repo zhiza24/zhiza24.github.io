@@ -259,7 +259,7 @@ function testsLayer(P,f){
  if(sm&&Array.isArray(sm.states)){
   var direct=sm.states.filter(function(x){return x.signals&&x.signals.CH&&x.signals.CH.length>=2&&!x.needsDiscriminator.length});
   direct.slice(0,2).forEach(function(x){
-   obst.push({t:'Повторяющаяся тема · '+x.name,x.stance+' Это предварительное наблюдение по '+x.signals.CH.length+' ситуационным выборам.'});
+   obst.push({t:'Повторяющаяся тема · '+x.name,x:x.stance+' Это предварительное наблюдение по '+x.signals.CH.length+' ситуационным выборам.'});
    if(window.GStateEngine&&GStateEngine.interventions){
     var iv=GStateEngine.interventions(x.id)[0];
     if(iv)actions.push({state:x.name,goal:iv.goal,lever:iv.lever,action:iv.action,time:iv.time,stake:iv.stake,caution:iv.caution||''});
