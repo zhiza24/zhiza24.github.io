@@ -106,8 +106,8 @@ var KIT9={reactorIn:'Реактор не оценивает тебя и не т�
 (function(){var PC=R.pc_intro;R.pc_intro=function(){var P=GPro.load(),v3=P.valuesCore&&P.valuesCore.top3,vb=v3&&v3.length?'<p class="pt">Твои три ориентира: '+v3.map(GEsc).join(', ')+'.</p>':'';return PC().replace('<button class="next" id="nx">','<p>'+KIT9.reactorIn+'</p>'+vb+'<button class="next" id="nx">')}})();
 function FOBS(P){var o=[],E=GEsc,arr=function(a){return (Array.isArray(a)?a:[]).map(function(x){return typeof x==='string'?x:(x&&(x.t||x.name||x.title))||''}).filter(Boolean)};
  var r=arr(P.res);if(r.length)o.push({k:'res',l:'Опоры',t:r.slice(0,4).join(', ')});
- if(P.ego&&P.ego.top)o.push({k:'ego',l:'Знакомое состояние',t:P.ego.top});
- if(P.archB&&P.archB.top)o.push({k:'archB',l:'Привычная реакция',t:P.archB.top});
+ if(P.ego&&P.ego.top)o.push({k:'ego',l:'Первый слой',t:P.ego.top});
+ if(P.archB&&P.archB.top)o.push({k:'archB',l:'Второй слой',t:P.archB.top});
  var v=(P.valuesCore&&P.valuesCore.top3)||(P.values&&P.values.order||[]).slice(0,3);if(v.length)o.push({k:'values',l:P.valuesCore?'Три ориентира':'Ценности',t:v.join(', ')});
  if(P.selfWorth&&P.selfWorth.top&&P.selfWorth.status!=='insufficient')o.push({k:'sv',l:'Самоценность',t:P.selfWorth.top});
  if(P.desireLab&&P.desireLab.desire)o.push({k:'desire',l:'Желание из лабиринта',t:P.desireLab.desire});
