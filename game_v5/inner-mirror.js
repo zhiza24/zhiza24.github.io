@@ -28,7 +28,7 @@ function collect(P){
    out.fragments.push({domain:'Фоновое состояние',title:meta.t||f.title,detail:detail,source:'backgroundState',evidence:ev});
   });
   arr(background.adaptations).forEach(function(a){if(a.situations&&a.situations.length)out.fragments.push({domain:'Адаптация',title:a.title,detail:a.description+' Отмечено в '+a.situations.length+' ситуациях.',source:'backgroundState'})});
-  arr(background.resources).forEach(function(r){if(r.weight>0)out.fragments.push({domain:'Ресурсы',title:r.id,detail:r.description||((BD.RES||{})[r.id]||''),source:'backgroundState'})});
+  arr(background.resources).forEach(function(r){if(r.weight>0)out.fragments.push({domain:'Ресурсы',title:(r.id==='A5'?'Гибкая перестройка':r.id==='A6'?'Самостоятельное начало':r.id),detail:r.description||((BD.RES||{})[r.id]||''),source:'backgroundState'})});
   if(background.coverage&&background.coverage.answered<12)out.unknown.push('Фоновое состояние: отвечено меньше половины ситуационных вопросов; картина предварительная.');
  }
  function source(id,name,detail){out.sources.push({id:id,name:name,detail:detail||''})}
