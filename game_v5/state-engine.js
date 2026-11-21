@@ -72,22 +72,23 @@ function evaluate(P){
   f.states.forEach(function(id){add(id,layer,source,situation,detail,fid);states[id].needsDiscriminator=uniq(states[id].needsDiscriminator.concat([fid]))});
  }
  /* Ситуационные ответы Магa. A11 — эмоциональный итог, не отдельная ситуация, поэтому не учитывается. */
- var mage=resultOf(P,'ego','ego');
+ var mage=resultOf(P,'ego','ego'),mageRepeatability=null,mageContext=[],mageFinal=[];
  if(mage&&mage.answers){
+  var repeatCode=mage.answers.A12;
+  mageRepeatability=/^R[0-4]$/.test(repeatCode||'')?Number(repeatCode.slice(1)):null;
+  mageFinal=arr(mage.answers.A11).map(function(code){return {code:String(code),meaning:({A1:'самокритика и стыд',A2:'потребность в признании',A3:'ощущение отвержения',A4:'настороженность к мотивам других',A5:'ощущение использования',A6:'ощущение отсутствия влияния',A7:'ожидание угрозы',A8:'ощущение нехватки',A9:'одиночество',A10:'отказ от собственных предпочтений',A11:'ощущение борьбы',A12:'внутренняя опора'}[code]||'эмоциональный итог')}});
   Object.keys(mage.answers).forEach(function(q){
    var code=mage.answers[q],id=MAGE_CODES[code];
    if(id)add(id,'CH','mage',q,'Ситуационный выбор Мага: '+String(code),false);
-   else if(code&&q!=='A11')unknown.push('Код Мага '+String(code)+' в ситуации '+q+' пока не сопоставлен с 19 состояниями и не участвует в их подсчете.');
+   else if(code&&q!=='A11'&&q!=='A12'){mageContext.push({question:q,code:String(code),meaning:MAGE_CONTEXT_CODES[code]||'контекстный ответ'});unknown.push('Код Мага '+String(code)+' в ситуации '+q+' сохранен как контекст и не засчитывается как прямое доказательство состояния.');}
   });
  }
- /* Эхо: используем только семантически достаточно близкие соответствия. Остальные коды не приравниваем к состояниям. */
- var echo=resultOf(P,'archB','archB');
+ /* Эхо описывает способы реагирования, а не состояния. */
+ var echo=resultOf(P,'archB','archB'),echoContext=[];
  if(echo&&echo.answers){
   Object.keys(echo.answers).forEach(function(q){
-   var code=echo.answers[q],id=ECHO_CODES[code],family=ECHO_FAMILIES[code];
-   if(id)add(id,'CH','echo',q,'Ситуационный выбор Эха: '+String(code),false);
-   else if(family)addFamily(family,'CH','echo',q,'Ситуационный выбор Эха: '+String(code));
-   else if(code)unknown.push('Код Эха '+String(code)+' сохранен как стратегия реагирования, но пока не сопоставлен с 19 состояниями.');
+   var code=echo.answers[q];
+   if(code&&code!=='0')echoContext.push({question:q,code:String(code),meaning:ECHO_CONTEXT_CODES[code]||'смешанная стратегия'});
   });
  }
  /* Шкалы — только слой самоотчета. Один результат шкалы считается одной областью наблюдения, а не четырьмя независимыми пунктами. */
@@ -149,7 +150,7 @@ function evaluate(P){
  });
  return {
   version:'1.0.0',sourceModelVersion:DATA.version||'0.1',at:Date.now(),
-  context:context,
+  context:Object.assign({},context,{mageRepeatability:mageRepeatability,mageFinal:mageFinal,mageContext:mageContext,echoStrategies:echoContext}),
   note:'Рабочая модель самонаблюдения; статусы предварительные, не клиническая диагностика.',
   rules:{requiredLayers:2,requiredSituations:3,globalTraitRequiresSpheres:2,highConfidenceAvailable:false},
   layers:{SR:layers.SR,CH:layers.CH,NR:layers.NR},
