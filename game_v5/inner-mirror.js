@@ -72,7 +72,7 @@ function collect(P){
   Object.keys(fsMap).forEach(function(n){
    var code=fsMap[n],r=fs.outcome&&fs.outcome[n];
    if(r&&r!=='few'&&r!=='notwas'&&echoCodes.indexOf(code)>=0&&fs.now&&fs.now[n]&&fs.now[n].answered>=2&&fs.now[n].mean>=2){
-    var ev2=['Первые настройки · сейчас: '+n+' — среднее '+Math.round(fs.now[n].mean*100)/100+', статус: '+r];var eq2=window.GARCH&&GARCH.B||[];if(echo&&echo.answers)eq2.forEach(function(q){var a=echo.answers[q.id];if(a===code){var opt=arr(q.o).filter(function(o){return o[0]===code})[0];ev2.push('Эхо · '+(q.h||q.t||q.id)+': '+(opt?opt[1]:code))}});
+    var ev2=['Первые настройки · сейчас: '+n+' — среднее '+Math.round(fs.now[n].mean*100)/100+', статус: '+r];var fd=window.GTESTS&&GTESTS.fs||{},scale=['Никогда или почти никогда','Редко','Иногда','Часто','Почти всегда'];arr(fd.child).concat(arr(fd.now)).forEach(function(q){if(q.s!==n||!fs.answers||fs.answers[q.id]==null)return;var v=fs.answers[q.id],period=arr(fd.child).indexOf(q)>=0?'детство':'сейчас',ans=typeof v==='number'?(scale[v]||String(v)):v==='nr'?'Не помню':v==='nw'?'Не было':String(v);ev2.push('Первые настройки · '+period+' · '+(q.t||q.id)+': '+ans)});var eq2=window.GARCH&&GARCH.B||[];if(echo&&echo.answers)eq2.forEach(function(q){var a=echo.answers[q.id];if(a===code){var opt=arr(q.o).filter(function(o){return o[0]===code})[0];ev2.push('Эхо · '+(q.h||q.t||q.id)+': '+(opt?opt[1]:code))}});
     out.links.push({title:'Похожий ход заметен в разных исследованиях',detail:'«Первые настройки» показывают динамику стратегии «'+n+'», а «Эхо» — близкий способ реагирования: «'+labelEcho(code)+'». Это сходство описаний, не вывод о происхождении реакции.',sources:['firstSet','echo'],evidence:ev2,kind:'support'});
    }
    if(r==='changed'||r==='weaker'){
