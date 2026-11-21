@@ -70,7 +70,7 @@ function finalize(P){var e=P.ego&&P.ego.v===2?P.ego:null,b0=P.archB||null,b=b0?s
  else if(s1!=='unclear'){a=s1;a1=cand[1]||null;a2=null;aIndex=1}
  if(s0!=='unclear'&&s1!=='unclear'){var v0=v02(V.V02_0),v1=v02(V.V02_1);if(Math.abs((S[cand[0]]||0)-(S[cand[1]]||0))<=1&&(S[cand[0]]||0)>=3&&(S[cand[1]]||0)>=3&&v0>=1&&v1>=1){a='mixed';a1=cand[0];a2=cand[1];aIndex=0}}
  if(V.V03==='accepted'&&a==='supported')a='tentative';
- out.a=a;out.a1=a1;out.a2=a2;out.aIndex=aIndex;out.recalled=!!(V['V01_'+aIndex]&&V['V01_'+aIndex]!=='none'&&V['V01_'+aIndex]!=='skip');out.counterEvidence=V.V03==='accepted';
+ out.a=a;out.a1=a1;out.a2=a2;out.aIndex=aIndex;out.recalled=!!(V['V01_'+aIndex]&&V['V01_'+aIndex]!=='none'&&V['V01_'+aIndex]!=='skip');out.confirmation={primary:v02(V['V02_'+aIndex]),secondary:v02(V.V02_1)};out.counterEvidence=V.V03==='accepted';
  var bs=b?JSON.parse(JSON.stringify(b.scores)):{},bc=b?(b.cand||[]).slice():[],v6=V.V06;
  if(bc[0]&&bc[1]){if(v6==='b1')bs[bc[0]]+=2;if(v6==='b2')bs[bc[1]]+=2;if(v6==='both'){bs[bc[0]]++;bs[bc[1]]++}if(v6==='neither'){bs[bc[0]]-=2;bs[bc[1]]-=2}}
  var askedB=bc[0],bo=bc.slice().sort(function(x,y){return bs[y]-bs[x]||bc.indexOf(x)-bc.indexOf(y)}),b1=bo[0],b2=bo[1],cnt=b?b.hits||b.count||b.scores:{};
@@ -86,7 +86,7 @@ function finalize(P){var e=P.ego&&P.ego.v===2?P.ego:null,b0=P.archB||null,b=b0?s
 function blocks(P,upto){var F=finalize(P),V=(P.archV&&P.archV.answers)||{},B=[],a=F.a,e=P.ego&&P.ego.v===2?P.ego:null;
  var key=a==='unclear'||!F.a1?'none':F.a1,RA=D.resA[key];
  B.push({h:'',t:[a==='mixed'?g(RA.title)+' · '+g(D.resA[F.a2].title):g(RA.title)],cls:'title',cons:g(D.cons[F.cons])});
- if(key!=='none'&&e&&F.recalled){var n=e.sit[F.a1]||0,m=1+((v02(V['V02_'+F.aIndex])||0)>=1?1:0);B.push({h:'',t:['Ты отмечаешь это ощущение'+(n?' в '+num(n,'ситуации','ситуациях')+' и':'')+' в '+num(m,'сфере','сферах')+'.']})}
+ if(key!=='none'&&e&&F.recalled){var n=e.sit[F.a1]||0,m=1+((v02(V['V02_'+F.aIndex])||0)>=1?1:0);B.push({h:'',t:['Ты отмечаешь это ощущение'+(n?' в '+num(n,'ситуации','ситуациях')+' и':'')+' в '+num(m,'сфере','сферах')+'.']});var cf=[];[0,1].forEach(function(i){var code=i===0?F.a1:F.a2,vv=v02(V['V02_'+i]);if(!code||vv==null||vv<1)return;cf.push(g(D.phrase[code])+': '+(vv===2?'похожее ощущение в другой сфере повторялось довольно часто.':'в другой сфере тоже был один-два похожих эпизода.'))});if(cf.length)B.push({h:'Проверка в другой сфере',t:cf})}
  B.push({h:'',t:[g(RA.text),'Новая точка: «'+g(RA.point).replace(/\.$/,'')+'».'].concat(a==='mixed'?[g(D.resA[F.a2].text),'Новая точка: «'+g(D.resA[F.a2].point).replace(/\.$/,'')+'».']:[])});
  if(F.b!=='unclear'&&F.b1){var bl=[F.b1].concat(F.b==='mixed'&&F.b2?[F.b2]:[]);B.push({h:'Что может поддерживать этот сценарий',t:bl.map(function(c){var r=D.resB[c];return g(r.text)+(r.sw?' Переключатель: '+g(r.sw).charAt(0).toLowerCase()+g(r.sw).slice(1):'')})})}
  else if(P.archB)B.push({h:'Что может поддерживать этот сценарий',t:[g(D.resB.none.text)]});
