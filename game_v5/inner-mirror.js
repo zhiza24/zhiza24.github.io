@@ -41,13 +41,13 @@ function collect(P){
   echoCodes.forEach(function(c){out.fragments.push({domain:'Реакции',title:labelEcho(c),detail:'Этот способ выделился в «Эхе». Он описывает ответы в предложенных ситуациях, а не постоянную черту личности.',status:calc.status,source:'echo',code:c})});
   if(!echoCodes.length)out.fragments.push({domain:'Реакции',title:'Один ведущий способ не выделился',detail:'Ответы показывают разные реакции или пока не дают устойчивого результата.',status:calc.status||'unclear',source:'echo'});
  }
- var wheelSectors=[];
+ var wheelSectors=[],wheelShadowSectors=[];
  if(wheel&&Array.isArray(wheel.sectors)){
   wheel.sectors.forEach(function(sec){
    var forms=arr(sec.forms),hits=[];
    forms.forEach(function(f){
     var sh=f.shadow&&f.shadow.score,sp=f.support&&f.support.score,n=+f.answered||0;
-    if(n>=2&&typeof sh==='number'&&sh>=50)hits.push({side:'shadow',title:f.shadow.title,score:sh,form:f.id});
+    if(n>=2&&typeof sh==='number'&&sh>=50){hits.push({side:'shadow',title:f.shadow.title,score:sh,form:f.id});if(wheelShadowSectors.indexOf(sec.id)<0)wheelShadowSectors.push(sec.id)}
     if(n>=2&&typeof sp==='number'&&sp>=50)hits.push({side:'support',title:f.support.title,score:sp,form:f.id});
     if(n>=2&&typeof sh==='number'&&typeof sp==='number'&&sh>=50&&sp>=50){
      out.tensions.push({title:'Два способа в одной области',detail:'В ветви «'+f.title+'» заметны обе стороны. Возможно, способы меняются в зависимости от ситуации; это не ошибка и не взаимоисключающие качества.',sources:['wheel'],kind:'context'});
@@ -58,12 +58,12 @@ function collect(P){
  }
  /* Межмодульные связи. Сопоставляем только тематически близкие сигналы. */
  var sectorToEcho={perf:['B1'],please:['B2'],ctrl:['B3'],detach:['B4'],over:['B5']};
- wheelSectors.forEach(function(sec){
+ wheelShadowSectors.forEach(function(sec){
   var codes=sectorToEcho[sec]||[];
   codes.forEach(function(c){
    if(echoCodes.indexOf(c)>=0){
     var wName=({perf:'Перфекционизм',please:'Угождение людям',ctrl:'Гиперконтроль',detach:'Отстранение',over:'Чрезмерная отдача'})[sec]||sec;
-    out.links.push({title:'Два исследования указывают на близкую тему',detail:'В «Эхе» проявился способ «'+labelEcho(c)+'», а в Колесе отмечены формы из области «'+wName+'». Это независимые наблюдения в разных форматах, а не доказательство единой причины.',sources:['echo','wheel'],kind:'support'});
+    var wf=[];arr(wheel.sectors).forEach(function(s){if(s.id!==sec)return;arr(s.forms).forEach(function(f){if(f.shadow&&f.shadow.score>=50&&f.answered>=2)wf.push(f)})});var ev=[];var eq=window.GARCH&&GARCH.B||[];if(echo&&echo.answers)eq.forEach(function(q){var a=echo.answers[q.id];if(a===c){var opt=arr(q.o).filter(function(o){return o[0]===c})[0];ev.push('Эхо · '+(q.h||q.t||q.id)+': '+(opt?opt[1]:c))}});wf.forEach(function(f){arr(f.items).forEach(function(it){if(it.choice==='left'||it.choice==='both')ev.push('Колесо · '+it.question+' → '+it.label)})});out.links.push({title:'Два исследования указывают на близкую тему',detail:'В «Эхе» проявился способ «'+labelEcho(c)+'», а в Колесе отмечены формы из области «'+wName+'». Это независимые наблюдения в разных форматах, а не доказательство единой причины.',sources:['echo','wheel'],evidence:ev,kind:'support'});
    }
   });
  });
@@ -71,8 +71,9 @@ function collect(P){
  if(fs&&fs.v){
   Object.keys(fsMap).forEach(function(n){
    var code=fsMap[n],r=fs.outcome&&fs.outcome[n];
-   if(r&&r!=='few'&&r!=='notwas'&&echoCodes.indexOf(code)>=0){
-    out.links.push({title:'Похожий ход заметен в разных исследованиях',detail:'«Первые настройки» показывают динамику стратегии «'+n+'», а «Эхо» — близкий способ реагирования: «'+labelEcho(code)+'». Это сходство описаний, не вывод о происхождении реакции.',sources:['firstSet','echo'],kind:'support'});
+   if(r&&r!=='few'&&r!=='notwas'&&echoCodes.indexOf(code)>=0&&fs.now&&fs.now[n]&&fs.now[n].answered>=2&&fs.now[n].mean>=2){
+    var ev2=['Первые настройки · сейчас: '+n+' — среднее '+Math.round(fs.now[n].mean*100)/100+', статус: '+r];var eq2=window.GARCH&&GARCH.B||[];if(echo&&echo.answers)eq2.forEach(function(q){var a=echo.answers[q.id];if(a===code){var opt=arr(q.o).filter(function(o){return o[0]===code})[0];ev2.push('Эхо · '+(q.h||q.t||q.id)+': '+(opt?opt[1]:code))}});
+    out.links.push({title:'Похожий ход заметен в разных исследованиях',detail:'«Первые настройки» показывают динамику стратегии «'+n+'», а «Эхо» — близкий способ реагирования: «'+labelEcho(code)+'». Это сходство описаний, не вывод о происхождении реакции.',sources:['firstSet','echo'],evidence:ev2,kind:'support'});
    }
    if(r==='changed'||r==='weaker'){
     var current=fs.leading&&fs.leading.indexOf(n)>=0;
@@ -102,8 +103,9 @@ function mapSvg(data){
 }
 function sourceName(id){return ({firstSet:'Первые настройки',km:'Идеальный Кривой Мир',echo:'Эхо',wheel:'Колесо самопредательства'})[id]||id}
 function card(x,idx,interactive){
+ var trace=arr(x.sources||[x.source]).filter(Boolean).map(function(s){return '<p>'+esc(sourceName(s))+'</p>'}).join('')+arr(x.evidence).map(function(e){return '<p class="im-evidence">'+esc(e)+'</p>'}).join('');
  return '<article class="im-card"><div class="im-card-k">'+esc(x.domain||'Отражение')+'</div><h3>'+esc(x.title)+'</h3><p>'+esc(x.detail)+'</p>'+
- '<details><summary>Откуда появилось это отражение</summary><p>'+arr(x.sources||[x.source]).filter(Boolean).map(function(s){return esc(sourceName(s))}).join(' · ')+'</p></details>'+
+ '<details><summary>Откуда появилось это отражение</summary>'+trace+'</details>'+
  (interactive?'<div class="im-feedback" data-idx="'+idx+'"><b>Узнаешь это в своем опыте?</b><div class="im-actions"><button data-v="yes">Да, узнаю</button><button data-v="part">Отчасти</button><button data-v="no">Нет, не так</button><button data-v="later">Пока не знаю</button></div></div>':'')+'</article>';
 }
 function mount(box){
