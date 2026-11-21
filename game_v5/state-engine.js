@@ -10,7 +10,7 @@ function discriminatorFor(a,b){
 function choiceText(d,id){
  if(!d||!d.reading)return 'Ближе к этому варианту';
  var parts=String(d.reading).split(/[.;]/),hit=parts.filter(function(x){return new RegExp('→\\s*'+id+'\\b').test(x)})[0];
- return hit?hit.replace(/→\\s*'+id+'\\b/,'').trim():'Ближе к этому варианту';
+ return hit?hit.split('→')[0].trim():'Ближе к этому варианту';
 }
 var FAMILIES=[
  {id:'SIG_WRT',states:['SIG','WRT']},
