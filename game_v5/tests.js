@@ -17,7 +17,7 @@ var STEP={km:{u:'slot.html?id=km',f:'kmTest',mod:'km',name:'Идеальный �
  lab_d:{u:'slot.html?id=lab_d',f:'desireLab',mod:'desireLab',name:'Лабиринт желаний'},pi:{u:'slot.html?id=pi',f:'interact',mod:'interact',name:'Профиль взаимодействия'},
  rs:{u:'slot.html?id=rs',f:'respTest',mod:'respTest',name:'Ответственность'},ct:{u:'slot.html?id=ct',f:'ctTest',mod:'ctTest',name:'Критическое мышление'},
  sv:{u:'slot.html?id=sv',f:'selfWorth',mod:'selfWorth',name:'Самоценность'},vsort:{u:'slot.html?id=vsort',f:'valuesCore',mod:'valuesCore',name:'Три ориентира'},
- im:{u:'slot.html?id=im',f:'backgroundProfile',mod:'backgroundProfile',name:'Зеркало внутреннего мира'}};
+ im:{u:'slot.html?id=im',f:'im',mod:'im',name:'Зеркало внутреннего мира'}};
 var SHORT={'scene.html?k=ego':'Маг','slot.html?id=fs':'Первые настройки','swipe.html':'свайп хорошего','slot.html?id=arch_p':'Страж, точка переключения',
  'slot.html?id=fractal':'Фрактальная карта','slot.html?id=ct':'Критическое мышление','slot.html?id=leverage':'Точка влияния','slot.html?id=vsort':'три ориентира',
  'slot.html?id=guard':'Встреча со Стражем','slot.html?id=rs':'Ответственность','slot.html?id=pi':'Профиль взаимодействия','slot.html?id=sv':'Самоценность'};
