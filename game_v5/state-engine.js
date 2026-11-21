@@ -44,10 +44,12 @@ function contextOf(P){
  var lab=obj(P.lab),calc=null;
  if(!lab.lead&&global.GCalc){try{calc=global.GCalc(P)}catch(e){}}
  var lead=lab.lead||calc&&calc.lead,labels={resp:'Гиперответственность',err:'Страх ошибки',appr:'Зависимость от одобрения',deval:'Обесценивание хорошего',others:'Ориентация на желания других',avoid:'Избегание действий'};
+ var pattern=lead&&global.GPAT&&global.GPAT[lead],parts=pattern&&pattern.parts||[];
+ function part(n){return parts[n]&&parts[n][1]||''}
  var wheel=P.betray&&P.betray.start||P.betrayWheel||P.wheelTest||null;
  var values=arr(P.values&&P.values.order);
  return {
-  reactionStrategy:lead?{id:lead,label:labels[lead]||lead,secondary:arr(lab.queue||calc&&calc.queue).slice(0,2),userAdjusted:lab.agree!=null,weak:lab.weak!=null?!!lab.weak:!!(calc&&calc.weak),tie:lab.tie!=null?!!lab.tie:!!(calc&&calc.tie)}:null,
+  reactionStrategy:lead?{id:lead,label:labels[lead]||lead,secondary:arr(lab.queue||calc&&calc.queue).slice(0,2),userAdjusted:lab.agree!=null,weak:lab.weak!=null?!!lab.weak:!!(calc&&calc.weak),tie:lab.tie!=null?!!lab.tie:!!(calc&&calc.tie),pattern:pattern?{trigger:part(0),reaction:part(1),rule:part(2),benefit:part(3),cost:part(4),newSetting:part(5)}:null}:null,
   firstSettingsAvailable:!!P.firstSet,
   wheelAvailable:!!wheel,
   values:values.slice(0,3),
