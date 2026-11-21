@@ -52,11 +52,10 @@ function scoreB(ans){var s={},availability={},rates={},hits={};BCODES.forEach(fu
  return {scores:s,count:JSON.parse(JSON.stringify(s)),hits:hits,availability:availability,rates:rates,cand:cand,leaders:leaders,topScore:top,topRate:topRate,answered:answered,coded:coded,status:status}}
 function modeOf(ans){var s={C1:0,C2:0,C3:0,C4:0};D.C.forEach(function(q){var c=ans[q.id];if(c&&s[c]!=null)s[c]++});
  var mx=Math.max(s.C1,s.C2,s.C3,s.C4),tops=Object.keys(s).filter(function(k){return s[k]===mx});
- if(mx<3)return {scores:s,mode:'mix'};
  if(s.C4>=3&&s.C4===mx)return {scores:s,mode:'C4'};
  if(tops.length===1)return {scores:s,mode:tops[0]};
- if(tops.indexOf('C4')>=0)return {scores:s,mode:'C4'};
  if(s.C4>=2&&((tops.indexOf('C1')>=0&&tops.indexOf('C2')>=0)||(tops.indexOf('C2')>=0&&tops.indexOf('C3')>=0)))return {scores:s,mode:'C4'};
+ if(mx<3)return {scores:s,mode:'mix'};
  return {scores:s,mode:'mix'}}
 function v02(x){return x==='2'?2:x==='1'?1:(x==='0a'||x==='0b')?0:null}
 /* итоговые статусы по правилам 9.1–9.4 */
@@ -70,6 +69,7 @@ function finalize(P){var e=P.ego&&P.ego.v===2?P.ego:null,b0=P.archB||null,b=b0?s
  if(s0!=='unclear')a=s0;
  else if(s1!=='unclear'){a=s1;a1=cand[1]||null;a2=null;aIndex=1}
  if(s0!=='unclear'&&s1!=='unclear'){var v0=v02(V.V02_0),v1=v02(V.V02_1);if(Math.abs((S[cand[0]]||0)-(S[cand[1]]||0))<=1&&(S[cand[0]]||0)>=3&&(S[cand[1]]||0)>=3&&v0>=1&&v1>=1){a='mixed';a1=cand[0];a2=cand[1];aIndex=0}}
+ if(V.V03==='accepted'&&a==='supported')a='tentative';
  out.a=a;out.a1=a1;out.a2=a2;out.aIndex=aIndex;out.recalled=!!(V['V01_'+aIndex]&&V['V01_'+aIndex]!=='none'&&V['V01_'+aIndex]!=='skip');out.counterEvidence=V.V03==='accepted';
  var bs=b?JSON.parse(JSON.stringify(b.scores)):{},bc=b?(b.cand||[]).slice():[],v6=V.V06;
  if(bc[0]&&bc[1]){if(v6==='b1')bs[bc[0]]+=2;if(v6==='b2')bs[bc[1]]+=2;if(v6==='both'){bs[bc[0]]++;bs[bc[1]]++}if(v6==='neither'){bs[bc[0]]-=2;bs[bc[1]]-=2}}
@@ -106,7 +106,7 @@ function blocks(P,upto){var F=finalize(P),V=(P.archV&&P.archV.answers)||{},B=[],
  }
  var chk=[];if(e&&e.period==='P3')chk.push(g(D.ui.stress));
  if(V.V03==='context'||V.V04==='real')chk.push(g(D.ui.ctx));
- else if(V.V03==='accepted')chk.push(g(D.ui.counter));
+ if(V.V03==='accepted')chk.push(g(D.ui.counter));
  else if(V.V03==='selective')chk.push(g(D.ui.selective));
  else if(V.V03==='discount')chk.push(g(D.ui.discount));
  else if(V.V03==='unknown')chk.push(g(D.ui.unknown));
@@ -128,7 +128,7 @@ Runner.prototype.items=function(){return this.o.items};
 Runner.prototype.start=function(){var self=this;window.gBack=function(){if(self.hist.length){self.i=self.hist.pop();self.draw();scrollTo(0,0);return true}return false};this.draw()};
 Runner.prototype.next=function(){this.hist.push(this.i);this.i++;if(this.o.onStep)this.o.onStep(this.i,this.items().length);this.draw();scrollTo(0,0)};
 Runner.prototype.draw=function(){var it=this.items()[this.i];if(!it){this.o.done(this.ans);return}var k=this.sk,self=this,b=this.box,qn=this.items().filter(function(x){return x.kind!=='intro'&&x.kind!=='screen'}),ix=qn.indexOf(it);
- if(it.kind==='intro'){var I=D.intro[it.key];b.innerHTML='<div class="ar-ph"><b>'+esc(I.who)+'</b><small>'+esc(I.zdesc)+'</small></div><div class="'+k.q+'">'+h(I.title)+'</div>'+(D.showDraft&&I.draft?'<p class="ar-draft">'+h(I.draft)+'<span>черновик</span></p>':'')+'<p style="line-height:1.55">'+h(I.text)+'</p>'+(it.context?'<p class="ar-ctx">'+h(it.context)+'</p>':'')+'<button class="'+k.go+'" id="arGo">'+h(I.btn)+'</button>';
+ if(it.kind==='intro'){var I=D.intro[it.key];b.innerHTML='<div class="ar-ph"><b>'+esc(I.who)+'</b><small>'+esc(I.zdesc)+'</small></div><div class="'+k.q+'">'+h(I.title)+'</div>' +'<p style="line-height:1.55">'+h(I.text)+'</p>'+(it.context?'<p class="ar-ctx">'+h(it.context)+'</p>':'')+'<button class="'+k.go+'" id="arGo">'+h(I.btn)+'</button>';
   b.querySelector('#arGo').onclick=function(){self.next()};return}
  if(it.kind==='screen'){b.innerHTML=it.html()+'<button class="'+k.go+'" id="arGo">'+esc(it.btn||'Дальше')+'</button>';b.querySelector('#arGo').onclick=function(){if(it.go)it.go();self.next()};return}
  if(it.kind==='reflection'){
@@ -161,10 +161,10 @@ function partA(box,skin,hooks){var items=[{kind:'intro',key:'a'},{kind:'one',id:
  items.push({kind:'multi',id:'A11',h:D.A11.h,t:D.A11.t,hint:D.A11.hint,o:D.A11.o,shuffle:true});
  items.push({kind:'one',id:'A12',h:D.A12.h,t:D.A12.t,o:D.A12.o,ctx:function(ans){var picked=Array.isArray(ans.A11)?ans.A11:[];if(picked.indexOf('0')>=0)return 'Ты отметил'+g('','а')+' разные чувства в разных историях. Как часто все же повторяется какое-то одно из них?';var c=a12Code(ans);if(!c)return '';var m=picked.filter(function(x){return x!=='0'}).length;return (m?'Речь о чувстве: «':'Если вспоминать самое частое в твоих ответах: «')+g(D.phrase[c])+'»'}});
  new Runner({box:box,skin:skin,items:items,module:'ego',onStep:hooks&&hooks.step,done:function(ans){var r=scoreA(ans),c=r.cand[0],lead=c&&r.scores[c]>=3&&r.skips<5?c:null,RA=D.resA[lead||'none'];
-  var res={v:2,line:'A',top:lead?g(D.phrase[lead]):'Один фон пока не выделился',lead:lead,period:ans.S1&&ans.S1!=='skip'?ans.S1:null,answers:ans,scores:r.scores,sit:r.sit,a11:r.a11,R:r.R,Rcode:r.Rcode,cand:r.cand,skips:r.skips,at:Date.now()};
+  var res={v:2,line:'A',top:'Предварительные сигналы собраны',lead:lead,period:ans.S1&&ans.S1!=='skip'?ans.S1:null,answers:ans,scores:r.scores,sit:r.sit,a11:r.a11,R:r.R,Rcode:r.Rcode,cand:r.cand,skips:r.skips,at:Date.now()};
   var also=lead&&r.cand[1]&&r.scores[r.cand[1]]>=3&&r.scores[lead]-r.scores[r.cand[1]]<=1?g(D.ui.alsoA).replace('%A%',g(D.phrase[r.cand[1]])):'';
   var html='<div class="'+SKIN[skin].l+'">Первый слой собран</div><div class="'+SKIN[skin].q+'">Пока без выводов</div><p style="line-height:1.55">Ответы сохранены. Сначала посмотрим на привычные реакции, затем проверим возможные повторяющиеся состояния на конкретных примерах.</p>'+(res.period==='P3'?'<p>'+h(D.ui.stress)+'</p>':'')+'<div class="'+SKIN[skin].l+'">Черный кристалл у Героя · запись в Дневнике</div>';
-  resultScreen(box,skin,html,'a',function(){store('a',res,{answers:ans},'Фоновое состояние: '+res.top,function(P){if(window.GArts)GArts.grantInto(P,'black_crystal');else{P.arts=P.arts||[];if(P.arts.indexOf('Черный кристалл')<0)P.arts.push('Черный кристалл')}
+  resultScreen(box,skin,html,'a',function(){store('a',res,{answers:ans},'Линия А: предварительные ответы собраны',function(P){if(window.GArts)GArts.grantInto(P,'black_crystal');else{P.arts=P.arts||[];if(P.arts.indexOf('Черный кристалл')<0)P.arts.push('Черный кристалл')}
    try{var p=window.GP?GP():null;if(p){p.done[3]=1;p.log.push({s:3,t:'Фоновое состояние',r:res.top,d:new Date().toLocaleDateString('ru')});P.path=p}}catch(e){}})})}}).start()}
 function wheelComparison(wheel){
  if(!wheel||!Array.isArray(wheel.sectors))return '<section class="ar-compare"><h3>Сопоставление с Колесом самопредательства</h3><p>В профиле пока нет завершенного результата Колеса. Это исследование сохранится отдельно.</p></section>';
@@ -209,7 +209,7 @@ function partB(box){
  new Runner({box:box,skin:'slot',items:items,module:'archB',done:function(ans){
   var r=scoreB(ans),lead=r.status==='leading'?r.leaders[0]:null,RB=D.resB[lead||'none'],ties=r.status==='mixed'?r.leaders:[];
   var title=lead?RB.name:ties.length?'Несколько привычных ходов проявляются сопоставимо':r.status==='insufficient'?'Пока недостаточно данных':'Один привычный способ пока не выделился';
-  var res={v:4,line:'B',top:lead?RB.name:ties.length?ties.map(function(c){return D.resB[c].name}).join(' · '):title,lead:lead,leaders:ties,answers:ans,scores:r.scores,count:r.count,availability:r.availability,rates:r.rates,cand:r.cand,answered:r.answered,coded:r.coded,status:r.status,wheelSnapshot:wheel?JSON.parse(JSON.stringify(wheel)):null,at:Date.now()};
+  var res={v:5,line:'B',top:'Привычные реакции собраны',lead:lead,leaders:ties,answers:ans,scores:r.scores,count:r.count,availability:r.availability,rates:r.rates,cand:r.cand,answered:r.answered,coded:r.coded,status:r.status,wheelSnapshot:wheel?JSON.parse(JSON.stringify(wheel)):null,at:Date.now()};
   var body='';
   if(lead)body='<p>'+h(RB.text)+'</p>';
   else if(ties.length)body=ties.map(function(c){return '<div class="ar-blk"><div class="aq">'+h(D.resB[c].name)+'</div><p>'+h(D.resB[c].text)+'</p></div>'}).join('');
@@ -222,7 +222,7 @@ function partB(box){
    full='<details class="ar-det"><summary>Подробнее об этом ходе</summary><p>'+h(x.d)+'</p><p><b>'+esc(L.logic||'Логика')+':</b> '+h(x.logic)+'</p><p><b>'+esc(L.gain||'Что дает')+':</b> '+h(x.gain)+'</p><p><b>'+esc(L.cost||'Цена')+':</b> '+h(x.cost)+'</p></details>'
   }
   var html='<span class="tag">Точка 0</span><span class="tag">Эхо</span><div class="al">Привычные реакции собраны</div><div class="aq">Пока без выводов</div><p>Дальше сопоставим ответы с тем, как ты описываешь реальные ситуации. Отдельный ответ или повторяющийся ход еще не объясняет весь внутренний сценарий.</p>';
-  resultScreen(box,'slot',html,'b',function(){store('b',res,{answers:ans},'Привычный ход: '+res.top)})
+  resultScreen(box,'slot',html,'b',function(){store('b',res,{answers:ans},'Линия Б: привычные реакции собраны')})
  }}).start()
 }
 function partV(box){var P=data(),e=P.ego&&P.ego.v===2?P.ego:null,a=e?e.cand||[]:[],eb=P.archB?scoreB(P.archB.answers||{}):null,b=eb?eb.cand||[]:[],items=[{kind:'intro',key:'v'}];
