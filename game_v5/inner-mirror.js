@@ -22,7 +22,8 @@ function collect(P){
   var BD=window.GIMD||{};
   arr(background.families).forEach(function(f){
    if(!f.situationCount&&!f.aftertaste)return;
-   var meta=BD.FAM&&BD.FAM[f.id]||{},ev=arr(f.situations).map(function(id){var q=arr(BD.Q).filter(function(x){return x[0]===id})[0];return q?q[2]:id});
+   var meta=BD.FAM&&BD.FAM[f.id]||{},ev=arr(f.situations).map(function(id){var q=arr(BD.Q).filter(function(x){return x[0]===id})[0],index=background.answers&&background.answers[id],opt=q&&q[3]&&q[3][index];return q?q[2]+(opt?' → '+opt[0]:''):id});
+   arr(f.aftertasteEvidence).forEach(function(x){ev.push('Послевкусие: '+x.text)});
    var detail=(meta.x||f.description||'Наблюдения в ситуациях.')+' '+(f.repeatLabel||'');
    if(f.aftertasteLabel)detail+=' '+f.aftertasteLabel+'.';
    out.fragments.push({domain:'Фоновое состояние',title:meta.t||f.title,detail:detail,source:'backgroundState',evidence:ev});
