@@ -12,21 +12,15 @@ function choiceText(d,id){
  var parts=String(d.reading).split(/[.;]/),hit=parts.filter(function(x){return new RegExp('→\\s*'+id+'\\b').test(x)})[0];
  return hit?hit.split('→')[0].trim():'Ближе к этому варианту';
 }
-var FAMILIES=[
- {id:'SIG_WRT',states:['SIG','WRT']},
- {id:'MIS_TRU',states:['MIS','TRU']},
- {id:'INC_EFF',states:['INC','EFF']},
- {id:'DEF_SCO',states:['DEF','SCO']},
- {id:'STD_MAS',states:['STD','MAS']},
- {id:'MIS_AUT',states:['MIS','AUT']},
- {id:'AUT_SEC',states:['AUT','SEC']}
-].map(function(f){
- var d=discriminatorFor(f.states[0],f.states[1]);
- f.question=d?d.question:'Для этой пары требуется дополнительное различение.';
- f.discriminator=d;
- f.choices=f.states.map(function(id){return {state:id,label:choiceText(d,id)}});
- return f;
-});
+var LEGACY_FAMILY_IDS={SIG_WRT:['SIG','WRT'],MIS_TRU:['MIS','TRU'],INC_EFF:['INC','EFF'],DEF_SCO:['DEF','SCO'],STD_MAS:['STD','MAS'],MIS_AUT:['MIS','AUT'],AUT_SEC:['AUT','SEC']};
+var FAMILIES=(function(){
+ var pairs=arr(DATA.discriminators).map(function(d){
+  var states=[d.a,d.b],legacy=Object.keys(LEGACY_FAMILY_IDS).filter(function(k){var x=LEGACY_FAMILY_IDS[k];return x[0]===states[0]&&x[1]===states[1]||x[0]===states[1]&&x[1]===states[0]})[0];
+  var id=legacy||states.slice().sort().join('_');
+  return {id:id,states:states,question:d.question,discriminator:d,choices:states.map(function(code){return {state:code,label:choiceText(d,code)}})};
+ });
+ var seen={};return pairs.filter(function(f){if(seen[f.id])return false;seen[f.id]=true;return true});
+})();
 var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A6:'INC',A8:'STD',A9:'ABD'};
 var ECHO_CODES={B8:'EFF'},ECHO_FAMILIES={B1:'SIG_WRT'};
 var SCALE_FAMILIES={
@@ -119,7 +113,7 @@ function evaluate(P){
  if(P.betray&&P.betray.start)unknown.push('Колесо показывает конкретные формы поведения и опоры. Пока оно используется как контекст, а не как прямой балл одного из 19 состояний: соответствия требуют отдельной проверки.');
  if(P.lab)unknown.push('GLead/GPAT описывают привычный способ реагирования и его стратегию. Они учитываются отдельно и не считаются независимым подтверждением состояния.');
  unknown.push('Нарративный слой пока не оценивается автоматически. Личные записи не анализируются без отдельного явного согласия.');
- var savedProfileState=obj(P.backgroundProfile&&P.backgroundProfile.stateModel),savedAnswers=obj(savedProfileState.discriminatorAnswers),savedGoals=obj(savedProfileState.stateGoals);
+ var savedProfileState=obj(P.backgroundProfile&&P.backgroundProfile.stateModel),savedAnswers=obj(savedProfileState.discriminatorAnswers),savedGoals=obj(savedProfileState.stateGoals),savedFalsifiers=obj(savedProfileState.falsifierAnswers);
  var familyList=Object.keys(families).map(function(k){return families[k]}).filter(function(f){return f.evidence.length}).map(function(f){
   var definition=FAMILIES.filter(function(x){return x.id===f.id})[0],answer=savedAnswers[f.id];
   f.question=definition?definition.question:f.question;
@@ -141,7 +135,7 @@ function evaluate(P){
   if(layersN>=2&&situations>=3){s.confidence='вероятно, контекст не определен';s.status='probable';}
   else if(layersN>=1||situations>=2){s.confidence='гипотеза';s.status='hypothesis';}
   else{s.confidence='нет достаточных данных';s.status='unassessed';}
-  if(s.needsDiscriminator.length){s.status='needs_discriminator';s.confidence='гипотеза, требуется различитель';}
+  var falsifierList=arr(DATA.falsifiers).filter(function(x){return x.state===id});\n  var falsifierCount=falsifierList.filter(function(x){var v=savedFalsifiers[x.state+'::'+x.question];return v===true||v===1||v==='yes'||v==='present'||v==='да'}).length;\n  s.falsifiers=falsifierCount;\n  if(falsifierCount>=3){s.status='situational';s.confidence='контрпримеры показывают, что реакция может быть ситуативной';}\n  if(s.needsDiscriminator.length){s.status='needs_discriminator';s.confidence='гипотеза, требуется различитель';}\n  if(s.signals.CH.length&&!s.signals.SR.length&&!s.signals.NR.length&&(mageRepeatability===0||mageRepeatability===1)){s.status='situational';s.confidence='единичные или редкие реакции по самоотчету о повторяемости';}
   /* Без NR и данных о сферах глобальная устойчивость не присваивается. */
   s.globalTrait=false;
   s.layersConfirmed=['SR','CH','NR'].filter(function(k){return s.signals[k].length>0});
