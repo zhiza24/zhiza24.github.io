@@ -186,7 +186,11 @@ function mount(box){
        (rp?'<p><b>Триггер:</b> '+esc(rp.trigger)+'</p><p><b>Автоматическая реакция:</b> '+esc(rp.reaction)+'</p><p><b>Скрытое правило:</b> «'+esc(rp.rule)+'»</p><p><b>Что дает:</b> '+esc(rp.benefit)+'</p><p><b>Цена:</b> '+esc(rp.cost)+'</p><p><b>Новая настройка:</b> '+esc(rp.newSetting)+'</p>':'')+
        (cx.reactionStrategy.secondary.length?'<p>Другие заметные стратегии: '+esc(cx.reactionStrategy.secondary.join(', '))+'</p>':'')+'</article>';
      }
-     html+='<p>Первые настройки: '+(cx.firstSettingsAvailable?'результат есть':'пока нет')+' · Колесо: '+(cx.wheelAvailable?'результат есть':'пока нет')+' · Исследование желаний: '+(cx.desireResearchAvailable?'результат есть':'пока нет')+'</p>';
+     if(cx.mageRepeatability!=null)html+='<p>Повторяемость эмоционального фона по ответу Мага: '+esc(['почти никогда','редко','иногда','часто','очень часто'][cx.mageRepeatability]) +'. Это влияет на осторожность интерпретации, но не добавляет баллы.</p>';
+      if(cx.mageFinal&&cx.mageFinal.length)html+='<p>Эмоциональные итоги Мага: '+esc(cx.mageFinal.map(function(x){return x.meaning}).join('; '))+'. Это контекст, не отдельные ситуационные подтверждения.</p>';
+      if(cx.mageContext&&cx.mageContext.length)html+='<p>Другие сигналы Мага, оставленные в контексте: '+esc(cx.mageContext.map(function(x){return x.meaning}).join('; '))+'.</p>';
+      if(cx.echoStrategies&&cx.echoStrategies.length)html+='<p>Стратегии реагирования по «Эху»: '+esc(cx.echoStrategies.map(function(x){return x.meaning}).join('; '))+'. Они не приравниваются к состояниям.</p>';
+      html+='<p>Первые настройки: '+(cx.firstSettingsAvailable?'результат есть':'пока нет')+' · Колесо: '+(cx.wheelAvailable?'результат есть':'пока нет')+' · Исследование желаний: '+(cx.desireResearchAvailable?'результат есть':'пока нет')+'</p>';
      if(cx.values.length)html+='<p>Выбранные ценности: '+esc(cx.values.join(', '))+'</p>';
      html+='<p class="im-muted">Эти данные помогают понять контекст и подобрать действия, но не прибавляют баллы состояниям автоматически.</p></section>';
     }
