@@ -3,7 +3,7 @@
 'use strict';
 function arr(x){return Array.isArray(x)?x:[]}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-function text(s){return String(s==null?'':s).replace(/\{([^{}|]*)\|([^{}]*)\}/g,function(_,a,b){return root.GG?GG(a,b):a}).replace(/§([^§|]+)\|([^§]+)§/g,function(_,a,b){return root.GG?GG(a,b):a})}
+function text(s){return String(s==null?'':s).replace(/\{([^{}|]*)\|([^{}]*)\}/g,function(_,a,b){return root.GG?root.GG(a,b):a}).replace(/§([^§|]+)\|([^§]+)§/g,function(_,a,b){return root.GG?GG(a,b):a})}
 function css(){
  if(document.getElementById('bg-state-css'))return;
  var s=document.createElement('style');s.id='bg-state-css';s.textContent='.im-stage{margin:12px 0;padding:18px 14px;border:1px solid rgba(201,164,106,.35);border-radius:18px;background:linear-gradient(145deg,#21190f,#100e0b);color:#f2dfbd}.im-eyebrow{color:#cba25f;font-size:12px;letter-spacing:.14em;text-transform:uppercase}.im-stage h1{font-size:25px;line-height:1.2}.im-stage h2{font-size:19px}.im-stage p{line-height:1.55}.im-muted{color:#bba98d;font-size:13px}.im-card{margin:12px 0;padding:14px;border:1px solid rgba(201,164,106,.35);border-radius:14px;background:rgba(35,27,19,.6)}.im-final{margin:16px 0;padding:16px;text-align:center;border:1px solid #b48a49;border-radius:16px;background:radial-gradient(circle,rgba(214,166,82,.18),transparent 75%),#17110a}.im-final-num{font:700 38px Georgia;color:#f3d28e}.im-bg-choices{display:grid;gap:8px;margin:16px 0}.im-choice,.im-secondary{width:100%;padding:13px;border:1px solid #806035;border-radius:12px;background:#21190f;color:#f2dfbd;text-align:left;font:500 15px/1.45 Manrope}.im-choice.selected{border-color:#e5bf75;background:#49351d;color:#ffe8b2}.im-secondary{margin-top:8px;text-align:center;background:transparent}.im-actions{display:flex;gap:8px;flex-wrap:wrap}.im-actions button{flex:1;min-height:42px}.im-stage progress{width:100%;height:8px;accent-color:#d4a653}';document.head.appendChild(s);
@@ -77,7 +77,7 @@ function mount(box){
   var skip=box.querySelector('#bgSkip');if(skip)skip.onclick=function(){advance(true)};
   box.querySelectorAll('[data-bg-choice]').forEach(function(b){b.onclick=function(){var i=Number(b.dataset.bgChoice);if(step>=D.Q.length)draft.aftertaste[D.AFTER_AT[step-D.Q.length]]=i;else draft.answers[D.Q[step][0]]=i;persist();question()}});
  }
- if(saved){result()}else intro();
+ if(saved&&!(draft.updatedAt&&draft.updatedAt>(saved.at||0))){result()}else intro();
 }
 root.GBackgroundTest={mount:mount};
 })(window);
