@@ -161,7 +161,23 @@ function mount(box){
      }).join('');
      html+='</section>';
     }
-    if(data.stateModel.context){
+    if(active.length){
+      var falsifierAnswers=data.stateModel.falsifierAnswers||{},falsifierHtml='';
+      active.forEach(function(state){
+       var questions=GStateEngine.falsifiers(state.id);
+       if(!questions.length)return;
+       falsifierHtml+='<article class="im-card"><div class="im-card-k">Проверка гипотезы · '+esc(state.name)+'</div>';
+       questions.forEach(function(q,index){
+        var key=state.id+'::'+q.question,answer=falsifierAnswers[key];
+        falsifierHtml+='<p>'+esc(q.question)+'</p><div class="im-actions">'+
+         [['yes','Да, такой пример есть'],['no','Не вспоминаю такого'],['skip','Пока не могу сказать']].map(function(o){var v=o[0]==='yes'?true:o[0]==='no'?false:null;return '<button class="'+(answer===v?'selected':'')+'" data-falsifier-state="'+esc(state.id)+'" data-falsifier-index="'+index+'" data-falsifier-value="'+o[0]+'">'+o[1]+'</button>'}).join('')+
+         '</div>';
+       });
+       falsifierHtml+='</article>';
+      });
+      if(falsifierHtml)html+='<section class="im-group"><h2>Проверить обратными примерами</h2><p>Вспомните случаи, которые не укладываются в найденную гипотезу. Такие примеры не менее важны, чем совпадения. Можно пропустить любой вопрос.</p>'+falsifierHtml+'</section>';
+     }
+     if(data.stateModel.context){
      var cx=data.stateModel.context;
      html+='<section class="im-group"><h2>Другие слои картины</h2>';
      if(cx.reactionStrategy){
@@ -229,7 +245,18 @@ function mount(box){
    data.stateModel=GStateEngine.evaluate(P);
    draw();
   }});
-  box.querySelectorAll('[data-state-goal]').forEach(function(b){b.onclick=function(){
+  box.querySelectorAll('[data-falsifier-state]').forEach(function(b){b.onclick=function(){
+    if(!P.backgroundProfile||typeof P.backgroundProfile!=='object')P.backgroundProfile={};
+    var saved=P.backgroundProfile.stateModel=P.backgroundProfile.stateModel||{},answers=saved.falsifierAnswers||{};
+    var state=b.dataset.falsifierState,items=GStateEngine.falsifiers(state),item=items[+b.dataset.falsifierIndex];
+    if(!item)return;
+    var key=state+'::'+item.question,value=b.dataset.falsifierValue;
+    answers[key]=value==='yes'?true:value==='no'?false:null;
+    saved.falsifierAnswers=answers;
+    data.stateModel=GStateEngine.evaluate(P);
+    draw();
+   }});
+   box.querySelectorAll('[data-state-goal]').forEach(function(b){b.onclick=function(){
    if(!P.backgroundProfile||typeof P.backgroundProfile!=='object')P.backgroundProfile={};
    var saved=P.backgroundProfile.stateModel=P.backgroundProfile.stateModel||{},goals=saved.stateGoals||{};
    goals[b.dataset.stateGoal]=b.dataset.goal;saved.stateGoals=goals;
