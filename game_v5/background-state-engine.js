@@ -26,7 +26,7 @@ function calculate(answers,aftertaste){
  answers=answers&&typeof answers==='object'?answers:{};
  aftertaste=aftertaste&&typeof aftertaste==='object'?aftertaste:{};
  var families={},adaptations={},resources={},chapters={},answered=0,afterCount=0,co=[];
- Object.keys(D.FAM).forEach(function(id){families[id]={id:id,title:D.FAM[id].t,description:D.FAM[id].x,orientation:D.FAM[id].pos?'resource':'attention',weight:0,situations:[],chapters:{},aftertaste:0}});
+ Object.keys(D.FAM).forEach(function(id){families[id]={id:id,title:D.FAM[id].t,description:D.FAM[id].x,orientation:D.FAM[id].pos?'resource':'attention',weight:0,situations:[],chapters:{},aftertaste:0,aftertasteEvidence:[]}});
  Object.keys(D.ADAPT).forEach(function(id){adaptations[id]={id:id,title:D.ADAPT[id].t,description:D.ADAPT[id].x,weight:0,situations:[],chapters:{}}});
  Object.keys(D.RES).forEach(function(id){resources[id]={id:id,description:D.RES[id],weight:0,situations:[]}});
  function add(target,id,weight,qid,chapter){
@@ -50,7 +50,7 @@ function calculate(answers,aftertaste){
   if(index==null||!Number.isInteger(Number(index)))return;
   index=Number(index);var opt=list(D.AFTER)[index];if(!opt)return;
   afterCount++;var tags=parseTags(opt[1]);
-  Object.keys(tags.families).forEach(function(id){if(families[id])families[id].aftertaste+=tags.families[id]});
+  Object.keys(tags.families).forEach(function(id){if(families[id]){families[id].aftertaste+=tags.families[id];families[id].aftertasteEvidence.push({id:qid,text:opt[0]})}});
   Object.keys(tags.resources).forEach(function(id){if(resources[id])resources[id].weight+=tags.resources[id]});
  });
  var familyList=Object.keys(families).map(function(id){
@@ -74,6 +74,7 @@ function calculate(answers,aftertaste){
  return {
   version:1,algoVersion:1,status:answered>=12?'reviewable':'preliminary',at:Date.now(),
   coverage:{answered:answered,total:list(D.Q).length,aftertasteAnswered:afterCount,aftertasteTotal:list(D.AFTER_AT).length,chapters:Object.keys(chapters).length,chapterAnswers:chapters},
+  answers:Object.assign({},answers),aftertasteAnswers:Object.assign({},aftertaste),
   families:familyList,adaptations:adaptationList,resources:resourceList,combinations:combinations,
   note:'Сигналы показывают повторяющиеся варианты ответов в предложенных ситуациях. Это не диагноз, не оценка личности и не доказательство причин.'
  };
