@@ -38,7 +38,7 @@ function mount(box){
    (hasSaved?'<p class="im-muted">Исследование уже сохранено. Его можно пройти заново — предыдущий результат останется в истории.</p>':'')+
    (n?'<p class="im-muted">Сохранен черновик: '+n+' из 32 ответов.</p>':'')+
    '<button class="next" id="bgStart">'+(n?'Продолжить исследование':hasSaved?'Пройти заново':'Начать исследование')+'</button>'+
-   (hasSaved?'<button class="next" id="bgContinue">Перейти к карте внутреннего мира</button>':''));
+   (hasSaved?'<button class="next" id="bgContinue">Перейти к карте внутреннего мира</button><button type="button" class="im-secondary" id="bgRetake">Пройти заново</button>':''));
  }
  function question(){
   var isAfter=step>=D.Q.length,qid,chapter,prompt,opts,current;
@@ -65,7 +65,8 @@ function mount(box){
  }
  function advance(skip){var isAfter=step>=D.Q.length;if(skip){if(isAfter)delete draft.aftertaste[D.AFTER_AT[step-D.Q.length]];else delete draft.answers[D.Q[step][0]]}step++;persist();if(step>=total()){saveResult(E.calculate(draft.answers,draft.aftertaste));result()}else question()}
  function bind(){
-  var start=box.querySelector('#bgStart');if(start)start.onclick=function(){step=firstMissing();question()};
+  var start=box.querySelector('#bgStart');if(start)start.onclick=function(){step=firstMissing();if(step>=total()){saveResult(E.calculate(draft.answers,draft.aftertaste));result()}else question()};
+  var retake=box.querySelector('#bgRetake');if(retake)retake.onclick=function(){draft={answers:{},aftertaste:{},startedAt:Date.now()};step=0;persist();intro()};
   var cont=box.querySelector('#bgContinue');if(cont)cont.onclick=function(){if(root.GInner)GInner.mount(box)};
   var back=box.querySelector('#bgBack');if(back)back.onclick=function(){if(step>0){step--;question()}};
   var next=box.querySelector('#bgNext');if(next)next.onclick=function(){advance(false)};
