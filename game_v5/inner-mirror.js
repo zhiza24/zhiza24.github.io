@@ -145,7 +145,11 @@ function mount(box){
    if(data.stateModel){
     var active=data.stateModel.states.filter(function(x){return x.status!=='unassessed'});
     html+='<section class="im-group"><h2>Каталог 19 состояний</h2><p>Здесь отмечены только состояния, для которых нашлись прямые или неоднозначные сигналы в уже пройденных исследованиях. Это предварительные гипотезы, а не типы личности.</p>';
-    if(active.length)html+=active.map(function(x){var count=x.layersConfirmed.length;return '<article class="im-card"><div class="im-card-k">'+esc(x.valence)+' · '+esc(x.confidence)+'</div><h3>'+esc(x.name)+'</h3><p>'+esc(x.stance)+'</p><p>Сигналы: '+count+' слоя · '+x.situationsCount+' ситуаций. '+(x.needsDiscriminator.length?'Нужен различитель: '+x.needsDiscriminator.map(function(k){return (data.stateModel.families.filter(function(f){return f.id===k})[0]||{}).question||k}).join(' '):'')+'</p></article>'}).join('');
+    if(active.length)html+=active.map(function(x){
+      var count=x.layersConfirmed.length,goal=data.stateModel.stateGoals&&data.stateModel.stateGoals[x.id],selector=x.signals.CH.length>=2&&!x.needsDiscriminator.length?
+       '<p>Как Вы хотите обращаться с этой стратегией?</p><div class="im-actions">'+[['Ослабить','Ослабить'],['Усилить','Усилить'],['Оставить','Оставить как есть'],['Не знаю','Пока не определился']].map(function(o){return '<button class="'+(goal===o[0]?'selected':'')+'" data-state-goal="'+esc(x.id)+'" data-goal="'+esc(o[0])+'">'+esc(o[1])+'</button>'}).join('')+'</div>':'';
+      return '<article class="im-card"><div class="im-card-k">'+esc(x.valence)+' · '+esc(x.confidence)+'</div><h3>'+esc(x.name)+'</h3><p>'+esc(x.stance)+'</p><p>Сигналы: '+count+' слоя · '+x.situationsCount+' ситуаций. '+(x.needsDiscriminator.length?'Нужен различитель: '+x.needsDiscriminator.map(function(k){return (data.stateModel.families.filter(function(f){return f.id===k})[0]||{}).question||k}).join(' '):'')+'</p>'+selector+'</article>';
+     }).join('');
     else html+='<p>Пока нет прямых совпадений. Каталог сохранен, но выводы не подменяются догадками.</p>';
     if(data.stateModel.families.length){
      html+='<section class="im-group"><h2>Уточнить неоднозначные сигналы</h2><p>Это короткие вопросы-различители из модели. Выберите то, что ближе к Вашему опыту. Можно оставить вопрос без ответа.</p>';
@@ -206,10 +210,16 @@ function mount(box){
   box.querySelectorAll('[data-feedback]').forEach(function(b){b.onclick=function(){feedback[+b.dataset.feedback]=b.dataset.v;draw()}});
   box.querySelectorAll('[data-discriminator]').forEach(function(b){b.onclick=function(){
    if(!P.backgroundProfile||typeof P.backgroundProfile!=='object')P.backgroundProfile={};
-   var previous=P.backgroundProfile.stateModel&&P.backgroundProfile.stateModel.discriminatorAnswers||{};
+   var saved=P.backgroundProfile.stateModel=P.backgroundProfile.stateModel||{},previous=saved.discriminatorAnswers||{};
    previous[b.dataset.discriminator]=b.dataset.state==='skip'?null:b.dataset.state;
-   P.backgroundProfile.stateModel=P.backgroundProfile.stateModel||{};
-   P.backgroundProfile.stateModel.discriminatorAnswers=previous;
+   saved.discriminatorAnswers=previous;
+   data.stateModel=GStateEngine.evaluate(P);
+   draw();
+  }});
+  box.querySelectorAll('[data-state-goal]').forEach(function(b){b.onclick=function(){
+   if(!P.backgroundProfile||typeof P.backgroundProfile!=='object')P.backgroundProfile={};
+   var saved=P.backgroundProfile.stateModel=P.backgroundProfile.stateModel||{},goals=saved.stateGoals||{};
+   goals[b.dataset.stateGoal]=b.dataset.goal;saved.stateGoals=goals;
    data.stateModel=GStateEngine.evaluate(P);
    draw();
   }});
