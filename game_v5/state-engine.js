@@ -144,7 +144,7 @@ function evaluate(P){
   s.falsifierEffect=Math.min(0.75,0.15*falsifierCount);
   if(falsifierCount>0)s.confidence+='; есть контрпример, требуется учитывать контекст';
   if(s.needsDiscriminator.length){s.status='needs_discriminator';s.confidence='гипотеза, требуется различитель';}
-  if(s.signals.CH.length&&!s.signals.SR.length&&!s.signals.NR.length&&(mageRepeatability===0||mageRepeatability===1)){s.status='situational';s.confidence='единичные или редкие реакции по самоотчету о повторяемости';}
+  if(!s.needsDiscriminator.length&&s.signals.CH.length&&!s.signals.SR.length&&!s.signals.NR.length&&(mageRepeatability===0||mageRepeatability===1)){s.status='situational';s.confidence='единичные или редкие реакции по самоотчету о повторяемости';}
   /* Без NR и данных о сферах глобальная устойчивость не присваивается. */
   s.globalTrait=false;
   s.layersConfirmed=['SR','CH','NR'].filter(function(k){return s.signals[k].length>0});
