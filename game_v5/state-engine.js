@@ -44,6 +44,7 @@ function contextOf(P){
  function part(n){return parts[n]&&parts[n][1]||''}
  var wheel=P.betray&&P.betray.start||P.betrayWheel||P.wheelTest||null;
  var values=arr(P.values&&P.values.order);
+ if(!values.length){var vc=P.valuesCore||P.modules&&P.modules.valuesCore&&P.modules.valuesCore.result;values=arr(vc&&vc.top3);}
  return {
   reactionStrategy:lead?{id:lead,label:labels[lead]||lead,secondary:arr(lab.queue||calc&&calc.queue).slice(0,2),userAdjusted:lab.agree!=null,weak:lab.weak!=null?!!lab.weak:!!(calc&&calc.weak),tie:lab.tie!=null?!!lab.tie:!!(calc&&calc.tie),pattern:pattern?{trigger:part(0),reaction:part(1),rule:part(2),benefit:part(3),cost:part(4),newSetting:part(5)}:null}:null,
   firstSettingsAvailable:!!P.firstSet,
