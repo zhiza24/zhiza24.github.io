@@ -161,7 +161,23 @@ function mount(box){
      }).join('');
      html+='</section>';
     }
-    if(data.stateModel.context){
+    if(active.length){
+      var falsifierAnswers=data.stateModel.falsifierAnswers||{},falsifierHtml='';
+      active.forEach(function(state){
+       var questions=GStateEngine.falsifiers(state.id);
+       if(!questions.length)return;
+       falsifierHtml+='<article class="im-card"><div class="im-card-k">Проверка гипотезы · '+esc(state.name)+'</div>';
+       questions.forEach(function(q,index){
+        var key=state.id+'::'+q.question,answer=falsifierAnswers[key];
+        falsifierHtml+='<p>'+esc(q.question)+'</p><div class="im-actions">'+
+         [['yes','Да, такой пример есть'],['no','Не вспоминаю такого'],['skip','Пока не могу сказать']].map(function(o){var v=o[0]==='yes'?true:o[0]==='no'?false:null;return '<button class="'+(answer===v?'selected':'')+'" data-falsifier-state="'+esc(state.id)+'" data-falsifier-index="'+index+'" data-falsifier-value="'+o[0]+'">'+o[1]+'</button>'}).join('')+
+         '</div>';
+       });
+       falsifierHtml+='</article>';
+      });
+      if(falsifierHtml)html+='<section class="im-group"><h2>Проверить обратными примерами</h2><p>Вспомните случаи, которые не укладываются в найденную гипотезу. Такие примеры не менее важны, чем совпадения. Можно пропустить любой вопрос.</p>'+falsifierHtml+'</section>';
+     }
+     if(data.stateModel.context){
      var cx=data.stateModel.context;
      html+='<section class="im-group"><h2>Другие слои картины</h2>';
      if(cx.reactionStrategy){
@@ -170,7 +186,11 @@ function mount(box){
        (rp?'<p><b>Триггер:</b> '+esc(rp.trigger)+'</p><p><b>Автоматическая реакция:</b> '+esc(rp.reaction)+'</p><p><b>Скрытое правило:</b> «'+esc(rp.rule)+'»</p><p><b>Что дает:</b> '+esc(rp.benefit)+'</p><p><b>Цена:</b> '+esc(rp.cost)+'</p><p><b>Новая настройка:</b> '+esc(rp.newSetting)+'</p>':'')+
        (cx.reactionStrategy.secondary.length?'<p>Другие заметные стратегии: '+esc(cx.reactionStrategy.secondary.join(', '))+'</p>':'')+'</article>';
      }
-     html+='<p>Первые настройки: '+(cx.firstSettingsAvailable?'результат есть':'пока нет')+' · Колесо: '+(cx.wheelAvailable?'результат есть':'пока нет')+' · Исследование желаний: '+(cx.desireResearchAvailable?'результат есть':'пока нет')+'</p>';
+     if(cx.mageRepeatability!=null)html+='<p>Повторяемость эмоционального фона по ответу Мага: '+esc(['почти никогда','редко','иногда','часто','очень часто'][cx.mageRepeatability]) +'. Это влияет на осторожность интерпретации, но не добавляет баллы.</p>';
+      if(cx.mageFinal&&cx.mageFinal.length)html+='<p>Эмоциональные итоги Мага: '+esc(cx.mageFinal.map(function(x){return x.meaning}).join('; '))+'. Это контекст, не отдельные ситуационные подтверждения.</p>';
+      if(cx.mageContext&&cx.mageContext.length)html+='<p>Другие сигналы Мага, оставленные в контексте: '+esc(cx.mageContext.map(function(x){return x.meaning}).join('; '))+'.</p>';
+      if(cx.echoStrategies&&cx.echoStrategies.length)html+='<p>Стратегии реагирования по «Эху»: '+esc(cx.echoStrategies.map(function(x){return x.meaning}).join('; '))+'. Они не приравниваются к состояниям.</p>';
+      html+='<p>Первые настройки: '+(cx.firstSettingsAvailable?'результат есть':'пока нет')+' · Колесо: '+(cx.wheelAvailable?'результат есть':'пока нет')+' · Исследование желаний: '+(cx.desireResearchAvailable?'результат есть':'пока нет')+'</p>';
      if(cx.values.length)html+='<p>Выбранные ценности: '+esc(cx.values.join(', '))+'</p>';
      html+='<p class="im-muted">Эти данные помогают понять контекст и подобрать действия, но не прибавляют баллы состояниям автоматически.</p></section>';
     }
@@ -229,7 +249,18 @@ function mount(box){
    data.stateModel=GStateEngine.evaluate(P);
    draw();
   }});
-  box.querySelectorAll('[data-state-goal]').forEach(function(b){b.onclick=function(){
+  box.querySelectorAll('[data-falsifier-state]').forEach(function(b){b.onclick=function(){
+    if(!P.backgroundProfile||typeof P.backgroundProfile!=='object')P.backgroundProfile={};
+    var saved=P.backgroundProfile.stateModel=P.backgroundProfile.stateModel||{},answers=saved.falsifierAnswers||{};
+    var state=b.dataset.falsifierState,items=GStateEngine.falsifiers(state),item=items[+b.dataset.falsifierIndex];
+    if(!item)return;
+    var key=state+'::'+item.question,value=b.dataset.falsifierValue;
+    answers[key]=value==='yes'?true:value==='no'?false:null;
+    saved.falsifierAnswers=answers;
+    data.stateModel=GStateEngine.evaluate(P);
+    draw();
+   }});
+   box.querySelectorAll('[data-state-goal]').forEach(function(b){b.onclick=function(){
    if(!P.backgroundProfile||typeof P.backgroundProfile!=='object')P.backgroundProfile={};
    var saved=P.backgroundProfile.stateModel=P.backgroundProfile.stateModel||{},goals=saved.stateGoals||{};
    goals[b.dataset.stateGoal]=b.dataset.goal;saved.stateGoals=goals;

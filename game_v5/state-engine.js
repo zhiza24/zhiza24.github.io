@@ -12,27 +12,23 @@ function choiceText(d,id){
  var parts=String(d.reading).split(/[.;]/),hit=parts.filter(function(x){return new RegExp('→\\s*'+id+'\\b').test(x)})[0];
  return hit?hit.split('→')[0].trim():'Ближе к этому варианту';
 }
-var FAMILIES=[
- {id:'SIG_WRT',states:['SIG','WRT']},
- {id:'MIS_TRU',states:['MIS','TRU']},
- {id:'INC_EFF',states:['INC','EFF']},
- {id:'DEF_SCO',states:['DEF','SCO']},
- {id:'STD_MAS',states:['STD','MAS']},
- {id:'MIS_AUT',states:['MIS','AUT']},
- {id:'AUT_SEC',states:['AUT','SEC']}
-].map(function(f){
- var d=discriminatorFor(f.states[0],f.states[1]);
- f.question=d?d.question:'Для этой пары требуется дополнительное различение.';
- f.discriminator=d;
- f.choices=f.states.map(function(id){return {state:id,label:choiceText(d,id)}});
- return f;
-});
-var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A6:'INC',A8:'STD',A9:'ABD'};
-var ECHO_CODES={B8:'EFF'},ECHO_FAMILIES={B1:'SIG_WRT'};
+var LEGACY_FAMILY_IDS={SIG_WRT:['SIG','WRT'],MIS_TRU:['MIS','TRU'],INC_EFF:['INC','EFF'],DEF_SCO:['DEF','SCO'],STD_MAS:['STD','MAS'],MIS_AUT:['MIS','AUT'],AUT_SEC:['AUT','SEC']};
+var FAMILIES=(function(){
+ var pairs=arr(DATA.discriminators).map(function(d){
+  var states=[d.a,d.b],legacy=Object.keys(LEGACY_FAMILY_IDS).filter(function(k){var x=LEGACY_FAMILY_IDS[k];return x[0]===states[0]&&x[1]===states[1]||x[0]===states[1]&&x[1]===states[0]})[0];
+  var id=legacy||states.slice().sort().join('_');
+  return {id:id,states:states,question:d.question,discriminator:d,choices:states.map(function(code){return {state:code,label:choiceText(d,code)}})};
+ });
+ var seen={};return pairs.filter(function(f){if(seen[f.id])return false;seen[f.id]=true;return true});
+})();
+var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A9:'ABD'};
+var ECHO_CODES={},ECHO_FAMILIES={};
+var MAGE_CONTEXT_CODES={A5:'ощущение использования',A6:'ощущение отсутствия влияния',A7:'ожидание угрозы и неопределенности',A8:'ощущение нехватки',A10:'отказ от собственных предпочтений',A11:'ощущение борьбы',A12:'внутренняя опора и выбор следующего шага'};
+var ECHO_CONTEXT_CODES={B1:'доказывание ценности',B2:'угадывание ожиданий',B3:'проверка и контроль',B4:'отступление заранее',B5:'спасательство и избыточная ответственность',B6:'борьба и защита',B7:'откладывание выбора',B8:'прояснение и действие'};
 var SCALE_FAMILIES={
- KM02:['DEF_SCO'],KM04:['MIS_TRU'],KM05:['INC_EFF'],
- SV01:['SIG_WRT'],SV02:['DEF_SCO'],SV05:['SIG_WRT','STD_MAS'],SV06:['SIG_WRT'],
- RS02:['DEF_SCO'],RS04:['INC_EFF'],RS05:['STD_MAS'],RS06:['MIS_TRU','MIS_AUT']
+ KM02:['DEF_SCO'],KM04:['MIS_TRU'],
+ SV02:['DEF_SCO'],SV05:['STD_MAS'],
+ RS05:['STD_MAS'],RS06:['MIS_TRU','MIS_AUT']
 };
 function arr(x){return Array.isArray(x)?x:[]}
 function obj(x){return x&&typeof x==='object'?x:{}}
@@ -78,22 +74,23 @@ function evaluate(P){
   f.states.forEach(function(id){add(id,layer,source,situation,detail,fid);states[id].needsDiscriminator=uniq(states[id].needsDiscriminator.concat([fid]))});
  }
  /* Ситуационные ответы Магa. A11 — эмоциональный итог, не отдельная ситуация, поэтому не учитывается. */
- var mage=resultOf(P,'ego','ego');
+ var mage=resultOf(P,'ego','ego'),mageRepeatability=null,mageContext=[],mageFinal=[];
  if(mage&&mage.answers){
+  var repeatCode=mage.answers.A12;
+  mageRepeatability=/^R[0-4]$/.test(repeatCode||'')?Number(repeatCode.slice(1)):null;
+  mageFinal=arr(mage.answers.A11).map(function(code){return {code:String(code),meaning:({A1:'самокритика и стыд',A2:'потребность в признании',A3:'ощущение отвержения',A4:'настороженность к мотивам других',A5:'ощущение использования',A6:'ощущение отсутствия влияния',A7:'ожидание угрозы',A8:'ощущение нехватки',A9:'одиночество',A10:'отказ от собственных предпочтений',A11:'ощущение борьбы',A12:'внутренняя опора'}[code]||'эмоциональный итог')}});
   Object.keys(mage.answers).forEach(function(q){
    var code=mage.answers[q],id=MAGE_CODES[code];
    if(id)add(id,'CH','mage',q,'Ситуационный выбор Мага: '+String(code),false);
-   else if(code&&q!=='A11')unknown.push('Код Мага '+String(code)+' в ситуации '+q+' пока не сопоставлен с 19 состояниями и не участвует в их подсчете.');
+   else if(code&&q!=='A11'&&q!=='A12'){mageContext.push({question:q,code:String(code),meaning:MAGE_CONTEXT_CODES[code]||'контекстный ответ'});unknown.push('Код Мага '+String(code)+' в ситуации '+q+' сохранен как контекст и не засчитывается как прямое доказательство состояния.');}
   });
  }
- /* Эхо: используем только семантически достаточно близкие соответствия. Остальные коды не приравниваем к состояниям. */
- var echo=resultOf(P,'archB','archB');
+ /* Эхо описывает способы реагирования, а не состояния. */
+ var echo=resultOf(P,'archB','archB'),echoContext=[];
  if(echo&&echo.answers){
   Object.keys(echo.answers).forEach(function(q){
-   var code=echo.answers[q],id=ECHO_CODES[code],family=ECHO_FAMILIES[code];
-   if(id)add(id,'CH','echo',q,'Ситуационный выбор Эха: '+String(code),false);
-   else if(family)addFamily(family,'CH','echo',q,'Ситуационный выбор Эха: '+String(code));
-   else if(code)unknown.push('Код Эха '+String(code)+' сохранен как стратегия реагирования, но пока не сопоставлен с 19 состояниями.');
+   var code=echo.answers[q];
+   if(code&&code!=='0')echoContext.push({question:q,code:String(code),meaning:ECHO_CONTEXT_CODES[code]||'смешанная стратегия'});
   });
  }
  /* Шкалы — только слой самоотчета. Один результат шкалы считается одной областью наблюдения, а не четырьмя независимыми пунктами. */
@@ -119,7 +116,7 @@ function evaluate(P){
  if(P.betray&&P.betray.start)unknown.push('Колесо показывает конкретные формы поведения и опоры. Пока оно используется как контекст, а не как прямой балл одного из 19 состояний: соответствия требуют отдельной проверки.');
  if(P.lab)unknown.push('GLead/GPAT описывают привычный способ реагирования и его стратегию. Они учитываются отдельно и не считаются независимым подтверждением состояния.');
  unknown.push('Нарративный слой пока не оценивается автоматически. Личные записи не анализируются без отдельного явного согласия.');
- var savedProfileState=obj(P.backgroundProfile&&P.backgroundProfile.stateModel),savedAnswers=obj(savedProfileState.discriminatorAnswers),savedGoals=obj(savedProfileState.stateGoals);
+ var savedProfileState=obj(P.backgroundProfile&&P.backgroundProfile.stateModel),savedAnswers=obj(savedProfileState.discriminatorAnswers),savedGoals=obj(savedProfileState.stateGoals),savedFalsifiers=obj(savedProfileState.falsifierAnswers);
  var familyList=Object.keys(families).map(function(k){return families[k]}).filter(function(f){return f.evidence.length}).map(function(f){
   var definition=FAMILIES.filter(function(x){return x.id===f.id})[0],answer=savedAnswers[f.id];
   f.question=definition?definition.question:f.question;
@@ -141,7 +138,13 @@ function evaluate(P){
   if(layersN>=2&&situations>=3){s.confidence='вероятно, контекст не определен';s.status='probable';}
   else if(layersN>=1||situations>=2){s.confidence='гипотеза';s.status='hypothesis';}
   else{s.confidence='нет достаточных данных';s.status='unassessed';}
+  var falsifierList=arr(DATA.falsifiers).filter(function(x){return x.state===id});
+  var falsifierCount=falsifierList.filter(function(x){var v=savedFalsifiers[x.state+'::'+x.question];return v===true||v===1||v==='yes'||v==='present'||v==='да'}).length;
+  s.falsifiers=falsifierCount;
+  s.falsifierEffect=Math.min(0.75,0.15*falsifierCount);
+  if(falsifierCount>0)s.confidence+='; есть контрпример, требуется учитывать контекст';
   if(s.needsDiscriminator.length){s.status='needs_discriminator';s.confidence='гипотеза, требуется различитель';}
+  if(!s.needsDiscriminator.length&&s.signals.CH.length&&!s.signals.SR.length&&!s.signals.NR.length&&(mageRepeatability===0||mageRepeatability===1)){s.status='situational';s.confidence='единичные или редкие реакции по самоотчету о повторяемости';}
   /* Без NR и данных о сферах глобальная устойчивость не присваивается. */
   s.globalTrait=false;
   s.layersConfirmed=['SR','CH','NR'].filter(function(k){return s.signals[k].length>0});
@@ -150,13 +153,14 @@ function evaluate(P){
  });
  return {
   version:'1.0.0',sourceModelVersion:DATA.version||'0.1',at:Date.now(),
-  context:context,
+  context:Object.assign({},context,{mageRepeatability:mageRepeatability,mageFinal:mageFinal,mageContext:mageContext,echoStrategies:echoContext}),
   note:'Рабочая модель самонаблюдения; статусы предварительные, не клиническая диагностика.',
   rules:{requiredLayers:2,requiredSituations:3,globalTraitRequiresSpheres:2,highConfidenceAvailable:false},
   layers:{SR:layers.SR,CH:layers.CH,NR:layers.NR},
   states:Object.keys(states).map(function(id){return states[id]}),
   families:familyList,
   discriminatorAnswers:savedAnswers,
+  falsifierAnswers:savedFalsifiers,
   stateGoals:savedGoals,
   unknown:uniq(unknown),
   coverage:{stateCount:arr(DATA.states).length,statesWithSignals:Object.keys(states).filter(function(id){return states[id].situationsCount>0}).length,narrativeAvailable:false,spheresAvailable:false}
