@@ -246,6 +246,7 @@ function mount(box){
    var saved=P.backgroundProfile.stateModel=P.backgroundProfile.stateModel||{},previous=saved.discriminatorAnswers||{};
    previous[b.dataset.discriminator]=b.dataset.state==='skip'?null:b.dataset.state;
    saved.discriminatorAnswers=previous;
+   persistStateModel();
    data.stateModel=GStateEngine.evaluate(P);
    draw();
   }});
@@ -257,6 +258,7 @@ function mount(box){
     var key=state+'::'+item.question,value=b.dataset.falsifierValue;
     answers[key]=value==='yes'?true:value==='no'?false:null;
     saved.falsifierAnswers=answers;
+    persistStateModel();
     data.stateModel=GStateEngine.evaluate(P);
     draw();
    }});
@@ -264,12 +266,28 @@ function mount(box){
    if(!P.backgroundProfile||typeof P.backgroundProfile!=='object')P.backgroundProfile={};
    var saved=P.backgroundProfile.stateModel=P.backgroundProfile.stateModel||{},goals=saved.stateGoals||{};
    goals[b.dataset.stateGoal]=b.dataset.goal;saved.stateGoals=goals;
+   persistStateModel();
    data.stateModel=GStateEngine.evaluate(P);
    draw();
   }});
   var f=box.querySelector('#imFinish');if(f)f.onclick=finish;
  }
- function draw(){box.innerHTML=sceneHtml();bind();if(typeof window.scrollTo==='function')window.scrollTo(0,0)}
+ function persistStateModel(){
+  if(!P.backgroundProfile||typeof P.backgroundProfile!=='object')P.backgroundProfile={};
+  if(!P.backgroundProfile.stateModel)return;
+  if(!window.GProfile)return;
+  try{
+   var profile=GProfile.load(),background=profile.backgroundProfile&&typeof profile.backgroundProfile==='object'?profile.backgroundProfile:{};
+   background.stateModel=P.backgroundProfile.stateModel;
+   GProfile.saveResult('backgroundProfile',background);
+   P.backgroundProfile=background;
+  }catch(e){console.warn('Не удалось сохранить ответ модели состояний',e)}
+ }
+ function draw(){
+  var y=typeof window.scrollY==='number'?window.scrollY:0;
+  box.innerHTML=sceneHtml();bind();
+  if(typeof window.scrollTo==='function')window.scrollTo(0,y);
+ }
  function finish(){
   var all=data.links.concat(data.tensions),rec={v:3,version:3,algoVersion:3,type:'synthesis',sources:data.sources,fragments:data.fragments,links:data.links,tensions:data.tensions,unknown:data.unknown,stateModel:data.stateModel||null,feedback:feedback,at:Date.now(),legacy:existing&&existing.answers?{answers:existing.answers,at:existing.at||null}:null};
   var lines=['Карта внутренней архитектуры','Источники: '+data.sources.map(function(x){return x.name}).join(', ')];
