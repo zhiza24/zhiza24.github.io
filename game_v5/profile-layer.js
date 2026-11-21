@@ -56,6 +56,7 @@
     selfWorth: { field: 'selfWorth' },
     valuesCore: { field: 'valuesCore' },
     backgroundProfile: { field: 'backgroundProfile' },
+    im: { field: 'im' },
     reactorIn: { field: 'reactorIn' }
   };
 
