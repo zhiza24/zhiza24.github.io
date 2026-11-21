@@ -227,9 +227,9 @@ function practRec(P){
     минимум в двух разных ситуациях и без неразрешенного различителя. */
  var sm=bp&&bp.stateModel,practiceByState={SIG:'mydecision',ABD:'contact',STD:'enough',INC:'myzone',EFF:'create',WRT:'keepgood',SEC:'contact',TRU:'acceptsup',MAS:'create',CUR:'create',GRA:'grat',FLO:'create',PLY:'pract',SCO:'keepgood'};
  if(sm&&Array.isArray(sm.states)){
-  sm.states.filter(function(x){return x.signals&&x.signals.CH&&x.signals.CH.length>=2&&!x.needsDiscriminator.length})
+  sm.states.filter(function(x){return x.signals&&x.signals.CH&&x.signals.CH.length>=2&&!x.needsDiscriminator.length&&sm.stateGoals&&sm.stateGoals[x.id]==='Ослабить'})
    .sort(function(a,b){return b.signals.CH.length-a.signals.CH.length})
-   .some(function(x){var id=practiceByState[x.id];if(!id)return false;add(id,'В двух или более ситуационных выборах повторилась близкая тема «'+x.name+'». Это рабочая гипотеза; проверь, подходит ли практика.');return out.length>=2});
+   .some(function(x){var id=practiceByState[x.id];if(!id)return false;add(id,'Вы выбрали ослабить повторяющуюся тему «'+x.name+'». Это необязательная практика; проверьте, подходит ли она.');return out.length>=2});
  }
  if(bp&&bp.unstableJoy)add('keepgood','После хороших событий быстро возвращается ощущение нехватки.');
  if(L.S6>=2)add('mine','Внимание чаще уходит к тому, чего еще нет. Учимся присваивать результат.');
