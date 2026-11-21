@@ -147,6 +147,16 @@ function mount(box){
     html+='<section class="im-group"><h2>Каталог 19 состояний</h2><p>Здесь отмечены только состояния, для которых нашлись прямые или неоднозначные сигналы в уже пройденных исследованиях. Это предварительные гипотезы, а не типы личности.</p>';
     if(active.length)html+=active.map(function(x){var count=x.layersConfirmed.length;return '<article class="im-card"><div class="im-card-k">'+esc(x.valence)+' · '+esc(x.confidence)+'</div><h3>'+esc(x.name)+'</h3><p>'+esc(x.stance)+'</p><p>Сигналы: '+count+' слоя · '+x.situationsCount+' ситуаций. '+(x.needsDiscriminator.length?'Нужен различитель: '+x.needsDiscriminator.map(function(k){return (data.stateModel.families.filter(function(f){return f.id===k})[0]||{}).question||k}).join(' '):'')+'</p></article>'}).join('');
     else html+='<p>Пока нет прямых совпадений. Каталог сохранен, но выводы не подменяются догадками.</p>';
+    if(data.stateModel.families.length){
+     html+='<section class="im-group"><h2>Уточнить неоднозначные сигналы</h2><p>Это короткие вопросы-различители из модели. Выберите то, что ближе к Вашему опыту. Можно оставить вопрос без ответа.</p>';
+     html+=data.stateModel.families.map(function(f){
+      return '<article class="im-card"><div class="im-card-k">'+esc(f.states.join(' / '))+'</div><h3>'+esc(f.question)+'</h3>'+
+       '<div class="im-actions">'+f.choices.map(function(c){return '<button class="'+(f.answer===c.state?'selected':'')+'" data-discriminator="'+esc(f.id)+'" data-state="'+esc(c.state)+'">'+esc(c.label)+'</button>'}).join('')+
+       '<button class="'+(!f.answer?'selected':'')+'" data-discriminator="'+esc(f.id)+'" data-state="skip">Не могу определить</button></div>'+
+       (f.resolved?'<p class="im-muted">Уточнение учтено. Его можно изменить.</p>':'<p class="im-muted">Пока обе версии остаются открытыми.</p>')+'</article>';
+     }).join('');
+     html+='</section>';
+    }
     html+='<p class="im-muted">Нарратив и сферы жизни пока не учитываются в расчете: они не должны появляться в выводе без отдельного основания.</p></section>';
    }
    html+='</div><button class="next" id="imNext">Посмотреть связи</button>';
@@ -194,6 +204,15 @@ function mount(box){
  function bind(){
   var n=box.querySelector('#imNext');if(n)n.onclick=function(){scene++;draw()};
   box.querySelectorAll('[data-feedback]').forEach(function(b){b.onclick=function(){feedback[+b.dataset.feedback]=b.dataset.v;draw()}});
+  box.querySelectorAll('[data-discriminator]').forEach(function(b){b.onclick=function(){
+   if(!P.backgroundProfile||typeof P.backgroundProfile!=='object')P.backgroundProfile={};
+   var previous=P.backgroundProfile.stateModel&&P.backgroundProfile.stateModel.discriminatorAnswers||{};
+   previous[b.dataset.discriminator]=b.dataset.state==='skip'?null:b.dataset.state;
+   P.backgroundProfile.stateModel=P.backgroundProfile.stateModel||{};
+   P.backgroundProfile.stateModel.discriminatorAnswers=previous;
+   data.stateModel=GStateEngine.evaluate(P);
+   draw();
+  }});
   var f=box.querySelector('#imFinish');if(f)f.onclick=finish;
  }
  function draw(){box.innerHTML=sceneHtml();bind();if(typeof window.scrollTo==='function')window.scrollTo(0,0)}
