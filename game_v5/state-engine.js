@@ -81,6 +81,7 @@ function evaluate(P){
   Object.keys(mage.answers).forEach(function(q){
    var code=mage.answers[q],id=MAGE_CODES[code];
    if(id)add(id,'CH','mage',q,'Ситуационный выбор Мага: '+String(code),false);
+   else if(code&&q!=='A11')unknown.push('Код Мага '+String(code)+' в ситуации '+q+' пока не сопоставлен с 19 состояниями и не участвует в их подсчете.');
   });
  }
  /* Эхо: используем только семантически достаточно близкие соответствия. Остальные коды не приравниваем к состояниям. */
@@ -90,6 +91,7 @@ function evaluate(P){
    var code=echo.answers[q],id=ECHO_CODES[code],family=ECHO_FAMILIES[code];
    if(id)add(id,'CH','echo',q,'Ситуационный выбор Эха: '+String(code),false);
    else if(family)addFamily(family,'CH','echo',q,'Ситуационный выбор Эха: '+String(code));
+   else if(code)unknown.push('Код Эха '+String(code)+' сохранен как стратегия реагирования, но пока не сопоставлен с 19 состояниями.');
   });
  }
  /* Шкалы — только слой самоотчета. Один результат шкалы считается одной областью наблюдения, а не четырьмя независимыми пунктами. */
@@ -101,7 +103,10 @@ function evaluate(P){
  scales.forEach(function(entry){
   var x=entry.data;if(!x||x.status==='insufficient')return;
   arr(x.leadingScales).forEach(function(id){
-   if(!SCALE_FAMILIES[id])return;
+   if(!SCALE_FAMILIES[id]){
+    if(id!=='KM02')unknown.push('Шкала '+id+' пока не имеет точного соответствия в 19 состояниях и не участвует в их подсчете.');
+    return;
+   }
    SCALE_FAMILIES[id].forEach(function(fid){addFamily(fid,'SR',entry.source,id,'Ведущая шкала самоотчета: '+id)});
   });
  });
