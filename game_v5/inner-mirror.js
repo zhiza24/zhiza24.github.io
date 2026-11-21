@@ -164,7 +164,12 @@ function mount(box){
     if(data.stateModel.context){
      var cx=data.stateModel.context;
      html+='<section class="im-group"><h2>Другие слои картины</h2>';
-     if(cx.reactionStrategy)html+='<article class="im-card"><div class="im-card-k">GLead · способ реагирования</div><h3>'+esc(cx.reactionStrategy.label)+'</h3><p>Это отдельный слой привычной стратегии, а не доказательство одного из 19 состояний.</p>'+(cx.reactionStrategy.secondary.length?'<p>Другие заметные стратегии: '+esc(cx.reactionStrategy.secondary.join(', '))+'</p>':'')+'</article>';
+     if(cx.reactionStrategy){
+      var rp=cx.reactionStrategy.pattern;
+      html+='<article class="im-card"><div class="im-card-k">GLead / GPAT · способ реагирования</div><h3>'+esc(cx.reactionStrategy.label)+'</h3><p>Это отдельный слой привычной стратегии, а не доказательство одного из 19 состояний.</p>'+
+       (rp?'<p><b>Триггер:</b> '+esc(rp.trigger)+'</p><p><b>Автоматическая реакция:</b> '+esc(rp.reaction)+'</p><p><b>Скрытое правило:</b> «'+esc(rp.rule)+'»</p><p><b>Что дает:</b> '+esc(rp.benefit)+'</p><p><b>Цена:</b> '+esc(rp.cost)+'</p><p><b>Новая настройка:</b> '+esc(rp.newSetting)+'</p>':'')+
+       (cx.reactionStrategy.secondary.length?'<p>Другие заметные стратегии: '+esc(cx.reactionStrategy.secondary.join(', '))+'</p>':'')+'</article>';
+     }
      html+='<p>Первые настройки: '+(cx.firstSettingsAvailable?'результат есть':'пока нет')+' · Колесо: '+(cx.wheelAvailable?'результат есть':'пока нет')+' · Исследование желаний: '+(cx.desireResearchAvailable?'результат есть':'пока нет')+'</p>';
      if(cx.values.length)html+='<p>Выбранные ценности: '+esc(cx.values.join(', '))+'</p>';
      html+='<p class="im-muted">Эти данные помогают понять контекст и подобрать действия, но не прибавляют баллы состояниям автоматически.</p></section>';
