@@ -43,7 +43,7 @@ function scoreA(ans){var s={},sit={};ACODES.forEach(function(c){s[c]=0;sit[c]=0}
  var ord=ACODES.slice().sort(function(x,y){var ix=a11.indexOf(x),iy=a11.indexOf(y);return s[y]-s[x]||(ix<0?9:ix)-(iy<0?9:iy)||sit[y]-sit[x]||ACODES.indexOf(x)-ACODES.indexOf(y)});
  var cand=ord.filter(function(c){return s[c]>0}).slice(0,2);
  return {scores:s,sit:sit,a11:a11,R:R,Rcode:a12Code(ans),cand:cand,skips:skips}}
-function a12Code(ans){var m=(Array.isArray(ans.A11)?ans.A11:[]).filter(function(c){return c!=='0'});if(m.length)return m[0];
+function a12Code(ans){var selected=Array.isArray(ans.A11)?ans.A11:[];var m=selected.filter(function(c){return c!=='0'});if(m.length)return m[0];if(selected.indexOf('0')>=0)return null;
  var s={};D.A.forEach(function(q){var c=ans[q.id];if(c&&c!=='0'&&c!=='skip')s[c]=(s[c]||0)+1});var k=Object.keys(s).sort(function(x,y){return s[y]-s[x]||ACODES.indexOf(x)-ACODES.indexOf(y)});return k[0]||null}
 function scoreB(ans){var s={},availability={},rates={};BCODES.forEach(function(c){s[c]=0;availability[c]=0});var answered=0,coded=0;
  D.B.forEach(function(q){var c=ans[q.id],seen={};if(c!=null&&c!=='skip')answered++;if(c&&c!=='0'&&c!=='skip'&&s[c]!=null){s[c]++;coded++}q.o.forEach(function(o){if(availability[o[0]]!=null&&!seen[o[0]]){availability[o[0]]++;seen[o[0]]=1}})});
@@ -147,7 +147,7 @@ function resultScreen(box,skin,html,part,save){var k=SKIN[skin];save();box.inner
 function partA(box,skin,hooks){var items=[{kind:'intro',key:'a'},{kind:'one',id:'S1',t:D.period.t,o:D.period.o}];
  D.A.forEach(function(q){items.push({kind:'one',id:q.id,h:q.h,t:q.t,o:q.o,shuffle:true})});
  items.push({kind:'multi',id:'A11',h:D.A11.h,t:D.A11.t,hint:D.A11.hint,o:D.A11.o,shuffle:true});
- items.push({kind:'one',id:'A12',h:D.A12.h,t:D.A12.t,o:D.A12.o,ctx:function(ans){var c=a12Code(ans);if(!c)return '';var m=(ans.A11||[]).filter(function(x){return x!=='0'}).length;return (m?'Речь о чувстве: «':'Если вспоминать самое частое в твоих ответах: «')+g(D.phrase[c])+'»'}});
+ items.push({kind:'one',id:'A12',h:D.A12.h,t:D.A12.t,o:D.A12.o,ctx:function(ans){var picked=Array.isArray(ans.A11)?ans.A11:[];if(picked.indexOf('0')>=0)return 'Ты отметил'+g('','а')+' разные чувства в разных историях. Как часто все же повторяется какое-то одно из них?';var c=a12Code(ans);if(!c)return '';var m=picked.filter(function(x){return x!=='0'}).length;return (m?'Речь о чувстве: «':'Если вспоминать самое частое в твоих ответах: «')+g(D.phrase[c])+'»'}});
  new Runner({box:box,skin:skin,items:items,module:'ego',onStep:hooks&&hooks.step,done:function(ans){var r=scoreA(ans),c=r.cand[0],lead=c&&r.scores[c]>=3&&r.skips<5?c:null,RA=D.resA[lead||'none'];
   var res={v:2,line:'A',top:lead?g(D.phrase[lead]):'Один фон пока не выделился',lead:lead,period:ans.S1&&ans.S1!=='skip'?ans.S1:null,answers:ans,scores:r.scores,sit:r.sit,a11:r.a11,R:r.R,Rcode:r.Rcode,cand:r.cand,skips:r.skips,at:Date.now()};
   var also=lead&&r.cand[1]&&r.scores[r.cand[1]]>=3&&r.scores[lead]-r.scores[r.cand[1]]<=1?g(D.ui.alsoA).replace('%A%',g(D.phrase[r.cand[1]])):'';
