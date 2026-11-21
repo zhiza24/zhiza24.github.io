@@ -4,21 +4,25 @@
 (function(global){
 'use strict';
 var DATA=global.GSTATE_DATA||{};
+function findDiscriminator(a,b){
+ var d=arr(DATA.discriminators).filter(function(x){return (x.a===a&&x.b===b)||(x.a===b&&x.b===a)})[0];
+ return d?d.question+' '+d.reading:'Для этой пары нужен дополнительный различитель.';
+}
 var FAMILIES=[
- {id:'SIG_DEF',states:['SIG','DEF'],scales:{KM02:1},question:'Что сильнее задевает: отсутствие признания вклада или риск, что увидят тебя настоящего?'},
- {id:'SIG_WRT',states:['SIG','WRT'],scales:{SV01:1,SV05:1},question:'Как долго отсутствие признания влияет на отношение к себе?'},
- {id:'MIS_TRU',states:['MIS','TRU'],scales:{KM04:1,RS06:1},question:'Осторожность опирается на конкретные факты и меняется ли при другом поведении человека?'},
- {id:'INC_EFF',states:['INC','EFF'],scales:{KM05:1},question:'Когда не знаешь, как сделать, первая мысль «не справлюсь» или «как разобраться»?'},
- {id:'DEF_SCO',states:['DEF','SCO'],scales:{SV02:1},question:'После ошибки сильнее стыд и желание спрятаться или ответственность без самонаказания?'},
- {id:'STD_MAS',states:['STD','MAS'],scales:{RS05:1,SV05:1},question:'Ты продолжаешь улучшать результат из страха несовершенства или из интереса, получая удовлетворение?'},
- {id:'MIS_TRU_AUT',states:['MIS','TRU','AUT'],scales:{SV03:1,RS06:1},question:'От помощи отказываешься из-за страха подвоха, потому что доверяешь по фактам или потому что действительно предпочитаешь справляться сам?'}
+ {id:'SIG_WRT',states:['SIG','WRT'],question:findDiscriminator('SIG','WRT')},
+ {id:'MIS_TRU',states:['MIS','TRU'],question:findDiscriminator('MIS','TRU')},
+ {id:'INC_EFF',states:['INC','EFF'],question:findDiscriminator('INC','EFF')},
+ {id:'DEF_SCO',states:['DEF','SCO'],question:findDiscriminator('DEF','SCO')},
+ {id:'STD_MAS',states:['STD','MAS'],question:findDiscriminator('STD','MAS')},
+ {id:'MIS_AUT',states:['MIS','AUT'],question:findDiscriminator('MIS','AUT')},
+ {id:'AUT_SEC',states:['AUT','SEC'],question:findDiscriminator('AUT','SEC')}
 ];
 var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A6:'INC',A8:'STD',A9:'ABD'};
-var ECHO_CODES={B8:'EFF'},ECHO_FAMILIES={B1:'SIG_DEF'};
+var ECHO_CODES={B8:'EFF'},ECHO_FAMILIES={B1:'SIG_WRT'};
 var SCALE_FAMILIES={
- KM02:['SIG_DEF'],KM04:['MIS_TRU'],KM05:['INC_EFF'],
- SV01:['SIG_WRT'],SV02:['DEF_SCO'],SV03:['MIS_TRU_AUT'],SV05:['SIG_WRT','STD_MAS'],
- RS05:['STD_MAS'],RS06:['MIS_TRU_AUT']
+ KM04:['MIS_TRU'],KM05:['INC_EFF'],
+ SV01:['SIG_WRT'],SV02:['DEF_SCO'],SV03:['MIS_AUT'],SV05:['SIG_WRT','STD_MAS'],
+ RS05:['STD_MAS'],RS06:['MIS_TRU','MIS_AUT']
 };
 function arr(x){return Array.isArray(x)?x:[]}
 function obj(x){return x&&typeof x==='object'?x:{}}
@@ -78,8 +82,10 @@ function evaluate(P){
   });
  });
  /* Первые настройки и GLead/GPAT описывают стратегии адаптации, а не состояния из каталога. Сохраняем их отдельно. */
- var fs=resultOf(P,'firstSet','firstSet'),lead=global.GLead?null:null;
+ var fs=resultOf(P,'firstSet','firstSet');
  if(fs&&fs.v)unknown.push('«Первые настройки» описывают динамику адаптации; без отдельного различителя они не засчитываются как прямое доказательство одного из 19 состояний.');
+ var kmContext=resultOf(P,'kmTest','km');
+ if(kmContext&&arr(kmContext.leadingScales).indexOf('KM02')>=0)unknown.push('Шкала KM02 показывает условную самоценность, но пока не распределяется между конкретными состояниями: для этого требуется дополнительное различение.');
  if(P.betray&&P.betray.start)unknown.push('Колесо показывает конкретные формы поведения и опоры. Пока оно используется как контекст, а не как прямой балл одного из 19 состояний: соответствия требуют отдельной проверки.');
  if(P.lab)unknown.push('GLead/GPAT описывают привычный способ реагирования и его стратегию. Они учитываются отдельно и не считаются независимым подтверждением состояния.');
  unknown.push('Нарративный слой пока не оценивается автоматически. Личные записи не анализируются без отдельного явного согласия.');
@@ -110,5 +116,7 @@ function evaluate(P){
 }
 function getState(id){return arr(DATA.states).filter(function(x){return x.id===id})[0]||null}
 function interventions(id,goal){return arr(DATA.interventions).filter(function(x){return x.state===id&&(!goal||x.goal===goal)})}
-global.GStateEngine={data:DATA,evaluate:evaluate,getState:getState,interventions:interventions,families:FAMILIES};
+function discriminators(id){return arr(DATA.discriminators).filter(function(x){return x.a===id||x.b===id})}
+function falsifiers(id){return arr(DATA.falsifiers).filter(function(x){return x.state===id})}
+global.GStateEngine={data:DATA,evaluate:evaluate,getState:getState,interventions:interventions,discriminators:discriminators,falsifiers:falsifiers,families:FAMILIES};
 })(typeof window!=='undefined'?window:globalThis);
