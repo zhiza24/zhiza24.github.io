@@ -157,6 +157,7 @@ function evaluate(P){
   states:Object.keys(states).map(function(id){return states[id]}),
   families:familyList,
   discriminatorAnswers:savedAnswers,
+  falsifierAnswers:savedFalsifiers,
   stateGoals:savedGoals,
   unknown:uniq(unknown),
   coverage:{stateCount:arr(DATA.states).length,statesWithSignals:Object.keys(states).filter(function(id){return states[id].situationsCount>0}).length,narrativeAvailable:false,spheresAvailable:false}
