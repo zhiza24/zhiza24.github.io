@@ -24,9 +24,9 @@ var FAMILIES=(function(){
 var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A6:'INC',A8:'STD',A9:'ABD'};
 var ECHO_CODES={B8:'EFF'},ECHO_FAMILIES={B1:'SIG_WRT'};
 var SCALE_FAMILIES={
- KM02:['DEF_SCO'],KM04:['MIS_TRU'],KM05:['INC_EFF'],
- SV01:['SIG_WRT'],SV02:['DEF_SCO'],SV05:['SIG_WRT','STD_MAS'],SV06:['SIG_WRT'],
- RS02:['DEF_SCO'],RS04:['INC_EFF'],RS05:['STD_MAS'],RS06:['MIS_TRU','MIS_AUT']
+ KM02:['DEF_SCO'],KM04:['MIS_TRU'],
+ SV02:['DEF_SCO'],SV05:['STD_MAS'],
+ RS05:['STD_MAS'],RS06:['MIS_TRU','MIS_AUT']
 };
 function arr(x){return Array.isArray(x)?x:[]}
 function obj(x){return x&&typeof x==='object'?x:{}}
