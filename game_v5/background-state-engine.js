@@ -7,7 +7,7 @@ function list(x){return Array.isArray(x)?x:[]}
 function round(x){return Math.round(x*100)/100}
 function parseTags(raw){
  var out={families:{},adaptations:{},resources:{}};
- String(raw||'').split(/\\s+/).filter(Boolean).forEach(function(token){
+ String(raw||'').split(/\s+/).filter(Boolean).forEach(function(token){
   var parts=token.split('/');
   if(parts.every(function(x){return /^S[1-8]$/.test(x)})){
    var w=1/parts.length;
