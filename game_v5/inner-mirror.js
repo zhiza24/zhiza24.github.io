@@ -10,16 +10,30 @@ function labelEcho(code){
  var d=window.GARCH&&GARCH.resB&&GARCH.resB[code];return d&&d.name||names[code]||code;
 }
 function collect(P){
+ var mag=P.ego||P.modules&&P.modules.ego&&P.modules.ego.result||null;
  var fs=P.firstSet||P.modules&&P.modules.firstSet&&P.modules.firstSet.result||null;
  var km=P.kmTest||P.modules&&P.modules.km&&P.modules.km.result||null;
  var echo=P.archB||P.modules&&P.modules.archB&&P.modules.archB.result||null;
  var wheel=P.betray&&P.betray.start||P.betrayWheel||P.modules&&P.modules.betrayWheel&&P.modules.betrayWheel.result||null;
  var out={sources:[],fragments:[],links:[],tensions:[],unknown:[]};
  function source(id,name,detail){out.sources.push({id:id,name:name,detail:detail||''})}
+ if(mag&&mag.v===2){source('mag','Маг','Повторяющийся эмоциональный итог в разных жизненных ситуациях');}
  if(fs&&fs.v){source('firstSet','Первые настройки','Детские и нынешние стратегии адаптации');}
  if(km&&km.v){source('km','Идеальный Кривой Мир','Текущие фильтры восприятия');}
  if(echo){source('echo','Эхо','Способы реагирования в ситуациях');}
  if(wheel&&Array.isArray(wheel.sectors)){source('wheel','Колесо самопредательства','Конкретные проявления в 24 ветвях');}
+ if(mag&&mag.v===2){
+  var D=window.GARCH||{},lead=mag.lead,phrase=lead&&D.phrase&&D.phrase[lead],ra=lead&&D.resA&&D.resA[lead],answers=mag.answers||{},ev=[];
+  (D.A||[]).forEach(function(q){var code=answers[q.id];if(!code||code==='skip')return;var opt=arr(q.o).filter(function(o){return o[0]===code})[0];ev.push('Маг · '+q.h+': '+(opt?opt[1]:code))});
+  arr(mag.a11).forEach(function(code,i){var opt=arr(D.A11&&D.A11.o).filter(function(o){return o[0]===code})[0];ev.push('Маг · эмоциональный итог '+(i+1)+': '+(opt?opt[1]:code))});
+  var freq=['Почти никогда','Редко','Иногда','Часто','Очень часто'];
+  if(mag.R!=null&&freq[mag.R])ev.push('Маг · частота похожего чувства: '+freq[mag.R]);
+  var detail=lead?(ra&&ra.title?ra.title:phrase||lead)+'. Это предварительный повторяющийся эмоциональный итог, а не диагноз и не объяснение его причин.':'По ответам не выделилось одно устойчивое фоновое состояние. Это самостоятельный результат, а не отсутствие данных.';
+  if(mag.period)detail+=' Период ответа: '+({P1:'последние 2–3 месяца',P2:'последний год',P3:'сложный текущий период',P4:'период не определен'})[mag.period]+'.';
+  if(mag.R!=null&&freq[mag.R])detail+=' Частота по самооценке: '+freq[mag.R].toLowerCase()+'.';
+  if(mag.skips!=null)detail+=' Пропущено вопросов: '+mag.skips+'.';
+  out.fragments.push({domain:'Фоновое состояние',title:lead?(phrase||mag.top||lead):'Один фон пока не выделился',detail:detail,status:lead?'preliminary':'unclear',source:'mag',evidence:ev});
+ }
  if(fs&&fs.v){
   var fl=arr(fs.leading),names=Object.keys(fs.outcome||{});
   names.forEach(function(n){
@@ -85,6 +99,7 @@ function collect(P){
  if(echo&&echo.status==='mixed')out.tensions.push({title:'Разные реакции в разных ситуациях',detail:'В «Эхе» не выделился один общий способ. Это может говорить о контекстной изменчивости, а не о противоречии личности.',sources:['echo'],kind:'context'});
  if(!out.sources.length)out.unknown.push('Предыдущие исследования пока не дали доступных результатов. Зеркалу нечего сопоставлять.');
  else if(out.links.length===0)out.unknown.push('Пока нет достаточно сильных межмодульных совпадений. Отдельные наблюдения сохранены, но объединять их в общий вывод было бы преждевременно.');
+ if(!mag)out.unknown.push('«Маг» еще не доступен.');
  if(!fs)out.unknown.push('«Первые настройки» еще не доступны.');
  if(!km)out.unknown.push('«Идеальный Кривой Мир» еще не доступен.');
  if(!echo)out.unknown.push('«Эхо» еще не доступно.');
@@ -93,7 +108,7 @@ function collect(P){
 }
 function mapSvg(data){
  var nodes=[
-  ['СЕБЯ','ПРЕДСТАВЛЕНИЕ О СЕБЕ',160,43,['firstSet','echo']],
+  ['СЕБЯ','ПРЕДСТАВЛЕНИЕ О СЕБЕ',160,43,['mag','firstSet','echo']],
   ['МИР','ВОСПРИЯТИЕ МИРА',260,105,['km']],
   ['ДРУГИЕ','ОТНОШЕНИЯ И КОНТАКТ',220,202,['echo','wheel']],
   ['ВЫБОР','ЖЕЛАНИЯ И ДЕЙСТВИЯ',100,202,['wheel','firstSet']],
@@ -107,7 +122,7 @@ function mapSvg(data){
  '<circle cx="160" cy="124" r="43" fill="url(#imGlow)" stroke="#e4bd70" stroke-width="1.5"/><text x="160" y="119" fill="#ffe8b2" text-anchor="middle" font-size="12" font-weight="700">ВНУТРЕННЯЯ</text><text x="160" y="135" fill="#ffe8b2" text-anchor="middle" font-size="12" font-weight="700">АРХИТЕКТУРА</text>'+
  '</svg><div class="im-legend"><span>● Есть данные</span><span>○ Данных пока нет</span></div></div>';
 }
-function sourceName(id){return ({firstSet:'Первые настройки',km:'Идеальный Кривой Мир',echo:'Эхо',wheel:'Колесо самопредательства'})[id]||id}
+function sourceName(id){return ({mag:'Маг',firstSet:'Первые настройки',km:'Идеальный Кривой Мир',echo:'Эхо',wheel:'Колесо самопредательства'})[id]||id}
 function card(x,idx,interactive){
  var trace=arr(x.sources||[x.source]).filter(Boolean).map(function(s){return '<p>'+esc(sourceName(s))+'</p>'}).join('')+arr(x.evidence).map(function(e){return '<p class="im-evidence">'+esc(e)+'</p>'}).join('');
  return '<article class="im-card"><div class="im-card-k">'+esc(x.domain||'Отражение')+'</div><h3>'+esc(x.title)+'</h3><p>'+esc(x.detail)+'</p>'+
@@ -123,7 +138,7 @@ function mount(box){
   if(scene===0)html=intro();
   if(scene===1){
    html='<div class="im-stage"><div class="im-eyebrow">Первое отражение</div><h1>Пять сторон внутреннего мира</h1>'+mapSvg(data)+'<p>Здесь видны не оценки и не типы личности, а области, по которым уже есть сведения. Светятся только те зеркала, для которых найдены данные.</p>';
-   var groups=['Адаптация','Картина мира','Реакции','Самопредательство'];
+   var groups=['Фоновое состояние','Адаптация','Картина мира','Реакции','Самопредательство'];
    groups.forEach(function(g){var a=data.fragments.filter(function(x){return x.domain===g});if(a.length)html+='<section class="im-group"><h2>'+esc(g)+'</h2>'+a.map(function(x){return card(x,-1,false)}).join('')+'</section>'});
    html+='</div><button class="next" id="imNext">Посмотреть связи</button>';
   }
@@ -169,6 +184,7 @@ function mount(box){
  function finish(){
   var all=data.links.concat(data.tensions),rec={v:2,version:2,algoVersion:2,type:'synthesis',sources:data.sources,fragments:data.fragments,links:data.links,tensions:data.tensions,unknown:data.unknown,feedback:feedback,at:Date.now(),legacy:existing&&existing.answers?{answers:existing.answers,at:existing.at||null}:null};
   var lines=['Карта внутренней архитектуры','Источники: '+data.sources.map(function(x){return x.name}).join(', ')];
+  var magFragment=data.fragments.filter(function(x){return x.source==='mag'})[0];if(magFragment)lines.push('Маг: '+magFragment.title+' — '+magFragment.detail+(magFragment.evidence&&magFragment.evidence.length?'\\n'+magFragment.evidence.join('\\n'):''));
   if(data.links.length)lines.push('Межмодульные связи: '+data.links.map(function(x){return x.title+' — '+x.detail}).join('\n'));
   if(data.tensions.length)lines.push('Расхождения и контекст: '+data.tensions.map(function(x){return x.title+' — '+x.detail}).join('\n'));
   if(data.unknown.length)lines.push('Открытые вопросы: '+data.unknown.join('\n'));
