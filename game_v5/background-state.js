@@ -3,7 +3,7 @@
 'use strict';
 function arr(x){return Array.isArray(x)?x:[]}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-function text(s){return String(s==null?'':s).replace(/\\{([^{}|]*)\\|([^{}]*)\\}/g,function(_,a,b){return root.GG?GG(a,b):a}).replace(/§([^§|]+)\\|([^§]+)§/g,function(_,a,b){return root.GG?GG(a,b):a})}
+function text(s){return String(s==null?'':s).replace(/\{([^{}|]*)\|([^{}]*)\}/g,function(_,a,b){return root.GG?GG(a,b):a}).replace(/§([^§|]+)\|([^§]+)§/g,function(_,a,b){return root.GG?GG(a,b):a})}
 function mount(box){
  var G=root.GTests,D=root.GIMD,E=root.GBackgroundState;if(!G||!D||!E)return;
  G.css();
