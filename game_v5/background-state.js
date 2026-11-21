@@ -64,6 +64,7 @@ function mount(box){
   else html+='<div class="im-card"><p>Пока недостаточно ответов, чтобы увидеть повторяющиеся сигналы.</p></div>';
   if(r.adaptations.length){html+='<h2>Способы реагирования</h2>';r.adaptations.forEach(function(a){html+='<article class="im-card"><h3>'+esc(a.title)+'</h3><p>'+esc(a.description)+'</p></article>'})}
   if(r.resources.length){html+='<h2>Что уже помогает</h2>';r.resources.forEach(function(a){html+='<article class="im-card"><p>'+esc(a.description)+'</p></article>'})}
+  if(r.combinations.length){html+='<h2>Сочетания наблюдений</h2>';r.combinations.forEach(function(a){html+='<article class="im-card"><h3>'+esc(a.title)+'</h3><p>'+esc(a.description)+'</p><p class="im-muted">Оба сигнала проявились в общих областях: '+esc(a.sharedChapters.join(', '))+'. Это повод для исследования, а не доказательство общей причины.</p></article>'})}
   html+='<p class="im-muted">Сигналы не объясняют причины и не доказывают устойчивую черту. Их можно сверить с другими исследованиями и собственными примерами.</p><button class="next" id="bgContinue">Перейти в зал зеркал</button><button type="button" class="im-secondary" id="bgRetake">Пройти исследование заново</button>';
   shell(html);
  }
