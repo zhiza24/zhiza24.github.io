@@ -161,6 +161,14 @@ function mount(box){
      }).join('');
      html+='</section>';
     }
+    if(data.stateModel.context){
+     var cx=data.stateModel.context;
+     html+='<section class="im-group"><h2>Другие слои картины</h2>';
+     if(cx.reactionStrategy)html+='<article class="im-card"><div class="im-card-k">GLead · способ реагирования</div><h3>'+esc(cx.reactionStrategy.label)+'</h3><p>Это отдельный слой привычной стратегии, а не доказательство одного из 19 состояний.</p>'+(cx.reactionStrategy.secondary.length?'<p>Другие заметные стратегии: '+esc(cx.reactionStrategy.secondary.join(', '))+'</p>':'')+'</article>';
+     html+='<p>Первые настройки: '+(cx.firstSettingsAvailable?'результат есть':'пока нет')+' · Колесо: '+(cx.wheelAvailable?'результат есть':'пока нет')+' · Исследование желаний: '+(cx.desireResearchAvailable?'результат есть':'пока нет')+'</p>';
+     if(cx.values.length)html+='<p>Выбранные ценности: '+esc(cx.values.join(', '))+'</p>';
+     html+='<p class="im-muted">Эти данные помогают понять контекст и подобрать действия, но не прибавляют баллы состояниям автоматически.</p></section>';
+    }
     html+='<p class="im-muted">Нарратив и сферы жизни пока не учитываются в расчете: они не должны появляться в выводе без отдельного основания.</p></section>';
    }
    html+='</div><button class="next" id="imNext">Посмотреть связи</button>';
