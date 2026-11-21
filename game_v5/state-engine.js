@@ -141,7 +141,8 @@ function evaluate(P){
   var falsifierList=arr(DATA.falsifiers).filter(function(x){return x.state===id});
   var falsifierCount=falsifierList.filter(function(x){var v=savedFalsifiers[x.state+'::'+x.question];return v===true||v===1||v==='yes'||v==='present'||v==='да'}).length;
   s.falsifiers=falsifierCount;
-  if(falsifierCount>=3){s.status='situational';s.confidence='контрпримеры показывают, что реакция может быть ситуативной';}
+  s.falsifierEffect=Math.min(0.75,0.15*falsifierCount);
+  if(falsifierCount>0)s.confidence+='; есть контрпример, требуется учитывать контекст';
   if(s.needsDiscriminator.length){s.status='needs_discriminator';s.confidence='гипотеза, требуется различитель';}
   if(s.signals.CH.length&&!s.signals.SR.length&&!s.signals.NR.length&&(mageRepeatability===0||mageRepeatability===1)){s.status='situational';s.confidence='единичные или редкие реакции по самоотчету о повторяемости';}
   /* Без NR и данных о сферах глобальная устойчивость не присваивается. */
