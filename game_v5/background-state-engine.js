@@ -72,7 +72,7 @@ function calculate(answers,aftertaste){
   if(overlap.length)combinations.push({id:key,title:ids.map(function(id){return families[id].title}).join(' + '),description:D.MIX[key],sharedChapters:overlap});
  });
  return {
-  version:1,algoVersion:1,status:answered>=12?'collected':'preliminary',at:Date.now(),
+  version:1,algoVersion:1,status:answered>=12?'reviewable':'preliminary',at:Date.now(),
   coverage:{answered:answered,total:list(D.Q).length,aftertasteAnswered:afterCount,aftertasteTotal:list(D.AFTER_AT).length,chapters:Object.keys(chapters).length,chapterAnswers:chapters},
   families:familyList,adaptations:adaptationList,resources:resourceList,combinations:combinations,
   note:'Сигналы показывают повторяющиеся варианты ответов в предложенных ситуациях. Это не диагноз, не оценка личности и не доказательство причин.'
