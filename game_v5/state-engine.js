@@ -21,8 +21,10 @@ var FAMILIES=(function(){
  });
  var seen={};return pairs.filter(function(f){if(seen[f.id])return false;seen[f.id]=true;return true});
 })();
-var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A6:'INC',A8:'STD',A9:'ABD'};
-var ECHO_CODES={B8:'EFF'},ECHO_FAMILIES={B1:'SIG_WRT'};
+var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A9:'ABD'};
+var ECHO_CODES={},ECHO_FAMILIES={};
+var MAGE_CONTEXT_CODES={A5:'ощущение использования',A6:'ощущение отсутствия влияния',A7:'ожидание угрозы и неопределенности',A8:'ощущение нехватки',A10:'отказ от собственных предпочтений',A11:'ощущение борьбы',A12:'внутренняя опора и выбор следующего шага'};
+var ECHO_CONTEXT_CODES={B1:'доказывание ценности',B2:'угадывание ожиданий',B3:'проверка и контроль',B4:'отступление заранее',B5:'спасательство и избыточная ответственность',B6:'борьба и защита',B7:'откладывание выбора',B8:'прояснение и действие'};
 var SCALE_FAMILIES={
  KM02:['DEF_SCO'],KM04:['MIS_TRU'],
  SV02:['DEF_SCO'],SV05:['STD_MAS'],
