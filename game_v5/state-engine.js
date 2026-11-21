@@ -40,9 +40,23 @@ function uniq(a){var o={},r=[];a.forEach(function(x){if(x!=null&&!o[x]){o[x]=1;r
 function resultOf(P,top,module){
  return P[top]||P.modules&&P.modules[module]&&P.modules[module].result||null;
 }
+function contextOf(P){
+ var lab=obj(P.lab),calc=null;
+ if(!lab.lead&&global.GCalc){try{calc=global.GCalc(P)}catch(e){}}
+ var lead=lab.lead||calc&&calc.lead,labels={resp:'Гиперответственность',err:'Страх ошибки',appr:'Зависимость от одобрения',deval:'Обесценивание хорошего',others:'Ориентация на желания других',avoid:'Избегание действий'};
+ var wheel=P.betray&&P.betray.start||P.betrayWheel||P.wheelTest||null;
+ var values=arr(P.values&&P.values.order);
+ return {
+  reactionStrategy:lead?{id:lead,label:labels[lead]||lead,secondary:arr(lab.queue||calc&&calc.queue).slice(0,2),userAdjusted:lab.agree!=null,weak:lab.weak!=null?!!lab.weak:!!(calc&&calc.weak),tie:lab.tie!=null?!!lab.tie:!!(calc&&calc.tie)}:null,
+  firstSettingsAvailable:!!P.firstSet,
+  wheelAvailable:!!wheel,
+  values:values.slice(0,3),
+  desireResearchAvailable:!!P.desireLab
+ };
+}
 function evaluate(P){
  P=obj(P);
- var states={},families={},layers={SR:[],CH:[],NR:[]},unknown=[];
+ var context=contextOf(P),states={},families={},layers={SR:[],CH:[],NR:[]},unknown=[];
  arr(DATA.states).forEach(function(s){
   states[s.id]={id:s.id,name:s.name,valence:s.valence,stance:s.stance,need:s.need,gives:s.gives,costs:s.costs,
    signals:{SR:[],CH:[],NR:[]},situations:[],spheres:[],falsifiers:0,confidence:'нет данных',status:'unassessed',needsDiscriminator:[]};
@@ -130,6 +144,7 @@ function evaluate(P){
  });
  return {
   version:'1.0.0',sourceModelVersion:DATA.version||'0.1',at:Date.now(),
+  context:context,
   note:'Рабочая модель самонаблюдения; статусы предварительные, не клиническая диагностика.',
   rules:{requiredLayers:2,requiredSituations:3,globalTraitRequiresSpheres:2,highConfidenceAvailable:false},
   layers:{SR:layers.SR,CH:layers.CH,NR:layers.NR},
