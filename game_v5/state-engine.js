@@ -135,7 +135,12 @@ function evaluate(P){
   if(layersN>=2&&situations>=3){s.confidence='вероятно, контекст не определен';s.status='probable';}
   else if(layersN>=1||situations>=2){s.confidence='гипотеза';s.status='hypothesis';}
   else{s.confidence='нет достаточных данных';s.status='unassessed';}
-  var falsifierList=arr(DATA.falsifiers).filter(function(x){return x.state===id});\n  var falsifierCount=falsifierList.filter(function(x){var v=savedFalsifiers[x.state+'::'+x.question];return v===true||v===1||v==='yes'||v==='present'||v==='да'}).length;\n  s.falsifiers=falsifierCount;\n  if(falsifierCount>=3){s.status='situational';s.confidence='контрпримеры показывают, что реакция может быть ситуативной';}\n  if(s.needsDiscriminator.length){s.status='needs_discriminator';s.confidence='гипотеза, требуется различитель';}\n  if(s.signals.CH.length&&!s.signals.SR.length&&!s.signals.NR.length&&(mageRepeatability===0||mageRepeatability===1)){s.status='situational';s.confidence='единичные или редкие реакции по самоотчету о повторяемости';}
+  var falsifierList=arr(DATA.falsifiers).filter(function(x){return x.state===id});
+  var falsifierCount=falsifierList.filter(function(x){var v=savedFalsifiers[x.state+'::'+x.question];return v===true||v===1||v==='yes'||v==='present'||v==='да'}).length;
+  s.falsifiers=falsifierCount;
+  if(falsifierCount>=3){s.status='situational';s.confidence='контрпримеры показывают, что реакция может быть ситуативной';}
+  if(s.needsDiscriminator.length){s.status='needs_discriminator';s.confidence='гипотеза, требуется различитель';}
+  if(s.signals.CH.length&&!s.signals.SR.length&&!s.signals.NR.length&&(mageRepeatability===0||mageRepeatability===1)){s.status='situational';s.confidence='единичные или редкие реакции по самоотчету о повторяемости';}
   /* Без NR и данных о сферах глобальная устойчивость не присваивается. */
   s.globalTrait=false;
   s.layersConfirmed=['SR','CH','NR'].filter(function(k){return s.signals[k].length>0});
