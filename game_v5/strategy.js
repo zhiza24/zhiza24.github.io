@@ -261,7 +261,7 @@ function testsLayer(P,f){
   direct.slice(0,2).forEach(function(x){
    obst.push({t:'Повторяющаяся тема · '+x.name,x:x.stance+' Это предварительное наблюдение по '+x.signals.CH.length+' ситуационным выборам.'});
    if(window.GStateEngine&&GStateEngine.interventions){
-    var iv=GStateEngine.interventions(x.id)[0];
+    var chosen=sm.stateGoals&&sm.stateGoals[x.id],iv=(chosen==='Ослабить'||chosen==='Усилить')?GStateEngine.interventions(x.id,chosen)[0]:null;
     if(iv)actions.push({state:x.name,goal:iv.goal,lever:iv.lever,action:iv.action,time:iv.time,stake:iv.stake,caution:iv.caution||''});
    }
   });
