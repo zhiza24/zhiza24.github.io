@@ -211,7 +211,17 @@ function mount(box){
   }
   lines.push('Отклик игрока: '+all.map(function(x,i){return x.title+': '+(feedback[i]||'не отмечено')}).join('; '));
   var diary={id:'inner_mirror',title:'Карта внутренней архитектуры',passed:'Зеркало внутреннего мира',lead:data.links.length?'Обнаружены связи между несколькими исследованиями.':'Собраны отдельные отражения; межмодульных связей пока недостаточно.',strong:data.links.map(function(x){return x.title}).join('; '),insight:data.tensions.length?data.tensions[0].title:'',insightMore:lines.join('\n'),answers:[]};
-  if(!preview){G.store('im',rec,'Зеркало внутреннего мира: карта собрана');}
+  if(!preview){
+   G.store('im',rec,'Зеркало внутреннего мира: карта собрана');
+   /* Отдельно сохраняем вычисленный слой в общий профиль, не заменяя прежние уровни backgroundProfile. */
+   if(data.stateModel&&window.GProfile){
+    try{
+     var profile=GProfile.load(),background=profile.backgroundProfile&&typeof profile.backgroundProfile==='object'?profile.backgroundProfile:{};
+     background.stateModel=data.stateModel;
+     GProfile.saveResult('backgroundProfile',background);
+    }catch(e){console.warn('Не удалось сохранить модель состояний в профиль',e)}
+   }
+  }
   var html='<span class="tag">Точка 0</span><span class="tag">Зеркало</span>'+finalHtml().replace('<button class="next" id="imFinish">Сохранить в дневник</button>','<p class="im-saved">Карта сохранена в дневнике.</p>');
   G.result(box,'im',{html:html,diary:diary},function(){scene=0;feedback={};draw()});
  }
