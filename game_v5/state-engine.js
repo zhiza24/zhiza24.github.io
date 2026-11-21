@@ -21,9 +21,9 @@ var FAMILIES=(function(){
  });
  var seen={};return pairs.filter(function(f){if(seen[f.id])return false;seen[f.id]=true;return true});
 })();
-var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A9:'ABD'};
+var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS'};
 var ECHO_CODES={},ECHO_FAMILIES={};
-var MAGE_CONTEXT_CODES={A5:'ощущение использования',A6:'ощущение отсутствия влияния',A7:'ожидание угрозы и неопределенности',A8:'ощущение нехватки',A10:'отказ от собственных предпочтений',A11:'ощущение борьбы',A12:'внутренняя опора и выбор следующего шага'};
+var MAGE_CONTEXT_CODES={A9:'одиночество и переживание, что все приходится нести одному',A5:'ощущение использования',A6:'ощущение отсутствия влияния',A7:'ожидание угрозы и неопределенности',A8:'ощущение нехватки',A10:'отказ от собственных предпочтений',A11:'ощущение борьбы',A12:'внутренняя опора и выбор следующего шага'};
 var ECHO_CONTEXT_CODES={B1:'доказывание ценности',B2:'угадывание ожиданий',B3:'проверка и контроль',B4:'отступление заранее',B5:'спасательство и избыточная ответственность',B6:'борьба и защита',B7:'откладывание выбора',B8:'прояснение и действие'};
 var SCALE_FAMILIES={
  KM02:['DEF_SCO'],KM04:['MIS_TRU'],
@@ -141,10 +141,20 @@ function evaluate(P){
   var falsifierList=arr(DATA.falsifiers).filter(function(x){return x.state===id});
   var falsifierCount=falsifierList.filter(function(x){var v=savedFalsifiers[x.state+'::'+x.question];return v===true||v===1||v==='yes'||v==='present'||v==='да'}).length;
   s.falsifiers=falsifierCount;
-  s.falsifierEffect=Math.min(0.75,0.15*falsifierCount);
-  if(falsifierCount>0)s.confidence+='; есть контрпример, требуется учитывать контекст';
+  s.falsifierQuestions=falsifierList.length;
+  s.falsifierAssessment=falsifierCount?{
+   status:'counterexamples_present',
+   count:falsifierCount,
+   available:falsifierList.length,
+   note:'Есть примеры, которые не укладываются в гипотезу. Это не отменяет наблюдения, но ограничивает их обобщение и требует учитывать обстоятельства.'
+  }:{status:'not_reported',count:0,available:falsifierList.length,note:'Контрпримеры пока не отмечены. Это не считается дополнительным подтверждением гипотезы.'};
   if(s.needsDiscriminator.length){s.status='needs_discriminator';s.confidence='гипотеза, требуется различитель';}
   if(!s.needsDiscriminator.length&&s.signals.CH.length&&!s.signals.SR.length&&!s.signals.NR.length&&(mageRepeatability===0||mageRepeatability===1)){s.status='situational';s.confidence='единичные или редкие реакции по самоотчету о повторяемости';}
+  if(falsifierCount>0){
+   if(s.status==='probable'){s.status='hypothesis';s.confidence='гипотеза, есть контрпримеры; контекст важен';}
+   else if(s.status==='hypothesis')s.confidence='гипотеза с исключениями; контекст важен';
+   else if(s.status==='situational')s.confidence='ситуативная реакция; есть контрпримеры';
+  }
   /* Без NR и данных о сферах глобальная устойчивость не присваивается. */
   s.globalTrait=false;
   s.layersConfirmed=['SR','CH','NR'].filter(function(k){return s.signals[k].length>0});
