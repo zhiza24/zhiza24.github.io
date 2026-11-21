@@ -92,13 +92,19 @@ function collect(P){
  return out;
 }
 function mapSvg(data){
- var nodes=[['Я и мои настройки',0,0],['Я и мир',-84,-55],['Я и другие',84,-55],['Я и выбор',-84,58],['Я и привычные правила',84,58]];
+ var nodes=[
+  ['СЕБЯ','ПРЕДСТАВЛЕНИЕ О СЕБЕ',160,43,['firstSet','echo']],
+  ['МИР','ВОСПРИЯТИЕ МИРА',260,105,['km']],
+  ['ДРУГИЕ','ОТНОШЕНИЯ И КОНТАКТ',220,202,['echo','wheel']],
+  ['ВЫБОР','ЖЕЛАНИЯ И ДЕЙСТВИЯ',100,202,['wheel','firstSet']],
+  ['ПРАВИЛА','ПРИВЫЧНЫЕ УСТАНОВКИ',60,105,['firstSet','km']]
+ ];
  var active={};data.sources.forEach(function(s){active[s.id]=true});
- var n=data.sources.length;
- return '<div class="im-map"><svg viewBox="0 0 320 250" role="img" aria-label="Карта связей внутреннего мира"><defs><radialGradient id="imGlow"><stop stop-color="#ffe8a3" stop-opacity=".8"/><stop offset="1" stop-color="#c28b37" stop-opacity=".05"/></radialGradient></defs>'+
- '<g stroke="#9f7944" stroke-opacity=".65" stroke-width="1.4"><path d="M160 124L76 69M160 124L244 69M160 124L76 183M160 124L244 183"/></g>'+
- '<circle cx="160" cy="124" r="48" fill="url(#imGlow)" stroke="#e4bd70" stroke-width="1.5"/><text x="160" y="119" fill="#ffe8b2" text-anchor="middle" font-size="13" font-weight="700">ВНУТРЕННЯЯ</text><text x="160" y="136" fill="#ffe8b2" text-anchor="middle" font-size="13" font-weight="700">АРХИТЕКТУРА</text>'+
- nodes.slice(1).map(function(x,i){var ids=['firstSet','km','echo','wheel'],ok=!!active[ids[i]],cx=160+x[1],cy=124+x[2];return '<circle cx="'+cx+'" cy="'+cy+'" r="35" fill="'+(ok?'#49351d':'#201a14')+'" stroke="'+(ok?'#d4a653':'#66533a')+'" stroke-width="1.2" opacity="'+(ok?'1':'.6')+'"/><text x="'+cx+'" y="'+(cy-2)+'" fill="'+(ok?'#ffe8b2':'#a89a83')+'" text-anchor="middle" font-size="10">'+esc(x[0].replace('Я и ',''))+'</text><text x="'+cx+'" y="'+(cy+12)+'" fill="#c9a46a" text-anchor="middle" font-size="9">'+(ok?'проявлено':'пока нет')+'</text>'}).join('')+
+ var paths=nodes.map(function(n){return '<path d="M160 124L'+n[2]+' '+n[3]+'" />'}).join('');
+ var circles=nodes.map(function(n){var ok=n[4].some(function(id){return !!active[id]}),cx=n[2],cy=n[3];return '<circle cx="'+cx+'" cy="'+cy+'" r="31" fill="'+(ok?'#49351d':'#201a14')+'" stroke="'+(ok?'#d4a653':'#66533a')+'" stroke-width="1.2" opacity="'+(ok?'1':'.6')+'"/><text x="'+cx+'" y="'+(cy-2)+'" fill="'+(ok?'#ffe8b2':'#a89a83')+'" text-anchor="middle" font-size="10" font-weight="700">'+n[0]+'</text><text x="'+cx+'" y="'+(cy+11)+'" fill="#c9a46a" text-anchor="middle" font-size="6.5">'+n[1]+'</text><text x="'+cx+'" y="'+(cy+22)+'" fill="#c9a46a" text-anchor="middle" font-size="8">'+(ok?'проявлено':'пока нет')+'</text>'}).join('');
+ return '<div class="im-map"><svg viewBox="0 0 320 250" role="img" aria-label="Пять зеркал внутреннего мира и связи с центром"><defs><radialGradient id="imGlow"><stop stop-color="#ffe8a3" stop-opacity=".8"/><stop offset="1" stop-color="#c28b37" stop-opacity=".05"/></radialGradient></defs>'+
+ '<g stroke="#9f7944" stroke-opacity=".65" stroke-width="1.4">'+paths+'</g>'+circles+
+ '<circle cx="160" cy="124" r="43" fill="url(#imGlow)" stroke="#e4bd70" stroke-width="1.5"/><text x="160" y="119" fill="#ffe8b2" text-anchor="middle" font-size="12" font-weight="700">ВНУТРЕННЯЯ</text><text x="160" y="135" fill="#ffe8b2" text-anchor="middle" font-size="12" font-weight="700">АРХИТЕКТУРА</text>'+
  '</svg><div class="im-legend"><span>● Есть данные</span><span>○ Данных пока нет</span></div></div>';
 }
 function sourceName(id){return ({firstSet:'Первые настройки',km:'Идеальный Кривой Мир',echo:'Эхо',wheel:'Колесо самопредательства'})[id]||id}
