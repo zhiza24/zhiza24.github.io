@@ -223,6 +223,14 @@ function practRec(P){
   if(L.S2>=2)add('create','Интерес и движение — твоя сильная сторона. Стоит давать им время.');
   add('keepgood','Твой фон устойчивый. Практика помогает сохранять то, что уже работает.');
   return out}
+ /* Новая модель состояний: практику предлагаем только при повторении прямых ситуационных выборов
+    минимум в двух разных ситуациях и без неразрешенного различителя. */
+ var sm=bp&&bp.stateModel,practiceByState={SIG:'mydecision',ABD:'contact',STD:'enough',INC:'myzone',EFF:'create',WRT:'keepgood',SEC:'contact',TRU:'acceptsup',MAS:'create',CUR:'create',GRA:'grat',FLO:'create',PLY:'pract',SCO:'keepgood'};
+ if(sm&&Array.isArray(sm.states)){
+  sm.states.filter(function(x){return x.signals&&x.signals.CH&&x.signals.CH.length>=2&&!x.needsDiscriminator.length})
+   .sort(function(a,b){return b.signals.CH.length-a.signals.CH.length})
+   .some(function(x){var id=practiceByState[x.id];if(!id)return false;add(id,'В двух или более ситуационных выборах повторилась близкая тема «'+x.name+'». Это рабочая гипотеза; проверь, подходит ли практика.');return out.length>=2});
+ }
  if(bp&&bp.unstableJoy)add('keepgood','После хороших событий быстро возвращается ощущение нехватки.');
  if(L.S6>=2)add('mine','Внимание чаще уходит к тому, чего еще нет. Учимся присваивать результат.');
  if(L.S5>=2)add('risk','Часто заранее видишь сложности. Учимся отличать риск от предположения.');
@@ -235,14 +243,6 @@ function practRec(P){
  if(lvl(P,'respTest','RS02')>=2||lvl(P,'selfWorth','SV04')>=2)add('guilt','Вина и чужая ответственность звучат громко.');
  if(lvl(P,'respTest','RS06')>=2)add('letgo','Трудно поручать и доверять.');
  if(L.S2>=2)add('create','Интерес и движение — твоя опора.');
- /* Новая модель состояний: практику предлагаем только при повторении прямых ситуационных выборов
-    минимум в двух разных ситуациях и без неразрешенного различителя. */
- var sm=bp&&bp.stateModel,practiceByState={SIG:'mydecision',ABD:'contact',STD:'enough',INC:'myzone',EFF:'create',WRT:'keepgood',SEC:'contact',TRU:'acceptsup',MAS:'create',CUR:'create',GRA:'grat',FLO:'create',PLY:'pract',SCO:'keepgood'};
- if(sm&&Array.isArray(sm.states)){
-  sm.states.filter(function(x){return x.signals&&x.signals.CH&&x.signals.CH.length>=2&&!x.needsDiscriminator.length})
-   .sort(function(a,b){return b.signals.CH.length-a.signals.CH.length})
-   .some(function(x){var id=practiceByState[x.id];if(!id)return false;add(id,'В двух или более ситуационных выборах повторилась близкая тема «'+x.name+'». Это рабочая гипотеза; проверь, подходит ли практика.');return out.length>=2});
- }
  return out}
 function testsLayer(P,f){
  var res=[],obst=[],bp=P.backgroundProfile,F=window.GIMD&&GIMD.FAM;
