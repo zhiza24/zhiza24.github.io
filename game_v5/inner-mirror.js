@@ -16,6 +16,21 @@ function collect(P){
  var echo=P.archB||P.modules&&P.modules.archB&&P.modules.archB.result||null;
  var wheel=P.betray&&P.betray.start||P.betrayWheel||P.modules&&P.modules.betrayWheel&&P.modules.betrayWheel.result||null;
  var out={sources:[],fragments:[],links:[],tensions:[],unknown:[]};
+ var background=P.backgroundProfile&&P.backgroundProfile.backgroundState;
+ if(background&&background.version===1){
+  source('backgroundState','Фоновое состояние','24 ситуации и 8 эмоциональных итогов');
+  var BD=window.GIMD||{};
+  arr(background.families).forEach(function(f){
+   if(!f.situationCount&&!f.aftertaste)return;
+   var meta=BD.FAM&&BD.FAM[f.id]||{},ev=arr(f.situations).map(function(id){var q=arr(BD.Q).filter(function(x){return x[0]===id})[0];return q?q[2]:id});
+   var detail=(meta.x||f.description||'Наблюдения в ситуациях.')+' '+(f.repeatLabel||'');
+   if(f.aftertasteLabel)detail+=' '+f.aftertasteLabel+'.';
+   out.fragments.push({domain:'Фоновое состояние',title:meta.t||f.title,detail:detail,source:'backgroundState',evidence:ev});
+  });
+  arr(background.adaptations).forEach(function(a){if(a.situations&&a.situations.length)out.fragments.push({domain:'Адаптация',title:a.title,detail:a.description+' Отмечено в '+a.situations.length+' ситуациях.',source:'backgroundState'})});
+  arr(background.resources).forEach(function(r){if(r.weight>0)out.fragments.push({domain:'Ресурсы',title:r.id,detail:r.description||((BD.RES||{})[r.id]||''),source:'backgroundState'})});
+  if(background.coverage&&background.coverage.answered<12)out.unknown.push('Фоновое состояние: отвечено меньше половины ситуационных вопросов; картина предварительная.');
+ }
  function source(id,name,detail){out.sources.push({id:id,name:name,detail:detail||''})}
  if(mag&&mag.v===2){source('mag','Маг','Повторяющийся эмоциональный итог в разных жизненных ситуациях');}
  if(fs&&fs.v){source('firstSet','Первые настройки','Детские и нынешние стратегии адаптации');}
@@ -110,7 +125,7 @@ function collect(P){
 }
 function mapSvg(data){
  var nodes=[
-  ['СЕБЯ','ПРЕДСТАВЛЕНИЕ О СЕБЕ',160,43,['mag','firstSet','echo']],
+  ['СЕБЯ','ПРЕДСТАВЛЕНИЕ О СЕБЕ',160,43,['backgroundState','mag','firstSet','echo']],
   ['МИР','ВОСПРИЯТИЕ МИРА',260,105,['km']],
   ['ДРУГИЕ','ОТНОШЕНИЯ И КОНТАКТ',220,202,['echo','wheel']],
   ['ВЫБОР','ЖЕЛАНИЯ И ДЕЙСТВИЯ',100,202,['wheel','firstSet']],
@@ -124,7 +139,7 @@ function mapSvg(data){
  '<circle cx="160" cy="124" r="43" fill="url(#imGlow)" stroke="#e4bd70" stroke-width="1.5"/><text x="160" y="119" fill="#ffe8b2" text-anchor="middle" font-size="12" font-weight="700">ВНУТРЕННЯЯ</text><text x="160" y="135" fill="#ffe8b2" text-anchor="middle" font-size="12" font-weight="700">АРХИТЕКТУРА</text>'+
  '</svg><div class="im-legend"><span>● Есть данные</span><span>○ Данных пока нет</span></div></div>';
 }
-function sourceName(id){return ({mag:'Маг',firstSet:'Первые настройки',km:'Идеальный Кривой Мир',echo:'Эхо',wheel:'Колесо самопредательства'})[id]||id}
+function sourceName(id){return ({backgroundState:'Фоновое состояние',mag:'Маг',firstSet:'Первые настройки',km:'Идеальный Кривой Мир',echo:'Эхо',wheel:'Колесо самопредательства'})[id]||id}
 function card(x,idx,interactive){
  var trace=arr(x.sources||[x.source]).filter(Boolean).map(function(s){return '<p>'+esc(sourceName(s))+'</p>'}).join('')+arr(x.evidence).map(function(e){return '<p class="im-evidence">'+esc(e)+'</p>'}).join('');
  return '<article class="im-card"><div class="im-card-k">'+esc(x.domain||'Отражение')+'</div><h3>'+esc(x.title)+'</h3><p>'+esc(x.detail)+'</p>'+
