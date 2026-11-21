@@ -30,9 +30,9 @@ var FAMILIES=[
 var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A6:'INC',A8:'STD',A9:'ABD'};
 var ECHO_CODES={B8:'EFF'},ECHO_FAMILIES={B1:'SIG_WRT'};
 var SCALE_FAMILIES={
- KM04:['MIS_TRU'],KM05:['INC_EFF'],
- SV01:['SIG_WRT'],SV02:['DEF_SCO'],SV03:['MIS_AUT'],SV05:['SIG_WRT','STD_MAS'],
- RS05:['STD_MAS'],RS06:['MIS_TRU','MIS_AUT']
+ KM02:['DEF_SCO'],KM04:['MIS_TRU'],KM05:['INC_EFF'],
+ SV01:['SIG_WRT'],SV02:['DEF_SCO'],SV05:['SIG_WRT','STD_MAS'],SV06:['SIG_WRT'],
+ RS02:['DEF_SCO'],RS04:['INC_EFF'],RS05:['STD_MAS'],RS06:['MIS_TRU','MIS_AUT']
 };
 function arr(x){return Array.isArray(x)?x:[]}
 function obj(x){return x&&typeof x==='object'?x:{}}
@@ -113,8 +113,7 @@ function evaluate(P){
  /* Первые настройки и GLead/GPAT описывают стратегии адаптации, а не состояния из каталога. Сохраняем их отдельно. */
  var fs=resultOf(P,'firstSet','firstSet');
  if(fs&&fs.v)unknown.push('«Первые настройки» описывают динамику адаптации; без отдельного различителя они не засчитываются как прямое доказательство одного из 19 состояний.');
- var kmContext=resultOf(P,'kmTest','km');
- if(kmContext&&arr(kmContext.leadingScales).indexOf('KM02')>=0)unknown.push('Шкала KM02 показывает условную самоценность, но пока не распределяется между конкретными состояниями: для этого требуется дополнительное различение.');
+
  if(P.betray&&P.betray.start)unknown.push('Колесо показывает конкретные формы поведения и опоры. Пока оно используется как контекст, а не как прямой балл одного из 19 состояний: соответствия требуют отдельной проверки.');
  if(P.lab)unknown.push('GLead/GPAT описывают привычный способ реагирования и его стратегию. Они учитываются отдельно и не считаются независимым подтверждением состояния.');
  unknown.push('Нарративный слой пока не оценивается автоматически. Личные записи не анализируются без отдельного явного согласия.');
