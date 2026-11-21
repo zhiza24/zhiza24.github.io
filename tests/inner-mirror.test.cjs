@@ -39,6 +39,8 @@ const full=E.calculate(fullAnswers,fullAfter);
 assert.equal(full.coverage.answered,24);
 assert.equal(full.coverage.aftertasteAnswered,8);
 assert.equal(full.coverage.chapters,4);
+assert.equal(Object.keys(full.answers).length,24,'сырые ситуационные ответы сохраняются');
+assert.equal(Object.keys(full.aftertasteAnswers).length,8,'сырые ответы о послевкусии сохраняются');
 const withoutAfter=E.calculate(fullAnswers,{});
 full.families.forEach(f=>{
  const other=withoutAfter.families.find(x=>x.id===f.id);
