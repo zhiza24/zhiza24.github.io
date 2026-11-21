@@ -45,44 +45,48 @@ function scoreA(ans){var s={},sit={};ACODES.forEach(function(c){s[c]=0;sit[c]=0}
  return {scores:s,sit:sit,a11:a11,R:R,Rcode:a12Code(ans),cand:cand,skips:skips}}
 function a12Code(ans){var selected=Array.isArray(ans.A11)?ans.A11:[];var m=selected.filter(function(c){return c!=='0'});if(m.length)return m[0];if(selected.indexOf('0')>=0)return null;
  var s={};D.A.forEach(function(q){var c=ans[q.id];if(c&&c!=='0'&&c!=='skip')s[c]=(s[c]||0)+1});var k=Object.keys(s).sort(function(x,y){return s[y]-s[x]||ACODES.indexOf(x)-ACODES.indexOf(y)});return k[0]||null}
-function scoreB(ans){var s={},availability={},rates={};BCODES.forEach(function(c){s[c]=0;availability[c]=0});var answered=0,coded=0;
- D.B.forEach(function(q){var c=ans[q.id],seen={};if(c!=null&&c!=='skip')answered++;if(c&&c!=='0'&&c!=='skip'&&s[c]!=null){s[c]++;coded++}q.o.forEach(function(o){if(availability[o[0]]!=null&&!seen[o[0]]){availability[o[0]]++;seen[o[0]]=1}})});
+function scoreB(ans){var s={},availability={},rates={},hits={};BCODES.forEach(function(c){s[c]=0;availability[c]=0;hits[c]=0});var answered=0,coded=0;
+ D.B.forEach(function(q){var c=ans[q.id],seen={};if(c!=null&&c!=='skip')answered++;if(c&&c!=='0'&&c!=='skip'&&s[c]!=null){s[c]++;hits[c]++;coded++}q.o.forEach(function(o){if(availability[o[0]]!=null&&!seen[o[0]]){availability[o[0]]++;seen[o[0]]=1}})});
  BCODES.forEach(function(c){rates[c]=availability[c]?s[c]/availability[c]:0});
- var ord=BCODES.slice().sort(function(x,y){return rates[y]-rates[x]||s[y]-s[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}),top=s[ord[0]]||0,topRate=rates[ord[0]]||0,near=top?ord.filter(function(c){return s[c]>=2&&topRate-rates[c]<=0.15}):[],status=answered<8||coded<6?'insufficient':top<3?'weak':near.length>1?'mixed':'leading',leaders=status==='mixed'?near:status==='leading'?[ord[0]]:[],cand=leaders.slice(0,2);
- return {scores:s,count:JSON.parse(JSON.stringify(s)),availability:availability,rates:rates,cand:cand,leaders:leaders,topScore:top,topRate:topRate,answered:answered,coded:coded,status:status}}
+ var ord=BCODES.slice().sort(function(x,y){return s[y]-s[x]||rates[y]-rates[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}),top=s[ord[0]]||0,topRate=rates[ord[0]]||0,cand=ord.filter(function(c){return s[c]>0}).slice(0,2),status=top>=3?'leading':top>=2?'tentative':'weak',leaders=status==='leading'?[ord[0]]:[];
+ return {scores:s,count:JSON.parse(JSON.stringify(s)),hits:hits,availability:availability,rates:rates,cand:cand,leaders:leaders,topScore:top,topRate:topRate,answered:answered,coded:coded,status:status}}
 function modeOf(ans){var s={C1:0,C2:0,C3:0,C4:0};D.C.forEach(function(q){var c=ans[q.id];if(c&&s[c]!=null)s[c]++});
- if(s.C4>=3)return {scores:s,mode:'C4'};var mx=Math.max(s.C1,s.C2,s.C3,s.C4),tops=Object.keys(s).filter(function(k){return s[k]===mx});
- if(tops.length===1&&mx>=3)return {scores:s,mode:tops[0]};
- if(tops.length>=2&&((tops.indexOf('C1')>=0&&tops.indexOf('C2')>=0)||(tops.indexOf('C2')>=0&&tops.indexOf('C3')>=0))&&s.C4>=2)return {scores:s,mode:'C4'};
+ var mx=Math.max(s.C1,s.C2,s.C3,s.C4),tops=Object.keys(s).filter(function(k){return s[k]===mx});
+ if(mx<3)return {scores:s,mode:'mix'};
+ if(s.C4>=3&&s.C4===mx)return {scores:s,mode:'C4'};
+ if(tops.length===1)return {scores:s,mode:tops[0]};
+ if(tops.indexOf('C4')>=0)return {scores:s,mode:'C4'};
+ if(s.C4>=2&&((tops.indexOf('C1')>=0&&tops.indexOf('C2')>=0)||(tops.indexOf('C2')>=0&&tops.indexOf('C3')>=0)))return {scores:s,mode:'C4'};
  return {scores:s,mode:'mix'}}
 function v02(x){return x==='2'?2:x==='1'?1:(x==='0a'||x==='0b')?0:null}
 /* итоговые статусы по правилам 9.1–9.4 */
-function finalize(P){var e=P.ego&&P.ego.v===2?P.ego:null,b0=P.archB||null,b=b0?(b0.status?b0:scoreB(b0.answers||{})):null,V=(P.archV&&P.archV.answers)||{},out={};if(b&&['leading','mixed'].indexOf(b.status)<0)b=null;
+function finalize(P){var e=P.ego&&P.ego.v===2?P.ego:null,b0=P.archB||null,b=b0?scoreB(b0.answers||{}):null,V=(P.archV&&P.archV.answers)||{},out={};
  var cand=e?e.cand||[]:[],S=e?e.scores:{};
  function st(c,i){if(!c||!e)return 'unclear';var s=S[c]||0,sit=e.sit[c]||0,inA=e.a11.indexOf(c)>=0,R=e.Rcode===c?e.R:null,vv=v02(V['V02_'+i]),rec=V['V01_'+i]&&V['V01_'+i]!=='none'&&V['V01_'+i]!=='skip';
   if(e.skips>=5)return 'unclear';
   if(s>=4&&sit>=2&&inA&&R!=null&&R>=2&&vv!=null&&vv>=1&&rec)return 'supported';
-  if(s>=3&&(inA||(vv!=null&&vv>=1)))return 'tentative';return 'unclear'}
- var a=st(cand[0],0);
- if(a!=='unclear'&&cand[1]){var s0=S[cand[0]],s1=S[cand[1]],v0=v02(V.V02_0),v1=v02(V.V02_1);if(Math.abs(s0-s1)<=1&&s0>=3&&s1>=3&&v0>=1&&v1>=1)a='mixed'}
- out.a=a;out.a1=cand[0]||null;out.a2=cand[1]||null;out.recalled=!!(V.V01_0&&V.V01_0!=='none'&&V.V01_0!=='skip');
+  if(s>=3&&((inA&&R!==0)||(vv!=null&&vv>=1)))return 'tentative';return 'unclear'}
+ var s0=st(cand[0],0),s1=st(cand[1],1),a='unclear',a1=cand[0]||null,a2=cand[1]||null,aIndex=0;
+ if(s0!=='unclear')a=s0;
+ else if(s1!=='unclear'){a=s1;a1=cand[1]||null;a2=null;aIndex=1}
+ if(s0!=='unclear'&&s1!=='unclear'){var v0=v02(V.V02_0),v1=v02(V.V02_1);if(Math.abs((S[cand[0]]||0)-(S[cand[1]]||0))<=1&&(S[cand[0]]||0)>=3&&(S[cand[1]]||0)>=3&&v0>=1&&v1>=1){a='mixed';a1=cand[0];a2=cand[1];aIndex=0}}
+ out.a=a;out.a1=a1;out.a2=a2;out.aIndex=aIndex;out.recalled=!!(V['V01_'+aIndex]&&V['V01_'+aIndex]!=='none'&&V['V01_'+aIndex]!=='skip');out.counterEvidence=V.V03==='accepted';
  var bs=b?JSON.parse(JSON.stringify(b.scores)):{},bc=b?(b.cand||[]).slice():[],v6=V.V06;
  if(bc[0]&&bc[1]){if(v6==='b1')bs[bc[0]]+=2;if(v6==='b2')bs[bc[1]]+=2;if(v6==='both'){bs[bc[0]]++;bs[bc[1]]++}if(v6==='neither'){bs[bc[0]]-=2;bs[bc[1]]-=2}}
- var askedB=bc[0],bo=bc.slice().sort(function(x,y){return bs[y]-bs[x]}),b1=bo[0],b2=bo[1],cnt=b?b.count||b.scores:{};
- var bst='unclear';if(b1){var t=bs[b1];
-  if(bo[1]&&Math.abs(t-bs[b2])<=1&&t>=3&&bs[b2]>=3&&v6==='both')bst='mixed';
-  else if(t>=3&&(cnt[b1]||0)>=3&&!(V.V05==='disconfirm'&&b1===askedB))bst='supported';
-  else if(t>=2)bst='tentative'}
+ var askedB=bc[0],bo=bc.slice().sort(function(x,y){return bs[y]-bs[x]||bc.indexOf(x)-bc.indexOf(y)}),b1=bo[0],b2=bo[1],cnt=b?b.hits||b.count||b.scores:{};
+ var bst='unclear';if(b1){var t=bs[b1],disconfirmed=V.V05==='disconfirm'&&b1===askedB;
+  if(!disconfirmed&&bo[1]&&Math.abs(t-bs[b2])<=1&&t>=3&&bs[b2]>=3&&v6==='both')bst='mixed';
+  else if(!disconfirmed&&t>=3&&(cnt[b1]||0)>=3)bst='supported';
+  else if(!disconfirmed&&t>=2)bst='tentative'}
  out.b=bst;out.b1=b1||null;out.b2=b2||null;
- var lo=a==='unclear',hi=a==='supported'&&bst==='supported'&&(V.V05==='repeat'||V.V05==='cost')&&out.recalled;
- out.cons=hi?'high':(!lo&&bst!=='unclear')?'medium':'low';
+ var lo=a==='unclear',hi=a==='supported'&&bst==='supported'&&(V.V05==='repeat'||V.V05==='cost')&&out.recalled&&!out.counterEvidence;
+ out.cons=lo||out.counterEvidence?'low':hi?'high':bst!=='unclear'?'medium':'low';
  return out}
-
 /* ---------- блоки результата (раздел 13) ---------- */
 function blocks(P,upto){var F=finalize(P),V=(P.archV&&P.archV.answers)||{},B=[],a=F.a,e=P.ego&&P.ego.v===2?P.ego:null;
  var key=a==='unclear'||!F.a1?'none':F.a1,RA=D.resA[key];
  B.push({h:'',t:[a==='mixed'?g(RA.title)+' · '+g(D.resA[F.a2].title):g(RA.title)],cls:'title',cons:g(D.cons[F.cons])});
- if(key!=='none'&&e&&F.recalled){var n=e.sit[F.a1]||0,m=1+((v02(V.V02_0)||0)>=1?1:0);B.push({h:'',t:['Ты отмечаешь это ощущение'+(n?' в '+num(n,'ситуации','ситуациях')+' и':'')+' в '+num(m,'сфере','сферах')+'.']})}
+ if(key!=='none'&&e&&F.recalled){var n=e.sit[F.a1]||0,m=1+((v02(V['V02_'+F.aIndex])||0)>=1?1:0);B.push({h:'',t:['Ты отмечаешь это ощущение'+(n?' в '+num(n,'ситуации','ситуациях')+' и':'')+' в '+num(m,'сфере','сферах')+'.']})}
  B.push({h:'',t:[g(RA.text),'Новая точка: «'+g(RA.point).replace(/\.$/,'')+'».'].concat(a==='mixed'?[g(D.resA[F.a2].text),'Новая точка: «'+g(D.resA[F.a2].point).replace(/\.$/,'')+'».']:[])});
  if(F.b!=='unclear'&&F.b1){var bl=[F.b1].concat(F.b==='mixed'&&F.b2?[F.b2]:[]);B.push({h:'Что может поддерживать этот сценарий',t:bl.map(function(c){var r=D.resB[c];return g(r.text)+(r.sw?' Переключатель: '+g(r.sw).charAt(0).toLowerCase()+g(r.sw).slice(1):'')})})}
  else if(P.archB)B.push({h:'Что может поддерживать этот сценарий',t:[g(D.resB.none.text)]});
@@ -102,6 +106,14 @@ function blocks(P,upto){var F=finalize(P),V=(P.archV&&P.archV.answers)||{},B=[],
  }
  var chk=[];if(e&&e.period==='P3')chk.push(g(D.ui.stress));
  if(V.V03==='context'||V.V04==='real')chk.push(g(D.ui.ctx));
+ else if(V.V03==='accepted')chk.push(g(D.ui.counter));
+ else if(V.V03==='selective')chk.push(g(D.ui.selective));
+ else if(V.V03==='discount')chk.push(g(D.ui.discount));
+ else if(V.V03==='unknown')chk.push(g(D.ui.unknown));
+ if(V.V04==='facts')chk.push(g(D.ui.facts));
+ else if(V.V04==='ask')chk.push(g(D.ui.ask));
+ else if(V.V04==='feel')chk.push(g(D.ui.feel));
+ else if(V.V04==='transition')chk.push(g(D.ui.transition));
  if(!chk.length){if(F.a2&&a!=='mixed'&&key!=='none')chk.push(g(D.ui.check2).replace('%A%',g(D.phrase[F.a2])));else chk.push(g(D.ui.checkNone))}
  if(upto==='d')chk.push(g(D.ui.care));
  B.push({h:'Что еще стоит проверить',t:chk});
@@ -151,7 +163,7 @@ function partA(box,skin,hooks){var items=[{kind:'intro',key:'a'},{kind:'one',id:
  new Runner({box:box,skin:skin,items:items,module:'ego',onStep:hooks&&hooks.step,done:function(ans){var r=scoreA(ans),c=r.cand[0],lead=c&&r.scores[c]>=3&&r.skips<5?c:null,RA=D.resA[lead||'none'];
   var res={v:2,line:'A',top:lead?g(D.phrase[lead]):'Один фон пока не выделился',lead:lead,period:ans.S1&&ans.S1!=='skip'?ans.S1:null,answers:ans,scores:r.scores,sit:r.sit,a11:r.a11,R:r.R,Rcode:r.Rcode,cand:r.cand,skips:r.skips,at:Date.now()};
   var also=lead&&r.cand[1]&&r.scores[r.cand[1]]>=3&&r.scores[lead]-r.scores[r.cand[1]]<=1?g(D.ui.alsoA).replace('%A%',g(D.phrase[r.cand[1]])):'';
-  var html='<div class="'+SKIN[skin].l+'">Твое знакомое состояние</div><div class="'+SKIN[skin].q+'">'+h(RA.title)+'</div><p style="line-height:1.55">'+h(RA.text)+'</p><p class="ar-pt">Новая точка: «'+h(RA.point).replace(/\.$/,'')+'»</p>'+(also?'<p>'+esc(also)+'</p>':'')+(res.period==='P3'?'<p>'+h(D.ui.stress)+'</p>':'')+(D.showDraft?'<p class="ar-draft">'+h(D.ui.preA)+'<span>черновик</span></p>':'<p>'+h(D.ui.preA)+'</p>')+'<div class="'+SKIN[skin].l+'">Черный кристалл у Героя · запись в Дневнике</div>';
+  var html='<div class="'+SKIN[skin].l+'">Первый слой собран</div><div class="'+SKIN[skin].q+'">Пока без выводов</div><p style="line-height:1.55">Ответы сохранены. Сначала посмотрим на привычные реакции, затем проверим возможные повторяющиеся состояния на конкретных примерах.</p>'+(res.period==='P3'?'<p>'+h(D.ui.stress)+'</p>':'')+'<div class="'+SKIN[skin].l+'">Черный кристалл у Героя · запись в Дневнике</div>;
   resultScreen(box,skin,html,'a',function(){store('a',res,{answers:ans},'Фоновое состояние: '+res.top,function(P){if(window.GArts)GArts.grantInto(P,'black_crystal');else{P.arts=P.arts||[];if(P.arts.indexOf('Черный кристалл')<0)P.arts.push('Черный кристалл')}
    try{var p=window.GP?GP():null;if(p){p.done[3]=1;p.log.push({s:3,t:'Фоновое состояние',r:res.top,d:new Date().toLocaleDateString('ru')});P.path=p}}catch(e){}})})}}).start()}
 function wheelComparison(wheel){
@@ -209,17 +221,17 @@ function partB(box){
    var x=D.bfull[lead],L=D.bfullLabels||{};
    full='<details class="ar-det"><summary>Подробнее об этом ходе</summary><p>'+h(x.d)+'</p><p><b>'+esc(L.logic||'Логика')+':</b> '+h(x.logic)+'</p><p><b>'+esc(L.gain||'Что дает')+':</b> '+h(x.gain)+'</p><p><b>'+esc(L.cost||'Цена')+':</b> '+h(x.cost)+'</p></details>'
   }
-  var html='<span class="tag">Точка 0</span><span class="tag">Эхо</span><div class="al">'+(lead?'Твой наиболее частый привычный ход':ties.length?'Сопоставимые привычные ходы':'Что видно по ответам')+'</div><div class="aq">'+h(title)+'</div>'+body+sw+full+echoMapHtml(r)+wheelComparison(wheel);
+  var html='<span class="tag">Точка 0</span><span class="tag">Эхо</span><div class="al">Привычные реакции собраны</div><div class="aq">Пока без выводов</div><p>Дальше сопоставим ответы с тем, как ты описываешь реальные ситуации. Отдельный ответ или повторяющийся ход еще не объясняет весь внутренний сценарий.</p>';
   resultScreen(box,'slot',html,'b',function(){store('b',res,{answers:ans},'Привычный ход: '+res.top)})
  }}).start()
 }
-function partV(box){var P=data(),e=P.ego&&P.ego.v===2?P.ego:null,a=e?e.cand||[]:[],eb=P.archB?(P.archB.status?P.archB:scoreB(P.archB.answers||{})):null,b=eb&&['leading','mixed'].indexOf(eb.status)>=0?eb.cand||[]:[],items=[{kind:'intro',key:'v'}];
+function partV(box){var P=data(),e=P.ego&&P.ego.v===2?P.ego:null,a=e?e.cand||[]:[],eb=P.archB?scoreB(P.archB.answers||{}):null,b=eb?eb.cand||[]:[],items=[{kind:'intro',key:'v'}];
  D.C.forEach(function(q){items.push({kind:'one',id:q.id,t:q.t,o:q.o})});
  function ph(i){return g(D.phrase[a[i]])}
  if(a[0]){items.push({kind:'one',id:'V01_0',t:D.V01.t.replace('%A%',ph(0)),o:D.V01.o,text:D.V01.text});
-  if(a[1])items.push({kind:'one',id:'V01_1',t:D.V01.t.replace('%A%',ph(1)),o:D.V01.o,text:D.V01.text});
   items.push({kind:'one',id:'V02_0',t:D.V02.t,ctx:'Речь об ощущении «'+ph(0)+'»',o:D.V02.o});
-  if(a[1])items.push({kind:'one',id:'V02_1',t:D.V02.t,ctx:'Речь об ощущении «'+ph(1)+'»',o:D.V02.o});
+  if(a[1]){items.push({kind:'one',id:'V01_1',t:D.V01.t.replace('%A%',ph(1)),o:D.V01.o,text:D.V01.text});
+   items.push({kind:'one',id:'V02_1',t:D.V02.t,ctx:'Речь об ощущении «'+ph(1)+'»',o:D.V02.o})}
   items.push({kind:'one',id:'V03',t:D.V03.t,ctx:'Речь об ощущении «'+ph(0)+'»',o:D.V03.o});
   items.push({kind:'one',id:'V04',t:D.V04.t,ctx:'Речь об ощущении «'+ph(0)+'»',o:D.V04.o})}
  if(b[0]){var bf=D.bfull||{},full=function(c){return bf[c]?g(bf[c].d):null},d1=full(b[0])||g(D.bdesc[b[0]]),vp=D.V05.t.split('«%B%»'),v5={kind:'one',id:'V05',t:D.V05.t.replace('%B%',d1),o:D.V05.o};if(full(b[0])&&vp.length===2)v5.parts=[vp[0].replace(/\s+$/,''),d1,vp[1].replace(/^,\s*/,'')];items.push(v5);
@@ -228,7 +240,7 @@ function partV(box){var P=data(),e=P.ego&&P.ego.v===2?P.ego:null,a=e?e.cand||[]:
  new Runner({box:box,skin:'slot',items:items,module:'archV',done:function(ans){var m=modeOf(ans),V={};Object.keys(ans).forEach(function(k){if(/^V0|^V0\d_/.test(k))V[k]=ans[k]});
   var res={v:1,c:{answers:{},scores:m.scores,mode:m.mode},answers:V,quote:ans.quote||null,at:Date.now()};D.C.forEach(function(q){if(ans[q.id])res.c.answers[q.id]=ans[q.id]});
   var P2=data();P2.archV=res;var r=blocks(P2,'v');res.status=r.F;res.cons=r.F.cons;res.top=r.list[0].t[0];
-  var html='<span class="tag">Точка А</span><span class="tag">Зодчий</span><div class="al">Что подтвердилось</div>'+blocksHTML(r);
+  var html='<span class="tag">Точка А</span><span class="tag">Зодчий</span><div class="al">Что подтвердилось</div>'+blocksHTML(r)+(P2.archB?echoMapHtml(scoreB(P2.archB.answers||{}))+wheelComparison(P2.archB.wheelSnapshot||null):'');
   resultScreen(box,'slot',html,'v',function(){store('v',res,{answers:ans},'Сверка Зодчего: '+res.top)})}}).start()}
 function partP(box){var P=data(),F=P.archV?finalize(P):{a:'unclear'},br=['supported','tentative','mixed'].indexOf(F.a)>=0&&F.a1?F.a1:'U',Ps=D.P[br],items=[{kind:'intro',key:'p'}];
  Ps.forEach(function(q,i){items.push({kind:'one',id:'P'+(i+1),t:q.t,o:q.o.map(function(x,j){return [String(j),x]}),text:q.o.map(function(x,j){return /^(Свой|Другое)/.test(x)?String(j):null}).filter(function(x){return x})})});
