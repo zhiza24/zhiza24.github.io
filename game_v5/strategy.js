@@ -194,7 +194,6 @@ function build(P){
  if(vals.length)res.push({t:'Твои ориентиры',x:vals.join(', ')+'.'});
  if(p1)res.push({t:'Новая настройка',x:'«'+p1.parts[5][1]+'».'});
  /* результаты всех исследований */
- try{var TL=testsLayer(P,f);TL.obst.forEach(function(x){obst.push(x)});TL.res.forEach(function(x){res.push(x)})}catch(e){}
  var precs=[],modelActions=[];try{precs=practRec(P).map(function(r){return {id:r.id,why:gx(r.why,f)}})}catch(e){}
  try{var TL=testsLayer(P,f);TL.obst.forEach(function(x){obst.push(x)});TL.res.forEach(function(x){res.push(x)});modelActions=TL.actions||[]}catch(e){}
  /* дни */
