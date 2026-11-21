@@ -4,19 +4,29 @@
 (function(global){
 'use strict';
 var DATA=global.GSTATE_DATA||{};
-function findDiscriminator(a,b){
- var d=arr(DATA.discriminators).filter(function(x){return (x.a===a&&x.b===b)||(x.a===b&&x.b===a)})[0];
- return d?d.question+' '+d.reading:'Для этой пары нужен дополнительный различитель.';
+function discriminatorFor(a,b){
+ return arr(DATA.discriminators).filter(function(x){return (x.a===a&&x.b===b)||(x.a===b&&x.b===a)})[0]||null;
+}
+function choiceText(d,id){
+ if(!d||!d.reading)return 'Ближе к этому варианту';
+ var parts=String(d.reading).split(/[.;]/),hit=parts.filter(function(x){return new RegExp('→\\s*'+id+'\\b').test(x)})[0];
+ return hit?hit.replace(/→\\s*'+id+'\\b/,'').trim():'Ближе к этому варианту';
 }
 var FAMILIES=[
- {id:'SIG_WRT',states:['SIG','WRT'],question:findDiscriminator('SIG','WRT')},
- {id:'MIS_TRU',states:['MIS','TRU'],question:findDiscriminator('MIS','TRU')},
- {id:'INC_EFF',states:['INC','EFF'],question:findDiscriminator('INC','EFF')},
- {id:'DEF_SCO',states:['DEF','SCO'],question:findDiscriminator('DEF','SCO')},
- {id:'STD_MAS',states:['STD','MAS'],question:findDiscriminator('STD','MAS')},
- {id:'MIS_AUT',states:['MIS','AUT'],question:findDiscriminator('MIS','AUT')},
- {id:'AUT_SEC',states:['AUT','SEC'],question:findDiscriminator('AUT','SEC')}
-];
+ {id:'SIG_WRT',states:['SIG','WRT']},
+ {id:'MIS_TRU',states:['MIS','TRU']},
+ {id:'INC_EFF',states:['INC','EFF']},
+ {id:'DEF_SCO',states:['DEF','SCO']},
+ {id:'STD_MAS',states:['STD','MAS']},
+ {id:'MIS_AUT',states:['MIS','AUT']},
+ {id:'AUT_SEC',states:['AUT','SEC']}
+].map(function(f){
+ var d=discriminatorFor(f.states[0],f.states[1]);
+ f.question=d?d.question:'Для этой пары требуется дополнительное различение.';
+ f.discriminator=d;
+ f.choices=f.states.map(function(id){return {state:id,label:choiceText(d,id)}});
+ return f;
+});
 var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A6:'INC',A8:'STD',A9:'ABD'};
 var ECHO_CODES={B8:'EFF'},ECHO_FAMILIES={B1:'SIG_WRT'};
 var SCALE_FAMILIES={
@@ -40,7 +50,7 @@ function evaluate(P){
  FAMILIES.forEach(function(f){families[f.id]={id:f.id,states:f.states.slice(),question:f.question,evidence:[]}})
  function add(id,layer,source,situation,detail,ambiguous){
   var s=states[id];if(!s)return;
-  var item={source:source,situation:situation,detail:detail||'',ambiguous:!!ambiguous};
+  var item={source:source,situation:situation,detail:detail||'',ambiguous:!!ambiguous,discriminator:typeof ambiguous==='string'?ambiguous:null};
   var bucket=s.signals[layer];
   if(!bucket.some(function(x){return x.source===source&&x.situation===situation}))bucket.push(item);
   s.situations=uniq(s.situations.concat([situation]));
@@ -49,7 +59,7 @@ function evaluate(P){
  function addFamily(fid,layer,source,situation,detail){
   var f=families[fid];if(!f)return;
   if(!f.evidence.some(function(x){return x.source===source&&x.situation===situation}))f.evidence.push({source:source,situation:situation,detail:detail||''});
-  f.states.forEach(function(id){add(id,layer,source,situation,detail,true);states[id].needsDiscriminator=uniq(states[id].needsDiscriminator.concat([fid]))});
+  f.states.forEach(function(id){add(id,layer,source,situation,detail,fid);states[id].needsDiscriminator=uniq(states[id].needsDiscriminator.concat([fid]))});
  }
  /* Ситуационные ответы Магa. A11 — эмоциональный итог, не отдельная ситуация, поэтому не учитывается. */
  var mage=resultOf(P,'ego','ego');
@@ -89,7 +99,22 @@ function evaluate(P){
  if(P.betray&&P.betray.start)unknown.push('Колесо показывает конкретные формы поведения и опоры. Пока оно используется как контекст, а не как прямой балл одного из 19 состояний: соответствия требуют отдельной проверки.');
  if(P.lab)unknown.push('GLead/GPAT описывают привычный способ реагирования и его стратегию. Они учитываются отдельно и не считаются независимым подтверждением состояния.');
  unknown.push('Нарративный слой пока не оценивается автоматически. Личные записи не анализируются без отдельного явного согласия.');
- var familyList=Object.keys(families).map(function(k){return families[k]}).filter(function(f){return f.evidence.length});
+ var savedAnswers=obj(P.backgroundProfile&&P.backgroundProfile.stateModel&&P.backgroundProfile.stateModel.discriminatorAnswers);
+ var familyList=Object.keys(families).map(function(k){return families[k]}).filter(function(f){return f.evidence.length}).map(function(f){
+  var definition=FAMILIES.filter(function(x){return x.id===f.id})[0],answer=savedAnswers[f.id];
+  f.question=definition?definition.question:f.question;
+  f.choices=definition?definition.choices:[];
+  if(f.states.indexOf(answer)>=0){
+   f.answer=answer;f.resolved=true;
+   f.states.forEach(function(id){
+    var state=states[id];
+    Object.keys(state.signals).forEach(function(layer){state.signals[layer]=state.signals[layer].filter(function(item){if(item.discriminator!==f.id)return true;if(id===answer)item.ambiguous=false;return id===answer})});
+    state.needsDiscriminator=state.needsDiscriminator.filter(function(x){return x!==f.id});
+    state.situations=uniq([].concat(state.signals.SR,state.signals.CH,state.signals.NR).map(function(x){return x.situation}));
+   });
+  }else{f.resolved=false;}
+  return f;
+ });
  Object.keys(states).forEach(function(id){
   var s=states[id],sr=s.signals.SR.length,ch=s.signals.CH.length,nr=s.signals.NR.length;
   var layersN=(sr?1:0)+(ch?1:0)+(nr?1:0),situations=s.situations.length;
@@ -110,6 +135,7 @@ function evaluate(P){
   layers:{SR:layers.SR,CH:layers.CH,NR:layers.NR},
   states:Object.keys(states).map(function(id){return states[id]}),
   families:familyList,
+  discriminatorAnswers:savedAnswers,
   unknown:uniq(unknown),
   coverage:{stateCount:arr(DATA.states).length,statesWithSignals:Object.keys(states).filter(function(id){return states[id].situationsCount>0}).length,narrativeAvailable:false,spheresAvailable:false}
  };
