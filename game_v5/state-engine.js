@@ -14,7 +14,7 @@ var FAMILIES=[
  {id:'MIS_TRU_AUT',states:['MIS','TRU','AUT'],scales:{SV03:1,RS06:1},question:'От помощи отказываешься из-за страха подвоха, потому что доверяешь по фактам или потому что действительно предпочитаешь справляться сам?'}
 ];
 var MAGE_CODES={A1:'DEF',A2:'SIG',A3:'ABD',A4:'MIS',A6:'INC',A8:'STD',A9:'ABD'};
-var ECHO_CODES={B1:'SIG',B8:'EFF'};
+var ECHO_CODES={B8:'EFF'},ECHO_FAMILIES={B1:'SIG_DEF'};
 var SCALE_FAMILIES={
  KM02:['SIG_DEF'],KM04:['MIS_TRU'],KM05:['INC_EFF'],
  SV01:['SIG_WRT'],SV02:['DEF_SCO'],SV03:['MIS_TRU_AUT'],SV05:['SIG_WRT','STD_MAS'],
@@ -42,10 +42,10 @@ function evaluate(P){
   s.situations=uniq(s.situations.concat([situation]));
   if(layers[layer].indexOf(source)<0)layers[layer].push(source);
  }
- function addFamily(fid,source,situation,detail){
+ function addFamily(fid,layer,source,situation,detail){
   var f=families[fid];if(!f)return;
   if(!f.evidence.some(function(x){return x.source===source&&x.situation===situation}))f.evidence.push({source:source,situation:situation,detail:detail||''});
-  f.states.forEach(function(id){add(id,'SR',source,situation,detail,true);states[id].needsDiscriminator=uniq(states[id].needsDiscriminator.concat([fid]))});
+  f.states.forEach(function(id){add(id,layer,source,situation,detail,true);states[id].needsDiscriminator=uniq(states[id].needsDiscriminator.concat([fid]))});
  }
  /* Ситуационные ответы Магa. A11 — эмоциональный итог, не отдельная ситуация, поэтому не учитывается. */
  var mage=resultOf(P,'ego','ego');
@@ -59,8 +59,9 @@ function evaluate(P){
  var echo=resultOf(P,'archB','archB');
  if(echo&&echo.answers){
   Object.keys(echo.answers).forEach(function(q){
-   var code=echo.answers[q],id=ECHO_CODES[code];
+   var code=echo.answers[q],id=ECHO_CODES[code],family=ECHO_FAMILIES[code];
    if(id)add(id,'CH','echo',q,'Ситуационный выбор Эха: '+String(code),false);
+   else if(family)addFamily(family,'CH','echo',q,'Ситуационный выбор Эха: '+String(code));
   });
  }
  /* Шкалы — только слой самоотчета. Один результат шкалы считается одной областью наблюдения, а не четырьмя независимыми пунктами. */
@@ -73,7 +74,7 @@ function evaluate(P){
   var x=entry.data;if(!x||x.status==='insufficient')return;
   arr(x.leadingScales).forEach(function(id){
    if(!SCALE_FAMILIES[id])return;
-   SCALE_FAMILIES[id].forEach(function(fid){addFamily(fid,entry.source,id,'Ведущая шкала самоотчета: '+id)});
+   SCALE_FAMILIES[id].forEach(function(fid){addFamily(fid,'SR',entry.source,id,'Ведущая шкала самоотчета: '+id)});
   });
  });
  /* Первые настройки и GLead/GPAT описывают стратегии адаптации, а не состояния из каталога. Сохраняем их отдельно. */
