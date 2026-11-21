@@ -160,9 +160,8 @@ function partA(box,skin,hooks){var items=[{kind:'intro',key:'a'},{kind:'one',id:
  D.A.forEach(function(q){items.push({kind:'one',id:q.id,h:q.h,t:q.t,o:q.o,shuffle:true})});
  items.push({kind:'multi',id:'A11',h:D.A11.h,t:D.A11.t,hint:D.A11.hint,o:D.A11.o,shuffle:true});
  items.push({kind:'one',id:'A12',h:D.A12.h,t:D.A12.t,o:D.A12.o,ctx:function(ans){var picked=Array.isArray(ans.A11)?ans.A11:[];if(picked.indexOf('0')>=0)return 'Ты отметил'+g('','а')+' разные чувства в разных историях. Как часто все же повторяется какое-то одно из них?';var c=a12Code(ans);if(!c)return '';var m=picked.filter(function(x){return x!=='0'}).length;return (m?'Речь о чувстве: «':'Если вспоминать самое частое в твоих ответах: «')+g(D.phrase[c])+'»'}});
- new Runner({box:box,skin:skin,items:items,module:'ego',onStep:hooks&&hooks.step,done:function(ans){var r=scoreA(ans),c=r.cand[0],lead=c&&r.scores[c]>=3&&r.skips<5?c:null,RA=D.resA[lead||'none'];
+ new Runner({box:box,skin:skin,items:items,module:'ego',onStep:hooks&&hooks.step,done:function(ans){var r=scoreA(ans),c=r.cand[0],lead=c&&r.scores[c]>=3&&r.skips<5?c:null;
   var res={v:2,line:'A',top:'Предварительные сигналы собраны',lead:lead,period:ans.S1&&ans.S1!=='skip'?ans.S1:null,answers:ans,scores:r.scores,sit:r.sit,a11:r.a11,R:r.R,Rcode:r.Rcode,cand:r.cand,skips:r.skips,at:Date.now()};
-  var also=lead&&r.cand[1]&&r.scores[r.cand[1]]>=3&&r.scores[lead]-r.scores[r.cand[1]]<=1?g(D.ui.alsoA).replace('%A%',g(D.phrase[r.cand[1]])):'';
   var html='<div class="'+SKIN[skin].l+'">Первый слой собран</div><div class="'+SKIN[skin].q+'">Пока без выводов</div><p style="line-height:1.55">Ответы сохранены. Сначала посмотрим на привычные реакции, затем проверим возможные повторяющиеся состояния на конкретных примерах.</p>'+(res.period==='P3'?'<p>'+h(D.ui.stress)+'</p>':'')+'<div class="'+SKIN[skin].l+'">Черный кристалл у Героя · запись в Дневнике</div>';
   resultScreen(box,skin,html,'a',function(){store('a',res,{answers:ans},'Линия А: предварительные ответы собраны',function(P){if(window.GArts)GArts.grantInto(P,'black_crystal');else{P.arts=P.arts||[];if(P.arts.indexOf('Черный кристалл')<0)P.arts.push('Черный кристалл')}
    try{var p=window.GP?GP():null;if(p){p.done[3]=1;p.log.push({s:3,t:'Фоновое состояние',r:res.top,d:new Date().toLocaleDateString('ru')});P.path=p}}catch(e){}})})}}).start()}
@@ -190,7 +189,7 @@ function echoMapHtml(r){
   var n=r.scores[c]||0,available=availability[c]||0,p=available?Math.round((rates[c]||0)*100):0;
   return {code:c,name:D.resB[c].name,count:n,available:available,pct:p,rate:rates[c]||0}
  }).sort(function(a,b){return b.rate-a.rate||b.count-a.count||order.indexOf(a.code)-order.indexOf(b.code)});
- var leadNames=r.status==='leading'?[r.leaders[0]]:r.status==='mixed'?r.leaders:[];
+ var leadNames=r.status==='leading'?[r.leaders[0]]:r.status==='mixed'?r.leaders:r.status==='tentative'&&r.cand&&r.cand[0]?[r.cand[0]]:[];
  var html='<section class="ar-echo-map"><h3>Карта восьми отражений</h3><p class="ar-echo-note">Заполнено '+r.answered+' из 12 ситуаций; в '+den+' ответах выбран один из восьми ходов. Для каждого хода показана доля выборов среди ситуаций, где он предлагался. Проценты не складываются в 100%.</p>';
  labels.forEach(function(x){
   var top=leadNames.indexOf(x.code)>=0;
@@ -199,28 +198,17 @@ function echoMapHtml(r){
  html+='<div class="ar-echo-legend"><span class="ar-echo-dot"></span> Частота выбора, не процент личности и не оценка качества реакции</div>';
  if(r.status==='leading')html+='<div class="ar-echo-lead"><b>Чаще других повторялся ход:</b> '+h(D.resB[r.leaders[0]].name)+'. Это предварительная закономерность в ответах, а не постоянная характеристика.</div>';
  else if(r.status==='mixed')html+='<div class="ar-echo-lead"><b>Сопоставимо проявились:</b> '+r.leaders.map(function(c){return h(D.resB[c].name)}).join('; ')+'. В этих ответах нет оснований сводить все к одному ходу.</div>';
+ else if(r.status==='tentative')html+='<div class="ar-echo-lead">Этот ход повторился несколько раз, но пока недостаточно данных, чтобы считать его ведущим. Сверь его с примерами из своей жизни.</div>';
  else if(r.status==='weak')html+='<div class="ar-echo-lead">Ни один ход не повторился достаточно часто, чтобы выделить его как ведущий. Возможно, реакции заметно меняются от ситуации к ситуации.</div>';
- else html+='<div class="ar-echo-lead">Пока недостаточно ответов одного из восьми вариантов, чтобы надежно сравнить частоту ходов. Карта показывает только предварительное распределение.</div>';
+ else html+='<div class="ar-echo-lead">Пока недостаточно повторений, чтобы выделить один привычный ход. Карта показывает предварительное распределение.</div>';
  html+='</section>';return html
 }
 function partB(box){
  var P0=prof(),wheel=P0.betray&&P0.betray.start||null,items=[{kind:'intro',key:'b'}];
  D.B.forEach(function(q){items.push({kind:'reflection',id:q.id,h:q.h,t:q.t,o:q.o,shuffle:true})});
  new Runner({box:box,skin:'slot',items:items,module:'archB',done:function(ans){
-  var r=scoreB(ans),lead=r.status==='leading'?r.leaders[0]:null,RB=D.resB[lead||'none'],ties=r.status==='mixed'?r.leaders:[];
-  var title=lead?RB.name:ties.length?'Несколько привычных ходов проявляются сопоставимо':r.status==='insufficient'?'Пока недостаточно данных':'Один привычный способ пока не выделился';
-  var res={v:5,line:'B',top:'Привычные реакции собраны',lead:lead,leaders:ties,answers:ans,scores:r.scores,count:r.count,availability:r.availability,rates:r.rates,cand:r.cand,answered:r.answered,coded:r.coded,status:r.status,wheelSnapshot:wheel?JSON.parse(JSON.stringify(wheel)):null,at:Date.now()};
-  var body='';
-  if(lead)body='<p>'+h(RB.text)+'</p>';
-  else if(ties.length)body=ties.map(function(c){return '<div class="ar-blk"><div class="aq">'+h(D.resB[c].name)+'</div><p>'+h(D.resB[c].text)+'</p></div>'}).join('');
-  else if(r.status==='insufficient')body='<p>Заполнено '+r.answered+' из 12 ситуаций. В '+r.coded+' ответах выбран один из восьми ходов. Для сравнения нужно не менее 8 отвеченных ситуаций и 6 ответов по моделям. Пока не будем выделять ведущий ход.</p>';
-  else body='<p>Ответов достаточно для сравнения, но ни один ход не повторился хотя бы три раза. Это не означает, что таких реакций у тебя нет: они могут зависеть от обстоятельств.</p>';
-  var sw=lead&&RB.sw?'<p class="ar-pt">Переключатель: '+h(RB.sw)+'</p>':'';
-  var full='';
-  if(lead&&D.bfull&&D.bfull[lead]){
-   var x=D.bfull[lead],L=D.bfullLabels||{};
-   full='<details class="ar-det"><summary>Подробнее об этом ходе</summary><p>'+h(x.d)+'</p><p><b>'+esc(L.logic||'Логика')+':</b> '+h(x.logic)+'</p><p><b>'+esc(L.gain||'Что дает')+':</b> '+h(x.gain)+'</p><p><b>'+esc(L.cost||'Цена')+':</b> '+h(x.cost)+'</p></details>'
-  }
+  var r=scoreB(ans),lead=r.status==='leading'?r.cand[0]:null;
+  var res={v:5,line:'B',top:'Привычные реакции собраны',lead:lead,leaders:r.leaders,answers:ans,scores:r.scores,count:r.count,hits:r.hits,availability:r.availability,rates:r.rates,cand:r.cand,answered:r.answered,coded:r.coded,status:r.status,wheelSnapshot:wheel?JSON.parse(JSON.stringify(wheel)):null,at:Date.now()};
   var html='<span class="tag">Точка 0</span><span class="tag">Эхо</span><div class="al">Привычные реакции собраны</div><div class="aq">Пока без выводов</div><p>Дальше сопоставим ответы с тем, как ты описываешь реальные ситуации. Отдельный ответ или повторяющийся ход еще не объясняет весь внутренний сценарий.</p>';
   resultScreen(box,'slot',html,'b',function(){store('b',res,{answers:ans},'Линия Б: привычные реакции собраны')})
  }}).start()
