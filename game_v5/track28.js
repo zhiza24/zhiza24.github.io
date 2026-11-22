@@ -400,14 +400,23 @@ function trackClock(minute){
   return ('0'+Math.floor(m/60)).slice(-2)+':'+('0'+(m%60)).slice(-2);
 }
 function viewDiary(P,T){
-  var html='<div class="t28"><p class="dk">История наблюдений</p><h1>Дневник</h1><p class="cap28">Здесь собраны события и контрольные точки, которые Вы внесли в течение 28 дней. Пустые промежутки не трактуются как бездействие.</p>';
+  var html='<div class="t28"><p class="dk">История наблюдений</p><h1>Дневник</h1><p class="cap28">Здесь собраны события, заметки, знаки, благодарность, выборы и контрольные точки, внесенные за 28 дней. Пустые промежутки не трактуются как бездействие.</p>';
   html+='<button type="button" class="quiet-btn" data-act="space" data-s="map">Открыть календарь 28 дней</button>';
-  var total=0;
+  var records=0;
   for(var n=1;n<=28;n++){
-    var evs=(T.events24&&T.events24[n])||[], cps=(T.checkpoints24&&T.checkpoints24[n])||[];
-    if(!evs.length&&!cps.length)continue;
-    total+=evs.length;
+    var evs=(T.events24&&T.events24[n])||[],cps=(T.checkpoints24&&T.checkpoints24[n])||[],d=(T.days||{})[String(n)]||{},proofs=(T.proofs||[]).filter(function(x){return +x.day===n});
+    var journal=Object.keys(d.journal||{}).filter(function(k){return String(d.journal[k]||'').trim()});
+    var hasNotes=!!(d.note||(d.res&&(d.res.saw||d.res.proof))||(d.custom&&d.custom[n])||(d.signs||[]).length||(d.grat||[]).length||(d.choose||[]).length||journal.length||proofs.length);
+    if(!evs.length&&!cps.length&&!hasNotes)continue;
+    records++;
     html+='<section class="row-line diary-day"><b>День '+n+'</b>';
+    if(d.note)html+='<div class="diary-event"><b>Заметка дня</b><p>'+esc(d.note)+'</p></div>';
+    if(d.res&&(d.res.saw||d.res.proof))html+='<div class="diary-event"><b>Наблюдение и подтверждение</b>'+(d.res.saw?'<p>'+esc(d.res.saw)+'</p>':'')+(d.res.proof?'<p>'+esc(d.res.proof)+'</p>':'')+'</div>';
+    if((d.signs||[]).length)html+='<div class="diary-event"><b>Знаки и совпадения</b>'+d.signs.map(function(x){return '<p>'+esc(x.tag?x.tag+' · ':'')+esc(x.text||'')+'</p>'}).join('')+'</div>';
+    if((d.grat||[]).length)html+='<div class="diary-event"><b>Благодарность и хорошее</b>'+d.grat.map(function(x){return '<p>'+esc(x.text||x)+'</p>'}).join('')+'</div>';
+    if((d.choose||[]).length)html+='<div class="diary-event"><b>Выборы и шаги</b>'+d.choose.map(function(x){return '<p>'+esc(x.text||'')+(x.status?' · '+esc(x.status):'')+'</p>'}).join('')+'</div>';
+    if(journal.length)html+='<div class="diary-event"><b>Записи практик</b>'+journal.map(function(k){return '<p><b>'+esc(k)+'</b> · '+esc(d.journal[k])+'</p>'}).join('')+'</div>';
+    if(proofs.length)html+='<div class="diary-event"><b>Доказательства и наблюдения</b>'+proofs.map(function(x){return '<p>'+esc(x.text||'')+'</p>'}).join('')+'</div>';
     evs.slice().sort(function(a,b){return (+a.startMin)-(+b.startMin)}).forEach(function(e){
       html+='<div class="diary-event"><div><b>'+esc(e.title||'Событие')+'</b><span>'+trackClock(e.startMin)+'–'+trackClock(e.endMin)+(e.endMin>1440?' · после полуночи':'')+'</span></div>';
       html+='<p class="mute">'+[e.sphere,e.motive,e.emotion,e.focus].filter(Boolean).map(esc).join(' · ')+'</p>';
@@ -419,7 +428,7 @@ function viewDiary(P,T){
     });
     html+='<button type="button" class="quiet-btn" data-act="open" data-n="'+n+'">Открыть день '+n+'</button></section>';
   }
-  if(!total&&!Object.keys(T.checkpoints24||{}).length)html+='<div class="row-line"><p>Записей пока нет. Вы можете добавить событие или контрольную точку из раздела «Мой день».</p><button type="button" class="go" data-act="today">Перейти к сегодняшнему дню</button></div>';
+  if(!records)html+='<div class="row-line"><p>Записей пока нет. Вы можете добавить событие, заметку или контрольную точку из раздела «Мой день».</p><button type="button" class="go" data-act="today">Перейти к сегодняшнему дню</button></div>';
   html+='</div>';return html;
 }
 function viewDirections(P,T){
