@@ -71,7 +71,7 @@ window.GContra=function(){
  if(P.lab&&P.lab.foundStatus==='insufficient')basis='Основание пока не определилось — это открытый вопрос.';
  else if(P.lab&&P.lab.foundFeedback==='no')basis='Предложенное объяснение основания не откликнулось; его не нужно принимать.';
  else if(P.lab&&P.lab.found&&P.lab.found!=='none')basis='Есть предварительная гипотеза об основании реакции; ее стоит сверять с конкретными обстоятельствами.';
- var own=P.lab&&P.lab.ownCorrection?String(P.lab.ownCorrection).replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c]}):'',rule=own?'собственная формулировка «'+own+'»':'возможное правило «'+p.parts[2][1].toLowerCase()+'»';
+ var own=P.lab&&P.lab.ownCorrection?String(P.lab.ownCorrection).replace(/[&<>\"']/g,function(c){return c==='&'?'&amp;':c==='<'?'&lt;':c==='>'?'&gt;':c==='\"'?'&quot;':'&#39;'}):'',rule=own?'собственная формулировка «'+own+'»':'возможное правило «'+p.parts[2][1].toLowerCase()+'»';
  return 'Среди твоих трех ориентиров — ценность «'+v+'». Ведущая гипотеза Точки Б — '+rule+'.'+(spheres.length?' Ты решил'+(female?'а':'')+' проверить повторение схемы в сферах: '+spheres.join(', ')+'.':'')+(basis?' '+basis:' Это рабочая гипотеза, а не окончательное описание тебя.') ;
 };
 
