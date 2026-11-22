@@ -849,6 +849,7 @@ function viewResults(P,T){
     var cmp=GTrackA.compareWeeks(T);
     html+='<div class="row-line"><b>Неделя 1 и неделя 4</b>'+cmp.map(function(x){return '<p>'+esc(x.name)+': '+(x.w1==null?'нет отметок':x.w1)+(x.w4==null?'':' → '+x.w4)+'</p>'}).join('')+'</div>';
   }
+  html+='<button type="button" class="quiet-btn" data-act="space" data-s="mirror">Открыть «Зеркало прожитой жизни»</button>';
   html+=svgChart(T,1,28,T.hiddenMet||{},'')+recipeOf(T);
   var rew=[7,14,21,28].filter(function(d){return T.rewards[d]}).map(function(d){return '<p>День '+d+': '+esc(T.rewards[d])+'</p>'}).join('');
   html+='<div class="row-line"><b>Награда за цикл</b><input type="text" data-act="reward" data-d="28" maxlength="160" placeholder="награда себе за 28 дней" value="'+esc(T.rewards[28]||'')+'">'+rew+'</div>';
@@ -1143,6 +1144,7 @@ function bind(){
         days:{},events24:{},eventDraft:{},checkpoints24:{},checkpointDraft:{},
         weekPlans:{},rewards:{},proofs:[],openDay:1,view:'month',space:'map',
         directions:JSON.parse(JSON.stringify(T.directions||[])),
+        directionPlans:JSON.parse(JSON.stringify(T.directionPlans||{})),
         strategy:JSON.parse(JSON.stringify(T.strategy||null)),
         strategySeen:!!T.strategySeen,
         declared:!!T.declared,
