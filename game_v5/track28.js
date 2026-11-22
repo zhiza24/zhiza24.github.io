@@ -1054,7 +1054,7 @@ function bind(){
     }
     if(act==='event-cancel'){if(T.eventDraft)delete T.eventDraft[n];T.editingEvent=null;save(P);render();openAccAfterRender('events24');return}
     if(act==='event-delete'){
-      var en=+b.getAttribute('data-day'),eid=b.getAttribute('data-id');T.events24=T.events24||{};T.events24[en]=(T.events24[en]||[]).filter(function(x){return x.id!==eid});if(!T.events24[en].length)delete T.events24[en];save(P);render();openAccAfterRender('events24');return;
+      var en=+b.getAttribute('data-day'),eid=b.getAttribute('data-id');if(T.editingEvent&&T.editingEvent.id===eid){T.editingEvent=null;if(T.eventDraft)delete T.eventDraft[n]}T.events24=T.events24||{};T.events24[en]=(T.events24[en]||[]).filter(function(x){return x.id!==eid});if(!T.events24[en].length)delete T.events24[en];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='hour-t'){d.openHour=d.openHour===+b.getAttribute('data-h')?null:+b.getAttribute('data-h'); save(P); render(); openAccAfterRender('hours'); return}
     if(act==='fate'){
