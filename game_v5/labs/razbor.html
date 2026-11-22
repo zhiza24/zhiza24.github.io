@@ -24,7 +24,7 @@
 <p class="muted small">Ответы сохраняются только в этом браузере. Исследование не является диагностикой или психотерапией. Можно пропускать вопросы, менять ответы, остановиться или удалить запись.</p>
 </section>
 <section id="home">
-<div class="card"><h2>Твои исследования</h2><p class="muted">Каждая запись самостоятельна. Начните новую или продолжите сохраненную.</p><div id="records"></div>
+<div class="card"><h2>Твои исследования</h2><p class="muted">Каждая запись самостоятельна. Начни новую или продолжи сохраненную.</p><div id="records"></div>
 <div class="btns"><button class="btn" id="new">Начать исследование</button><button class="btn secondary" id="export">Экспортировать мои записи</button><button class="btn secondary" id="restore">Вернуть резервную копию</button><label class="btn secondary" style="display:inline-flex;align-items:center;cursor:pointer">Импортировать копию<input id="import" type="file" accept="application/json,.json" class="hidden"></label></div>
 <p class="small muted" id="homeMsg" aria-live="polite"></p></div>
 </section>
@@ -36,7 +36,7 @@
 <p class="autosave" id="saved" aria-live="polite">Сохранение включено</p>
 </section>
 <section id="result" class="hidden"></section>
-<footer class="footer">Твои ответы не отправляются на сервер. Для переноса между устройствами используй экспорт. Храните файл в безопасном месте, если в нем есть личная информация.</footer>
+<footer class="footer">Твои ответы не отправляются на сервер. Для переноса между устройствами используй экспорт. Храни файл в безопасном месте, если в нем есть личная информация.</footer>
 </main>
 <script>
 (function(){
@@ -45,7 +45,7 @@ var KEY='alch_v5_belief_lab_v1',BACK='alch_v5_belief_lab_backup_v1';
 var STEPS=[
  {name:'Мысль',title:'Какое правило влияет на ситуацию?',intro:'Начнем с конкретной мысли. Это может быть убеждение о себе, других людях или о том, как устроена жизнь. Не обязательно формулировать идеально.',fields:[
   ['belief','Фраза, которая возникает в этой ситуации','area','Например: «Если я откажу, отношения испортятся». Запиши именно свою мысль, не пытайтесь сделать ее красивой.'],
-  ['context','В какой ситуации она обычно появляется?','area','Опишите один недавний эпизод: что происходило, кто участвовал, что было поставлено на карту.'],
+  ['context','В какой ситуации она обычно появляется?','area','Опиши один недавний эпизод: что происходило, кто участвовал, что было поставлено на карту.'],
   ['feeling','Что ты замечаешь в себе в этот момент?','area','Эмоции, телесные сигналы, импульс, желание приблизиться, отступить, замереть или отложить решение.']
  ]},
  {name:'Факты',title:'Что известно, а что является выводом?',intro:'Мы не спорим с переживанием. Мы отделяем наблюдаемое событие от смысла, который ему придается.',fields:[
@@ -66,13 +66,13 @@ var STEPS=[
  ]},
  {name:'Цена и ресурсы',title:'Что происходит, когда это правило управляет выбором?',intro:'Здесь важно увидеть не только неудобства, но и то, что уже помогает. Не нужно обвинять себя за способы, которые когда-то были доступны.',fields:[
   ['shortterm','Что это правило дает в ближайший момент?','area','Например, снижает неопределенность, помогает избежать конфликта, сохраняет силы. Возможно, ничего не дает.'],
-  ['longterm','Какова цена этого правила со временем?','area','Что оно ограничивает, откладывает или усложняет? Учитывайте и то, что цена может быть небольшой.'],
+  ['longterm','Какова цена этого правила со временем?','area','Что оно ограничивает, откладывает или усложняет? Учитывай и то, что цена может быть небольшой.'],
   ['resources','Какие у тебя уже есть опоры и доступные варианты?','area','Люди, навыки, деньги, информация, время, право отказаться, возможность попросить помощь.']
  ]},
  {name:'Новый выбор',title:'Какое более точное правило подойдет сейчас?',intro:'Не обязательно заменять мысль противоположностью. Можно сохранить полезное предупреждение, уточнить его границы или пока оставить вопрос открытым.',fields:[
   ['balanced','Как могла бы звучать более точная формулировка?','area','Например: «Отказ может вызвать недовольство, но я могу учитывать свои возможности и выбирать безопасный способ ответа».'],
   ['choice','Какой небольшой выбор доступен тебе в реальных обстоятельствах?','area','Действие необязательно. Это может быть сбор информации, пауза, разговор с безопасным человеком или отказ от эксперимента.'],
-  ['experiment','Если это безопасно и уместно, что можно проверить без большого риска?','area','Опишите маленькую обратимую проверку. Не проводите ее, если возможны насилие, наказание, потеря жилья, дохода или другой серьезный ущерб.'],
+  ['experiment','Если это безопасно и уместно, что можно проверить без большого риска?','area','Опиши маленькую обратимую проверку. Не проводи ее, если возможны насилие, наказание, потеря жилья, дохода или другой серьезный ущерб.'],
   ['review','По каким признакам ты поймешь, что формулировка или выбор стали полезнее?','area','Не по «позитивности», а по точности, безопасности, соответствию твоим ценностям и реальным результатам.']
  ]}
 ];
@@ -80,7 +80,7 @@ var state={items:[],current:null,step:0};
 function read(){try{var x=JSON.parse(localStorage.getItem(KEY)||'{}');if(x&&x.v===1&&Array.isArray(x.items))return x}catch(e){}return {v:1,items:[]}}
 state.items=read().items;
 function id(){return 'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-function save(){try{localStorage.setItem(KEY,JSON.stringify({v:1,items:state.items}));document.getElementById('saved').textContent='Сохранено на этом устройстве';return true}catch(e){document.getElementById('saved').textContent='Не удалось сохранить. Освободите место или экспортируйте записи.';return false}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({v:1,items:state.items}));document.getElementById('saved').textContent='Сохранено на этом устройстве';return true}catch(e){document.getElementById('saved').textContent='Не удалось сохранить. Освободи место или экспортируй записи.';return false}}
 function current(){return state.items.find(x=>x.id===state.current)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function show(which){['home','work','result'].forEach(function(x){document.getElementById(x).classList.toggle('hidden',x!==which)})}
@@ -108,7 +108,7 @@ function renderStep(){
  p.innerHTML='<div class="eyebrow">Исследование · '+(state.step+1)+'</div><h2>'+esc(s.title)+'</h2><p class="muted">'+esc(s.intro)+'</p>'+
  (state.step===5?'<div class="notice safe"><b>Выбор остается за тобой.</b> Можно сформулировать новую мысль, сохранить прежнюю с уточнениями, ничего не предпринимать или завершить исследование без эксперимента.</div><label class="choice"><input id="safetyConcern" type="checkbox" '+(x.answers.safetyConcern?'checked':'')+'> <span>Проверка поведения или границ может повлечь угрозу, давление, наказание, потерю жилья, дохода или другой серьезный ущерб.</span></label><p class="field-help">Если отметили этот пункт, поле эксперимента будет скрыто. Не нужно проверять опасную ситуацию на себе.</p>':'')+
  s.fields.filter(function(f){return !(state.step===5&&x.answers.safetyConcern&&f[0]==='experiment')}).map(fieldHtml).join('')+
- (state.step===3?'<div class="notice"><b>Проверка реальности.</b> Если речь идет о насилии, угрозах, контроле, принуждении или зависимости, не нужно экспериментировать с границами или поведением человека, от которого ты зависишь. Сначала ищите безопасную поддержку и учитывайте реальные риски.</div>':'');
+ (state.step===3?'<div class="notice"><b>Проверка реальности.</b> Если речь идет о насилии, угрозах, контроле, принуждении или зависимости, не нужно экспериментировать с границами или поведением человека, от которого ты зависишь. Сначала ищи безопасную поддержку и учитывайте реальные риски.</div>':'');
  s.fields.forEach(function(f){var el=document.getElementById(f[0]);if(el)el.addEventListener('input',function(){x.answers[f[0]]=el.value;x.done=false;x.updated=Date.now();save()})});
  var risk=document.getElementById('safetyConcern');if(risk)risk.onchange=function(){x.answers.safetyConcern=!!risk.checked;if(risk.checked)delete x.answers.experiment;x.done=false;x.updated=Date.now();save();renderStep()};
  document.getElementById('back').disabled=state.step===0;
@@ -125,7 +125,7 @@ function renderResult(){
  document.getElementById('result').innerHTML=h;show('result');
  document.getElementById('edit').onclick=function(){state.step=5;renderStep()};
  document.getElementById('homeBtn').onclick=exit;
- document.getElementById('copy').onclick=function(){var text='РАЗБОР УБЕЖДЕНИЙ\n\n'+STEPS.map(function(s){return s.name+'\n'+s.fields.map(function(f){return f[1]+': '+(x.answers[f[0]]||'—')}).join('\n')}).join('\n\n');if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(function(){alert('Текст скопирован')}).catch(function(){alert('Не удалось скопировать. Используйте экспорт.')});else alert('Копирование недоступно в этом браузере. Используйте экспорт.')};
+ document.getElementById('copy').onclick=function(){var text='РАЗБОР УБЕЖДЕНИЙ\n\n'+STEPS.map(function(s){return s.name+'\n'+s.fields.map(function(f){return f[1]+': '+(x.answers[f[0]]||'—')}).join('\n')}).join('\n\n');if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(function(){alert('Текст скопирован')}).catch(function(){alert('Не удалось скопировать. Используй экспорт.')});else alert('Копирование недоступно в этом браузере. Используй экспорт.')};
 }
 document.getElementById('new').onclick=make;
 document.getElementById('back').onclick=function(){sync();if(state.step>0){state.step--;current().step=state.step;renderStep()}};
