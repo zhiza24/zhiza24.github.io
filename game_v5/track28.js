@@ -1138,7 +1138,11 @@ function bind(){
     }
     if(act==='pract'){
       var id=b.getAttribute('data-id'); T.practices=T.practices||{}; var c=T.practices[id]=T.practices[id]||{count:0,streak:0};
-      var day=new Date().toDateString(); c.count=(c.count||0)+1; c.last=day; c.streak=(c.streak||0)+1; save(P); render(); openAccAfterRender('pract'); return;
+      var now=new Date(),day=now.toDateString(),yesterday=new Date(now.getFullYear(),now.getMonth(),now.getDate()-1).toDateString();
+      /* Повторное нажатие в тот же день не увеличивает счетчик. Серия
+         продолжается только при отметке в соседние календарные дни. */
+      if(c.last!==day){c.count=(c.count||0)+1;c.streak=c.last===yesterday?(c.streak||0)+1:1;c.last=day;}
+      save(P); render(); openAccAfterRender('pract'); return;
     }
     if(act==='pract-on'){
       var id=b.getAttribute('data-id'); T.practices=T.practices||{}; var c=T.practices[id]=T.practices[id]||{count:0,streak:0};
