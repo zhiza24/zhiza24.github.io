@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17120d">
+<title>Разбор убеждений · Путь Алхимика</title>
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../img/hero_icon.png">
+<link rel="stylesheet" href="../g.css?v=1f19">
+<style>
+:root{color-scheme:dark;--bg:#17120d;--panel:#211a12;--panel2:#2a2117;--line:#80663d;--gold:#c8a56a;--cream:#f1e7d5;--muted:#b9aa94;--safe:#9ab8a2;--warn:#d7ad83}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--cream);font:16px/1.55 Manrope,system-ui,sans-serif}a{color:var(--gold)}.top{position:sticky;top:0;z-index:3;background:#17120df2;border-bottom:1px solid var(--line);padding:13px max(18px,calc((100% - 900px)/2));display:flex;justify-content:space-between;gap:16px}.top a{text-decoration:none}.wrap{max-width:900px;margin:auto;padding:28px 18px 100px}.eyebrow{color:var(--gold);font-size:12px;letter-spacing:.14em;text-transform:uppercase}.intro{padding:24px 0 20px;border-bottom:1px solid var(--line)}h1,h2,h3{font-family:Georgia,serif;font-weight:500;line-height:1.15}h1{font-size:clamp(32px,7vw,54px);margin:8px 0 14px}h2{font-size:clamp(25px,5vw,34px);margin:0 0 12px}h3{font-size:22px;margin:0 0 8px}.muted,.hint{color:var(--muted)}.card{border:1px solid var(--line);background:var(--panel);padding:18px;margin:16px 0;border-radius:3px}.notice{border-left:3px solid var(--gold);padding:12px 15px;background:#2a2117;margin:16px 0}.safe{border-left-color:var(--safe)}.warn{border-left-color:var(--warn)}.progress{height:4px;background:#493a28;margin:18px 0 8px}.progress i{display:block;height:4px;background:var(--gold);transition:width .2s}.steps{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0}.steps button{border:1px solid var(--line);background:transparent;color:var(--muted);padding:8px 10px;min-height:40px}.steps button[aria-current=step]{background:var(--gold);color:#17120d;border-color:var(--gold)}label{display:block;font-weight:600;margin:18px 0 7px}input,textarea,select{width:100%;border:1px solid var(--line);background:#130f0b;color:var(--cream);padding:12px;border-radius:2px;font:inherit}textarea{min-height:95px;resize:vertical}input:focus,textarea:focus,select:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{min-height:46px;padding:10px 16px;border:1px solid var(--gold);background:var(--gold);color:#17120d;font-weight:700;cursor:pointer}.btn.secondary{background:transparent;color:var(--cream);border-color:var(--line)}.btn:disabled{opacity:.45;cursor:not-allowed}.small{font-size:13px}.record{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding:13px 0}.record button{max-width:65%;text-align:left}.tag{font-size:12px;color:var(--gold)}.autosave{color:var(--safe);font-size:12px}.hidden{display:none!important}.footer{border-top:1px solid var(--line);margin-top:34px;padding-top:16px;color:var(--muted);font-size:13px}.field-help{font-size:13px;color:var(--muted);font-weight:400;margin-top:4px}.choice{display:flex;align-items:flex-start;gap:10px;font-weight:400}.choice input{width:auto;margin-top:5px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.two{grid-template-columns:1fr}.top{font-size:13px}.wrap{padding-top:18px}.card{padding:14px}}
+</style>
+</head>
+<body>
+<header class="top"><a href="../reactor.html">← В Реактор</a><span class="eyebrow">Дополнительная лаборатория</span></header>
+<main class="wrap">
+<section class="intro" id="intro">
+<div class="eyebrow">Путь Алхимика · исследование без оценок</div>
+<h1>Разбор убеждений</h1>
+<p>Здесь можно исследовать мысль или правило, которое влияет на решения. Не для того, чтобы объявить его неправильным, а чтобы увидеть контекст, проверить выводы и найти больше свободы выбора.</p>
+<div class="notice"><b>Важное правило.</b> Не всякое ограничение — убеждение. Иногда препятствие связано с деньгами, здоровьем, безопасностью, властью другого человека или устройством обстоятельств. Такие ограничения нельзя «переубедить» — их нужно учитывать.</div>
+<p class="muted small">Ответы сохраняются только в этом браузере. Исследование не является диагностикой или психотерапией. Можно пропускать вопросы, менять ответы, остановиться или удалить запись.</p>
+</section>
+<section id="home">
+<div class="card"><h2>Ваши исследования</h2><p class="muted">Каждая запись самостоятельна. Начните новую или продолжите сохраненную.</p><div id="records"></div>
+<div class="btns"><button class="btn" id="new">Начать исследование</button><button class="btn secondary" id="export">Экспортировать мои записи</button><label class="btn secondary" style="display:inline-flex;align-items:center;cursor:pointer">Импортировать копию<input id="import" type="file" accept="application/json,.json" class="hidden"></label></div>
+<p class="small muted" id="homeMsg" aria-live="polite"></p></div>
+</section>
+<section id="work" class="hidden">
+<div class="progress"><i id="bar" style="width:0%"></i></div><div class="tag" id="count"></div>
+<nav class="steps" id="stepnav" aria-label="Этапы исследования"></nav>
+<div class="card" id="panel" aria-live="polite"></div>
+<div class="btns"><button class="btn secondary" id="back">Назад</button><button class="btn secondary" id="saveExit">Сохранить и выйти</button><button class="btn" id="next">Продолжить</button></div>
+<p class="autosave" id="saved" aria-live="polite">Сохранение включено</p>
+</section>
+<section id="result" class="hidden"></section>
+<footer class="footer">Ваши ответы не отправляются на сервер. Для переноса между устройствами используйте экспорт. Храните файл в безопасном месте, если в нем есть личная информация.</footer>
+</main>
+<script>
+(function(){
+'use strict';
+var KEY='alch_v5_belief_lab_v1',BACK='alch_v5_belief_lab_backup_v1';
+var STEPS=[
+ {name:'Мысль',title:'Какое правило влияет на ситуацию?',intro:'Начнем с конкретной мысли. Это может быть убеждение о себе, других людях или о том, как устроена жизнь. Не обязательно формулировать идеально.',fields:[
+  ['belief','Фраза, которая возникает в этой ситуации','area','Например: «Если я откажу, отношения испортятся». Запишите именно свою мысль, не пытайтесь сделать ее красивой.'],
+  ['context','В какой ситуации она обычно появляется?','area','Опишите один недавний эпизод: что происходило, кто участвовал, что было поставлено на карту.'],
+  ['feeling','Что Вы замечаете в себе в этот момент?','area','Эмоции, телесные сигналы, импульс, желание приблизиться, отступить, замереть или отложить решение.']
+ ]},
+ {name:'Факты',title:'Что известно, а что является выводом?',intro:'Мы не спорим с переживанием. Мы отделяем наблюдаемое событие от смысла, который ему придается.',fields:[
+  ['facts','Что в этой ситуации можно было бы записать на камеру?','area','Слова, действия, даты, конкретные события. Без догадок о чужих мотивах.'],
+  ['interpretation','Какой вывод Вы сделали из этих событий?','area','Например: «Он не ответил» — событие; «Я ему не важна» — возможная интерпретация.'],
+  ['support','Что поддерживает эту версию?','area','Факты, которые действительно имеют отношение к выводу.'],
+  ['against','Что не укладывается в эту версию или говорит о другом?','area','Исключения, альтернативные факты, случаи, когда происходило иначе. «Пока не знаю» — полноценный ответ.']
+ ]},
+ {name:'Контекст',title:'Откуда могло взяться это правило?',intro:'Происхождение мысли не обязано быть связано с детством или конкретным человеком. Иногда это вывод из повторяющегося опыта, текущих условий или попытка предсказать риск.',fields:[
+  ['origin','Как Вы объясняете появление этой мысли?','area','Можно указать событие, период, повторяющийся опыт или оставить вопрос открытым.'],
+  ['certainty','Насколько эта мысль кажется убедительной сейчас?','select','Это не оценка личности и не балл прогресса.', ['Совсем не кажется правдой','Скорее сомневаюсь','И верю, и сомневаюсь','Скорее верю','Кажется несомненной','Не хочу оценивать']],
+  ['exceptions','Были ли обстоятельства, в которых правило не срабатывало?','area','Даже один исключительный случай может уточнить слишком широкое правило. Не нужно искать исключение любой ценой.']
+ ]},
+ {name:'Функция',title:'Что эта мысль пытается учесть?',intro:'Мысль может предупреждать о риске, помогать сохранять отношения, экономить силы или отражать реальную угрозу. Это только варианты для исследования, а не скрытая выгода, которую система знает заранее.',fields:[
+  ['function','От чего эта мысль может пытаться защитить или к чему подготовить?','area','Можно написать несколько вариантов, «ничего из этого» или «не знаю».'],
+  ['need','Какая потребность или ценность здесь важна?','area','Например: безопасность, уважение, близость, самостоятельность, предсказуемость, отдых, материальная устойчивость.'],
+  ['reality','Какие реальные обстоятельства нельзя игнорировать?','area','Деньги, здоровье, зависимость, правила организации, власть другого человека, доступность помощи и другие условия.']
+ ]},
+ {name:'Цена и ресурсы',title:'Что происходит, когда это правило управляет выбором?',intro:'Здесь важно увидеть не только неудобства, но и то, что уже помогает. Не нужно обвинять себя за способы, которые когда-то были доступны.',fields:[
+  ['shortterm','Что это правило дает в ближайший момент?','area','Например, снижает неопределенность, помогает избежать конфликта, сохраняет силы. Возможно, ничего не дает.'],
+  ['longterm','Какова цена этого правила со временем?','area','Что оно ограничивает, откладывает или усложняет? Учитывайте и то, что цена может быть небольшой.'],
+  ['resources','Какие у Вас уже есть опоры и доступные варианты?','area','Люди, навыки, деньги, информация, время, право отказаться, возможность попросить помощь.']
+ ]},
+ {name:'Новый выбор',title:'Какое более точное правило подойдет сейчас?',intro:'Не обязательно заменять мысль противоположностью. Можно сохранить полезное предупреждение, уточнить его границы или пока оставить вопрос открытым.',fields:[
+  ['balanced','Как могла бы звучать более точная формулировка?','area','Например: «Отказ может вызвать недовольство, но я могу учитывать свои возможности и выбирать безопасный способ ответа».'],
+  ['choice','Какой небольшой выбор доступен Вам в реальных обстоятельствах?','area','Действие необязательно. Это может быть сбор информации, пауза, разговор с безопасным человеком или отказ от эксперимента.'],
+  ['experiment','Если это безопасно и уместно, что можно проверить без большого риска?','area','Опишите маленькую обратимую проверку. Не проводите ее, если возможны насилие, наказание, потеря жилья, дохода или другой серьезный ущерб.'],
+  ['review','По каким признакам Вы поймете, что формулировка или выбор стали полезнее?','area','Не по «позитивности», а по точности, безопасности, соответствию Вашим ценностям и реальным результатам.']
+ ]}
+];
+var state={items:[],current:null,step:0};
+function read(){try{var x=JSON.parse(localStorage.getItem(KEY)||'{}');if(x&&x.v===1&&Array.isArray(x.items))return x}catch(e){}return {v:1,items:[]}}
+state.items=read().items;
+function id(){return 'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({v:1,items:state.items}));document.getElementById('saved').textContent='Сохранено на этом устройстве';return true}catch(e){document.getElementById('saved').textContent='Не удалось сохранить. Освободите место или экспортируйте записи.';return false}}
+function current(){return state.items.find(x=>x.id===state.current)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function show(which){['home','work','result'].forEach(function(x){document.getElementById(x).classList.toggle('hidden',x!==which)})}
+function renderHome(){
+ var box=document.getElementById('records');
+ if(!state.items.length)box.innerHTML='<p class="muted">Пока нет записей. Можно начать с одной конкретной ситуации.</p>';
+ else box.innerHTML=state.items.slice().sort(function(a,b){return b.updated-a.updated}).map(function(x){return '<div class="record"><div><b>'+esc(x.title||x.answers.belief||'Исследование без названия')+'</b><div class="small muted">'+new Date(x.updated).toLocaleString('ru-RU')+' · '+(x.done?'завершено':'черновик')+'</div></div><div class="btns"><button class="btn secondary" data-open="'+x.id+'">Открыть</button><button class="btn secondary" data-delete="'+x.id+'" aria-label="Удалить запись">Удалить</button></div></div>'}).join('');
+ box.querySelectorAll('[data-open]').forEach(function(b){b.onclick=function(){openItem(b.dataset.open)}});
+ box.querySelectorAll('[data-delete]').forEach(function(b){b.onclick=function(){if(!confirm('Удалить это исследование без возможности восстановления?'))return;state.items=state.items.filter(function(x){return x.id!==b.dataset.delete});save();renderHome()}});
+ show('home');
+}
+function make(){var x={id:id(),title:'',created:Date.now(),updated:Date.now(),step:0,done:false,answers:{}};state.items.push(x);state.current=x.id;state.step=0;save();renderStep()}
+function openItem(k){state.current=k;var x=current();state.step=x.step||0;renderStep()}
+function fieldHtml(f){var key=f[0],label=f[1],type=f[2],help=f[3],v=current().answers[key]||'';
+ if(type==='select')return '<label for="'+key+'">'+esc(label)+'<div class="field-help">'+esc(help)+'</div></label><select id="'+key+'"><option value="">Выберите, если хотите</option>'+f[4].map(function(o){return '<option '+(v===o?'selected':'')+'>'+esc(o)+'</option>'}).join('')+'</select>';
+ return '<label for="'+key+'">'+esc(label)+'<div class="field-help">'+esc(help)+'</div></label><textarea id="'+key+'" data-field="'+key+'" placeholder="Можно ответить своими словами…">'+esc(v)+'</textarea>';
+}
+function renderStep(){
+ var x=current();if(!x){renderHome();return}
+ var s=STEPS[state.step],p=document.getElementById('panel');
+ document.getElementById('count').textContent='ЭТАП '+(state.step+1)+' ИЗ '+STEPS.length;
+ document.getElementById('bar').style.width=((state.step+1)/STEPS.length*100)+'%';
+ document.getElementById('stepnav').innerHTML=STEPS.map(function(t,i){return '<button type="button" data-step="'+i+'" '+(i===state.step?'aria-current="step"':'')+'>'+ (i+1)+'. '+esc(t.name)+'</button>'}).join('');
+ document.querySelectorAll('[data-step]').forEach(function(b){b.onclick=function(){sync();state.step=+b.dataset.step;x.step=state.step;x.updated=Date.now();save();renderStep()}});
+ p.innerHTML='<div class="eyebrow">Исследование · '+(state.step+1)+'</div><h2>'+esc(s.title)+'</h2><p class="muted">'+esc(s.intro)+'</p>'+s.fields.map(fieldHtml).join('')+
+ (state.step===5?'<div class="notice safe"><b>Выбор остается за Вами.</b> Можно сформулировать новую мысль, сохранить прежнюю с уточнениями, ничего не предпринимать или завершить исследование без эксперимента.</div>':'')+
+ (state.step===3?'<div class="notice"><b>Проверка реальности.</b> Если речь идет о насилии, угрозах, контроле, принуждении или зависимости, не нужно экспериментировать с границами или поведением человека, от которого Вы зависите. Сначала ищите безопасную поддержку и учитывайте реальные риски.</div>':'');
+ s.fields.forEach(function(f){var el=document.getElementById(f[0]);if(el)el.addEventListener('input',function(){x.answers[f[0]]=el.value;x.updated=Date.now();save()})});
+ document.getElementById('back').disabled=state.step===0;
+ document.getElementById('next').textContent=state.step===5?'Завершить исследование':'Далее';
+ show('work');
+}
+function sync(){var x=current();if(!x)return;STEPS[state.step].fields.forEach(function(f){var el=document.getElementById(f[0]);if(el)x.answers[f[0]]=el.value});x.step=state.step;x.updated=Date.now();save()}
+function exit(){sync();state.current=null;renderHome()}
+function finish(){sync();var x=current();x.done=true;x.updated=Date.now();save();renderResult()}
+function renderResult(){
+ var x=current(),h='<div class="card"><div class="eyebrow">Сохраненный результат</div><h2>'+esc(x.title||x.answers.belief||'Исследование')+'</h2><p class="muted">Это карта Ваших наблюдений, а не диагноз и не окончательный вывод.</p>';
+ STEPS.forEach(function(s){h+='<section class="card"><h3>'+esc(s.name)+'</h3>';s.fields.forEach(function(f){var v=x.answers[f[0]];if(v)h+='<p><b>'+esc(f[1])+'</b><br>'+esc(v).replace(/\n/g,'<br>')+'</p>'});h+='</section>'});
+ h+='<div class="btns"><button class="btn" id="edit">Вернуться к ответам</button><button class="btn secondary" id="copy">Скопировать текст</button><button class="btn secondary" id="homeBtn">К исследованиям</button></div></div>';
+ document.getElementById('result').innerHTML=h;show('result');
+ document.getElementById('edit').onclick=function(){state.step=5;renderStep()};
+ document.getElementById('homeBtn').onclick=exit;
+ document.getElementById('copy').onclick=function(){var text='РАЗБОР УБЕЖДЕНИЙ\n\n'+STEPS.map(function(s){return s.name+'\n'+s.fields.map(function(f){return f[1]+': '+(x.answers[f[0]]||'—')}).join('\n')}).join('\n\n');if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(function(){alert('Текст скопирован')}).catch(function(){alert('Не удалось скопировать. Используйте экспорт.')});else alert('Копирование недоступно в этом браузере. Используйте экспорт.')};
+}
+document.getElementById('new').onclick=make;
+document.getElementById('back').onclick=function(){sync();if(state.step>0){state.step--;current().step=state.step;renderStep()}};
+document.getElementById('next').onclick=function(){sync();if(state.step<5){state.step++;current().step=state.step;renderStep()}else finish()};
+document.getElementById('saveExit').onclick=exit;
+document.getElementById('export').onclick=function(){var blob=new Blob([JSON.stringify({v:1,items:state.items},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='put-alhimika-razbor-ubezhdeniy.json';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000)};
+document.getElementById('import').onchange=function(){var f=this.files&&this.files[0];this.value='';if(!f)return;if(f.size>2e6){alert('Файл слишком большой');return}if(!confirm('Импорт объединит записи с текущими. Перед импортом будет создана резервная копия. Продолжить?'))return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(d.v!==1||!Array.isArray(d.items)||d.items.some(function(x){return !x||typeof x.id!=='string'||!x.answers||typeof x.answers!=='object'}))throw 0;localStorage.setItem(BACK,JSON.stringify({v:1,items:state.items,at:Date.now()}));var seen=new Set(state.items.map(function(x){return x.id}));d.items.forEach(function(x){if(!seen.has(x.id))state.items.push(x)});save();renderHome();document.getElementById('homeMsg').textContent='Импорт завершен. Предыдущая версия сохранена в резервной копии.'}catch(e){alert('Файл не прошел проверку. Текущие записи не изменены.')}};r.readAsText(f)};
+renderHome();
+})();
+</script>
+<script>if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('../sw.js').catch(function(){});</script>
+</body></html>
