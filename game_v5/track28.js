@@ -628,16 +628,17 @@ function dayPanel(P,T,n){
   if(!dirs(T).length)html+='<div class="row-line"><p class="mute">Три направления появятся после подтверждения выбора на Небе желаний.</p></div>';
 
   }
-  html+='<div class="row-line sliders">';
+  var stateBody='<div class="row-line sliders">';
   MET.forEach(function(m){
     var v=d.sliders[m.key]; if(v==null)v=5;
     var tip=sliderHint(m,+v);
-    html+='<div class="slid"><label>'+esc(m.name)+' <small>'+esc(gx(m.sub))+' · '+v+'</small></label>';
-    if(tip)html+='<p class="soft-tip">'+esc(tip)+'</p>';
-    else html+='<p class="soft-tip"></p>';
-    html+='<input type="range" min="1" max="10" value="'+v+'" data-act="slider" data-k="'+m.key+'"></div>';
+    stateBody+='<div class="slid"><label>'+esc(m.name)+' <small>'+esc(gx(m.sub))+' · '+v+'</small></label>';
+    if(tip)stateBody+='<p class="soft-tip">'+esc(tip)+'</p>';
+    else stateBody+='<p class="soft-tip"></p>';
+    stateBody+='<input type="range" min="1" max="10" value="'+v+'" data-act="slider" data-k="'+m.key+'"></div>';
   });
-  html+='</div>';
+  stateBody+='</div>';
+  html+=acc('state','Состояние сейчас','пять оценок · по желанию',stateBody);
   html+=razborBlock(P,T,n);
   var evCount=((T.events24||{})[n]||[]).length+(((T.events24||{})[n-1]||[]).filter(function(x){return +x.endMin>1440}).length);html+=acc('events24','24 часа · события и занятия',evCount?'записей: '+evCount:'добавить запись',events24Body(T,n));
 
@@ -1177,6 +1178,8 @@ function bind(){
         P.wheel=nextWheel.slice();
         P.cycleBaseline={wheel:nextWheel,research:nextResearch,cycle:(T.cycle||1)+1,capturedAt:Date.now(),source:'mirror'};
       }
+      /* Повторный замер относится к закрытому циклу: не переносим его в новый. */
+      delete P.retest;
       var nextCycle={
         version:T.version||1,
         cycle:(T.cycle||1)+1,
