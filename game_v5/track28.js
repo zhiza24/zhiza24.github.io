@@ -410,13 +410,13 @@ function viewDiary(P,T){
   html+='<button type="button" class="quiet-btn" data-act="space" data-s="map">Открыть календарь 28 дней</button>';
   var records=0;
   for(var n=1;n<=28;n++){
-    var evs=(T.events24&&T.events24[n])||[],cps=(T.checkpoints24&&T.checkpoints24[n])||[],d=(T.days||{})[String(n)]||{},proofs=(T.proofs||[]).filter(function(x){return +x.day===n});
+    var evs=(T.events24&&T.events24[n])||[],cps=(T.checkpoints24&&T.checkpoints24[n])||[],d=(T.days||{})[String(n)]||{},proofs=(T.proofs||[]).filter(function(x){return +x.day===n}),custom=(T.custom||{})[n];
     var journal=Object.keys(d.journal||{}).filter(function(k){return String(d.journal[k]||'').trim()});
-    var hasNotes=!!(d.note||(d.res&&(d.res.saw||d.res.proof))||(d.custom&&d.custom[n])||(d.signs||[]).length||(d.grat||[]).length||(d.choose||[]).length||journal.length||proofs.length||d.lightCounters);
+    var hasNotes=!!(d.note||(d.res&&(d.res.saw||d.res.proof))||custom||(d.signs||[]).length||(d.grat||[]).length||(d.choose||[]).length||journal.length||proofs.length||d.lightCounters);
     if(!evs.length&&!cps.length&&!hasNotes)continue;
     records++;
     html+='<section class="row-line diary-day"><b>День '+n+'</b>';
-    if(d.note)html+='<div class="diary-event"><b>Заметка дня</b><p>'+esc(d.note)+'</p></div>';
+    if(d.note)html+='<div class="diary-event"><b>Заметка дня</b><p>'+esc(d.note)+'</p></div>'; if(custom)html+='<div class="diary-event"><b>Своя запись</b><p>'+esc(custom)+'</p></div>';
     if(d.lightCounters)html+='<div class="diary-event"><b>Легкие отметки</b><p>Вода: '+(+d.lightCounters.water||0)+' стак. · Движение: '+(+d.lightCounters.movement||0)+' мин · Приемы пищи: '+(+d.lightCounters.meals||0)+'</p></div>';
     if(d.res&&(d.res.saw||d.res.proof))html+='<div class="diary-event"><b>Наблюдение и подтверждение</b>'+(d.res.saw?'<p>'+esc(d.res.saw)+'</p>':'')+(d.res.proof?'<p>'+esc(d.res.proof)+'</p>':'')+'</div>';
     if((d.signs||[]).length)html+='<div class="diary-event"><b>Знаки и совпадения</b>'+d.signs.map(function(x){return '<p>'+esc(x.tag?x.tag+' · ':'')+esc(x.text||'')+'</p>'}).join('')+'</div>';
