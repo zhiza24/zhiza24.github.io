@@ -166,7 +166,7 @@ box.innerHTML=html+(preview?'<p class="ar-ctx">Просмотр: ответы н
    id:'arch_'+part,step:resultSteps[part],title:resultTitles[part],passed:resultPoints[part],
    lead:'Промежуточная карта наблюдений. Это не окончательный вывод о тебе: следующие этапы помогут проверить и уточнить увиденное.',
    insightLabel:'Что показали собранные наблюдения',insightMore:blocksHTML(summary),
-   answers:source.answers||source,at:source.at||Date.now(),
+   answers:Array.isArray(source.answers)?source.answers:[],at:source.at||Date.now(),
    preview:preview,before:box.querySelector('#arNext')
   });
  }
