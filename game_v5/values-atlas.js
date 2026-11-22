@@ -40,7 +40,7 @@ function nav(next,back){var w=node('div');w.className='two';w.style.marginTop='2
 function render(){
 card.replaceChildren();
 var l=A.layer||1;
-if(l===7){renderResult(A.result||calculate());return;}
+if(l===7){renderResult(A.result&&A.result.dilemmas?A.result:calculate());return;}
 if(l===1){
 setHead('Исследование ценностей · 1 из 6','Что Вы называете важным?','Выберите от пяти до восьми ориентиров, которые действительно хотите видеть в своей жизни. Можно добавить собственную формулировку. Это Ваше самоописание — не обещание всегда поступать именно так.');
 card.append(valueChips('Выберите 5–8 ориентиров',A.declared));
