@@ -949,7 +949,7 @@ function bind(){
   };
   host.onchange=function(e){
     var el=e.target, act=el.getAttribute('data-act'); if(!act)return;
-    var P=ensure(), T=Tget(P);
+    var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T);
     if(act==='plan-done'){
       var i=+el.getAttribute('data-i'), plan=weekPlan(T,(T.weekN||0)+1);
       plan.done[i]=!!el.checked; save(P); render(); return;
