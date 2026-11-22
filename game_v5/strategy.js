@@ -147,7 +147,7 @@ var WEEKS=[
 
 function wishOf(P){var T=P.tracker||{},D=T.declared;if(P.wishBack&&P.wishBack.text)return P.wishBack.text;if(D&&(D.text||D.raw))return D.text||D.raw;if(P.pathPlan&&P.pathPlan.wish)return P.pathPlan.wish;return ''}
 function catOf(w){var k=Object.keys(CAT);for(var i=0;i<k.length;i++){if(k[i]!=='gen'&&CAT[k[i]].re.test(w))return k[i]}return 'gen'}
-var VNEED={'Свобода':'свобода выбора','Любовь':'любовь','Семья':'семья и близость','Здоровье':'силы и здоровье','Творчество':'самовыражение','Развитие':'развитие','Смысл':'смысл','Стабильность':'устойчивость','Приключения':'новизна','Служение':'польза людям','Красота':'красота вокруг','Спокойствие':'спокойствие','Дружба':'поддержка людей','Честность':'честность с собой','Гармония':'гармония'};
+var VNEED={'Свобода':'свобода выбора','Безопасность':'надежность и защищенность','Любовь':'любовь','Семья':'семья и близость','Здоровье':'силы и здоровье','Деньги':'материальная опора и свобода выбора','Признание':'уважение и видимость собственного вклада','Творчество':'самовыражение','Развитие':'развитие','Дружба':'поддержка людей','Красота':'красота вокруг','Спокойствие':'спокойствие','Честность':'честность с собой','Помощь людям':'вклад и поддержка других','Приключения':'новизна','Духовность':'связь с тем, что придает смысл','Власть и влияние':'возможность влиять и принимать решения','Стабильность':'устойчивость','Удовольствие':'удовольствие и качество проживаемого опыта','Смысл':'смысл','Служение':'польза людям','Гармония':'гармония'};
 function first(s){s=String(s||'');var m=s.match(/^.*?[.!?](\s|$)/);return (m?m[0]:s).trim()}
 
 function lead(P){var L=null;try{L=window.GLead?GLead():P.lab}catch(e){L=P.lab}
@@ -157,7 +157,7 @@ function build(P){
  var f=P.gender==='f',wish=wishOf(P)||'Твое желание',ck=catOf(wish),C=CAT[ck],L=lead(P);
  var k1=L.lead,k2=(L.queue||[]).filter(function(k){return k!==k1&&FOC[k]})[0]||'deval';
  /* потребность: от желания и ценностей */
- var vals=((P.values&&P.values.order)||(P.wishMod&&P.wishMod.research&&P.wishMod.research.values)||[]).slice(0,3);
+ var vals=((P.valuesCore&&P.valuesCore.top3&&P.valuesCore.top3.length?P.valuesCore.top3:null)||(P.values&&P.values.order)||(P.wishMod&&P.wishMod.research&&P.wishMod.research.values)||[]).slice(0,3);
  var need=C.need;var vn=vals.map(function(v){return VNEED[v]}).filter(Boolean).filter(function(x){return need.indexOf(x)<0}).slice(0,2);
  need=need.charAt(0).toUpperCase()+need.slice(1)+(vn.length?'. Для тебя здесь особенно важны '+vn.join(' и ')+'.':'.');
  /* ресурсы: колесо */
