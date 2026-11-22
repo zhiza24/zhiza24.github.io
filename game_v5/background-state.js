@@ -24,7 +24,7 @@ function mount(box){
   }catch(e){console.warn('Не удалось сохранить черновик фонового состояния',e)}
  }
  function saveResult(result){
-  if(preview){saved=result;return}
+  if(preview){saved=result;root.GBackgroundPreviewResult=result;return}
   var p=root.GProfile?GProfile.load():G.load(),b=p.backgroundProfile&&typeof p.backgroundProfile==='object'?p.backgroundProfile:{};
   if(b.backgroundState){b.backgroundStateHistory=arr(b.backgroundStateHistory);b.backgroundStateHistory.push(b.backgroundState);if(b.backgroundStateHistory.length>5)b.backgroundStateHistory.shift()}
   b.backgroundState=result;b.v=b.v||1;b.version=b.version||1;b.algoVersion=1;delete b.backgroundStateDraft;p.backgroundProfile=b;
