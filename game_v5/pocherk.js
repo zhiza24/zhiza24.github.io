@@ -240,9 +240,12 @@ function showBreakdown(R,fresh){
  var strongLine=stripPrefix(mainArr[1]||'',/^Твоя сила\s*[—–-]\s*/i);
  var attnLine=stripPrefix(mainArr[2]||'',/^На что стоит обратить внимание:\s*/i);
 
+ var total=(R.answers||[]).length;
+ var tally=ORDER.map(function(k){return DIRS[k]+' — '+(R.score[k]||0)}).join('; ');
  var leadTitle=R.mixed
-  ? 'Смешанная стратегия: '+names(R.leads,' и ')
-  : 'Ведущая стратегия: '+DIRS[R.lead]+(R.second&&R.second.length?' · дополнительная: '+names(R.second,', '):'');
+  ? 'В ответах несколько способов набрали одинаковое число выборов: '+names(R.leads,' и ')+'.'
+  : 'В этих игровых ситуациях чаще встречался ход «'+DIRS[R.lead]+'».';
+ leadTitle+=' Учтено ответов: '+total+' из '+Q.length+'. Распределение: '+tally+'. Это описание выбора в игровых сценах, а не постоянная характеристика личности.';
 
  var strongMore='';
  if(R.mixed){
@@ -288,7 +291,7 @@ function showBreakdown(R,fresh){
   title:'Твоя стратегия выбора',
   lead:leadTitle,
   strong:R.mixed
-   ? 'Ты умеешь переключаться между стратегиями ('+names(R.leads,', ')+') под задачу.'
+   ? 'В этом прохождении несколько способов получили одинаковый результат. Возможно, выбор зависит от контекста; сами по себе равные баллы еще не доказывают устойчивую гибкость.'
    : (strongLine.charAt(0).toUpperCase()+strongLine.slice(1)),
   strongMore:strongMore,
   insight:attnLine.split('. ')[0]+'.',
