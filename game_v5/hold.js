@@ -61,7 +61,7 @@ function render(){
  h+='</section>';
  var history=db.sessions.filter(function(x){return x.id!==s.id});
  if(history.length){h+='<section class="history"><h3>Предыдущие исследования</h3>'+history.map(function(x){return '<div class="history-item"><span>'+new Date(x.createdAt).toLocaleDateString('ru-RU')+(x.completedAt?' · завершено':' · не завершено')+'</span><button class="secondary" data-open="'+esc(x.id)+'">Открыть</button></div>'}).join('')+'</section>'}
- h+='<div class="actions"><button class="secondary" data-action="new">Начать новое исследование</button></div>';
+ h+='<div class="actions"><button class="secondary" data-action="new">Начать новое исследование</button><button class="secondary" data-action="clear">Удалить историю</button></div>';
  app.innerHTML=h;
 }
 function updateField(el){
@@ -90,6 +90,7 @@ app.addEventListener('click',function(e){
  if(a==='next'){s.step=Math.min(5,(+s.step||0)+1);save();render()}
  if(a==='finish'){s.completedAt=Date.now();save();render()}
  if(a==='new'){if(confirm('Начать новое исследование? Текущая запись останется в истории.'))fresh()}
+ if(a==='clear'){if(confirm('Удалить все исследования этой лаборатории из этого браузера? Это действие нельзя отменить.')){try{localStorage.removeItem(KEY)}catch(e){}db={sessions:[],currentId:null};fresh()}}
 });
 if(!current())fresh();else render();
 })();
