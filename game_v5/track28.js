@@ -45,7 +45,7 @@ var MARKS=[
   {id:'solved', t:'вопрос решился'}
 ];
 var SIGN_TAGS=['встреча','совпадение','информация','возможность','чувство'];
-var BONUS_HINT='Эта строка — подсказка для внимания. Когда желание остается в поле зрения, легче замечать связанные с ним идеи, людей и возможности. Отмечай то, что оказалось значимым, и продолжайте: выбираю, делаю, сделано.';
+var BONUS_HINT='Эта строка — подсказка для внимания. Когда желание остается в поле зрения, легче замечать связанные с ним идеи, людей и возможности. Отмечай то, что оказалось значимым, и продолжай: выбираю, делаю, сделано.';
 var WD=['пн','вт','ср','чт','пт','сб','вс'];
 
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
@@ -914,7 +914,13 @@ function viewArchive(P,T){
     if(!has)continue;
     html+='<section class="row-line diary-day"><b>День '+n+'</b>';
     if(d.note)html+='<p>'+esc(d.note)+'</p>';
+    if(d.custom)html+='<p><b>Своя запись</b> · '+esc(d.custom)+'</p>';
     if(d.res&&(d.res.saw||d.res.proof))html+='<p>'+esc(d.res.saw||'')+' '+esc(d.res.proof||'')+'</p>';
+    if(Object.keys(d.sliders||{}).length)html+='<div><b>Отметки состояния</b>'+Object.keys(d.sliders).map(function(k){return '<p>'+esc(k)+': '+esc(d.sliders[k])+'</p>'}).join('')+'</div>';
+    if(Object.keys(d.hours||{}).length)html+='<div><b>Записи по часам</b>'+Object.keys(d.hours).sort(function(a,b){return +a-(+b)}).map(function(k){var v=d.hours[k];return v&&v.text?'<p>'+esc((+k<10?'0':'')+k+':00')+' · '+esc(v.text)+'</p>':''}).join('')+'</div>';
+    if((d.dirSteps||[]).some(Boolean))html+='<div><b>Шаги по направлениям</b>'+d.dirSteps.map(function(v,i){return v?'<p>'+esc((T.directions||[])[i]&&((T.directions||[])[i].text||(T.directions||[])[i])||('Направление '+(i+1)))+' · '+esc(v)+'</p>':''}).join('')+'</div>';
+    if((d.dirState||[]).some(Boolean))html+='<p><b>Статусы шагов</b> · '+d.dirState.map(function(v){return v||'—'}).join(' / ')+'</p>';
+    if((d.dirMarks||[]).some(Boolean))html+='<p><b>Отметки результата</b> · '+d.dirMarks.map(function(v){return v||'—'}).join(' / ')+'</p>';
     if((d.signs||[]).length)html+='<div><b>Знаки</b>'+d.signs.map(function(x){return '<p>'+esc(x.tag||'')+' '+esc(x.text||'')+'</p>'}).join('')+'</div>';
     if((d.grat||[]).length)html+='<div><b>Благодарность</b>'+d.grat.map(function(x){return '<p>'+esc(x.text||x)+'</p>'}).join('')+'</div>';
     if((d.choose||[]).length)html+='<div><b>Выборы и действия</b>'+d.choose.map(function(x){return '<p>'+esc(x.text||'')+' · '+esc(x.status||'')+'</p>'}).join('')+'</div>';
