@@ -48,7 +48,20 @@ function render(){
  }
  else {
   /* Вкладка «Итоги»: автосохраненные расшифровки всех пройденных блоков по порядку (без артефактов) + привязанные инсайты/вопросы */
-  var blocks=(P.diary.blocks||[]).slice();
+  var blocks=(P.diary.blocks||[]).map(function(b,i){return {b:b,i:i}});
+  function routeKey(s){return String(s||'').replace(/([?&])(preview|retake)=1/g,'').replace(/[?&]$/,'')}
+  function routeOrder(b){
+   var key=routeKey(b&&b.step);
+   if(!key||!window.GFLOW)return 99999;
+   for(var i=0;i<GFLOW.length;i++){if(routeKey(GFLOW[i].u)===key)return i}
+   return 99999;
+  }
+  /* Итоги показываются в утвержденном порядке маршрута, а не в порядке случайных повторных заходов. */
+  blocks.sort(function(a,b){
+   var x=routeOrder(a.b),y=routeOrder(b.b);
+   return x-y||(Number(a.b.at)||0)-(Number(b.b.at)||0)||a.i-b.i;
+  });
+  blocks=blocks.map(function(x){return x.b});
   var seenSteps={};
   blocks.forEach(function(b){
    if(b.step)seenSteps[b.step]=1;
