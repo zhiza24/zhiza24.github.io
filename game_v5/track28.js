@@ -952,7 +952,7 @@ function bind(){
       if(sp==='day'&&!T.openDay)T.openDay=todayNum(T);
       save(P); render(); try{window.scrollTo(0,0)}catch(e){} return;
     }
-    if(act==='start-cycle'){T.strategySeen=true;T.space='day';T.view='day';if(!T.start)T.start=Date.now();T.openDay=todayNum(T);save(P);render();try{window.scrollTo(0,0)}catch(e){}return}
+    if(act==='start-cycle'){T.strategySeen=true;T.space='day';T.view='day';if(!T.start)T.start=Date.now();if(!P.cycleBaseline){P.cycleBaseline={wheel:(Array.isArray(P.wheel)?P.wheel:[]).slice(),research:mirrorInitialResearch(P),cycle:T.cycle||1,capturedAt:Date.now(),source:'initial'};}T.openDay=todayNum(T);save(P);render();try{window.scrollTo(0,0)}catch(e){}return}
     if(act==='open'){
       var nn=+b.getAttribute('data-n');
       T.space='day'; T.view='day'; T.openDay=nn;
@@ -1126,8 +1126,16 @@ function bind(){
     if(act==='newcycle'){
       var archived=JSON.parse(JSON.stringify(T));
       archived.archivedAt=Date.now();
+      if(P.cycleBaseline)archived.cycleBaseline=JSON.parse(JSON.stringify(P.cycleBaseline));
+      if(P.retest)archived.retest=JSON.parse(JSON.stringify(P.retest));
       P.trackerHistory=P.trackerHistory||[];
       P.trackerHistory.push(archived);
+      var completedMirror=T.mirror&&T.mirror.phase==='report'&&Array.isArray(T.mirror.endWheel)&&T.mirror.endWheel.length===8&&Array.isArray(T.mirror.endResearch)&&T.mirror.endResearch.length===24;
+      if(completedMirror){
+        var nextWheel=T.mirror.endWheel.slice(),nextResearch=mirrorResearchAvg(T.mirror.endResearch);
+        P.wheel=nextWheel.slice();
+        P.cycleBaseline={wheel:nextWheel,research:nextResearch,cycle:(T.cycle||1)+1,capturedAt:Date.now(),source:'mirror'};
+      }
       var nextCycle={
         version:T.version||1,
         cycle:(T.cycle||1)+1,
