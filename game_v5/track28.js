@@ -412,11 +412,12 @@ function viewDiary(P,T){
   for(var n=1;n<=28;n++){
     var evs=(T.events24&&T.events24[n])||[],cps=(T.checkpoints24&&T.checkpoints24[n])||[],d=(T.days||{})[String(n)]||{},proofs=(T.proofs||[]).filter(function(x){return +x.day===n});
     var journal=Object.keys(d.journal||{}).filter(function(k){return String(d.journal[k]||'').trim()});
-    var hasNotes=!!(d.note||(d.res&&(d.res.saw||d.res.proof))||(d.custom&&d.custom[n])||(d.signs||[]).length||(d.grat||[]).length||(d.choose||[]).length||journal.length||proofs.length);
+    var hasNotes=!!(d.note||(d.res&&(d.res.saw||d.res.proof))||(d.custom&&d.custom[n])||(d.signs||[]).length||(d.grat||[]).length||(d.choose||[]).length||journal.length||proofs.length||d.lightCounters);
     if(!evs.length&&!cps.length&&!hasNotes)continue;
     records++;
     html+='<section class="row-line diary-day"><b>День '+n+'</b>';
     if(d.note)html+='<div class="diary-event"><b>Заметка дня</b><p>'+esc(d.note)+'</p></div>';
+    if(d.lightCounters)html+='<div class="diary-event"><b>Легкие отметки</b><p>Вода: '+(+d.lightCounters.water||0)+' стак. · Движение: '+(+d.lightCounters.movement||0)+' мин · Приемы пищи: '+(+d.lightCounters.meals||0)+'</p></div>';
     if(d.res&&(d.res.saw||d.res.proof))html+='<div class="diary-event"><b>Наблюдение и подтверждение</b>'+(d.res.saw?'<p>'+esc(d.res.saw)+'</p>':'')+(d.res.proof?'<p>'+esc(d.res.proof)+'</p>':'')+'</div>';
     if((d.signs||[]).length)html+='<div class="diary-event"><b>Знаки и совпадения</b>'+d.signs.map(function(x){return '<p>'+esc(x.tag?x.tag+' · ':'')+esc(x.text||'')+'</p>'}).join('')+'</div>';
     if((d.grat||[]).length)html+='<div class="diary-event"><b>Благодарность и хорошее</b>'+d.grat.map(function(x){return '<p>'+esc(x.text||x)+'</p>'}).join('')+'</div>';
@@ -662,6 +663,13 @@ function dayPanel(P,T,n){
     html+='<div class="row-line"><b>'+esc(it.t)+'</b><p class="mute">'+esc(gx(it.daily))+'</p>';
     html+='<textarea data-act="journal" data-id="'+id+'" rows="2" maxlength="240" placeholder="'+esc(gx(it.min))+'">'+esc((d.journal&&d.journal[id])||'')+'</textarea></div>';
   });}
+  var lc=d.lightCounters||{};
+  var lightBody='<p class="mute">Не медицинский дневник и не норма. Отмечайте только то, что помогает Вам наблюдать за днем. Пропуски ничего не означают.</p>';
+  [['water','Вода · стаканы',1],['movement','Движение · минуты',5],['meals','Приемы пищи',1]].forEach(function(x){
+    var v=+lc[x[0]]||0;
+    lightBody+='<div class="light-counter"><b>'+x[1]+'</b><div><button type="button" class="quiet-btn" data-act="counter" data-k="'+x[0]+'" data-delta="-'+x[2]+'">−</button><strong>'+v+'</strong><button type="button" class="quiet-btn" data-act="counter" data-k="'+x[0]+'" data-delta="'+x[2]+'">+</button></div></div>';
+  });
+  html+=acc('light','Легкие отметки','по желанию',lightBody);
   html+='<button type="button" class="quiet-btn" data-act="practs">'+(pa?'Практики':'Лаборатория практик')+'</button>';
   html+='<button class="go" type="button" data-act="done">Завершить день</button></div>';
   return html;
@@ -983,6 +991,7 @@ function bind(){
       else {T.act=T.act||{};T.act[id]={from:dayn,len:(prc(id)||{len:7}).len,at:Date.now()}}
       save(P);render();return
     }
+    if(act==='counter'){var ck=b.getAttribute('data-k'),delta=+b.getAttribute('data-delta')||0,limits={water:20,movement:600,meals:8};d.lightCounters=d.lightCounters||{};d.lightCounters[ck]=Math.max(0,Math.min(limits[ck]||20,(+d.lightCounters[ck]||0)+delta));save(P);render();openAccAfterRender('light');return}
     if(act==='support-phrase'){T.support=T.support||{};T.support.phraseIndex=((+T.support.phraseIndex||0)+1)%5;save(P);render();return}
     if(act==='pr-off'){
       var id=b.getAttribute('data-id');
