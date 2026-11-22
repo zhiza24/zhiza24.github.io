@@ -157,7 +157,7 @@ function build(P){
  var f=P.gender==='f',wish=wishOf(P)||'Твое желание',ck=catOf(wish),C=CAT[ck],L=lead(P);
  var k1=L.lead,k2=(L.queue||[]).filter(function(k){return k!==k1&&FOC[k]})[0]||'deval';
  /* потребность: от желания и ценностей */
- var vals=((P.values&&P.values.order)||(P.wishMod&&P.wishMod.research&&P.wishMod.research.values)||[]).slice(0,3);
+ var vals=((P.valuesCore&&P.valuesCore.top3)||(P.values&&P.values.order)||(P.wishMod&&P.wishMod.research&&P.wishMod.research.values)||[]).slice(0,3);
  var need=C.need;var vn=vals.map(function(v){return VNEED[v]}).filter(Boolean).filter(function(x){return need.indexOf(x)<0}).slice(0,2);
  need=need.charAt(0).toUpperCase()+need.slice(1)+(vn.length?'. Для тебя здесь особенно важны '+vn.join(' и ')+'.':'.');
  /* ресурсы: колесо */
@@ -180,7 +180,7 @@ function build(P){
  }
  /* препятствия */
  var PT=window.GPAT||{},p1=PT[k1],p2=PT[k2],obst=[];
- if(p1){obst.push({t:'Привычная реакция',x:p1.parts[1][1]+'.'});obst.push({t:'Скрытое правило',x:'«'+p1.parts[2][1]+'».'});obst.push({t:'Что эта привычка дает взамен',x:p1.parts[3][1]+'. Поэтому отказаться от нее непросто.'})}
+ if(p1){obst.push({t:'Привычная реакция',x:p1.parts[1][1]+'.'});if(P.lab&&P.lab.ownCorrection){obst.push({t:'Ваша формулировка гипотезы',x:'«'+P.lab.ownCorrection+'».'});obst.push({t:'Исходное правило для проверки',x:'«'+p1.parts[2][1]+'» — это исходная версия, а не установленный факт.'})}else obst.push({t:'Скрытое правило',x:'«'+p1.parts[2][1]+'».'});obst.push({t:'Что эта привычка дает взамен',x:p1.parts[3][1]+'. Поэтому отказаться от нее непросто.'})}
  if(p2)obst.push({t:'Второе правило, которое тормозит',x:'«'+p2.parts[2][1]+'».'});
  if(P.betray&&(P.betray.picked||[]).length&&!bwr(P))obst.push({t:'Где ты себя предаешь',x:gx('Ты {отмечал|отмечала} это в колесе. В разборе дня трекера это можно отмечать одним касанием.',f)});
  /* ресурсы */
@@ -192,7 +192,7 @@ function build(P){
  if(hi)res.push({t:'Сфера-опора',x:'«'+hi+'» уже наполнена, из нее можно брать силы и людей.'});
  if(P.fractal&&P.fractal.lever&&P.fractal.lever.title&&P.fractal.lever.status!=='open')res.push({t:'Твоя точка влияния',x:P.fractal.lever.title+'.'});
  if(vals.length)res.push({t:'Твои ориентиры',x:vals.join(', ')+'.'});
- if(p1)res.push({t:'Новая настройка',x:'«'+p1.parts[5][1]+'».'});
+ if(P.lab&&P.lab.newRule&&P.lab.newRule.chosen)res.push({t:'Новая настройка',x:'«'+P.lab.newRule.chosen+'».'});else if(p1&&!(P.lab&&P.lab.ownCorrection))res.push({t:'Возможная новая настройка',x:'«'+p1.parts[5][1]+'».'});
  /* результаты всех исследований */
  var precs=[],modelActions=[];try{precs=practRec(P).map(function(r){return {id:r.id,why:gx(r.why,f)}})}catch(e){}
  try{var TL=testsLayer(P,f);TL.obst.forEach(function(x){obst.push(x)});TL.res.forEach(function(x){res.push(x)});modelActions=TL.actions||[]}catch(e){}
