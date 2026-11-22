@@ -50,3 +50,4 @@ body{margin:0;background:radial-gradient(ellipse at 50% 0%,#f7f2e9 0,#e9e0d2 58%
 .samost-foot{text-align:center;color:#82796c;font:italic 15px/1.65 Georgia,serif;padding:24px 14px 0}
 @media(min-width:600px){.samost-shell{padding-left:28px;padding-right:28px}.samost-home,.samost-work{padding:28px}.samost-topics{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+.samost-history{margin:18px 0 4px;padding:14px 15px;border:1px solid #e1d8ca;border-radius:14px;background:#f3eee5;color:#746b5f;font-size:12px;line-height:1.55}.samost-history b{display:block;color:#5f6857;font-size:13px;margin-bottom:6px}.samost-history p{margin:4px 0}
