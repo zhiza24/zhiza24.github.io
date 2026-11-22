@@ -118,19 +118,48 @@ R.found_go=function(){
  dr()
 };
 R.guard=function(){var g=GTXT.guard,g6=GTXT.guard6[GLead().lead];if(g6)return '<span class="tag">Точка Б</span><span class="tag">Страж</span><h1>'+(g6.name?GS(g6.name):GS(g.title))+'</h1><div id="gd"></div>';return '<span class="tag">Финал</span><span class="tag">Страж</span><h1>'+GS(g.title)+'</h1><p>'+GS(g.intro)+'</p><div id="gd"></div>'};
-R.guard_go=function(){var g6=GTXT.guard6[GLead().lead];if(g6)return G6(g6);var g=GTXT.guard,D=g.dialogue,i=0,A=[];
- function dr(){if(i>=D.length){var e=A.filter(function(a){return a.s==='ego'}).length;gd.innerHTML='<div class="pt"><small>Диалог завершен</small>'+GS(g.final.title)+'</div><p>'+GS(g.final.guardian||'Эта часть опыта может напоминать о прежней опасности, но не обязана принимать решения за Вас.')+'</p>'+['guardian_dialogue','player_response','transformation','closing'].filter(function(k){return g.final[k]}).map(function(k){return '<p>'+(k==='guardian_dialogue'?'<i>«'+GS(g.final[k])+'»</i>':GS(g.final[k]))+'</p>'}).join('')+'<p><small>Ваши ответы сохранены в истории пути. Они не складываются в оценку личности.</small></p><button class="next" id="nx">'+(GS(g.final.button)||'Дальше')+'</button>';
- nx.onclick=function(){var P=GPro.load();P.guard={answers:A,at:Date.now()};if(window.GProfile)GProfile.saveResult('guard',P.guard,{answers:A},{profile:P});var artRef=g.final.transformation&&g.final.transformation.artifact||g.final.artifact;if(window.GArts&&artRef)GArts.grant(artRef,{profile:P});save('Встреча со Стражем','диалог завершен',P);location.href=GRoute.advance()};return}
- var d=D[i];gd.innerHTML='<div class="pt"><small>Страж · '+(i+1)+' из '+D.length+'</small>'+GS(d.guardian)+'</div>'+(d.question?'<p><b>'+GS(d.question)+'</b></p>':'')+d.options.map(function(o,j){return '<button class="next" data-j="'+j+'" style="background:#20170e;color:#f4ecdf;border:1px solid #9e783a;text-align:left">'+GS(o.text)+'</button>'}).join('');
- gd.querySelectorAll('button').forEach(function(b){b.onclick=function(){var o=d.options[+b.dataset.j];A.push({n:i+1,id:o.id,s:o.label||o.state});gd.innerHTML='<div class="pt">'+(GS(o.outcome)||'')+'</div><button class="next" id="nx">Дальше</button>';nx.onclick=function(){i++;dr()}}})}
- dr()};
+R.guard_go=function(){
+ var lead=GLead().lead,g6=GTXT.guard6[lead],g=GTXT.guard,D=g.dialogue,i=0,A=[],P0=GPro.load(),old=P0.guardDraft,draft=old&&old.lead===lead&&old.mode==='dialogue'?old:null;
+ if(g6)return G6(g6);
+ if(draft){i=Math.max(0,+draft.i||0);A=Array.isArray(draft.answers)?draft.answers.slice():[]}
+ var pending=draft&&draft.pending||null;
+ function persist(){var P=GPro.load();P.guardDraft={lead:lead,mode:'dialogue',i:i,answers:A.slice(),pending:pending};GPro.save(P)}
+ function finish(){
+  gd.innerHTML='<div class="pt"><small>Диалог завершен</small>'+GS(g.final.title)+'</div><p>'+GS(g.final.guardian||'Эта часть опыта может напоминать о прежней опасности, но не обязана принимать решения за Вас.')+'</p>'+['guardian_dialogue','player_response','transformation','closing'].filter(function(k){return g.final[k]}).map(function(k){return '<p>'+(k==='guardian_dialogue'?'<i>«'+GS(g.final[k])+'»</i>':GS(g.final[k]))+'</p>'}).join('')+'<p><small>Ваши ответы сохранены в истории пути. Они не складываются в оценку личности.</small></p><button class="next" id="nx">'+(GS(g.final.button)||'Дальше')+'</button>';
+  nx.onclick=function(){var P=GPro.load();P.guard={answers:A,at:Date.now(),lead:lead};delete P.guardDraft;if(window.GProfile)GProfile.saveResult('guard',P.guard,{answers:A},{profile:P});var artRef=g.final.transformation&&g.final.transformation.artifact||g.final.artifact;if(window.GArts&&artRef)GArts.grant(artRef,{profile:P});save('Встреча со Стражем','диалог завершен',P);location.href=GRoute.advance()}
+ }
+ function showPending(){
+  var d=D[i],o=pending;gd.innerHTML='<div class="pt">'+(GS(o.outcome)||'')+'</div><button class="next" id="nx">Дальше</button>';
+  nx.onclick=function(){i++;pending=null;persist();dr()}
+ }
+ function dr(){
+  if(i>=D.length){finish();return}
+  if(pending){showPending();return}
+  var d=D[i];gd.innerHTML='<div class="pt"><small>Страж · '+(i+1)+' из '+D.length+'</small>'+GS(d.guardian)+'</div>'+(d.question?'<p><b>'+GS(d.question)+'</b></p>':'')+d.options.map(function(o,j){return '<button class="next" data-j="'+j+'" style="background:#20170e;color:#f4ecdf;border:1px solid #9e783a;text-align:left">'+GS(o.text)+'</button>'}).join('');
+  gd.querySelectorAll('button').forEach(function(b){b.onclick=function(){var o=d.options[+b.dataset.j];A[i]={n:i+1,id:o.id||null,s:o.label||o.state||null,text:GT(o.text)};pending={outcome:o.outcome||''};persist();showPending()}})
+ }
+ window.gBack=function(){if(pending){pending=null;persist();dr();return true}if(i>0){i--;A=A.slice(0,i);pending=null;persist();dr();return true}return false};
+ dr()
+};
 
-var GAN={"guardian_measure": "Печать меры", "guardian_experience": "Печать опыта", "guardian_connection": "Печать связей", "guardian_clarity": "Печать трезвости", "guardian_boundaries": "Печать границ", "guardian_pace": "Печать темпа"};function G6(g){var D=g.stages,i=0,A=[];
- function dr(){if(i>=D.length){var f=g.final;gd.innerHTML='<div class="pt"><small>Диалог завершен</small>Страж меняет свое место</div><p><i>«'+GS(f.guardian)+'»</i></p>'+(f.player?'<p>'+GS(f.player)+'</p>':'')+'<p><small>Ваши ответы сохранены как личные наблюдения. Они не являются баллом или оценкой личности.</small></p>'+((window.GArts?GArts.label(f.artifact):GAN[f.artifact])?'<div class="pt ok"><small>Новый артефакт</small>'+(window.GArts?GArts.label(f.artifact):GAN[f.artifact])+'</div>':'')+'<button class="next" id="nx">Дальше</button>';
- nx.onclick=function(){var P=GPro.load();P.guard={answers:A,at:Date.now()};if(window.GProfile)GProfile.saveResult('guard',P.guard,{answers:A},{profile:P});if(window.GArts)GArts.grant(f.artifact,{profile:P});else{var an=GAN[f.artifact];if(an){P.arts=P.arts||[];if(P.arts.indexOf(an)<0)P.arts.push(an)}}save('Встреча со Стражем','диалог завершен',P);location.href=GRoute.advance()};return}
- var d=D[i];gd.innerHTML='<div class="pt"><small>Страж · '+(i+1)+' из '+D.length+'</small>'+GS(d.guardian)+'</div>'+d.responses.map(function(o,j){return '<button class="next" data-j="'+j+'" style="background:#20170e;color:#f4ecdf;border:1px solid #9e783a;text-align:left">'+GS(o.text)+'</button>'}).join('');
- gd.querySelectorAll('button').forEach(function(b){b.onclick=function(){var o=d.responses[+b.dataset.j];A.push({n:i+1,s:o.type});i++;dr()}})}
- dr()}
+
+var GAN={"guardian_measure": "Печать меры", "guardian_experience": "Печать опыта", "guardian_connection": "Печать связей", "guardian_clarity": "Печать трезвости", "guardian_boundaries": "Печать границ", "guardian_pace": "Печать темпа"};function G6(g){
+ var lead=GLead().lead,D=g.stages,i=0,A=[],P0=GPro.load(),old=P0.guardDraft,draft=old&&old.lead===lead&&old.mode==='six'?old:null;
+ if(draft){i=Math.max(0,+draft.i||0);A=Array.isArray(draft.answers)?draft.answers.slice():[]}
+ function persist(){var P=GPro.load();P.guardDraft={lead:lead,mode:'six',i:i,answers:A.slice()};GPro.save(P)}
+ function finish(){
+  var f=g.final;gd.innerHTML='<div class="pt"><small>Диалог завершен</small>Страж меняет свое место</div><p><i>«'+GS(f.guardian)+'»</i></p>'+(f.player?'<p>'+GS(f.player)+'</p>':'')+'<p><small>Ваши ответы сохранены как личные наблюдения. Они не являются баллом или оценкой личности.</small></p>'+((window.GArts?GArts.label(f.artifact):GAN[f.artifact])?'<div class="pt ok"><small>Новый артефакт</small>'+(window.GArts?GArts.label(f.artifact):GAN[f.artifact])+'</div>':'')+'<button class="next" id="nx">Дальше</button>';
+  nx.onclick=function(){var P=GPro.load();P.guard={answers:A,at:Date.now(),lead:lead};delete P.guardDraft;if(window.GProfile)GProfile.saveResult('guard',P.guard,{answers:A},{profile:P});if(window.GArts)GArts.grant(f.artifact,{profile:P});else{var an=GAN[f.artifact];if(an){P.arts=P.arts||[];if(P.arts.indexOf(an)<0)P.arts.push(an)}}save('Встреча со Стражем','диалог завершен',P);location.href=GRoute.advance()}
+ }
+ function dr(){
+  if(i>=D.length){finish();return}
+  var d=D[i];gd.innerHTML='<div class="pt"><small>Страж · '+(i+1)+' из '+D.length+'</small>'+GS(d.guardian)+'</div>'+d.responses.map(function(o,j){return '<button class="next" data-j="'+j+'" style="background:#20170e;color:#f4ecdf;border:1px solid #9e783a;text-align:left">'+GS(o.text)+'</button>'}).join('');
+  gd.querySelectorAll('button').forEach(function(b){b.onclick=function(){var o=d.responses[+b.dataset.j];A[i]={n:i+1,id:o.id||null,s:o.type||null,text:GT(o.text)};i++;persist();dr()}})
+ }
+ window.gBack=function(){if(i>0){i--;A=A.slice(0,i);persist();dr();return true}return false};
+ dr()
+}
+
 
 var WN=['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'],BQ=['Я замечаю, когда включается моя установка','Я поступаю по-новому хотя бы иногда','Мне легче выбирать свое'];
 R.retest=function(){var P=GPro.load();if(!(GTrackDay(P).done))return '<h1>Повторный замер</h1><p>Вернись сюда, когда пройдешь 28 дней трекера.</p><a class="st" href="reactor.html">К Реактору</a>';return '<span class="tag">Финал</span><span class="tag">Тест</span><h1>Повторный замер</h1><p>Оцени сферы сейчас, не глядя на прошлые цифры.</p>'+WN.map(function(n,i){return '<div>'+n+': <b id="v'+i+'">?</b></div><input type="range" min="0" max="10" value="5" id="r'+i+'" data-t="0" style="opacity:.45" oninput="v'+i+'.textContent=this.value;this.dataset.t=1;this.style.opacity=1">'}).join('')+'<h2>Что изменилось в жизни</h2>'+BQ.map(function(q,i){return '<p>'+q+'</p><div class="row" data-q="'+i+'"><button data-v="0">Нет</button><button data-v="1">Иногда</button><button data-v="2">Да</button></div>'}).join('')+'<button class="next" id="nx">Сравнить</button>'};
