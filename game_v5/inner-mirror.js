@@ -160,7 +160,7 @@ function mount(box){
    groups.forEach(function(g){var a=data.fragments.filter(function(x){return x.domain===g});if(a.length)html+='<section class="im-group"><h2>'+esc(g)+'</h2>'+a.map(function(x){return card(x,-1,false)}).join('')+'</section>'});
    if(data.stateModel){
     var active=data.stateModel.states.filter(function(x){return x.status!=='unassessed'});
-    html+='<section class="im-group"><h2>Каталог 19 состояний</h2><p>Здесь собраны внутренние привычки и способы реагирования, которые уже проявились в твоих ответах. Посмотри, какие из них помогают тебе, а какие хочется перенастроить.</p>';
+    html+='<section class="im-group"><h2>Твои внутренние настройки</h2><p>Здесь собраны внутренние привычки и способы реагирования, которые уже проявились в твоих ответах. Посмотри, какие из них помогают тебе, а какие хочется перенастроить.</p>';
     if(active.length)html+=active.map(function(x){
       var count=x.layersConfirmed.length,goal=data.stateModel.stateGoals&&data.stateModel.stateGoals[x.id],selector=x.signals.CH.length>=2&&!x.needsDiscriminator.length?
        '<p>Как Вы хотите обращаться с этой стратегией?</p><div class="im-actions">'+[['Ослабить','Ослабить'],['Усилить','Усилить'],['Оставить','Оставить как есть'],['Не знаю','Пока не определился']].map(function(o){return '<button class="'+(goal===o[0]?'selected':'')+'" data-state-goal="'+esc(x.id)+'" data-goal="'+esc(o[0])+'">'+esc(o[1])+'</button>'}).join('')+'</div>':'';
@@ -204,7 +204,7 @@ function mount(box){
      }
      
       if(cx.mageFinal&&cx.mageFinal.length)html+='<p>Важные эмоциональные темы: '+esc(cx.mageFinal.map(function(x){return x.meaning}).join('; '))+'.</p>';
-      if(cx.mageContext&&cx.mageContext.length)html+='<p>Другие сигналы Мага, оставленные в контексте: '+esc(cx.mageContext.map(function(x){return x.meaning}).join('; '))+'.</p>';
+      if(cx.mageContext&&cx.mageContext.length)html+='<p>Еще один эмоциональный оттенок: '+esc(cx.mageContext.map(function(x){return x.meaning}).join('; '))+'.</p>';
       if(cx.echoStrategies&&cx.echoStrategies.length)html+='<p>В ситуациях тебе также свойственны такие способы реагирования: '+esc(cx.echoStrategies.map(function(x){return x.meaning}).join('; '))+'.</p>';
       html+='';
      if(cx.values.length)html+='<p>Выбранные ценности: '+esc(cx.values.join(', '))+'</p>';
@@ -244,11 +244,11 @@ function mount(box){
   var modelSummary='';
   if(data.stateModel){
    var marked=data.stateModel.states.filter(function(x){return x.status!=='unassessed'});
-   modelSummary='<section class="im-group"><h2>Сверка с 19 состояниями</h2><p>Есть сигналы по '+marked.length+' состояниям из 19. Устойчивые выводы пока не присваиваются: нарративный слой и сферы жизни еще не собраны.</p>'+
+   modelSummary='<section class="im-group"><h2>Твои внутренние настройки</h2>'+\n    (marked.length?marked.slice(0,8).map(function(x){return '<article class="im-card"><h3>'+esc(x.name)+'</h3><p>'+esc(x.stance)+'</p></article>'}).join(''):'<p>По мере прохождения пути ты увидишь больше своих привычных способов реагировать.</p>')+'</section>';/*
     (marked.length?marked.slice(0,8).map(function(x){return '<p><b>'+esc(x.name)+'</b> — '+esc(x.confidence)+(x.needsDiscriminator.length?' · требуется различитель':'')+'</p>'}).join(''):'<p>Прямых совпадений пока нет.</p>')+
     (data.stateModel.families.length?'<p>Семейства, требующие различения: '+data.stateModel.families.map(function(x){return esc(x.states.join(' / '))}).join('; ')+'.</p>':'')+'</section>';
   }
-  return '<div class="im-stage"><div class="im-eyebrow">Собранное отражение</div><h1>Твоя карта внутренней архитектуры</h1>'+map+modelSummary+'<div class="im-final"><div class="im-final-num">'+data.sources.length+'</div><div>исследований вошло в карту</div><div class="im-final-line"></div><b>'+esc(status)+'</b></div>'+
+  return '<div class="im-stage"><div class="im-eyebrow">Собранное отражение</div><h1>Твоя карта внутренней архитектуры</h1>'+map+modelSummary+'<div class="im-final"><div class="im-final-num">'+data.sources.length+'</div><div>исследований помогли собрать эту карту</div><div class="im-final-line"></div><b>'+esc(status)+'</b></div>'+
   (confirmed.length?'<h2>Что ты подтвердил</h2>'+confirmed.map(function(x){return '<p>✧ '+esc(x.title)+'</p>'}).join(''):'')+
   (denied.length?'<h2>Что ты уточнил</h2>'+denied.map(function(x){return '<p>✧ '+esc(x.title)+' — не совпало с твоим опытом</p>'}).join(''):'')+
   (data.unknown.length?'<h2>Что осталось открытым</h2>'+data.unknown.map(function(x){return '<p>'+esc(x)+'</p>'}).join(''):'')+
