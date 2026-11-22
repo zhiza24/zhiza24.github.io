@@ -1195,7 +1195,7 @@ function bind(){
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T);
     if(act==='mirror-wheel'){T.mirror=T.mirror||{version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0};T.mirror.endWheel=T.mirror.endWheel||Array(8).fill(null);T.mirror.endWheel[+el.getAttribute('data-i')]=el.value===''?null:+el.value;save(P);return}
     if(act==='mirror-note'){T.mirror=T.mirror||{};T.mirror.reflection=T.mirror.reflection||{};T.mirror.reflection[el.getAttribute('data-key')]=el.value;save(P);return}
-    if(act==='support-five'){T.support=T.support||{};T.support.fiveMinDays=T.support.fiveMinDays||{};T.support.fiveMinDays[n]=!!el.checked;save(P);return}
+    if(act==='support-five'){T.support=T.support||{};T.support.fiveMinDays=T.support.fiveMinDays||{};T.support.fiveMinDays[todayNum(T)]=!!el.checked;save(P);return}
     if(act==='event-field'){T.eventDraft=T.eventDraft||{};T.eventDraft[n]=T.eventDraft[n]||{};T.eventDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='checkpoint-field'){T.checkpointDraft=T.checkpointDraft||{};T.checkpointDraft[n]=T.checkpointDraft[n]||{};T.checkpointDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='plan-done'){
