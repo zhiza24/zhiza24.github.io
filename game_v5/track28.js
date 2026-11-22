@@ -1134,6 +1134,10 @@ function bind(){
       save(P); if(window.GArts)GArts.grant('proof_sign'); render(); return;
     }
     if(act==='newcycle'){
+      if(!T.mirror||T.mirror.phase!=='report'){
+        if(!T.mirror)T.mirror={version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0,startedAt:Date.now(),initialWheel:((P.cycleBaseline&&P.cycleBaseline.wheel)||P.wheel||[]).slice(),initialResearch:mirrorInitialResearch(P).slice(),history:[]};
+        T.space='mirror';T.view='mirror';save(P);render();return;
+      }
       if(!window.confirm('Сохранить весь текущий цикл в архиве и начать новый?'))return;
       if(T.mirror&&T.mirror.phase==='report'&&Array.isArray(T.mirror.endWheel)&&Array.isArray(T.mirror.endResearch)){
         P.wheel=T.mirror.endWheel.slice();
