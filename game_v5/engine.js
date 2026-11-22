@@ -64,9 +64,16 @@ window.GLead=function(){var P=load(),k=inKey(P);if(!P.lab||!P.lab.lead||(P.lab.a
 
 // Противоречие одной фразой
 var WN=['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'];
-window.GContra=function(){var P=load(),L=GLead(),p=PAT[L.lead],v=(P.values&&P.values.order||[])[0]||'свобода',w=P.wheel||[],lo='';
- if(w.length){var m=0;w.forEach(function(x,i){if(x<w[m])m=i});lo=WN[m]}
- return 'Для тебя важна ценность «'+v+'», но внутри работает правило «'+p.parts[2][1].toLowerCase()+'»'+(lo?'. Сильнее всего это видно в сфере «'+lo+'»':'')+'.'};
+window.GContra=function(){
+ var P=load(),L=GLead(),p=PAT[L.lead],v=(P.valuesCore&&P.valuesCore.top3&&P.valuesCore.top3[0])||(P.values&&P.values.order||[])[0]||'свобода';
+ var E=(P.fractal&&P.fractal.evidence)||[],names={health:'Здоровье',money:'Финансы',work:'Карьера',relationships:'Отношения',family:'Семья',environment:'Друзья',self_development:'Рост',rest:'Отдых'};
+ var spheres=E.map(function(x){return names[x.sphere]}).filter(Boolean),basis='';
+ if(P.lab&&P.lab.foundStatus==='insufficient')basis='Основание пока не определилось — это открытый вопрос.';
+ else if(P.lab&&P.lab.foundFeedback==='no')basis='Предложенное объяснение основания не откликнулось; его не нужно принимать.';
+ else if(P.lab&&P.lab.found&&P.lab.found!=='none')basis='Есть предварительная гипотеза об основании реакции; ее стоит сверять с конкретными обстоятельствами.';
+ var rule=P.lab&&P.lab.ownCorrection?P.lab.ownCorrection:'возможное правило «'+p.parts[2][1].toLowerCase()+'»';
+ return 'Среди твоих трех ориентиров — ценность «'+v+'». Ведущая гипотеза Точки Б — '+rule+'.'+(spheres.length?' Ты решил'+(female?'а':'')+' проверить повторение схемы в сферах: '+spheres.join(', ')+'.':'')+(basis?' '+basis:' Это рабочая гипотеза, а не окончательное описание тебя.') ;
+};
 
 // Задания Реактора на день
 window.GDay=function(n){var P=load(),L=GLead(),p=PAT[L.lead],f=P.focuses||[];
