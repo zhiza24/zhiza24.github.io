@@ -146,3 +146,9 @@
 .support-panel label:not(.support-check){display:block;margin:12px 0 6px;color:#e4d7c1;font:600 13px Manrope,sans-serif}
 .support-phrase{margin:14px 0 0;padding:12px;border-left:3px solid #a8b294;background:rgba(168,178,148,.08);border-radius:0 10px 10px 0}
 .support-phrase p{margin:0;color:#e8dcc8;font:600 15px/1.5 'Cormorant Garamond',serif}
+
+
+.light-counter{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-top:1px solid rgba(158,120,58,.18);color:#e4d7c1;font:600 13px Manrope,sans-serif}
+.light-counter>div{display:flex;align-items:center;gap:10px}
+.light-counter strong{min-width:24px;text-align:center;color:#f0c870;font-size:15px;font-variant-numeric:tabular-nums}
+.light-counter .quiet-btn{min-width:30px;padding:4px 9px;margin:0}
