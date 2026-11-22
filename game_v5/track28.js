@@ -882,7 +882,10 @@ function viewResults(P,T){
     html+='<section class="row-line"><b>Архив циклов</b><p class="mute">Здесь хранятся завершенные циклы. Архив доступен для просмотра и не изменяет текущие записи.</p>';
     html+=archivedCycles.map(function(a,i){
       var date=a.archivedAt||a.cycleEndedAt||a.start||Date.now(),filled=0,events=0;
-      for(var d=1;d<=28;d++){var rec=(a.days||{})[String(d)]||{};if(rec.note||rec.res||rec.wishMark||(rec.signs||[]).length||(rec.grat||[]).length||(rec.choose||[]).length||Object.keys(rec.sliders||{}).length)filled++}
+      for(var d=1;d<=28;d++){
+        var rec=(a.days||{})[String(d)]||{},dayEvents=(a.events24||{})[d]||[],dayPoints=(a.checkpoints24||{})[d]||[];
+        if(rec.note||rec.res||rec.wishMark||(rec.signs||[]).length||(rec.grat||[]).length||(rec.choose||[]).length||Object.keys(rec.sliders||{}).length||Object.keys(rec.journal||{}).length||Object.keys(rec.hours||{}).length||dayEvents.length||dayPoints.length)filled++;
+      }
       Object.keys(a.events24||{}).forEach(function(k){events+=(a.events24[k]||[]).length});
       return '<div class="archive-cycle"><b>Цикл '+(a.cycle||i+1)+'</b><span>'+new Date(date).toLocaleDateString('ru-RU')+' · дней с записями: '+filled+'/28 · событий: '+events+'</span><button type="button" class="quiet-btn" data-act="archive-open" data-i="'+i+'">Открыть дневник цикла</button>'+(a.mirror&&a.mirror.phase==='report'?'<button type="button" class="quiet-btn" data-act="mirror-archive" data-i="'+i+'">Открыть отчет Зеркала</button>':'')+'</div>';
     }).join('');
