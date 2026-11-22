@@ -40,12 +40,38 @@ R.sort_go=function(){
  }
  dr()
 };
-R.eraser=function(){var p=GPAT[GLead().lead],P=GPro.load(),draft=P.lab&&P.lab.newRuleDraft;return '<span class="tag">Точка Б</span><span class="tag">Практика</span><h1>Перенастройка привычного правила</h1><p>Символически сними темный слой со старой формулировки. Это игровой образ: он не стирает память и не удаляет убеждение автоматически. Он помогает остановиться и посмотреть, подходит ли прежнее правило твоей нынешней жизни.</p><div class="er"><div class="u">'+GEsc(p.parts[5][1])+'</div><canvas id="cv"></canvas></div><div class="fb" id="fb"></div><div id="ruleReframe" style="display:none"><p>Старая настройка могла когда-то помогать. Теперь можно проверить, нужна ли она в этой ситуации.</p><p><small>Предложенная формулировка — только вариант. Измени ее своими словами или оставь поле пустым.</small></p><textarea id="ruleEdit" rows="3" style="width:100%;box-sizing:border-box;background:#20170e;color:#f4ecdf;border:1px solid #9e783a;border-radius:8px;padding:10px;font:inherit">'+GEsc(draft||p.parts[5][1])+'</textarea></div><button class="next" id="nx" style="display:none">Сохранить и продолжить</button>'};
-R.eraser_go=function(){var p=GPAT[GLead().lead],c=document.getElementById('cv'),x=c.getContext('2d'),r=c.getBoundingClientRect(),ruleEdit=document.getElementById('ruleEdit');if(ruleEdit)ruleEdit.oninput=function(){var P=GPro.load();P.lab=P.lab||{};P.lab.newRuleDraft=ruleEdit.value;GPro.save(P)};c.width=Math.max(1,Math.round(r.width*devicePixelRatio));c.height=Math.max(1,Math.round(r.height*devicePixelRatio));x.scale(devicePixelRatio,devicePixelRatio);x.fillStyle='#2a2018';x.fillRect(0,0,r.width,r.height);x.fillStyle='#c9b591';x.font='600 19px Manrope';x.textAlign='center';x.textBaseline='middle';x.fillText('«'+p.parts[2][1]+'»',r.width/2,r.height/2,r.width-30);x.globalCompositeOperation='destination-out';
- var done=false,down=false;function erase(e){if(!down||done)return;var b=c.getBoundingClientRect();x.beginPath();x.arc(e.clientX-b.left,e.clientY-b.top,25,0,Math.PI*2);x.fill();e.preventDefault();check()}
- function check(){if(done)return;var d=x.getImageData(0,0,c.width,c.height).data,clear=0,total=0;for(var k=3;k<d.length;k+=128){total++;if(d[k]<20)clear++}if(total&&clear/total>.52){done=true;c.style.transition='opacity .65s';c.style.opacity='0';document.getElementById('fb').textContent='Вы увидели старую формулировку. Теперь можно проверить, какой вариант подходит Вам сегодня.';document.getElementById('ruleReframe').style.display='block';document.getElementById('nx').style.display='block'}}
+function GActualRule(P,p){
+ var E=(P.fractal&&P.fractal.evidence)||[],seen={},list=[];
+ E.forEach(function(e){
+  var text=String(e&&e.responses&&e.responses.rule||'').trim();
+  if(!text)return;
+  var key=text.toLocaleLowerCase();
+  if(seen[key])return;seen[key]=true;
+  list.push({text:text,sphere:e.sphere||'',support:typeof e.supports_rule==='number'?e.supports_rule:-1});
+ });
+ list.sort(function(a,b){return b.support-a.support});
+ if(list.length){
+  var x=list[0],ix=WK.indexOf(x.sphere),sphere=ix>=0?WN[ix]:x.sphere;
+  return {text:x.text,source:sphere?'Ваш ответ по сфере «'+sphere+'»':'Ваш ответ в исследовании повторяющейся схемы',support:x.support};
+ }
+ return {text:p.parts[2][1],source:'Базовая формулировка установки: отдельное правило в исследовании не было записано',support:-1};
+}
+R.eraser=function(){
+ var p=GPAT[GLead().lead],P=GPro.load(),draft=P.lab&&P.lab.newRuleDraft,actual=GActualRule(P,p);
+ return '<span class="tag">Точка Б</span><span class="tag">Практика</span><h1>Перенастройка привычного правила</h1><p>Символический жест помогает остановиться и проверить, подходит ли прежнее правило нынешним обстоятельствам. Он не стирает память и не удаляет убеждение автоматически.</p><div class="pt"><small>Формулировка из Вашего исследования</small>'+GEsc(actual.text)+'<p><small>'+GEsc(actual.source)+'</small></p></div><div class="er"><div class="u">'+GEsc(p.parts[5][1])+'</div><canvas id="cv"></canvas></div><div class="fb" id="fb"></div><div id="ruleReframe" style="display:none"><p>Старая настройка могла когда-то помогать. Теперь можно проверить, нужна ли она в этой ситуации.</p><p><small>Предложенная формулировка — только вариант. Измените ее своими словами или оставьте вопрос открытым.</small></p><textarea id="ruleEdit" rows="3" style="width:100%;box-sizing:border-box;background:#20170e;color:#f4ecdf;border:1px solid #9e783a;border-radius:8px;padding:10px;font:inherit">'+GEsc(draft||p.parts[5][1])+'</textarea></div><button class="next" id="nx" style="display:none">Сохранить и продолжить</button>'};
+R.eraser_go=function(){
+ var p=GPAT[GLead().lead],P0=GPro.load(),actual=GActualRule(P0,p),oldRule=actual.text,c=document.getElementById('cv'),x=c.getContext('2d'),r=c.getBoundingClientRect(),ruleEdit=document.getElementById('ruleEdit');
+ if(ruleEdit)ruleEdit.oninput=function(){var P=GPro.load();P.lab=P.lab||{};P.lab.newRuleDraft=ruleEdit.value;GPro.save(P)};
+ c.width=Math.max(1,Math.round(r.width*devicePixelRatio));c.height=Math.max(1,Math.round(r.height*devicePixelRatio));x.scale(devicePixelRatio,devicePixelRatio);x.fillStyle='#2a2018';x.fillRect(0,0,r.width,r.height);x.fillStyle='#c9b591';x.font='600 19px Manrope';x.textAlign='center';x.textBaseline='middle';
+ var words='«'+oldRule+'»'.split(' '),lines=[],line='';words.forEach(function(w){var next=line?line+' '+w:w;if(x.measureText(next).width>r.width-30&&line){lines.push(line);line=w}else line=next});if(line)lines.push(line);
+ var lineH=24,startY=r.height/2-(lines.length-1)*lineH/2;lines.forEach(function(t,i){x.fillText(t,r.width/2,startY+i*lineH,r.width-30)});
+ x.globalCompositeOperation='destination-out';
+ var done=false,down=false;
+ function erase(e){if(!down||done)return;var b=c.getBoundingClientRect();x.beginPath();x.arc(e.clientX-b.left,e.clientY-b.top,25,0,Math.PI*2);x.fill();e.preventDefault();check()}
+ function check(){if(done)return;var d=x.getImageData(0,0,c.width,c.height).data,clear=0,total=0;for(var k=3;k<d.length;k+=128){total++;if(d[k]<20)clear++}if(total&&clear/total>.52){done=true;c.style.transition='opacity .65s';c.style.opacity='0';document.getElementById('fb').textContent='Вы увидели свою прежнюю формулировку. Теперь можно проверить, какой вариант подходит Вам сегодня.';document.getElementById('ruleReframe').style.display='block';document.getElementById('nx').style.display='block'}}
  c.addEventListener('pointerdown',function(e){down=true;if(c.setPointerCapture)c.setPointerCapture(e.pointerId);erase(e)});c.addEventListener('pointermove',erase);['pointerup','pointercancel','lostpointercapture'].forEach(function(n){c.addEventListener(n,function(){down=false})});
- document.getElementById('nx').onclick=function(){var P=GPro.load();P.lab=P.lab||{};var v=document.getElementById('ruleEdit').value.trim();P.lab.newRule={old:p.parts[2][1],suggested:p.parts[5][1],chosen:v,status:v?'reframed':'left_open',at:Date.now()};delete P.lab.newRuleDraft;if(window.GArts)GArts.grant(p.art,{profile:P});else{P.arts=P.arts||[];if(P.arts.indexOf(p.art)<0)P.arts.push(p.art)}save('Перенастройка привычного правила',v?'формулировка сохранена':'вопрос оставлен открытым',P);location.href=GRoute.advance()}};
+ document.getElementById('nx').onclick=function(){var P=GPro.load();P.lab=P.lab||{};var v=document.getElementById('ruleEdit').value.trim();P.lab.newRule={old:oldRule,source:actual.source,suggested:p.parts[5][1],chosen:v,status:v?'reframed':'left_open',at:Date.now()};delete P.lab.newRuleDraft;if(window.GArts)GArts.grant(p.art,{profile:P});else{P.arts=P.arts||[];if(P.arts.indexOf(p.art)<0)P.arts.push(p.art)}save('Перенастройка привычного правила',v?'формулировка сохранена':'вопрос оставлен открытым',P);location.href=GRoute.advance()}
+};
 
 
 var WK=['health','money','work','relationships','family','environment','self_development','rest'],WN=['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'];
