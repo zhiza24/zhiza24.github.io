@@ -452,7 +452,7 @@ function mirrorBars(values,total,names){
  return keys.map(function(k){var v=values[k],pct=total?Math.round(v/total*100):0;return '<div class="mirror-bar"><div><b>'+esc((names&&names[k])||k)+'</b><span>'+Math.round(v/60*10)/10+' ч · '+pct+'%</span></div><i><em style="width:'+pct+'%"></em></i></div>'}).join('');
 }
 function viewMirror(P,T){
- var M=T.mirror||{},ready=todayNum(T)>=28;
+ var M=T.mirror||{},ready=!!(T.finale&&T.finale.done)||todayNum(T)>=28;
  if(M.phase==='self'){
   var h='<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни · повторный замер</p><h1>Как Вы воспринимаете свою жизнь сейчас?</h1><p class="cap28">Оцените каждую сферу по собственному ощущению. Прежние оценки, ответы и дневниковая статистика пока скрыты — сначала зафиксируйте сегодняшний взгляд.</p><div class="mirror-self-grid">';
   MIRROR_SPHERES.forEach(function(x,i){h+='<label class="mirror-self-item"><b>'+x.n+'</b><select data-act="mirror-wheel" data-i="'+i+'"><option value="">Выберите оценку</option>'+Array.from({length:10},function(_,j){var v=j+1;return '<option value="'+v+'" '+(+M.endWheel[i]===v?'selected':'')+'>'+v+' / 10</option>'}).join('')+'</select></label>'});
