@@ -190,7 +190,7 @@ function build(P){
  if(n&&window.GPassportData){var ar=GPassportData.arcana[n-1];if(ar){var rs=String(ar.resource||'');if(window.GPassport&&GPassport.say)rs=GPassport.say(rs,P.gender);res.push({t:'Твой аркан · '+ar.name,x:first(rs)})}}
  if(nat&&nat.facets&&window.GNature&&GNature.DT[nat.facets.decision])res.push({t:'Как тебе легче решать',x:GNature.DT[nat.facets.decision].name+'. '+first(GNature.DT[nat.facets.decision].text.replace('Твоя модель решения — ','Тебе естественно '))});
  if(hi)res.push({t:'Сфера-опора',x:'«'+hi+'» уже наполнена, из нее можно брать силы и людей.'});
- if(P.fractal&&P.fractal.lever&&P.fractal.lever.title)res.push({t:'Твоя точка влияния',x:P.fractal.lever.title+'.'});
+ if(P.fractal&&P.fractal.lever&&P.fractal.lever.title&&P.fractal.lever.status!=='open')res.push({t:'Твоя точка влияния',x:P.fractal.lever.title+'.'});
  if(vals.length)res.push({t:'Твои ориентиры',x:vals.join(', ')+'.'});
  if(p1)res.push({t:'Новая настройка',x:'«'+p1.parts[5][1]+'».'});
  /* результаты всех исследований */
