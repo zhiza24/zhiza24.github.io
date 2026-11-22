@@ -490,7 +490,7 @@ function dayPanel(P,T,n){
     html+='<input type="range" min="1" max="10" value="'+v+'" data-act="slider" data-k="'+m.key+'"></div>';
   });
   html+='</div>';
-  html+=razborBlock(P,T,n);
+  html+=razborBlock(P,T,n);\n  var evCount=((T.events24||{})[n]||[]).length;html+=acc('events24','24 часа · события и занятия',evCount?'записей: '+evCount:'добавить запись',events24Body(T,n));
 
   if(actOn(T,'signs',n)){
   html+='<div class="row-line"><b>Знаки дня</b><div class="signs">';
@@ -543,6 +543,35 @@ function chooseBody(d,T,n){
     return line+'</div>';
   }).join('');
   return rows+'<input type="text" data-act="ch-in" placeholder="Выбираю…" maxlength="160"><button type="button" class="add" data-act="ch-add">Добавить</button>';
+}
+/* 24-hour event journal. Records are stored per cycle day; endMin may exceed 1440 for overnight events. */
+function day24Fmt(v){v=Math.max(0,Math.round(v));if(v===1440)return '24:00';v=v%1440;return ('0'+Math.floor(v/60)).slice(-2)+':'+('0'+(v%60)).slice(-2)}
+function day24Names(){
+ return {type:{activity:'Занятие',sleep:'Сон',travel:'Дорога',care:'Забота',rest:'Отдых',other:'Другое'},
+ sphere:{health:'Здоровье',money:'Финансы',work:'Работа',relationships:'Отношения',family:'Семья',friends:'Друзья',growth:'Развитие',rest:'Отдых',other:'Другое'},
+ motive:{own:'Собственное желание / выбор',need:'Значимая необходимость',care:'Забота',duty:'Чувство долга',external:'Внешнее требование',habit:'Привычка',avoid:'Избегание / откладывание',mixed:'Смешанный мотив',other:'Другое'},
+ emotion:{calm:'Спокойствие',joy:'Радость',interest:'Интерес',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',neutral:'Нейтрально'}};
+}
+function events24Body(T,n){
+ var all=T.events24||{},own=all[n]||[],prev=all[n-1]||[],rows=[],N=day24Names(),draft=(T.eventDraft&&T.eventDraft[n])||{};
+ own.forEach(function(e){if(+e.startMin<1440)rows.push({e:e,owner:n,from:+e.startMin,to:Math.min(1440,+e.endMin),continued:false,overnight:+e.endMin>1440})});
+ prev.forEach(function(e){if(+e.endMin>1440)rows.push({e:e,owner:n-1,from:0,to:Math.min(1440,+e.endMin-1440),continued:true,overnight:false})});
+ rows.sort(function(a,b){return a.from-b.from});
+ var html='<div class="d24"><p class="mute">Записывайте события по ходу дня или вечером. Пустые промежутки остаются неизвестными — мы не считаем их отдыхом или бездействием. События могут пересекаться; время не суммируется автоматически.</p><div class="d24-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>';
+ if(rows.length){html+=rows.map(function(r){var e=r.e,from=r.from,to=r.to,dur=Math.max(0,to-from),left=from/1440*100,width=Math.max(0,dur/1440*100),time=r.continued?'00:00–'+day24Fmt(to):day24Fmt(e.startMin)+'–'+(r.overnight?'00:00 следующего дня':day24Fmt(e.endMin));var details=[N.type[e.type]||'Событие',N.sphere[e.sphere]||'',N.motive[e.motive]||'',N.emotion[e.emotion]||'',e.planned==='yes'?'Плановое':e.planned==='no'?'Спонтанное':''].filter(Boolean).join(' · ');
+ return '<div class="d24-row"><div class="d24-meta"><b>'+esc(e.title)+(r.continued?' · продолжение':'')+'</b><small>'+time+' · '+Math.floor(dur/60)+' ч '+(dur%60)+' мин</small><small>'+esc(details)+'</small></div><div class="d24-track"><i style="left:'+left+'%;width:'+width+'%"></i></div><button type="button" class="quiet-btn" data-act="event-delete" data-day="'+r.owner+'" data-id="'+esc(e.id)+'">Удалить</button></div>'}).join('')}
+ else html+='<p class="mute">Пока нет записей за этот день.</p>';
+ html+='<details class="d24-add"><summary>Добавить событие</summary><div class="d24-form">';
+ html+='<label>Что происходило<input type="text" maxlength="120" data-act="event-field" data-key="title" value="'+esc(draft.title||'')+'" placeholder="Например, работа над проектом"></label>';
+ html+='<div class="d24-times"><label>Начало<input type="time" data-act="event-field" data-key="start" value="'+esc(draft.start||'')+'"></label><label>Окончание<input type="time" data-act="event-field" data-key="end" value="'+esc(draft.end||'')+'"></label></div>';
+ function opts(key,items){return '<label>'+key+'<select data-act="event-field" data-key="'+key+'">'+items.map(function(x){return '<option value="'+x[0]+'" '+((draft[key]||'')===x[0]?'selected':'')+'>'+x[1]+'</option>'}).join('')+'</select></label>'}
+ html+=opts('type',[['activity','Занятие'],['sleep','Сон'],['travel','Дорога'],['care','Забота'],['rest','Отдых'],['other','Другое']]);
+ html+=opts('sphere',[['','Сферу можно не указывать'],['health','Здоровье'],['money','Финансы'],['work','Работа'],['relationships','Отношения'],['family','Семья'],['friends','Друзья'],['growth','Развитие'],['rest','Отдых'],['other','Другое']]);
+ html+=opts('motive',[['','Мотив можно не указывать'],['own','Собственное желание / выбор'],['need','Значимая необходимость'],['care','Забота'],['duty','Чувство долга'],['external','Внешнее требование'],['habit','Привычка'],['avoid','Избегание / откладывание'],['mixed','Смешанный мотив'],['other','Другое']]);
+ html+=opts('emotion',[['','Эмоцию можно не указывать'],['calm','Спокойствие'],['joy','Радость'],['interest','Интерес'],['anxiety','Тревога'],['sadness','Грусть'],['irritation','Раздражение'],['fatigue','Усталость'],['neutral','Нейтрально']]);
+ html+=opts('planned',[['','План / спонтанность — по желанию'],['yes','Плановое'],['no','Спонтанное']]);
+ html+='<button type="button" class="add" data-act="event-add">Сохранить событие</button><p class="mute">Если окончание раньше начала, запись продолжится после полуночи. Сон и другие события можно отмечать через границу дня.</p></div></details></div>';
+ return html;
 }
 function hoursBody(d){
   var h='<div class="hours">';
