@@ -492,7 +492,7 @@ function mirrorResearchAvg(arr){
  return MIRROR_SPHERES.map(function(x,i){var a=(arr||[]).slice(i*3,i*3+3).filter(function(v){return typeof v==='number'&&isFinite(v)});return a.length?a.reduce(function(p,c){return p+c},0)/a.length:null});
 }
 function mirrorInitialResearch(P){
- if(P.cycleBaseline&&Array.isArray(P.cycleBaseline.research)&&P.cycleBaseline.research.length===8)return P.cycleBaseline.research;var w=P.wheelTest||{};if(Array.isArray(w.averages)&&w.averages.length===8)return w.averages;
+ if(P.cycleBaseline&&Array.isArray(P.cycleBaseline.research))return P.cycleBaseline.research.slice();var w=P.wheelTest||{};if(Array.isArray(w.averages)&&w.averages.length===8)return w.averages;
  return (w.spheres||[]).map(function(s){var a=(s.ratings||[]).filter(function(v){return typeof v==='number'&&isFinite(v)});return a.length?a.reduce(function(p,c){return p+c},0)/a.length:null});
 }
 function mirrorActivityStats(T){
