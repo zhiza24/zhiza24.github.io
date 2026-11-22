@@ -11,7 +11,7 @@ function save(P){if(window.GProfile)P=GProfile.migrate(P);localStorage.setItem(K
 function objectLike(v){return !!v&&typeof v==='object'&&!Array.isArray(v)}
 function validImport(P){
  if(!objectLike(P))return false;
- if(P.schemaVersion!=null&&(!isFinite(+P.schemaVersion)||+P.schemaVersion<1||+P.schemaVersion>(window.GProfile&&GProfile.schemaVersion||3)))return false;
+ if(P.schemaVersion!=null&&(!isFinite(+P.schemaVersion)||+P.schemaVersion<0||+P.schemaVersion>(window.GProfile&&GProfile.schemaVersion||3)))return false;
  if(P.wheel!=null&&!Array.isArray(P.wheel))return false;
  if(P.arts!=null&&!Array.isArray(P.arts))return false;
  if(P.tracker!=null&&!objectLike(P.tracker))return false;
