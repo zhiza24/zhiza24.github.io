@@ -109,8 +109,8 @@ function renderStep(){
  (state.step===5?'<div class="notice safe"><b>Выбор остается за Вами.</b> Можно сформулировать новую мысль, сохранить прежнюю с уточнениями, ничего не предпринимать или завершить исследование без эксперимента.</div><label class="choice"><input id="safetyConcern" type="checkbox" '+(x.answers.safetyConcern?'checked':'')+'> <span>Проверка поведения или границ может повлечь угрозу, давление, наказание, потерю жилья, дохода или другой серьезный ущерб.</span></label><p class="field-help">Если отметили этот пункт, поле эксперимента будет скрыто. Не нужно проверять опасную ситуацию на себе.</p>':'')+
  s.fields.filter(function(f){return !(state.step===5&&x.answers.safetyConcern&&f[0]==='experiment')}).map(fieldHtml).join('')+
  (state.step===3?'<div class="notice"><b>Проверка реальности.</b> Если речь идет о насилии, угрозах, контроле, принуждении или зависимости, не нужно экспериментировать с границами или поведением человека, от которого Вы зависите. Сначала ищите безопасную поддержку и учитывайте реальные риски.</div>':'');
- s.fields.forEach(function(f){var el=document.getElementById(f[0]);if(el)el.addEventListener('input',function(){x.answers[f[0]]=el.value;x.updated=Date.now();save()})});
- var risk=document.getElementById('safetyConcern');if(risk)risk.onchange=function(){x.answers.safetyConcern=!!risk.checked;x.updated=Date.now();save();renderStep()};
+ s.fields.forEach(function(f){var el=document.getElementById(f[0]);if(el)el.addEventListener('input',function(){x.answers[f[0]]=el.value;x.done=false;x.updated=Date.now();save()})});
+ var risk=document.getElementById('safetyConcern');if(risk)risk.onchange=function(){x.answers.safetyConcern=!!risk.checked;if(risk.checked)delete x.answers.experiment;x.done=false;x.updated=Date.now();save();renderStep()};
  document.getElementById('back').disabled=state.step===0;
  document.getElementById('next').textContent=state.step===5?'Завершить исследование':'Далее';
  show('work');
