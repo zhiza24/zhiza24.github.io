@@ -311,8 +311,7 @@ function mount(box){
   if(data.unknown.length)lines.push('Открытые вопросы: '+data.unknown.join('\n'));
   if(data.stateModel){
    var marked=data.stateModel.states.filter(function(x){return x.status!=='unassessed'});
-   lines.push('Каталог 19 состояний: '+marked.map(function(x){return x.id+' — '+x.confidence+' ('+x.situationsCount+' ситуаций)'}).join('; '));
-   if(data.stateModel.families.length)lines.push('Требуют различения: '+data.stateModel.families.map(function(x){return x.states.join(' / ')+': '+x.question}).join('\n'));
+   if(marked.length)lines.push('Внутренние настройки: '+marked.map(function(x){return x.name+' — '+x.stance}).join('\n'));
   }
   lines.push('Отклик игрока: '+all.map(function(x,i){return x.title+': '+(feedback[i]||'не отмечено')}).join('; '));
   var diary={id:'inner_mirror',title:'Карта внутренней архитектуры',passed:'Зеркало внутреннего мира',lead:data.links.length?'Обнаружены связи между несколькими исследованиями.':'Собраны отдельные отражения; межмодульных связей пока недостаточно.',strong:data.links.map(function(x){return x.title}).join('; '),insight:data.tensions.length?data.tensions[0].title:'',insightMore:lines.join('\n'),answers:[]};
