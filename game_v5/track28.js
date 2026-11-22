@@ -551,7 +551,7 @@ function viewMirror(P,T,isArchive){
  if(isArchive){h+='<button type="button" class="quiet-btn" data-act="mirror-archive-back">Вернуться к текущему отчету</button>'}
  else{h+='<button type="button" class="go" data-act="mirror-continue">Продолжить к финальному сравнению</button><button type="button" class="quiet-btn" data-act="mirror-restart">Пройти повторное исследование еще раз</button><button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button>'}
  if(M.history&&M.history.length)h+='<details><summary>Повторные отчеты этого цикла: '+M.history.length+'</summary>'+M.history.map(function(x,i){return '<p>Повтор '+(i+1)+' · '+new Date(x.completedAt||x.startedAt||Date.now()).toLocaleDateString('ru-RU')+'</p>'}).join('')+'</details>';
- if(!isArchive){var prev=(P.trackerHistory||[]).map(function(x,i){return {t:x,i:i}}).filter(function(x){return x.t.mirror&&x.t.mirror.phase==='report'});if(prev.length)h+='<details><summary>Отчеты предыдущих циклов: '+prev.length+'</summary>'+prev.map(function(x){return '<p><button type="button" class="quiet-btn" data-act="mirror-archive" data-i="'+x.i+'">Открыть отчет · '+new Date(x.t.mirror.completedAt||x.t.mirror.startedAt||Date.now()).toLocaleDateString('ru-RU')+'</button></p>'}).join('')+'</details>'}
+ if(!isArchive){var prev=(P.trackerHistory||[]).map(function(x,i){return {t:x,i:i}}).filter(function(x){return x.t.mirror&&x.t.mirror.phase==='report'&&x.t.cycle!==T.cycle});if(prev.length)h+='<details><summary>Отчеты предыдущих циклов: '+prev.length+'</summary>'+prev.map(function(x){return '<p><button type="button" class="quiet-btn" data-act="mirror-archive" data-i="'+x.i+'">Открыть отчет · '+new Date(x.t.mirror.completedAt||x.t.mirror.startedAt||Date.now()).toLocaleDateString('ru-RU')+'</button></p>'}).join('')+'</details>'}
  return h+'</div>';
 }
 function viewHero(P,T){
@@ -1144,7 +1144,7 @@ function bind(){
       if(P.cycleBaseline)archived.cycleBaseline=JSON.parse(JSON.stringify(P.cycleBaseline));
       if(P.retest)archived.retest=JSON.parse(JSON.stringify(P.retest));
       P.trackerHistory=P.trackerHistory||[];
-      P.trackerHistory.push(archived);
+      if(!P.trackerHistory.some(function(x){return x&&x.cycle===T.cycle&&x.start===T.start}))P.trackerHistory.push(archived);
       var completedMirror=T.mirror&&T.mirror.phase==='report'&&Array.isArray(T.mirror.endWheel)&&T.mirror.endWheel.length===8&&Array.isArray(T.mirror.endResearch)&&T.mirror.endResearch.length===24;
       if(completedMirror){
         var nextWheel=T.mirror.endWheel.slice(),nextResearch=mirrorResearchAvg(T.mirror.endResearch);
