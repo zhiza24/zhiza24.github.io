@@ -674,7 +674,7 @@ function render(){
 var q=new URLSearchParams(location.search);
 if(q.get('change')==='1'){
   try{sessionStorage.setItem('alch_v5_wishChange','1')}catch(e){}
-  var P0=ensure();P0.wishMod.scene='center';save(P0);
+  var P0=ensure(),oldBig=P0.wishMod.big||{};P0.wishMod.bigDraft=oldBig.text||oldBig.raw||P0.wishMod.bigDraft||'';delete P0.wishMod.big;P0.wishMod.scene='center';save(P0);
   history.replaceState(null,'','wish.html'+(q.get('u')?'?u='+encodeURIComponent(q.get('u')):''));
 }
 if(q.get('pick')==='1'){
