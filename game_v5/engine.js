@@ -9,6 +9,7 @@ function load(){var P={};try{P=JSON.parse(localStorage.getItem(K))||{}}catch(e){
  return P}
 function save(P){if(window.GProfile)P=GProfile.migrate(P);localStorage.setItem(K,JSON.stringify(P))}
 function objectLike(v){return !!v&&typeof v==='object'&&!Array.isArray(v)}
+var EXTRA_KEYS=['alch_samost','alch_v5_hold','alch_v5_belief_lab_v1','alch_v5_belief_lab_backup_v1'];
 function validImport(P){
  if(!objectLike(P))return false;
  if(P.schemaVersion!=null&&(!isFinite(+P.schemaVersion)||+P.schemaVersion<0||+P.schemaVersion>(window.GProfile&&GProfile.schemaVersion||3)))return false;
@@ -23,9 +24,26 @@ function validImport(P){
  if(P.lab!=null&&!objectLike(P.lab))return false;
  return true;
 }
+function snapshotAll(){
+ var local={};
+ EXTRA_KEYS.forEach(function(k){local[k]=localStorage.getItem(k)});
+ return {format:'put-alhimika-backup',version:1,profile:load(),local:local};
+}
+function decodeSnapshot(data){
+ if(objectLike(data)&&data.format==='put-alhimika-backup'&&data.version===1){
+  if(!validImport(data.profile)||!objectLike(data.local))throw new Error('invalid backup envelope');
+  EXTRA_KEYS.forEach(function(k){if(data.local[k]!==null&&data.local[k]!==undefined&&typeof data.local[k]!=='string')throw new Error('invalid local module data')});
+  return {profile:data.profile,local:data.local};
+ }
+ if(validImport(data))return {profile:data,local:null};
+ throw new Error('invalid profile structure');
+}
+function applySnapshot(s){
+ if(s.local)EXTRA_KEYS.forEach(function(k){var v=s.local[k];if(v===null||v===undefined)localStorage.removeItem(k);else localStorage.setItem(k,v)});
+ save(s.profile);
+}
 function backupCurrent(){
- var raw=localStorage.getItem(K);
- if(raw===null)raw=JSON.stringify(load());
+ var raw=JSON.stringify(snapshotAll());
  var backups=[];
  try{backups=JSON.parse(localStorage.getItem('alch_v5_profile_backups')||'[]')}catch(e){backups=[]}
  if(!Array.isArray(backups))backups=[];
@@ -36,18 +54,17 @@ function backupCurrent(){
 }
 window.GPro={
  load:load,save:save,
- exportFile:function(){var b=new Blob([JSON.stringify(load(),null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='put-alhimika-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},1000)},
+ exportFile:function(){var b=new Blob([JSON.stringify(snapshotAll(),null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='put-alhimika-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},1000)},
  importFile:function(f,cb){
   if(!f||f.size>20*1024*1024){cb&&cb(false);return}
   var r=new FileReader();
   r.onerror=function(){cb&&cb(false)};
   r.onload=function(){
-   var P,raw;
+   var snap,raw;
    try{
-    P=JSON.parse(r.result);
-    if(!validImport(P))throw new Error('invalid profile structure');
+    snap=decodeSnapshot(JSON.parse(r.result));
     raw=backupCurrent();
-    try{save(P)}catch(e){if(raw!==null)localStorage.setItem(K,raw);throw e}
+    try{applySnapshot(snap)}catch(e){try{applySnapshot(decodeSnapshot(JSON.parse(raw)))}catch(ignore){}throw e}
     cb&&cb(true);
    }catch(e){cb&&cb(false)}
   };
@@ -57,12 +74,11 @@ window.GPro={
   try{
    var backups=JSON.parse(localStorage.getItem('alch_v5_profile_backups')||'[]');
    if(!Array.isArray(backups)||!backups.length)throw new Error('no backup');
-   var target=backups[backups.length-1],P=JSON.parse(target.raw);
-   if(!validImport(P))throw new Error('invalid backup');
-   var raw=localStorage.getItem(K);
-   backups.push({at:Date.now(),raw:raw===null?JSON.stringify(load()):raw});
+   var target=backups[backups.length-1],snap=decodeSnapshot(JSON.parse(target.raw));
+   var raw=JSON.stringify(snapshotAll());
+   backups.push({at:Date.now(),raw:raw});
    localStorage.setItem('alch_v5_profile_backups',JSON.stringify(backups.slice(-3)));
-   save(P);cb&&cb(true);
+   applySnapshot(snap);cb&&cb(true);
   }catch(e){cb&&cb(false)}
  }
 };
