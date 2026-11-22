@@ -627,7 +627,7 @@ function day24Names(){
  emotion:{calm:'Спокойствие',joy:'Радость',interest:'Интерес',satisfaction:'Удовлетворение',neutral:'Нейтральность',tension:'Напряжение',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',emptiness:'Опустошение'},completion:{done:'Выполнено',partial:'Частично',not_done:'Не выполнено',ongoing:'Продолжается',na:'Не применимо'},after:{better:'Стало лучше',same:'Без заметных изменений',worse:'Стало хуже',unknown:'Не определено'}};
 }
 function events24Body(T,n){
- var all=T.events24||{},own=all[n]||[],prev=all[n-1]||[],rows=[],N=day24Names(),draft=(T.eventDraft&&T.eventDraft[n])||{},cps=((T.checkpoints24||{})[n]||[]),cpDraft=(T.checkpointDraft&&T.checkpointDraft[n])||{};
+ var all=T.events24||{},own=all[n]||[],prev=all[n-1]||[],rows=[],N=day24Names(),draft=(T.eventDraft&&T.eventDraft[n])||{},editing=!!(T.editingEvent&&T.editingEvent.day===n),cps=((T.checkpoints24||{})[n]||[]),cpDraft=(T.checkpointDraft&&T.checkpointDraft[n])||{};
  own.forEach(function(e){if(+e.startMin<1440)rows.push({e:e,owner:n,from:+e.startMin,to:Math.min(1440,+e.endMin),continued:false,overnight:+e.endMin>1440})});
  prev.forEach(function(e){if(+e.endMin>1440)rows.push({e:e,owner:n-1,from:0,to:Math.min(1440,+e.endMin-1440),continued:true,overnight:false})});
  rows.sort(function(a,b){return a.from-b.from});
@@ -647,7 +647,7 @@ function events24Body(T,n){
  html+=opts('completion',[['','Степень выполнения — по желанию'],['done','Выполнено'],['partial','Частично'],['not_done','Не выполнено'],['ongoing','Продолжается'],['na','Не применимо']]);
  html+=opts('after',[['','Последействие — по желанию'],['better','Стало лучше'],['same','Без заметных изменений'],['worse','Стало хуже'],['unknown','Не могу определить']]);
  html+='<label>Что в следующий раз хотелось бы сделать иначе? <textarea rows="2" data-act="event-field" data-key="alternative" placeholder="Необязательно">'+esc(draft.alternative||'')+'</textarea></label>';
- html+='<button type="button" class="add" data-act="event-add">Сохранить событие</button><p class="mute">Если окончание раньше начала, запись продолжится после полуночи. Сон и другие события можно отмечать через границу дня.</p></div></details>';
+ html+='<button type="button" class="add" data-act="event-add">'+(editing?'Сохранить изменения':'Сохранить событие')+'</button>'+(editing?'<button type="button" class="quiet-btn" data-act="event-cancel">Отменить редактирование</button>':'')<p class="mute">Если окончание раньше начала, запись продолжится после полуночи. Сон и другие события можно отмечать через границу дня.</p></div></details>';
  html+='<div class="d24-checkpoints"><b>Контрольные точки состояния</b><p class="mute">Это отдельные отметки времени, настроения и энергии. Они не привязываются автоматически к событию.</p>';
  if(cps.length)html+=cps.map(function(c){return '<div class="d24-check"><b>'+day24Fmt(c.minute)+'</b><span>Настроение '+c.mood+'/10 · энергия '+c.energy+'/10</span>'+(c.note?'<small>'+esc(c.note)+'</small>':'')+'<button type="button" class="quiet-btn" data-act="checkpoint-delete" data-day="'+n+'" data-id="'+esc(c.id)+'">Удалить</button></div>'}).join('');
  html+='<div class="d24-form"><div class="d24-times"><label>Время<input type="time" data-act="checkpoint-field" data-key="time" value="'+esc(cpDraft.time||'')+'"></label><label>Настроение (1–10)<input type="number" min="1" max="10" data-act="checkpoint-field" data-key="mood" value="'+esc(cpDraft.mood||'')+'"></label><label>Энергия (1–10)<input type="number" min="1" max="10" data-act="checkpoint-field" data-key="energy" value="'+esc(cpDraft.energy||'')+'"></label></div><label>Что важно отметить? <input type="text" maxlength="140" data-act="checkpoint-field" data-key="note" value="'+esc(cpDraft.note||'')+'" placeholder="Необязательно"></label><button type="button" class="add" data-act="checkpoint-add">Добавить отметку состояния</button></div></div></div>';
@@ -1008,7 +1008,9 @@ function bind(){
       if(em<=sm)em+=1440;
       if(em-sm>1440){alert('Одно событие можно записать длительностью не более 24 часов.');return}
       T.events24=T.events24||{};T.events24[n]=T.events24[n]||[];
-      T.events24[n].push({id:uid(),title:title,startMin:sm,endMin:em,type:dr.type||'activity',sphere:dr.sphere||'',motive:dr.motive||'',emotion:dr.emotion||'',planned:dr.planned||'',completion:dr.completion||'',after:dr.after||'',alternative:String(dr.alternative||'').trim(),createdAt:Date.now()});
+      var evData={title:title,startMin:sm,endMin:em,type:dr.type||'activity',sphere:dr.sphere||'',motive:dr.motive||'',emotion:dr.emotion||'',planned:dr.planned||'',completion:dr.completion||'',after:dr.after||'',alternative:String(dr.alternative||'').trim()};
+      if(T.editingEvent&&T.editingEvent.day===n){var list=T.events24[n],old=list.filter(function(x){return x.id===T.editingEvent.id})[0];if(old)Object.keys(evData).forEach(function(k){old[k]=evData[k]});else list.push(Object.assign({id:uid(),createdAt:Date.now()},evData));T.editingEvent=null}
+      else T.events24[n].push(Object.assign({id:uid(),createdAt:Date.now()},evData));
       T.eventDraft=T.eventDraft||{};delete T.eventDraft[n];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='checkpoint-add'){
@@ -1037,6 +1039,13 @@ function bind(){
       T.mirror=M;save(P);render();return;
     }
     if(act==='mirror-back-self'){if(T.mirror){T.mirror.phase='self';save(P);render()}return}
+    if(act==='event-edit'){
+      var eday=+b.getAttribute('data-day'),eid=b.getAttribute('data-id'),ex=((T.events24||{})[eday]||[]).filter(function(x){return x.id===eid})[0];
+      if(!ex||eday!==n)return;
+      function tm(v){v=+v;return ('0'+Math.floor((v%1440)/60)).slice(-2)+':'+('0'+(v%60)).slice(-2)}
+      T.editingEvent={day:eday,id:eid};T.eventDraft=T.eventDraft||{};T.eventDraft[n]={title:ex.title,start:tm(ex.startMin),end:tm(ex.endMin),type:ex.type||'activity',sphere:ex.sphere||'',motive:ex.motive||'',emotion:ex.emotion||'',planned:ex.planned||'',completion:ex.completion||'',after:ex.after||'',alternative:ex.alternative||''};save(P);render();openAccAfterRender('events24');return;
+    }
+    if(act==='event-cancel'){if(T.eventDraft)delete T.eventDraft[n];T.editingEvent=null;save(P);render();openAccAfterRender('events24');return}
     if(act==='event-delete'){
       var en=+b.getAttribute('data-day'),eid=b.getAttribute('data-id');T.events24=T.events24||{};T.events24[en]=(T.events24[en]||[]).filter(function(x){return x.id!==eid});if(!T.events24[en].length)delete T.events24[en];save(P);render();openAccAfterRender('events24');return;
     }
