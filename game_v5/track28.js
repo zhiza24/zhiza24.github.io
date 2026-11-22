@@ -942,8 +942,8 @@ function bind(){
       save(P); if(window.GArts)GArts.grant('proof_sign'); render(); return;
     }
     if(act==='newcycle'){
-      T.prev=(T.prev||[]).concat([{start:T.start,finale:T.finale,days:T.days,weekPlans:T.weekPlans,rewards:T.rewards}]);
-      T.days={}; T.start=Date.now(); T.finale=null; T.openDay=0; T.view='month'; T.cycle=(T.cycle||1)+1; T.weekPlans={};
+      T.prev=(T.prev||[]).concat([{start:T.start,finale:T.finale,days:T.days,weekPlans:T.weekPlans,rewards:T.rewards,events24:T.events24,strategy:T.strategy}]);
+      T.days={}; T.events24={}; T.eventDraft={}; T.start=Date.now(); T.finale=null; T.openDay=0; T.view='month'; T.cycle=(T.cycle||1)+1; T.weekPlans={};
       save(P); render(); return;
     }
     if(act==='card'){try{drawCard(P,T)}catch(e){} return}
