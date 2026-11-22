@@ -45,7 +45,7 @@ function collect(P){
   arr(mag.a11).forEach(function(code,i){var opt=arr(D.A11&&D.A11.o).filter(function(o){return o[0]===code})[0];ev.push('Маг · эмоциональный итог '+(i+1)+': '+(opt?opt[1]:code))});
   var freq=['Почти никогда','Редко','Иногда','Часто','Очень часто'];
   if(mag.R!=null&&freq[mag.R])ev.push('Маг · частота похожего чувства: '+freq[mag.R]);
-  var detail=lead?(ra&&ra.title?ra.title:phrase||lead)+'. Это предварительный повторяющийся эмоциональный итог, а не диагноз и не объяснение его причин.':'По ответам не выделилось одно устойчивое фоновое состояние. Это самостоятельный результат, а не отсутствие данных.';
+  var detail=lead?(ra&&ra.title?ra.title:phrase||lead)+'. Это чувство особенно заметно в тех ситуациях, о которых ты рассказал.':'Сейчас на первый план выходят разные чувства в разных обстоятельствах.';
   if(mag.period)detail+=' Период ответа: '+({P1:'последние 2–3 месяца',P2:'последний год',P3:'сложный текущий период',P4:'период не определен'})[mag.period]+'.';
   if(mag.R!=null&&freq[mag.R])detail+=' Частота по самооценке: '+freq[mag.R].toLowerCase()+'.';
   if(mag.skips!=null)detail+=' Пропущено вопросов: '+mag.skips+'.';
@@ -69,7 +69,7 @@ function collect(P){
   var calc=echo;
   if((!calc.leaders||!calc.leaders.length)&&calc.answers&&window.GArch&&GArch.scoreB){try{calc=GArch.scoreB(calc.answers)}catch(e){}}
   echoCodes=arr(calc.leaders);if(calc.lead&&echoCodes.indexOf(calc.lead)<0)echoCodes.push(calc.lead);
-  echoCodes.forEach(function(c){out.fragments.push({domain:'Реакции',title:labelEcho(c),detail:'Этот способ выделился в «Эхе». Он описывает ответы в предложенных ситуациях, а не постоянную черту личности.',status:calc.status,source:'echo',code:c})});
+  echoCodes.forEach(function(c){out.fragments.push({domain:'Реакции',title:labelEcho(c),detail:'В предложенных ситуациях ты чаще выбирал этот способ. Посмотри, где он помогает тебе, а где уже мешает.',status:calc.status,source:'echo',code:c})});
   if(!echoCodes.length)out.fragments.push({domain:'Реакции',title:'Один ведущий способ не выделился',detail:'Ответы показывают разные реакции или пока не дают устойчивого результата.',status:calc.status||'unclear',source:'echo'});
  }
  var wheelSectors=[],wheelShadowSectors=[];
@@ -94,7 +94,7 @@ function collect(P){
   codes.forEach(function(c){
    if(echoCodes.indexOf(c)>=0){
     var wName=({perf:'Перфекционизм',please:'Угождение людям',ctrl:'Гиперконтроль',detach:'Отстранение',over:'Чрезмерная отдача'})[sec]||sec;
-    var wf=[];arr(wheel.sectors).forEach(function(s){if(s.id!==sec)return;arr(s.forms).forEach(function(f){if(f.shadow&&f.shadow.score>=50&&f.answered>=2)wf.push(f)})});var ev=[];var eq=window.GARCH&&GARCH.B||[];if(echo&&echo.answers)eq.forEach(function(q){var a=echo.answers[q.id];if(a===c){var opt=arr(q.o).filter(function(o){return o[0]===c})[0];ev.push('Эхо · '+(q.h||q.t||q.id)+': '+(opt?opt[1]:c))}});wf.forEach(function(f){arr(f.items).forEach(function(it){if(it.choice==='left'||it.choice==='both')ev.push('Колесо · '+it.question+' → '+it.label)})});out.links.push({title:'Два исследования указывают на близкую тему',detail:'В «Эхе» проявился способ «'+labelEcho(c)+'», а в Колесе отмечены формы из области «'+wName+'». Это независимые наблюдения в разных форматах, а не доказательство единой причины.',sources:['echo','wheel'],evidence:ev,kind:'support'});
+    var wf=[];arr(wheel.sectors).forEach(function(s){if(s.id!==sec)return;arr(s.forms).forEach(function(f){if(f.shadow&&f.shadow.score>=50&&f.answered>=2)wf.push(f)})});var ev=[];var eq=window.GARCH&&GARCH.B||[];if(echo&&echo.answers)eq.forEach(function(q){var a=echo.answers[q.id];if(a===c){var opt=arr(q.o).filter(function(o){return o[0]===c})[0];ev.push('Эхо · '+(q.h||q.t||q.id)+': '+(opt?opt[1]:c))}});wf.forEach(function(f){arr(f.items).forEach(function(it){if(it.choice==='left'||it.choice==='both')ev.push('Колесо · '+it.question+' → '+it.label)})});out.links.push({title:'Два исследования указывают на близкую тему',detail:'В разных заданиях повторилась близкая тема: «'+labelEcho(c)+'» и «'+wName+'». Возможно, именно здесь находится важная точка для наблюдения и выбора.',sources:['echo','wheel'],evidence:ev,kind:'support'});
    }
   });
  });
@@ -104,7 +104,7 @@ function collect(P){
    var code=fsMap[n],r=fs.outcome&&fs.outcome[n];
    if(r&&r!=='few'&&r!=='notwas'&&echoCodes.indexOf(code)>=0&&fs.now&&fs.now[n]&&fs.now[n].answered>=2&&fs.now[n].mean>=2){
     var ev2=['Первые настройки · сейчас: '+n+' — среднее '+Math.round(fs.now[n].mean*100)/100+', статус: '+r];var fd=window.GTESTS&&GTESTS.fs||{},scale=['Никогда или почти никогда','Редко','Иногда','Часто','Почти всегда'];arr(fd.child).concat(arr(fd.now)).forEach(function(q){if(q.s!==n||!fs.answers||fs.answers[q.id]==null)return;var v=fs.answers[q.id],period=arr(fd.child).indexOf(q)>=0?'детство':'сейчас',ans=typeof v==='number'?(scale[v]||String(v)):v==='nr'?'Не помню':v==='nw'?'Не было':String(v);ev2.push('Первые настройки · '+period+' · '+(q.t||q.id)+': '+ans)});var eq2=window.GARCH&&GARCH.B||[];if(echo&&echo.answers)eq2.forEach(function(q){var a=echo.answers[q.id];if(a===code){var opt=arr(q.o).filter(function(o){return o[0]===code})[0];ev2.push('Эхо · '+(q.h||q.t||q.id)+': '+(opt?opt[1]:code))}});
-    out.links.push({title:'Похожий ход заметен в разных исследованиях',detail:'«Первые настройки» показывают динамику стратегии «'+n+'», а «Эхо» — близкий способ реагирования: «'+labelEcho(code)+'». Это сходство описаний, не вывод о происхождении реакции.',sources:['firstSet','echo'],evidence:ev2,kind:'support'});
+    out.links.push({title:'Похожий ход заметен в разных исследованиях',detail:'Похожий способ проявляется и в воспоминаниях о детстве, и в сегодняшних ситуациях: «'+n+'» и «'+labelEcho(code)+'». Посмотри, как он изменился и что тебе подходит теперь.',sources:['firstSet','echo'],evidence:ev2,kind:'support'});
    }
    if(r==='changed'||r==='weaker'){
     var current=fs.leading&&fs.leading.indexOf(n)>=0;
@@ -114,15 +114,15 @@ function collect(P){
  }
  if(fs&&fs.status==='mixed')out.tensions.push({title:'Нет одной ведущей стратегии',detail:'В «Первых настройках» несколько стратегий проявились сопоставимо. Картина может зависеть от обстоятельств.',sources:['firstSet'],kind:'context'});
  if(echo&&echo.status==='mixed')out.tensions.push({title:'Разные реакции в разных ситуациях',detail:'В «Эхе» не выделился один общий способ. Это может говорить о контекстной изменчивости, а не о противоречии личности.',sources:['echo'],kind:'context'});
- if(!out.sources.length)out.unknown.push('Предыдущие исследования пока не дали доступных результатов. Зеркалу нечего сопоставлять.');
- else if(out.links.length===0)out.unknown.push('Пока нет достаточно сильных межмодульных совпадений. Отдельные наблюдения сохранены, но объединять их в общий вывод было бы преждевременно.');
+ if(!out.sources.length)out.unknown.push('Пройди первые исследования, и в Зале зеркал постепенно начнет складываться твоя карта.');
+ else if(out.links.length===0)out.unknown.push('Пока ярче видны отдельные стороны твоего опыта. По мере прохождения исследований между ними могут проявиться новые связи.');
  if(!mag)out.unknown.push('«Маг» еще не доступен.');
  if(!fs)out.unknown.push('«Первые настройки» еще не доступны.');
  if(!km)out.unknown.push('«Идеальный Кривой Мир» еще не доступен.');
  if(!echo)out.unknown.push('«Эхо» еще не доступно.');
  if(!wheel)out.unknown.push('Колесо самопредательства еще не доступно.');
  out.stateModel=window.GStateEngine&&GStateEngine.evaluate?GStateEngine.evaluate(P):null;
- if(out.stateModel&&out.stateModel.coverage.statesWithSignals===0)out.unknown.push('Сопоставление с каталогом 19 состояний пока не выделило прямых сигналов. Это не означает отсутствия этих состояний.');
+ if(out.stateModel&&out.stateModel.coverage.statesWithSignals===0)out.unknown.push('Продолжай исследовать разные стороны своей жизни: некоторые внутренние привычки становятся заметны не сразу.');
  return out;
 }
 function mapSvg(data){
@@ -151,25 +151,25 @@ function card(x,idx,interactive){
 function mount(box){
  var G=window.GTests;if(!G)return;G.css();var preview=G.preview,retake=G.retakeMode,P=G.load(),data=collect(P),feedback={},scene=0;
  var existing=P.backgroundProfile;
- function intro(){return '<span class="tag">Точка 0</span><span class="tag">Большое отражение</span><div class="im-scene"><div class="im-halo"><div class="im-oval"></div></div><div class="im-elder">Старец</div><div class="im-quote">«Отдельные отражения показывают стороны. Но только вместе они открывают рисунок».</div></div><h1>Зал зеркал</h1><p>Ты уже прошел несколько исследований. Сейчас не нужно отвечать на новый длинный тест. Мы соберем то, что уже проявилось, посмотрим, где наблюдения перекликаются, где расходятся и чего пока нельзя утверждать.</p><p class="im-muted">Каждое отражение можно открыть и посмотреть, из каких исследований оно сложилось. Никаких выводов о причинах без подтверждений.</p><button class="next" id="imNext">Войти в зал</button>'}
+ function intro(){return '<span class="tag">Точка 0</span><span class="tag">Большое отражение</span><div class="im-scene"><div class="im-halo"><div class="im-oval"></div></div><div class="im-elder">Старец</div><div class="im-quote">«Отдельные отражения показывают стороны. Но только вместе они открывают рисунок».</div></div><h1>Зал зеркал</h1><p>Ты уже прошел несколько исследований. Сейчас не нужно отвечать на новый длинный тест. Мы соберем то, что уже проявилось, увидим знакомые тебе способы думать, чувствовать и действовать — и найдем точки, с которых можно начать перемены.</p><p class="im-muted">Каждое отражение складывается из твоих ответов и выборов на протяжении пути.</p><button class="next" id="imNext">Войти в зал</button>'}
  function sceneHtml(){
   var html='';
   if(scene===0)html=intro();
   if(scene===1){
-   html='<div class="im-stage"><div class="im-eyebrow">Первое отражение</div><h1>Пять сторон внутреннего мира</h1>'+mapSvg(data)+'<p>Здесь видны не оценки и не типы личности, а области, по которым уже есть сведения. Светятся только те зеркала, для которых найдены данные.</p>';
+   html='<div class="im-stage"><div class="im-eyebrow">Первое отражение</div><h1>Пять сторон внутреннего мира</h1>'+mapSvg(data)+'<p>Пять зеркал собирают разные стороны твоей жизни: отношение к себе, восприятие мира, отношения, выбор и привычные правила.</p>';
    var groups=['Фоновое состояние','Адаптация','Картина мира','Реакции','Самопредательство'];
    groups.forEach(function(g){var a=data.fragments.filter(function(x){return x.domain===g});if(a.length)html+='<section class="im-group"><h2>'+esc(g)+'</h2>'+a.map(function(x){return card(x,-1,false)}).join('')+'</section>'});
    if(data.stateModel){
     var active=data.stateModel.states.filter(function(x){return x.status!=='unassessed'});
-    html+='<section class="im-group"><h2>Каталог 19 состояний</h2><p>Здесь отмечены только состояния, для которых нашлись прямые или неоднозначные сигналы в уже пройденных исследованиях. Это предварительные гипотезы, а не типы личности.</p>';
+    html+='<section class="im-group"><h2>Каталог 19 состояний</h2><p>Здесь собраны внутренние привычки и способы реагирования, которые уже проявились в твоих ответах. Посмотри, какие из них помогают тебе, а какие хочется перенастроить.</p>';
     if(active.length)html+=active.map(function(x){
       var count=x.layersConfirmed.length,goal=data.stateModel.stateGoals&&data.stateModel.stateGoals[x.id],selector=x.signals.CH.length>=2&&!x.needsDiscriminator.length?
        '<p>Как Вы хотите обращаться с этой стратегией?</p><div class="im-actions">'+[['Ослабить','Ослабить'],['Усилить','Усилить'],['Оставить','Оставить как есть'],['Не знаю','Пока не определился']].map(function(o){return '<button class="'+(goal===o[0]?'selected':'')+'" data-state-goal="'+esc(x.id)+'" data-goal="'+esc(o[0])+'">'+esc(o[1])+'</button>'}).join('')+'</div>':'';
-      return '<article class="im-card"><div class="im-card-k">'+esc(x.valence)+' · '+esc(x.confidence)+'</div><h3>'+esc(x.name)+'</h3><p>'+esc(x.stance)+'</p><p>Сигналы: '+count+' слоя · '+x.situationsCount+' ситуаций. '+(x.needsDiscriminator.length?'Нужен различитель: '+x.needsDiscriminator.map(function(k){return (data.stateModel.families.filter(function(f){return f.id===k})[0]||{}).question||k}).join(' '):'')+'</p>'+selector+'</article>';
+      return '<article class="im-card"><div class="im-card-k">'+esc(x.valence)+'</div><h3>'+esc(x.name)+'</h3><p>'+esc(x.stance)+'</p>'+selector+'</article>';
      }).join('');
     else html+='<p>Пока нет прямых совпадений. Каталог сохранен, но выводы не подменяются догадками.</p>';
     if(data.stateModel.families.length){
-     html+='<section class="im-group"><h2>Уточнить неоднозначные сигналы</h2><p>Это короткие вопросы-различители из модели. Выберите то, что ближе к Вашему опыту. Можно оставить вопрос без ответа.</p>';
+     html+='<section class="im-group"><h2>Посмотри на ситуацию с другой стороны</h2><p>Иногда похожее поведение возникает по разным причинам. Выбери то объяснение, которое ближе к твоему опыту.</p>';
      html+=data.stateModel.families.map(function(f){
       return '<article class="im-card"><div class="im-card-k">'+esc(f.states.join(' / '))+'</div><h3>'+esc(f.question)+'</h3>'+
        '<div class="im-actions">'+f.choices.map(function(c){return '<button class="'+(f.answer===c.state?'selected':'')+'" data-discriminator="'+esc(f.id)+'" data-state="'+esc(c.state)+'">'+esc(c.label)+'</button>'}).join('')+
@@ -192,7 +192,7 @@ function mount(box){
        });
        falsifierHtml+='</article>';
       });
-      if(falsifierHtml)html+='<section class="im-group"><h2>Проверить обратными примерами</h2><p>Вспомните случаи, которые не укладываются в найденную гипотезу. Такие примеры не менее важны, чем совпадения. Можно пропустить любой вопрос.</p>'+falsifierHtml+'</section>';
+      if(falsifierHtml)html+='<section class="im-group"><h2>А когда бывает иначе?</h2><p>Вспомни ситуации, в которых ты поступал иначе. Они помогут увидеть, что именно меняется в зависимости от обстоятельств. Любой вопрос можно пропустить.</p>'+falsifierHtml+'</section>';
      }
      if(data.stateModel.context){
      var cx=data.stateModel.context;
@@ -203,35 +203,35 @@ function mount(box){
        (rp?'<p><b>Триггер:</b> '+esc(rp.trigger)+'</p><p><b>Автоматическая реакция:</b> '+esc(rp.reaction)+'</p><p><b>Скрытое правило:</b> «'+esc(rp.rule)+'»</p><p><b>Что дает:</b> '+esc(rp.benefit)+'</p><p><b>Цена:</b> '+esc(rp.cost)+'</p><p><b>Новая настройка:</b> '+esc(rp.newSetting)+'</p>':'')+
        (cx.reactionStrategy.secondary.length?'<p>Другие заметные стратегии: '+esc(cx.reactionStrategy.secondary.join(', '))+'</p>':'')+'</article>';
      }
-     if(cx.mageRepeatability!=null)html+='<p>Повторяемость эмоционального фона по ответу Мага: '+esc(['почти никогда','редко','иногда','часто','очень часто'][cx.mageRepeatability]) +'. Это влияет на осторожность интерпретации, но не добавляет баллы.</p>';
-      if(cx.mageFinal&&cx.mageFinal.length)html+='<p>Эмоциональные итоги Мага: '+esc(cx.mageFinal.map(function(x){return x.meaning}).join('; '))+'. Это контекст, не отдельные ситуационные подтверждения.</p>';
+     
+      if(cx.mageFinal&&cx.mageFinal.length)html+='<p>Важные эмоциональные темы: '+esc(cx.mageFinal.map(function(x){return x.meaning}).join('; '))+'.</p>';
       if(cx.mageContext&&cx.mageContext.length)html+='<p>Другие сигналы Мага, оставленные в контексте: '+esc(cx.mageContext.map(function(x){return x.meaning}).join('; '))+'.</p>';
-      if(cx.echoStrategies&&cx.echoStrategies.length)html+='<p>Стратегии реагирования по «Эху»: '+esc(cx.echoStrategies.map(function(x){return x.meaning}).join('; '))+'. Они не приравниваются к состояниям.</p>';
+      if(cx.echoStrategies&&cx.echoStrategies.length)html+='<p>В ситуациях тебе также свойственны такие способы реагирования: '+esc(cx.echoStrategies.map(function(x){return x.meaning}).join('; '))+'.</p>';
       html+='<p>Первые настройки: '+(cx.firstSettingsAvailable?'результат есть':'пока нет')+' · Колесо: '+(cx.wheelAvailable?'результат есть':'пока нет')+' · Исследование желаний: '+(cx.desireResearchAvailable?'результат есть':'пока нет')+'</p>';
      if(cx.values.length)html+='<p>Выбранные ценности: '+esc(cx.values.join(', '))+'</p>';
-     html+='<p class="im-muted">Эти данные помогают понять контекст и подобрать действия, но не прибавляют баллы состояниям автоматически.</p></section>';
+     html+='<p class="im-muted">Все эти стороны вместе помогают увидеть, что поддерживает тебя и где может находиться точка перемен.</p></section>';
     }
-    html+='<p class="im-muted">Нарратив и сферы жизни пока не учитываются в расчете: они не должны появляться в выводе без отдельного основания.</p></section>';
+    
    }
    html+='</div><button class="next" id="imNext">Посмотреть связи</button>';
   }
   if(scene===2){
    html='<div class="im-stage"><div class="im-eyebrow">Второе отражение</div><h1>Нити между зеркалами</h1>';
    if(data.links.length)html+='<div class="im-thread"></div>'+data.links.map(function(x){return card(x,-1,false)}).join('');
-   else html+='<div class="im-empty"><div class="im-oval"></div><h2>Нить пока не проявилась</h2><p>Есть отдельные отражения, но данных для надежной связи между исследованиями пока недостаточно. Мы не будем соединять их только ради красивой истории.</p></div>';
+   else html+='<div class="im-empty"><div class="im-oval"></div><h2>Нити пока не соединились</h2><p>Сейчас лучше видны отдельные стороны твоего опыта. Продолжай путь — новые задания помогут увидеть, как они связаны между собой.</p></div>';
    html+='<button class="next" id="imNext">Посмотреть расхождения</button></div>';
   }
   if(scene===3){
    html='<div class="im-stage"><div class="im-eyebrow">Третье отражение</div><h1>Там, где картина меняется</h1>';
    if(data.tensions.length)html+=data.tensions.map(function(x){return card(x,-1,false)}).join('');
-   else html+='<div class="im-empty"><div class="im-shards">✧</div><h2>Явных расхождений пока нет</h2><p>Это не означает, что внутри нет противоречий. Просто имеющихся результатов недостаточно, чтобы их обозначить.</p></div>';
+   else html+='<div class="im-empty"><div class="im-shards">✧</div><h2>Пока картина складывается спокойно</h2><p>Продолжай наблюдать за собой в разных обстоятельствах. Некоторые различия становятся заметны только в движении.</p></div>';
    html+='<button class="next" id="imNext">Проверить отражения</button></div>';
   }
   if(scene===4){
-   html='<div class="im-stage"><div class="im-eyebrow">Четвертое отражение</div><h1>Твое слово важно</h1><p>Игра показывает только предварительные связи. Отметь, насколько они совпадают с твоим реальным опытом. Несогласие не портит результат — оно делает карту точнее.</p>';
+   html='<div class="im-stage"><div class="im-eyebrow">Четвертое отражение</div><h1>Твое слово важно</h1><p>Посмотри на каждое отражение и отметь, насколько узнаешь себя. Здесь важно твое собственное ощущение.</p>';
    var all=data.links.concat(data.tensions);
    if(all.length)html+=all.map(function(x,i){var v=feedback[i]||'';return '<article class="im-card"><h3>'+esc(x.title)+'</h3><p>'+esc(x.detail)+'</p><div class="im-actions">'+[['yes','Узнаю'],['part','Отчасти'],['no','Не про меня'],['later','Пока не знаю']].map(function(o){return '<button class="'+(v===o[0]?'selected':'')+'" data-feedback="'+i+'" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('')+'</div></article>'}).join('');
-   else html+='<div class="im-card"><p>Пока нет межмодульных гипотез, которые можно было бы проверить. Это честный результат, а не незавершенность игрока.</p></div>';
+   else html+='<div class="im-card"><p>Пока не появилось отражений, которые хочется сверить. Продолжай путь — к этому залу можно будет вернуться позже.</p></div>';
    html+='<button class="next" id="imNext">Собрать карту</button></div>';
   }
   if(scene===5)html=finalHtml();
