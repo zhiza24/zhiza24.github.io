@@ -550,7 +550,7 @@ function day24Fmt(v){v=Math.max(0,Math.round(v));if(v===1440)return '24:00';v=v%
 function day24Names(){
  return {type:{activity:'Занятие',sleep:'Сон',travel:'Дорога',care:'Забота',rest:'Отдых',other:'Другое'},
  sphere:{health:'Здоровье',money:'Финансы',work:'Работа',relationships:'Отношения',family:'Семья',friends:'Друзья',growth:'Развитие',rest:'Отдых',other:'Другое'},
- motive:{own:'Собственное желание / выбор',need:'Значимая необходимость',care:'Забота',duty:'Чувство долга',external:'Внешнее требование',habit:'Привычка',avoid:'Избегание / откладывание',mixed:'Смешанный мотив',other:'Другое'},
+ motive:{own:'Собственное желание',important:'Осознанный выбор по важности',need:'Необходимость',care:'Забота / любовь',duty:'Чувство долга',external:'Внешнее требование',habit:'Привычка / автоматизм',avoid:'Избегание / откладывание',restore:'Восстановление по потребности',mixed:'Смешанный мотив',other:'Другое'},
  emotion:{calm:'Спокойствие',joy:'Радость',interest:'Интерес',satisfaction:'Удовлетворение',neutral:'Нейтральность',tension:'Напряжение',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',emptiness:'Опустошение'},completion:{done:'Выполнено',partial:'Частично',not_done:'Не выполнено',ongoing:'Продолжается',na:'Не применимо'},after:{better:'Стало лучше',same:'Без заметных изменений',worse:'Стало хуже',unknown:'Не определено'}};
 }
 function events24Body(T,n){
@@ -938,6 +938,13 @@ function bind(){
       T.events24[n].push({id:uid(),title:title,startMin:sm,endMin:em,type:dr.type||'activity',sphere:dr.sphere||'',motive:dr.motive||'',emotion:dr.emotion||'',planned:dr.planned||'',completion:dr.completion||'',after:dr.after||'',alternative:String(dr.alternative||'').trim(),createdAt:Date.now()});
       T.eventDraft=T.eventDraft||{};delete T.eventDraft[n];save(P);render();openAccAfterRender('events24');return;
     }
+    if(act==='checkpoint-add'){
+      var cd=(T.checkpointDraft&&T.checkpointDraft[n])||{},tm=String(cd.time||''),mm=+cd.mood,ee=+cd.energy;
+      function cm(v){var z=/^(\d{2}):(\d{2})$/.exec(v);return z?(+z[1]*60+ +z[2]):null}
+      var mn=cm(tm);if(mn===null||!(mm>=1&&mm<=10)||!(ee>=1&&ee<=10)){alert('Укажите время, настроение и энергию от 1 до 10.');return}
+      T.checkpoints24=T.checkpoints24||{};T.checkpoints24[n]=T.checkpoints24[n]||[];T.checkpoints24[n].push({id:uid(),minute:mn,mood:mm,energy:ee,note:String(cd.note||'').trim(),at:Date.now()});T.checkpointDraft=T.checkpointDraft||{};delete T.checkpointDraft[n];save(P);render();openAccAfterRender('events24');return;
+    }
+    if(act==='checkpoint-delete'){var dn=+b.getAttribute('data-day'),did=b.getAttribute('data-id');T.checkpoints24=T.checkpoints24||{};T.checkpoints24[dn]=(T.checkpoints24[dn]||[]).filter(function(x){return x.id!==did});if(!T.checkpoints24[dn].length)delete T.checkpoints24[dn];save(P);render();openAccAfterRender('events24');return}
     if(act==='event-delete'){
       var en=+b.getAttribute('data-day'),eid=b.getAttribute('data-id');T.events24=T.events24||{};T.events24[en]=(T.events24[en]||[]).filter(function(x){return x.id!==eid});if(!T.events24[en].length)delete T.events24[en];save(P);render();openAccAfterRender('events24');return;
     }
@@ -948,8 +955,8 @@ function bind(){
       save(P); if(window.GArts)GArts.grant('proof_sign'); render(); return;
     }
     if(act==='newcycle'){
-      T.prev=(T.prev||[]).concat([{start:T.start,finale:T.finale,days:T.days,weekPlans:T.weekPlans,rewards:T.rewards,events24:T.events24,strategy:T.strategy}]);
-      T.days={}; T.events24={}; T.eventDraft={}; T.start=Date.now(); T.finale=null; T.openDay=0; T.view='month'; T.cycle=(T.cycle||1)+1; T.weekPlans={};
+      T.prev=(T.prev||[]).concat([{start:T.start,finale:T.finale,days:T.days,weekPlans:T.weekPlans,rewards:T.rewards,events24:T.events24,checkpoints24:T.checkpoints24,strategy:T.strategy}]);
+      T.days={}; T.events24={}; T.eventDraft={}; T.checkpoints24={}; T.checkpointDraft={}; T.start=Date.now(); T.finale=null; T.openDay=0; T.view='month'; T.cycle=(T.cycle||1)+1; T.weekPlans={};
       save(P); render(); return;
     }
     if(act==='card'){try{drawCard(P,T)}catch(e){} return}
@@ -958,6 +965,7 @@ function bind(){
     var el=e.target, act=el.getAttribute('data-act'); if(!act)return;
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T);
     if(act==='event-field'){T.eventDraft=T.eventDraft||{};T.eventDraft[n]=T.eventDraft[n]||{};T.eventDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
+    if(act==='checkpoint-field'){T.checkpointDraft=T.checkpointDraft||{};T.checkpointDraft[n]=T.checkpointDraft[n]||{};T.checkpointDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='plan-done'){
       var i=+el.getAttribute('data-i'), plan=weekPlan(T,(T.weekN||0)+1);
       plan.done[i]=!!el.checked; save(P); render(); return;
@@ -967,6 +975,7 @@ function bind(){
     var el=e.target, act=el.getAttribute('data-act'); if(!act)return;
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T), d=dayRec(T,n);
     if(act==='event-field'){T.eventDraft=T.eventDraft||{};T.eventDraft[n]=T.eventDraft[n]||{};T.eventDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
+    if(act==='checkpoint-field'){T.checkpointDraft=T.checkpointDraft||{};T.checkpointDraft[n]=T.checkpointDraft[n]||{};T.checkpointDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='slider'){d.sliders[el.getAttribute('data-k')]=+el.value; save(P); var m=MET.filter(function(x){return x.key===el.getAttribute('data-k')})[0]; var tip=el.parentNode.querySelector('.soft-tip'); if(tip)tip.textContent=sliderHint(m,+el.value); var sm=el.parentNode.querySelector('label small'); if(sm&&m)sm.textContent=m.sub+' · '+el.value; return}
     if(act==='dir-step'){d.dirSteps[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='ifthen'){T.ifthens=T.ifthens||['','','']; T.ifthens[+el.getAttribute('data-i')]=el.value; save(P); return}
