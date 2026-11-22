@@ -275,7 +275,7 @@ R.end_go=function(){
   var P=GPro.load(),L=P.lab;
   if(!L||!(GTrackDay(P).done)||!P.retest){nx.textContent='Сначала заверши Реактор и повторный замер';return}
   P.wheel=P.retest.wheel||P.wheel;
-  var baselineResearch=[];
+  var baselineResearch=P.cycleBaseline&&Array.isArray(P.cycleBaseline.research)?P.cycleBaseline.research.slice():[];
   if(P.retest&&P.retest.fromMirror&&P.retest.mirror){
    var endResearch=P.retest.mirror.endResearch||[];
    baselineResearch=WN.map(function(_,i){var vals=endResearch.slice(i*3,i*3+3).filter(function(v){return typeof v==='number'&&isFinite(v)});return vals.length?vals.reduce(function(a,b){return a+b},0)/vals.length:null});
