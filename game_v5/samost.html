@@ -7,7 +7,7 @@
 <title>Самость — Путь Алхимика</title>
 <link rel="stylesheet" href="nav.css?v=samost1">
 <link rel="stylesheet" href="samost.css?v=1">
-</head>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="img/hero_icon.png"><meta name="apple-mobile-web-app-capable" content="yes"></head>
 <body data-page="samost">
 <main class="samost-shell" id="samostApp">
   <header class="samost-head">
@@ -65,5 +65,5 @@
 </main>
 <script src="nav.js?v=samost1"></script>
 <script src="samost.js?v=1"></script>
-</body>
+<script>if("serviceWorker" in navigator && location.protocol==="https:"){navigator.serviceWorker.register("./sw.js").catch(function(){});}</script></body>
 </html>
