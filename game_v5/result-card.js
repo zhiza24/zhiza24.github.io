@@ -52,12 +52,16 @@ function css(){
 
 /* В Дневник попадает только содержимое расшифровки, без управляющих элементов. */
 function safeDiaryHtml(value){
+ var raw=String(value||'');
+ if(raw&&!/<[a-z][\\s\\S]*>/i.test(raw))raw=raw.split(/\\n+/).filter(function(x){return x.trim()}).map(function(x){return '<p>'+esc(x)+'</p>'}).join('');
  var t=document.createElement('template');
- t.innerHTML=String(value||'');
+ t.innerHTML=raw;
  var allowed={P:1,BR:1,B:1,STRONG:1,EM:1,I:1,UL:1,OL:1,LI:1,H3:1,H4:1,BLOCKQUOTE:1,DIV:1,SPAN:1,DETAILS:1,SUMMARY:1};
+ var forbidden={SCRIPT:1,STYLE:1,BUTTON:1,INPUT:1,SELECT:1,TEXTAREA:1,FORM:1,IFRAME:1,OBJECT:1,EMBED:1,SVG:1,CANVAS:1};
  function clean(node){
   Array.prototype.slice.call(node.childNodes).forEach(function(ch){
    if(ch.nodeType===1){
+    if(forbidden[ch.tagName]){ch.remove();return}
     if(!allowed[ch.tagName]){ch.replaceWith(document.createTextNode(ch.textContent||''));return}
     Array.prototype.slice.call(ch.attributes).forEach(function(a){ch.removeAttribute(a.name)});
     clean(ch);
