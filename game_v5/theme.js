@@ -113,3 +113,21 @@ function button(){var b=document.createElement('button');b.type='button';b.class
 window.addEventListener('storage',function(e){if(e.key===KEY)set(get())});
 window.GTheme={get:get,set:set,button:button,themed:on};
 })();
+
+/* PWA shell: local static cache only; profile data remains in browser storage. */
+(function(){
+ try{
+  if(!document.querySelector('link[rel="manifest"]')){
+   var mf=document.createElement('link');mf.rel='manifest';mf.href='manifest.webmanifest';document.head.appendChild(mf);
+  }
+  if(!document.querySelector('link[rel="apple-touch-icon"]')){
+   var ai=document.createElement('link');ai.rel='apple-touch-icon';ai.href='img/hero_icon.png';document.head.appendChild(ai);
+  }
+  if(!document.querySelector('meta[name="apple-mobile-web-app-capable"]')){
+   var cap=document.createElement('meta');cap.name='apple-mobile-web-app-capable';cap.content='yes';document.head.appendChild(cap);
+  }
+  if('serviceWorker' in navigator&&location.protocol==='https:'){
+   window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});
+  }
+ }catch(e){}
+})();
