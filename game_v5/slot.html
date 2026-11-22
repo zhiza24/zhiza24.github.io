@@ -251,7 +251,7 @@ R.retest_go=function(){if(!window.nx)return;var bh=[null,null,null];document.que
 R.compare=function(){
  var P=GPro.load(),RTEST=P.retest||{},a=P.wheel||[],b=RTEST.wheel||[];
  if(!b.length)return '<h1>Было и стало</h1><p>Сначала пройдите повторный замер.</p><a class="st" href="slot.html?id=retest">К повторному замеру</a>';
- var wheelHtml=WN.map(function(n,i){var x=a[i]||0,y=b[i]||0,d=y-x;return '<div>'+n+': '+x+' → <b>'+y+'</b> '+(d>0?'<span style="color:#9fd47f">+'+d+'</span>':d<0?'<span style="color:#d0664a">'+d+'</span>':'')+'</div><div class="bar"><i style="width:'+x*10+'%;background:#6b5535"></i><i style="width:'+y*10+'%;background:#e8c16c;opacity:.75"></i></div>'}).join('');
+ var wheelHtml=WN.map(function(n,i){var x=typeof a[i]==='number'?a[i]:null,y=typeof b[i]==='number'?b[i]:null,d=x!=null&&y!=null?y-x:null;return '<div>'+n+': '+(x==null?'—':x)+' → <b>'+(y==null?'—':y)+'</b> '+(d>0?'<span style="color:#9fd47f">+'+d+'</span>':d<0?'<span style="color:#d0664a">'+d+'</span>':'')+'</div><div class="bar"><i style="width:'+(x==null?0:x*10)+'%;background:#6b5535"></i><i style="width:'+(y==null?0:y*10)+'%;background:#e8c16c;opacity:.75"></i></div>'}).join('');
  if(RTEST.fromMirror){
   var M=RTEST.mirror||{},initial=M.initialResearch||[],answers=M.endResearch||[],rows=WN.map(function(n,i){
    var vals=answers.slice(i*3,i*3+3).filter(function(v){return typeof v==='number'&&isFinite(v)}),avg=vals.length?vals.reduce(function(x,y){return x+y},0)/vals.length:null,base=typeof initial[i]==='number'?initial[i]:null;
