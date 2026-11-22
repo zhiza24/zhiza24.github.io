@@ -59,7 +59,7 @@ var opts=[{id:'a',name:d.a},{id:'b',name:d.b},{id:'tie',name:'Оба одина�
 var g=node('div');g.className='pair';opts.forEach(function(o){g.append(button(o.name,function(){ans.choice=o.id;A.dilemmaIndex=idx+1;save();render();scrollTo(0,0)},ans.choice===o.id?'on':''))});card.append(g);
 card.append(field(d.ask,'note',ans),field('При каких обстоятельствах Вы выбрали бы иначе?','condition',ans));
 card.append(button('Сохранить уточнения',function(){save();A.dilemmaIndex=idx+1;render()},'next'));
-card.append(button('Вернуться к предыдущей ситуации',function(){A.dilemmaIndex=Math.max(0,idx-1);save();render()},'quiet-link'));return;
+card.append(button(idx===0?'Вернуться к ориентирам':'Вернуться к предыдущей ситуации',function(){if(idx===0){A.layer=1;save();render()}else{A.dilemmaIndex=idx-1;save();render()}scrollTo(0,0)},'quiet-link'));return;
 }
 if(l===3){
 setHead('Исследование ценностей · 3 из 6','Что Вы поддерживаете поступками?','Вспомните два-три конкретных эпизода за последние 6–12 месяцев. Важны реальные действия, вложенные ресурсы и обстоятельства — не только намерения.');
@@ -96,6 +96,7 @@ card.append(field('Что Вы в тот момент пытались сохр�
 card.append(valueChips('Какие ориентиры Вы сами связываете с тем, что защищали?',A.protection.tags));
 card.append(field('Что произошло после Вашей реакции? Она помогла получить то, что было важно?','outcome',A.protection));
 card.append(field('Если бы Вы могли вернуться в ту ситуацию, что сделали бы иначе?','repair',A.protection));
+card.append(button('Назад к исследованию угроз',function(){A.layer=5;save();render();scrollTo(0,0)},'quiet-link'));
 card.append(button('Собрать мою карту ценностей',finish,'next'));return;
 }
 }
