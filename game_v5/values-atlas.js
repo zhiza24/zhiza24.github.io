@@ -99,9 +99,9 @@ card.append(button('Собрать мою карту ценностей',finish,
 }
 }
 function calculate(){
-var counts={};VALUES.forEach(function(v){counts[v.id]={presented:0,selected:0,tied:0,conditional:0,neither:0,noExperience:0,index:null}});
-D.forEach(function(d){var a=A.dilemmas[d.id];if(!a||!a.choice)return;[d.av,d.bv].forEach(function(id){counts[id].presented++});if(a.choice==='a')counts[d.av].selected++;else if(a.choice==='b')counts[d.bv].selected++;else if(a.choice==='tie'){counts[d.av].tied++;counts[d.bv].tied++}else if(a.choice==='depends'){counts[d.av].conditional++;counts[d.bv].conditional++}else if(a.choice==='neither'){counts[d.av].neither++;counts[d.bv].neither++}else if(a.choice==='skip'){counts[d.av].noExperience++;counts[d.bv].noExperience++}});
-VALUES.forEach(function(v){var c=counts[v.id];c.index=c.presented>=2?Math.round(100*(c.selected+.5*c.tied)/c.presented):null});
+var counts={};VALUES.forEach(function(v){counts[v.id]={presented:0,eligible:0,selected:0,tied:0,conditional:0,neither:0,noExperience:0,index:null}});
+D.forEach(function(d){var a=A.dilemmas[d.id];if(!a||!a.choice)return;[d.av,d.bv].forEach(function(id){counts[id].presented++});if(a.choice==='a'){counts[d.av].eligible++;counts[d.bv].eligible++;counts[d.av].selected++}else if(a.choice==='b'){counts[d.av].eligible++;counts[d.bv].eligible++;counts[d.bv].selected++}else if(a.choice==='tie'){counts[d.av].eligible++;counts[d.bv].eligible++;counts[d.av].tied++;counts[d.bv].tied++}else if(a.choice==='depends'){counts[d.av].conditional++;counts[d.bv].conditional++}else if(a.choice==='neither'){counts[d.av].neither++;counts[d.bv].neither++}else if(a.choice==='skip'){counts[d.av].noExperience++;counts[d.bv].noExperience++}});
+VALUES.forEach(function(v){var c=counts[v.id];c.index=c.eligible>=2?Math.round(100*(c.selected+.5*c.tied)/c.eligible):null});
 var episodeTags={};(A.episodes||[]).forEach(function(e){(e.tags||[]).forEach(function(id){episodeTags[id]=(episodeTags[id]||0)+1})});
 var declared=A.declared.slice(),actionValues=Object.keys(episodeTags),shared=declared.filter(function(x){return actionValues.indexOf(x)>=0});
 var links=[];
