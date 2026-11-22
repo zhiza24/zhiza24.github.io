@@ -286,7 +286,7 @@ function result(box,k,built,retake){var S=STEP[k],n=nextOf(S.u);box.innerHTML=bu
    strongMore:_d.strongMore||'',insight:_d.insight||'',
    insightMore:_d.insightMore||built.html||'',
    insightLabel:_d.insightLabel||'Расшифровка результата',
-   answers:_d.answers||[],preview:preview,before:box.querySelector('#nx')
+   answers:_d.answers||(built.res&&built.res.answers)||[],at:_d.at||(built.res&&built.res.at),preview:preview,before:box.querySelector('#nx')
   });
  }
 try{built.bind(box)}catch(e){}
