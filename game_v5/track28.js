@@ -186,7 +186,7 @@ function svgChart(T,from,to,hidden,title){
 
 /* ---------- render ---------- */
 var host=null;
-function mount(el){host=el; var P=ensure(); var T=Tget(P); if(T.openDay==null)T.openDay=0; save(P); render()}
+function mount(el){host=el; var P=ensure(); var T=Tget(P); if(T.openDay==null)T.openDay=0;try{if(location.search.indexOf('view=mirror')>=0){T.space='mirror';T.view='mirror'}}catch(e){} save(P); render()}
 
 function spacesNav(space){
   var tabs=[['day','Мой день'],['map','Карта'],['lab','Практики'],['hero','Герой'],['mirror','Зеркало жизни'],['path','Путь']];
@@ -198,7 +198,7 @@ function injectNav(html,space){
 function render(){
   if(!host)return;
   var P=ensure(), T=Tget(P);
-  if(!T.strategySeen&&T.strategy&&window.GStrategy){
+  if(!T.strategySeen&&T.strategy&&window.GStrategy&&T.view!=='mirror'&&T.space!=='mirror'){
     host.innerHTML=viewStrategy(P,T); bind(); return;
   }
   if(T.view==='settings'){host.innerHTML=viewSettings(P,T); bind(); return}
@@ -421,11 +421,11 @@ function mirrorResearchAvg(arr){
  return MIRROR_SPHERES.map(function(x,i){var a=(arr||[]).slice(i*3,i*3+3).filter(function(v){return typeof v==='number'&&isFinite(v)});return a.length?a.reduce(function(p,c){return p+c},0)/a.length:null});
 }
 function mirrorInitialResearch(P){
- var w=P.wheelTest||{};if(Array.isArray(w.averages)&&w.averages.length===8)return w.averages;
+ if(P.cycleBaseline&&Array.isArray(P.cycleBaseline.research)&&P.cycleBaseline.research.length===8)return P.cycleBaseline.research;var w=P.wheelTest||{};if(Array.isArray(w.averages)&&w.averages.length===8)return w.averages;
  return (w.spheres||[]).map(function(s){var a=(s.ratings||[]).filter(function(v){return typeof v==='number'&&isFinite(v)});return a.length?a.reduce(function(p,c){return p+c},0)/a.length:null});
 }
 function mirrorActivityStats(T){
- var all=T.events24||{},bySphere={},byMotive={},byEmotion={},after={},eventIds={},days=0,checkpoints=0,overlap=0,total=0,unknown=0,alternatives=[];
+ var all=T.events24||{},bySphere={},byMotive={},byEmotion={},byFocus={},byPlanned={},after={},completion={},eventIds={},days=0,checkpoints=0,overlap=0,total=0,unknown=0,alternatives=[];
  MIRROR_SPHERES.forEach(function(x){bySphere[x.k]=0});
  for(var n=1;n<=28;n++){
   var own=all[n]||[],prev=all[n-1]||[],evs=[];
@@ -439,20 +439,21 @@ function mirrorActivityStats(T){
    var from=bounds[j],to=bounds[j+1],dur=to-from;if(dur<=0)continue;
    var active=evs.filter(function(x){return x.s<to&&x.t>from});
    if(active.length>1){overlap+=dur;continue}
-   if(active.length===1){var e=active[0].e,sp=e.sphere||'unclassified',mo=e.motive||'unclassified',em=e.emotion||'unclassified';if(bySphere[sp]==null)bySphere[sp]=0;bySphere[sp]+=dur;if(sp==='unclassified')unknown+=dur;byMotive[mo]=(byMotive[mo]||0)+dur;byEmotion[em]=(byEmotion[em]||0)+dur;total+=dur}
+   if(active.length===1){var e=active[0].e,sp=e.sphere||'unclassified',mo=e.motive||'unclassified',em=e.emotion||'unclassified';if(bySphere[sp]==null)bySphere[sp]=0;bySphere[sp]+=dur;if(sp==='unclassified'||sp==='other')unknown+=dur;byMotive[mo]=(byMotive[mo]||0)+dur;byEmotion[em]=(byEmotion[em]||0)+dur;var fo=e.focus||'unclassified',pl=e.planned||'unclassified';byFocus[fo]=(byFocus[fo]||0)+dur;byPlanned[pl]=(byPlanned[pl]||0)+dur;total+=dur}
   }
  }
- Object.keys(eventIds).forEach(function(id){var e=eventIds[id];after[e.after||'unclassified']=(after[e.after||'unclassified']||0)+1;if(e.alternative)alternatives.push(e.alternative)});
- Object.keys(T.checkpoints24||{}).forEach(function(k){checkpoints+=(T.checkpoints24[k]||[]).length});
- return {bySphere:bySphere,byMotive:byMotive,byEmotion:byEmotion,after:after,total:total,overlap:overlap,unknown:unknown,days:days,events:Object.keys(eventIds).length,checkpoints:checkpoints,alternatives:alternatives};
+ Object.keys(eventIds).forEach(function(id){var e=eventIds[id];after[e.after||'unclassified']=(after[e.after||'unclassified']||0)+1;completion[e.completion||'unclassified']=(completion[e.completion||'unclassified']||0)+1;if(e.alternative)alternatives.push(e.alternative)});
+ var moodSum=0,energySum=0;Object.keys(T.checkpoints24||{}).forEach(function(k){(T.checkpoints24[k]||[]).forEach(function(c){checkpoints++;moodSum+=+c.mood||0;energySum+=+c.energy||0})});
+ return {moodAvg:checkpoints?moodSum/checkpoints:null,energyAvg:checkpoints?energySum/checkpoints:null,bySphere:bySphere,byMotive:byMotive,byEmotion:byEmotion,byFocus:byFocus,byPlanned:byPlanned,after:after,completion:completion,total:total,overlap:overlap,unknown:unknown,days:days,events:Object.keys(eventIds).length,checkpoints:checkpoints,alternatives:alternatives};
 }
 function mirrorBars(values,total,names){
  var keys=Object.keys(values||{}).filter(function(k){return values[k]>0}).sort(function(a,b){return values[b]-values[a]});
  if(!keys.length)return '<p class="mute">Пока недостаточно записей.</p>';
  return keys.map(function(k){var v=values[k],pct=total?Math.round(v/total*100):0;return '<div class="mirror-bar"><div><b>'+esc((names&&names[k])||k)+'</b><span>'+Math.round(v/60*10)/10+' ч · '+pct+'%</span></div><i><em style="width:'+pct+'%"></em></i></div>'}).join('');
 }
-function viewMirror(P,T){
- var M=T.mirror||{},ready=todayNum(T)>=28;
+function viewMirror(P,T,isArchive){
+ if(!isArchive&&T.mirrorArchiveIndex!=null){var old=(P.trackerHistory||[])[+T.mirrorArchiveIndex];if(old&&old.mirror&&old.mirror.phase==='report')return viewMirror(P,old,true);delete T.mirrorArchiveIndex;save(P)}
+ var M=T.mirror||{},ready=!!(T.finale&&T.finale.done)||todayNum(T)>=28;
  if(M.phase==='self'){
   var h='<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни · повторный замер</p><h1>Как Вы воспринимаете свою жизнь сейчас?</h1><p class="cap28">Оцените каждую сферу по собственному ощущению. Прежние оценки, ответы и дневниковая статистика пока скрыты — сначала зафиксируйте сегодняшний взгляд.</p><div class="mirror-self-grid">';
   MIRROR_SPHERES.forEach(function(x,i){h+='<label class="mirror-self-item"><b>'+x.n+'</b><select data-act="mirror-wheel" data-i="'+i+'"><option value="">Выберите оценку</option>'+Array.from({length:10},function(_,j){var v=j+1;return '<option value="'+v+'" '+(+M.endWheel[i]===v?'selected':'')+'>'+v+' / 10</option>'}).join('')+'</select></label>'});
@@ -466,26 +467,28 @@ function viewMirror(P,T){
   h+='<button type="button" class="mirror-answer na" data-act="mirror-answer" data-v="na">Не относится ко мне</button></div><button type="button" class="quiet-btn" data-act="mirror-back-self">Вернуться к самооценке</button></div>';return h;
  }
  if(M.phase!=='report'){
-  var events=Object.values(T.events24||{}).reduce(function(n,a){return n+(a||[]).length},0);
-  return '<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни</p><h1>Три картины одной жизни</h1><p class="cap28">В начале цикла Вы уже увидели собственную оценку сфер и прошли исследовательские вопросы. За 28 дней можно было записывать события, время, мотивы и состояние. В конце мы сопоставим эти разные источники — не как оценку правильной жизни, а как материал для понимания.</p><div class="mirror-stage"><ol><li><b>Первый взгляд</b><span>Исходная самооценка сфер.</span></li><li><b>Исследовательская картина</b><span>Подробные ответы по восьми сферам и парные наблюдения.</span></li><li><b>Наблюдаемая картина</b><span>Зарегистрированные события, длительности, мотивы и состояние. Пустые промежутки не считаются бездействием.</span></li><li><b>Новый взгляд</b><span>Повторная самооценка и исследовательские вопросы — до показа прежних данных.</span></li></ol></div>'+(ready?'<p class="mute">Цикл достиг 28-го дня. Записано событий: '+events+'. Можно пройти повторный замер. Незаполненные дни не мешают завершить исследование.</p><button type="button" class="go" data-act="mirror-start">Начать повторный замер</button>':'<p class="mute">Повторный замер откроется на 28-й день цикла. Сейчас можно продолжать вести дневник событий и контрольных точек.</p>')+'<button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button></div>';
+  var events=Object.values(T.events24||{}).reduce(function(n,a){return n+(a||[]).length},0),prior=(P.trackerHistory||[]).map(function(x,i){return {t:x,i:i}}).filter(function(x){return x.t.mirror&&x.t.mirror.phase==='report'}),priorHtml=prior.length?'<details><summary>Отчеты предыдущих циклов: '+prior.length+'</summary>'+prior.map(function(x){return '<p><button type="button" class="quiet-btn" data-act="mirror-archive" data-i="'+x.i+'">Открыть отчет · '+new Date(x.t.mirror.completedAt||x.t.mirror.startedAt||Date.now()).toLocaleDateString('ru-RU')+'</button></p>'}).join('')+'</details>':'';
+  return '<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни</p><h1>Три картины одной жизни</h1><p class="cap28">В начале цикла Вы уже увидели собственную оценку сфер и прошли исследовательские вопросы. За 28 дней можно было записывать события, время, мотивы и состояние. В конце мы сопоставим эти разные источники — не как оценку правильной жизни, а как материал для понимания.</p><div class="mirror-stage"><ol><li><b>Первый взгляд</b><span>Исходная самооценка сфер.</span></li><li><b>Исследовательская картина</b><span>Подробные ответы по восьми сферам и парные наблюдения.</span></li><li><b>Наблюдаемая картина</b><span>Зарегистрированные события, длительности, мотивы и состояние. Пустые промежутки не считаются бездействием.</span></li><li><b>Новый взгляд</b><span>Повторная самооценка и исследовательские вопросы — до показа прежних данных.</span></li></ol></div>'+(ready?'<p class="mute">Цикл достиг 28-го дня. Записано событий: '+events+'. Можно пройти повторный замер. Незаполненные дни не мешают завершить исследование.</p><button type="button" class="go" data-act="mirror-start">Начать повторный замер</button>':'<p class="mute">Повторный замер откроется на 28-й день цикла. Сейчас можно продолжать вести дневник событий и контрольных точек.</p>')+priorHtml+'<button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button></div>';
  }
- var init=P.wheel||[],initResearch=mirrorInitialResearch(P),finalWheel=M.endWheel||[],finalResearch=mirrorResearchAvg(M.endResearch||[]),stats=mirrorActivityStats(T),shares={};
+ var init=M.initialWheel||((P.cycleBaseline&&P.cycleBaseline.wheel)||P.wheel||[]),initResearch=M.initialResearch||mirrorInitialResearch(P),finalWheel=M.endWheel||[],finalResearch=mirrorResearchAvg(M.endResearch||[]),stats=mirrorActivityStats(T),shares={};
  MIRROR_SPHERES.forEach(function(x){shares[x.k]=stats.total?stats.bySphere[x.k]/stats.total*100:0});
- var sn={unclassified:'Не указано',own:'Собственное желание',important:'Осознанный выбор',need:'Необходимость',care:'Забота / любовь',duty:'Чувство долга',external:'Внешнее требование',habit:'Привычка',avoid:'Избегание',restore:'Восстановление',mixed:'Смешанный мотив',unclassified:'Не указано',joy:'Радость',calm:'Спокойствие',interest:'Интерес',satisfaction:'Удовлетворение',neutral:'Нейтральность',tension:'Напряжение',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',emptiness:'Опустошение',better:'Стало лучше',same:'Без заметных изменений',worse:'Стало хуже',unknown:'Не определено'};
+ var sn={own:'Собственное желание',important:'Осознанный выбор',need:'Необходимость',care:'Забота / любовь',duty:'Чувство долга',external:'Внешнее требование',habit:'Привычка',avoid:'Избегание',restore:'Восстановление',mixed:'Смешанный мотив',unclassified:'Не указано',joy:'Радость',calm:'Спокойствие',interest:'Интерес',satisfaction:'Удовлетворение',neutral:'Нейтральность',tension:'Напряжение',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',emptiness:'Опустошение',better:'Стало лучше',same:'Без заметных изменений',worse:'Стало хуже',unknown:'Не определено',self:'Для себя',other:'Для другого',shared:'Общее / совместное',both:'Для себя и других',yes:'Плановое',no:'Спонтанное',done:'Выполнено',partial:'Частично',not_done:'Не выполнено',ongoing:'Продолжается',na:'Не применимо'};
  var h='<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни · отчет</p><h1>Пять разных взглядов на одну жизнь</h1><p class="cap28">Это не единый рейтинг и не объективная оценка благополучия. Самооценка, исследовательские ответы и зарегистрированная активность измеряют разные стороны опыта.</p>';
  h+='<div class="mirror-report-grid"><details open><summary>1. Исходная самооценка</summary>'+mirrorWheelSvg(init,'Как Вы оценивали сферы в начале',10)+'</details><details><summary>2. Исходные исследовательские ответы</summary>'+mirrorWheelSvg(initResearch,'Подробные ответы в начале',10)+'</details><details open><summary>3. Наблюдаемая активность за 28 дней</summary>';
- h+='<p class="mute">Событий: '+stats.events+' · дни с записями: '+stats.days+' из 28 · контрольные точки состояния: '+stats.checkpoints+'. Учтено без пересечений: '+Math.round(stats.total/60*10)/10+' ч. Пересекающееся время: '+Math.round(stats.overlap/60*10)/10+' ч — показано отдельно и не добавлено повторно. Без указанной сферы: '+Math.round(stats.unknown/60*10)/10+' ч.</p>';
+ h+='<p class="mute">Событий: '+stats.events+' · дни с записями: '+stats.days+' из 28 · контрольные точки состояния: '+stats.checkpoints+(stats.checkpoints?' · среднее настроение '+stats.moodAvg.toFixed(1)+'/10 · энергия '+stats.energyAvg.toFixed(1)+'/10':'')+'. Учтено без пересечений: '+Math.round(stats.total/60*10)/10+' ч. Пересекающееся время: '+Math.round(stats.overlap/60*10)/10+' ч — показано отдельно и не добавлено повторно. Другое или сфера не указана: '+Math.round(stats.unknown/60*10)/10+' ч.</p>';
  h+=stats.total?mirrorWheelSvg(MIRROR_SPHERES.map(function(x){return shares[x.k]}),'Доля зарегистрированного времени по сферам, %',100):'<p class="mute">Недостаточно записей, чтобы построить распределение. Это не означает, что в эти дни ничего не происходило.</p>';
  h+='<h3>Время по сферам</h3>'+mirrorBars(stats.bySphere,stats.total,Object.assign({unclassified:'Не указано'},Object.fromEntries(MIRROR_SPHERES.map(function(x){return [x.k,x.n]}))));
- h+='<h3>Мотивы зарегистрированных событий</h3>'+mirrorBars(stats.byMotive,stats.total,sn)+'<h3>Эмоциональные отметки</h3>'+mirrorBars(stats.byEmotion,stats.total,sn);
- h+='<h3>Последействие</h3>'+Object.keys(stats.after).map(function(k){return '<p>'+esc(sn[k]||k)+': '+stats.after[k]+'</p>'}).join('')+(stats.alternatives.length?'<h3>Что хотелось бы попробовать иначе</h3>'+stats.alternatives.slice(0,8).map(function(x){return '<p>· '+esc(x)+'</p>'}).join(''):'')+'</details>';
+ h+='<h3>Плановые и спонтанные события</h3>'+mirrorBars(stats.byPlanned,stats.total,sn)+'<h3>На кого было направлено время</h3>'+mirrorBars(stats.byFocus,stats.total,sn)+'<h3>Мотивы зарегистрированных событий</h3>'+mirrorBars(stats.byMotive,stats.total,sn)+'<h3>Эмоциональные отметки</h3>'+mirrorBars(stats.byEmotion,stats.total,sn);
+ h+='<h3>Степень выполнения</h3>'+Object.keys(stats.completion).map(function(k){return '<p>'+esc(sn[k]||k)+': '+stats.completion[k]+'</p>'}).join('')+'<h3>Последействие</h3>'+Object.keys(stats.after).map(function(k){return '<p>'+esc(sn[k]||k)+': '+stats.after[k]+'</p>'}).join('')+(stats.alternatives.length?'<h3>Что хотелось бы попробовать иначе</h3>'+stats.alternatives.slice(0,8).map(function(x){return '<p>· '+esc(x)+'</p>'}).join(''):'')+'</details>';
  h+='<details open><summary>4. Новая самооценка</summary>'+mirrorWheelSvg(finalWheel,'Как Вы оцениваете сферы сейчас',10)+'</details><details><summary>5. Повторные исследовательские ответы</summary>'+mirrorWheelSvg(finalResearch,'Подробные ответы сейчас',10)+'</details></div>';
  h+='<h2>Сопоставление</h2><div class="mirror-compare"><div class="mirror-compare-head"><span>Сфера</span><span>Было</span><span>Исслед.</span><span>Время</span><span>Стало</span><span>Исслед.</span></div>';
  MIRROR_SPHERES.forEach(function(x,i){h+='<div class="mirror-compare-row"><b>'+x.n+'</b><span>'+(init[i]==null?'—':init[i])+'</span><span>'+(initResearch[i]==null?'—':initResearch[i].toFixed(1))+'</span><span>'+(stats.total?Math.round(shares[x.k])+'%':'—')+'</span><span>'+(finalWheel[i]==null?'—':finalWheel[i])+'</span><span>'+(finalResearch[i]==null?'—':finalResearch[i].toFixed(1))+'</span></div>'});
  h+='</div><p class="mute">Расхождение между тем, что Вы ощущаете, что показывают ответы и на что уходит записанное время, не означает ошибку или самообман. Возможны изменение приоритетов, неполнота записей, внешние обстоятельства и разные способы измерения. Время по сферам рассчитано по непересекающимся интервалам; перекрытия вынесены отдельно.</p>';
  var note=M.reflection||{};h+='<div class="mirror-note"><h3>Что я замечаю в этой картине?</h3><label>Что оказалось неожиданным?<textarea data-act="mirror-note" data-key="surprise" rows="3">'+esc(note.surprise||'')+'</textarea></label><label>Что я хочу сохранить в своей жизни?<textarea data-act="mirror-note" data-key="keep" rows="3">'+esc(note.keep||'')+'</textarea></label><label>Что я хочу изменить или исследовать дальше?<textarea data-act="mirror-note" data-key="next" rows="3">'+esc(note.next||'')+'</textarea></label></div>';
- h+='<button type="button" class="quiet-btn" data-act="mirror-restart">Пройти повторное исследование еще раз</button><button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button>';
- if(M.history&&M.history.length)h+='<details><summary>Предыдущие отчеты: '+M.history.length+'</summary>'+M.history.map(function(x,i){return '<p>Круг '+(i+1)+' · '+new Date(x.completedAt||x.startedAt||Date.now()).toLocaleDateString('ru-RU')+'</p>'}).join('')+'</details>';
+ if(isArchive){h+='<button type="button" class="quiet-btn" data-act="mirror-archive-back">Вернуться к текущему отчету</button>'}
+ else{h+='<button type="button" class="go" data-act="mirror-continue">Продолжить к финальному сравнению</button><button type="button" class="quiet-btn" data-act="mirror-restart">Пройти повторное исследование еще раз</button><button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button>'}
+ if(M.history&&M.history.length)h+='<details><summary>Повторные отчеты этого цикла: '+M.history.length+'</summary>'+M.history.map(function(x,i){return '<p>Повтор '+(i+1)+' · '+new Date(x.completedAt||x.startedAt||Date.now()).toLocaleDateString('ru-RU')+'</p>'}).join('')+'</details>';
+ if(!isArchive){var prev=(P.trackerHistory||[]).map(function(x,i){return {t:x,i:i}}).filter(function(x){return x.t.mirror&&x.t.mirror.phase==='report'});if(prev.length)h+='<details><summary>Отчеты предыдущих циклов: '+prev.length+'</summary>'+prev.map(function(x){return '<p><button type="button" class="quiet-btn" data-act="mirror-archive" data-i="'+x.i+'">Открыть отчет · '+new Date(x.t.mirror.completedAt||x.t.mirror.startedAt||Date.now()).toLocaleDateString('ru-RU')+'</button></p>'}).join('')+'</details>'}
  return h+'</div>';
 }
 function viewHero(P,T){
@@ -624,30 +627,31 @@ function day24Names(){
  return {type:{activity:'Занятие',sleep:'Сон',travel:'Дорога',care:'Забота',rest:'Отдых',other:'Другое'},
  sphere:{health:'Здоровье',money:'Финансы',work:'Работа',relationships:'Отношения',family:'Семья',friends:'Друзья',growth:'Развитие',rest:'Отдых',other:'Другое'},
  motive:{own:'Собственное желание',important:'Осознанный выбор по важности',need:'Необходимость',care:'Забота / любовь',duty:'Чувство долга',external:'Внешнее требование',habit:'Привычка / автоматизм',avoid:'Избегание / откладывание',restore:'Восстановление по потребности',mixed:'Смешанный мотив',other:'Другое'},
- emotion:{calm:'Спокойствие',joy:'Радость',interest:'Интерес',satisfaction:'Удовлетворение',neutral:'Нейтральность',tension:'Напряжение',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',emptiness:'Опустошение'},completion:{done:'Выполнено',partial:'Частично',not_done:'Не выполнено',ongoing:'Продолжается',na:'Не применимо'},after:{better:'Стало лучше',same:'Без заметных изменений',worse:'Стало хуже',unknown:'Не определено'}};
+ emotion:{calm:'Спокойствие',joy:'Радость',interest:'Интерес',satisfaction:'Удовлетворение',neutral:'Нейтральность',tension:'Напряжение',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',emptiness:'Опустошение'},completion:{done:'Выполнено',partial:'Частично',not_done:'Не выполнено',ongoing:'Продолжается',na:'Не применимо'},after:{better:'Стало лучше',same:'Без заметных изменений',worse:'Стало хуже',unknown:'Не определено'},focus:{self:'Для себя',other:'Для другого',shared:'Общее / совместное',both:'И для себя, и для других',unknown:'Не могу определить'}};
 }
 function events24Body(T,n){
- var all=T.events24||{},own=all[n]||[],prev=all[n-1]||[],rows=[],N=day24Names(),draft=(T.eventDraft&&T.eventDraft[n])||{},cps=((T.checkpoints24||{})[n]||[]),cpDraft=(T.checkpointDraft&&T.checkpointDraft[n])||{};
+ var all=T.events24||{},own=all[n]||[],prev=all[n-1]||[],rows=[],N=day24Names(),draft=(T.eventDraft&&T.eventDraft[n])||{},editing=!!(T.editingEvent&&T.editingEvent.day===n),cps=((T.checkpoints24||{})[n]||[]),cpDraft=(T.checkpointDraft&&T.checkpointDraft[n])||{};
  own.forEach(function(e){if(+e.startMin<1440)rows.push({e:e,owner:n,from:+e.startMin,to:Math.min(1440,+e.endMin),continued:false,overnight:+e.endMin>1440})});
  prev.forEach(function(e){if(+e.endMin>1440)rows.push({e:e,owner:n-1,from:0,to:Math.min(1440,+e.endMin-1440),continued:true,overnight:false})});
  rows.sort(function(a,b){return a.from-b.from});
  var html='<div class="d24"><p class="mute">Записывайте события по ходу дня или вечером. Пустые промежутки остаются неизвестными — мы не считаем их отдыхом или бездействием. События могут пересекаться; в сводной картине пересечения будут показаны отдельно, чтобы не считать одни и те же минуты дважды.</p><div class="d24-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>';
- if(rows.length){html+=rows.map(function(r){var e=r.e,from=r.from,to=r.to,dur=Math.max(0,to-from),left=from/1440*100,width=Math.max(0,dur/1440*100),time=r.continued?'00:00–'+day24Fmt(to):day24Fmt(e.startMin)+'–'+(r.overnight?'00:00 следующего дня':day24Fmt(e.endMin));var details=[N.type[e.type]||'Событие',N.sphere[e.sphere]||'',N.motive[e.motive]||'',N.emotion[e.emotion]||'',e.planned==='yes'?'Плановое':e.planned==='no'?'Спонтанное':'',N.completion[e.completion]||'',N.after[e.after]||''].filter(Boolean).join(' · ');
- return '<div class="d24-row"><div class="d24-meta"><b>'+esc(e.title)+(r.continued?' · продолжение':'')+'</b><small>'+time+' · '+Math.floor(dur/60)+' ч '+(dur%60)+' мин</small><small>'+esc(details)+'</small>'+(e.alternative?'<small>В следующий раз: '+esc(e.alternative)+'</small>':'')+'</div><div class="d24-track"><i style="left:'+left+'%;width:'+width+'%"></i></div><button type="button" class="quiet-btn" data-act="event-delete" data-day="'+r.owner+'" data-id="'+esc(e.id)+'">Удалить</button></div>'}).join('')}
+ if(rows.length){html+=rows.map(function(r){var e=r.e,from=r.from,to=r.to,dur=Math.max(0,to-from),left=from/1440*100,width=Math.max(0,dur/1440*100),time=r.continued?'00:00–'+day24Fmt(to):day24Fmt(e.startMin)+'–'+(r.overnight?day24Fmt(e.endMin-1440)+' следующего дня':day24Fmt(e.endMin));var details=[N.type[e.type]||'Событие',N.sphere[e.sphere]||'',N.motive[e.motive]||'',N.emotion[e.emotion]||'',N.focus[e.focus]||'',e.planned==='yes'?'Плановое':e.planned==='no'?'Спонтанное':'',N.completion[e.completion]||'',N.after[e.after]||''].filter(Boolean).join(' · ');
+ return '<div class="d24-row"><div class="d24-meta"><b>'+esc(e.title)+(r.continued?' · продолжение':'')+'</b><small>'+time+' · '+Math.floor(dur/60)+' ч '+(dur%60)+' мин</small><small>'+esc(details)+'</small>'+(e.alternative?'<small>В следующий раз: '+esc(e.alternative)+'</small>':'')+'</div><div class="d24-track"><i style="left:'+left+'%;width:'+width+'%"></i></div>'+(r.continued?'':'<button type="button" class="quiet-btn" data-act="event-edit" data-day="'+r.owner+'" data-id="'+esc(e.id)+'">Изменить</button>')+'<button type="button" class="quiet-btn" data-act="event-delete" data-day="'+r.owner+'" data-id="'+esc(e.id)+'">Удалить</button></div>'}).join('')}
  else html+='<p class="mute">Пока нет записей за этот день.</p>';
  html+='<details class="d24-add"><summary>Добавить событие</summary><div class="d24-form">';
  html+='<label>Что происходило<input type="text" maxlength="120" data-act="event-field" data-key="title" value="'+esc(draft.title||'')+'" placeholder="Например, работа над проектом"></label>';
  html+='<div class="d24-times"><label>Начало<input type="time" data-act="event-field" data-key="start" value="'+esc(draft.start||'')+'"></label><label>Окончание<input type="time" data-act="event-field" data-key="end" value="'+esc(draft.end||'')+'"></label></div>';
- function opts(key,items){return '<label>'+key+'<select data-act="event-field" data-key="'+key+'">'+items.map(function(x){return '<option value="'+x[0]+'" '+((draft[key]||'')===x[0]?'selected':'')+'>'+x[1]+'</option>'}).join('')+'</select></label>'}
+ function opts(key,items){var titles={type:'Тип события',sphere:'Сфера жизни',motive:'Что побудило?',emotion:'Эмоциональный фон',focus:'Для кого это было?',planned:'План или спонтанность',completion:'Степень выполнения',after:'Последействие'};return '<label>'+(titles[key]||key)+'<select data-act="event-field" data-key="'+key+'">'+items.map(function(x){return '<option value="'+x[0]+'" '+((draft[key]||'')===x[0]?'selected':'')+'>'+x[1]+'</option>'}).join('')+'</select></label>'}
  html+=opts('type',[['activity','Занятие'],['sleep','Сон'],['travel','Дорога'],['care','Забота'],['rest','Отдых'],['other','Другое']]);
  html+=opts('sphere',[['','Сферу можно не указывать'],['health','Здоровье'],['money','Финансы'],['work','Карьера'],['relationships','Отношения'],['family','Семья'],['friends','Друзья'],['growth','Рост'],['rest','Отдых'],['other','Другое']]);
  html+=opts('motive',[['','Мотив можно не указывать'],['own','Собственное желание'],['important','Осознанный выбор по важности'],['care','Забота / любовь'],['duty','Чувство долга'],['need','Необходимость'],['habit','Привычка / автоматизм'],['avoid','Избегание / откладывание'],['restore','Восстановление по потребности'],['mixed','Смешанный мотив'],['other','Другое']]);
  html+=opts('emotion',[['','Эмоцию можно не указывать'],['joy','Радость'],['calm','Спокойствие'],['interest','Интерес'],['satisfaction','Удовлетворение'],['neutral','Нейтральность'],['tension','Напряжение'],['irritation','Раздражение'],['anxiety','Тревога'],['fatigue','Усталость'],['emptiness','Опустошение']]);
+ html+=opts('focus',[['','Для кого — по желанию'],['self','Для себя'],['other','Для другого'],['shared','Общее / совместное'],['both','И для себя, и для других'],['unknown','Не могу определить']]);
  html+=opts('planned',[['','План / спонтанность — по желанию'],['yes','Плановое'],['no','Спонтанное']]);
  html+=opts('completion',[['','Степень выполнения — по желанию'],['done','Выполнено'],['partial','Частично'],['not_done','Не выполнено'],['ongoing','Продолжается'],['na','Не применимо']]);
  html+=opts('after',[['','Последействие — по желанию'],['better','Стало лучше'],['same','Без заметных изменений'],['worse','Стало хуже'],['unknown','Не могу определить']]);
  html+='<label>Что в следующий раз хотелось бы сделать иначе? <textarea rows="2" data-act="event-field" data-key="alternative" placeholder="Необязательно">'+esc(draft.alternative||'')+'</textarea></label>';
- html+='<button type="button" class="add" data-act="event-add">Сохранить событие</button><p class="mute">Если окончание раньше начала, запись продолжится после полуночи. Сон и другие события можно отмечать через границу дня.</p></div></details>';
+ html+='<button type="button" class="add" data-act="event-add">'+(editing?'Сохранить изменения':'Сохранить событие')+'</button>'+(editing?'<button type="button" class="quiet-btn" data-act="event-cancel">Отменить редактирование</button>':'')+'<p class="mute">Если окончание раньше начала, запись продолжится после полуночи. Сон и другие события можно отмечать через границу дня.</p></div></details>';
  html+='<div class="d24-checkpoints"><b>Контрольные точки состояния</b><p class="mute">Это отдельные отметки времени, настроения и энергии. Они не привязываются автоматически к событию.</p>';
  if(cps.length)html+=cps.map(function(c){return '<div class="d24-check"><b>'+day24Fmt(c.minute)+'</b><span>Настроение '+c.mood+'/10 · энергия '+c.energy+'/10</span>'+(c.note?'<small>'+esc(c.note)+'</small>':'')+'<button type="button" class="quiet-btn" data-act="checkpoint-delete" data-day="'+n+'" data-id="'+esc(c.id)+'">Удалить</button></div>'}).join('');
  html+='<div class="d24-form"><div class="d24-times"><label>Время<input type="time" data-act="checkpoint-field" data-key="time" value="'+esc(cpDraft.time||'')+'"></label><label>Настроение (1–10)<input type="number" min="1" max="10" data-act="checkpoint-field" data-key="mood" value="'+esc(cpDraft.mood||'')+'"></label><label>Энергия (1–10)<input type="number" min="1" max="10" data-act="checkpoint-field" data-key="energy" value="'+esc(cpDraft.energy||'')+'"></label></div><label>Что важно отметить? <input type="text" maxlength="140" data-act="checkpoint-field" data-key="note" value="'+esc(cpDraft.note||'')+'" placeholder="Необязательно"></label><button type="button" class="add" data-act="checkpoint-add">Добавить отметку состояния</button></div></div></div>';
@@ -1008,7 +1012,9 @@ function bind(){
       if(em<=sm)em+=1440;
       if(em-sm>1440){alert('Одно событие можно записать длительностью не более 24 часов.');return}
       T.events24=T.events24||{};T.events24[n]=T.events24[n]||[];
-      T.events24[n].push({id:uid(),title:title,startMin:sm,endMin:em,type:dr.type||'activity',sphere:dr.sphere||'',motive:dr.motive||'',emotion:dr.emotion||'',planned:dr.planned||'',completion:dr.completion||'',after:dr.after||'',alternative:String(dr.alternative||'').trim(),createdAt:Date.now()});
+      var evData={title:title,startMin:sm,endMin:em,type:dr.type||'activity',sphere:dr.sphere||'',motive:dr.motive||'',emotion:dr.emotion||'',planned:dr.planned||'',focus:dr.focus||'',completion:dr.completion||'',after:dr.after||'',alternative:String(dr.alternative||'').trim()};
+      if(T.editingEvent&&T.editingEvent.day===n){var list=T.events24[n],old=list.filter(function(x){return x.id===T.editingEvent.id})[0];if(old)Object.keys(evData).forEach(function(k){old[k]=evData[k]});else list.push(Object.assign({id:uid(),createdAt:Date.now()},evData));T.editingEvent=null}
+      else T.events24[n].push(Object.assign({id:uid(),createdAt:Date.now()},evData));
       T.eventDraft=T.eventDraft||{};delete T.eventDraft[n];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='checkpoint-add'){
@@ -1018,10 +1024,13 @@ function bind(){
       T.checkpoints24=T.checkpoints24||{};T.checkpoints24[n]=T.checkpoints24[n]||[];T.checkpoints24[n].push({id:uid(),minute:mn,mood:mm,energy:ee,note:String(cd.note||'').trim(),at:Date.now()});T.checkpointDraft=T.checkpointDraft||{};delete T.checkpointDraft[n];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='checkpoint-delete'){var dn=+b.getAttribute('data-day'),did=b.getAttribute('data-id');T.checkpoints24=T.checkpoints24||{};T.checkpoints24[dn]=(T.checkpoints24[dn]||[]).filter(function(x){return x.id!==did});if(!T.checkpoints24[dn].length)delete T.checkpoints24[dn];save(P);render();openAccAfterRender('events24');return}
+    if(act==='mirror-archive'){T.mirrorArchiveIndex=+b.getAttribute('data-i');save(P);render();return}
+    if(act==='mirror-archive-back'){delete T.mirrorArchiveIndex;save(P);render();return}
+    if(act==='mirror-continue'){location.href='slot.html?id=retest';return}
     if(act==='mirror-start'||act==='mirror-restart'){
       var hist=(T.mirror&&T.mirror.history)||[];
       if(T.mirror&&T.mirror.phase==='report')hist=hist.concat([{startedAt:T.mirror.startedAt,completedAt:T.mirror.completedAt,endWheel:T.mirror.endWheel,endResearch:T.mirror.endResearch,reflection:T.mirror.reflection}]);
-      T.mirror={version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0,startedAt:Date.now(),history:hist};
+      T.mirror={version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0,startedAt:Date.now(),initialWheel:((P.cycleBaseline&&P.cycleBaseline.wheel)||P.wheel||[]).slice(),initialResearch:mirrorInitialResearch(P).slice(),history:hist};delete T.mirrorArchiveIndex;
       save(P);render();return;
     }
     if(act==='mirror-wheel-save'){
@@ -1037,8 +1046,15 @@ function bind(){
       T.mirror=M;save(P);render();return;
     }
     if(act==='mirror-back-self'){if(T.mirror){T.mirror.phase='self';save(P);render()}return}
+    if(act==='event-edit'){
+      var eday=+b.getAttribute('data-day'),eid=b.getAttribute('data-id'),ex=((T.events24||{})[eday]||[]).filter(function(x){return x.id===eid})[0];
+      if(!ex||eday!==n)return;
+      function tm(v){v=+v;return ('0'+Math.floor((v%1440)/60)).slice(-2)+':'+('0'+(v%60)).slice(-2)}
+      T.editingEvent={day:eday,id:eid};T.eventDraft=T.eventDraft||{};T.eventDraft[n]={title:ex.title,start:tm(ex.startMin),end:tm(ex.endMin),type:ex.type||'activity',sphere:ex.sphere||'',motive:ex.motive||'',emotion:ex.emotion||'',planned:ex.planned||'',focus:ex.focus||'',completion:ex.completion||'',after:ex.after||'',alternative:ex.alternative||''};save(P);render();openAccAfterRender('events24');return;
+    }
+    if(act==='event-cancel'){if(T.eventDraft)delete T.eventDraft[n];T.editingEvent=null;save(P);render();openAccAfterRender('events24');return}
     if(act==='event-delete'){
-      var en=+b.getAttribute('data-day'),eid=b.getAttribute('data-id');T.events24=T.events24||{};T.events24[en]=(T.events24[en]||[]).filter(function(x){return x.id!==eid});if(!T.events24[en].length)delete T.events24[en];save(P);render();openAccAfterRender('events24');return;
+      var en=+b.getAttribute('data-day'),eid=b.getAttribute('data-id');if(T.editingEvent&&T.editingEvent.id===eid){T.editingEvent=null;if(T.eventDraft)delete T.eventDraft[n]}T.events24=T.events24||{};T.events24[en]=(T.events24[en]||[]).filter(function(x){return x.id!==eid});if(!T.events24[en].length)delete T.events24[en];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='hour-t'){d.openHour=d.openHour===+b.getAttribute('data-h')?null:+b.getAttribute('data-h'); save(P); render(); openAccAfterRender('hours'); return}
     if(act==='fate'){
