@@ -1157,17 +1157,21 @@ function bind(){
         T.space='mirror';T.view='mirror';save(P);render();return;
       }
       if(!window.confirm('Сохранить весь текущий цикл в архиве и начать новый?'))return;
-      if(T.mirror&&T.mirror.phase==='report'&&Array.isArray(T.mirror.endWheel)&&Array.isArray(T.mirror.endResearch)){
-        P.wheel=T.mirror.endWheel.slice();
-        P.cycleBaseline={wheel:T.mirror.endWheel.slice(),research:mirrorResearchAvg(T.mirror.endResearch),capturedAt:Date.now()};
-      }
+      var completedMirror=T.mirror&&T.mirror.phase==='report'&&Array.isArray(T.mirror.endWheel)&&T.mirror.endWheel.length===8&&T.mirror.endWheel.every(function(v){return typeof v==='number'&&isFinite(v)})&&Array.isArray(T.mirror.endResearch)&&T.mirror.endResearch.length===24&&T.mirror.endResearch.every(function(v){return v==='na'||(typeof v==='number'&&isFinite(v))});
+      /* Сначала фиксируем исходную точку и полный старый цикл. Новый baseline
+         нельзя записывать до архивации: иначе отчет прошлого цикла получит
+         данные уже следующего цикла. */
+      var baselineBefore=P.cycleBaseline?JSON.parse(JSON.stringify(P.cycleBaseline)):null;
+      var retestBefore=P.retest?JSON.parse(JSON.stringify(P.retest)):null;
       var archived=JSON.parse(JSON.stringify(T));
+      archived.archiveVersion=2;
       archived.archivedAt=Date.now();
-      if(P.cycleBaseline)archived.cycleBaseline=JSON.parse(JSON.stringify(P.cycleBaseline));
-      if(P.retest)archived.retest=JSON.parse(JSON.stringify(P.retest));
+      archived.cycleStartedAt=T.start||null;
+      archived.cycleEndedAt=archived.archivedAt;
+      if(baselineBefore)archived.cycleBaseline=baselineBefore;
+      if(retestBefore)archived.retest=retestBefore;
       P.trackerHistory=P.trackerHistory||[];
-      if(!P.trackerHistory.some(function(x){return x&&x.cycle===T.cycle&&x.start===T.start}))P.trackerHistory.push(archived);
-      var completedMirror=T.mirror&&T.mirror.phase==='report'&&Array.isArray(T.mirror.endWheel)&&T.mirror.endWheel.length===8&&Array.isArray(T.mirror.endResearch)&&T.mirror.endResearch.length===24;
+      if(!P.trackerHistory.some(function(x){return x&&x.cycle===(T.cycle||1)&&((x.start||null)===(T.start||null))}))P.trackerHistory.push(archived);
       if(completedMirror){
         var nextWheel=T.mirror.endWheel.slice(),nextResearch=mirrorResearchAvg(T.mirror.endResearch);
         P.wheel=nextWheel.slice();
