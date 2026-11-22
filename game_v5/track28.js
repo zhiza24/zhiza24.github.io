@@ -1021,7 +1021,8 @@ function bind(){
       T.checkpoints24=T.checkpoints24||{};T.checkpoints24[n]=T.checkpoints24[n]||[];T.checkpoints24[n].push({id:uid(),minute:mn,mood:mm,energy:ee,note:String(cd.note||'').trim(),at:Date.now()});T.checkpointDraft=T.checkpointDraft||{};delete T.checkpointDraft[n];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='checkpoint-delete'){var dn=+b.getAttribute('data-day'),did=b.getAttribute('data-id');T.checkpoints24=T.checkpoints24||{};T.checkpoints24[dn]=(T.checkpoints24[dn]||[]).filter(function(x){return x.id!==did});if(!T.checkpoints24[dn].length)delete T.checkpoints24[dn];save(P);render();openAccAfterRender('events24');return}
-    if(act==='mirror-continue'){location.href='slot.html?id=retest';return}\n    if(act==='mirror-start'||act==='mirror-restart'){
+    if(act==='mirror-continue'){location.href='slot.html?id=retest';return}
+    if(act==='mirror-start'||act==='mirror-restart'){
       var hist=(T.mirror&&T.mirror.history)||[];
       if(T.mirror&&T.mirror.phase==='report')hist=hist.concat([{startedAt:T.mirror.startedAt,completedAt:T.mirror.completedAt,endWheel:T.mirror.endWheel,endResearch:T.mirror.endResearch,reflection:T.mirror.reflection}]);
       T.mirror={version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0,startedAt:Date.now(),history:hist};
