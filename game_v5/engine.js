@@ -71,14 +71,16 @@ window.GPro={
   r.readAsText(f);
  },
  restoreBackup:function(cb){
+  var raw=null;
   try{
    var backups=JSON.parse(localStorage.getItem('alch_v5_profile_backups')||'[]');
    if(!Array.isArray(backups)||!backups.length)throw new Error('no backup');
    var target=backups[backups.length-1],snap=decodeSnapshot(JSON.parse(target.raw));
-   var raw=JSON.stringify(snapshotAll());
+   raw=JSON.stringify(snapshotAll());
    backups.push({at:Date.now(),raw:raw});
    localStorage.setItem('alch_v5_profile_backups',JSON.stringify(backups.slice(-3)));
-   applySnapshot(snap);cb&&cb(true);
+   try{applySnapshot(snap)}catch(e){try{applySnapshot(decodeSnapshot(JSON.parse(raw)))}catch(ignore){}throw e}
+   cb&&cb(true);
   }catch(e){cb&&cb(false)}
  }
 };
