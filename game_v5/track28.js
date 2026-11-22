@@ -393,6 +393,12 @@ function viewPracts(P,T){
     });
   });
   h+='<div class="row-line"><b>Мои доказательства</b>'+proofBody(T)+'</div>';
+  var sup=T.support||{},week=Math.floor((n-1)/7)+1,phrases=['Мне не нужно решать все сразу.','Я могу начать с малого.','Мои обстоятельства имеют значение.','Пропуск не отменяет уже пройденный путь.','Я могу пересмотреть решение без обвинения себя.'];
+  h+='<section class="row-line support-panel"><p class="dk">Поддержка без давления</p><h2>Небольшое место для себя</h2>';
+  h+='<label class="support-check"><input type="checkbox" data-act="support-five" '+(sup.fiveMinDays&&sup.fiveMinDays[n]?'checked':'')+'> <span>Сегодня я выделил(а) хотя бы пять минут для себя</span></label>';
+  h+='<label>Новое впечатление или маленькая новизна на этой неделе<textarea rows="2" maxlength="300" data-act="support-week" data-w="'+week+'" placeholder="Что хотелось бы попробовать, увидеть или заметить?">'+esc((sup.weeklyExperience&&sup.weeklyExperience[week])||'')+'</textarea></label>';
+  h+='<label>Что сейчас могло бы меня поддержать?<textarea rows="2" maxlength="300" data-act="support-note" placeholder="Своя фраза, напоминание или важное условие">'+esc(sup.note||'')+'</textarea></label>';
+  h+='<div class="support-phrase"><p>'+esc(phrases[(+sup.phraseIndex||0)%phrases.length])+'</p><button type="button" class="quiet-btn" data-act="support-phrase">Другая поддерживающая фраза</button></div></section>';
   return h+'</div>';
 }
 function trackClock(minute){
@@ -977,6 +983,7 @@ function bind(){
       else {T.act=T.act||{};T.act[id]={from:dayn,len:(prc(id)||{len:7}).len,at:Date.now()}}
       save(P);render();return
     }
+    if(act==='support-phrase'){T.support=T.support||{};T.support.phraseIndex=((+T.support.phraseIndex||0)+1)%5;save(P);render();return}
     if(act==='pr-off'){
       var id=b.getAttribute('data-id');
       if(window.GPract)GPract.pause(T,id,todayNum(T));
@@ -1172,6 +1179,7 @@ function bind(){
         practices:JSON.parse(JSON.stringify(T.practices||{})),
         act:JSON.parse(JSON.stringify(T.act||{})),
         practHist:[],
+        support:{fiveMinDays:{},weeklyExperience:{},note:'',phraseIndex:(T.support&&T.support.phraseIndex)||0},
         notifyOn:!!T.notifyOn,
         notifyTime:T.notifyTime||'',
         mirror:null,
@@ -1187,6 +1195,7 @@ function bind(){
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T);
     if(act==='mirror-wheel'){T.mirror=T.mirror||{version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0};T.mirror.endWheel=T.mirror.endWheel||Array(8).fill(null);T.mirror.endWheel[+el.getAttribute('data-i')]=el.value===''?null:+el.value;save(P);return}
     if(act==='mirror-note'){T.mirror=T.mirror||{};T.mirror.reflection=T.mirror.reflection||{};T.mirror.reflection[el.getAttribute('data-key')]=el.value;save(P);return}
+    if(act==='support-five'){T.support=T.support||{};T.support.fiveMinDays=T.support.fiveMinDays||{};T.support.fiveMinDays[n]=!!el.checked;save(P);return}
     if(act==='event-field'){T.eventDraft=T.eventDraft||{};T.eventDraft[n]=T.eventDraft[n]||{};T.eventDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='checkpoint-field'){T.checkpointDraft=T.checkpointDraft||{};T.checkpointDraft[n]=T.checkpointDraft[n]||{};T.checkpointDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='plan-done'){
@@ -1202,6 +1211,8 @@ function bind(){
     if(act==='slider'){d.sliders[el.getAttribute('data-k')]=+el.value; save(P); var m=MET.filter(function(x){return x.key===el.getAttribute('data-k')})[0]; var tip=el.parentNode.querySelector('.soft-tip'); if(tip)tip.textContent=sliderHint(m,+el.value); var sm=el.parentNode.querySelector('label small'); if(sm&&m)sm.textContent=m.sub+' · '+el.value; return}
     if(act==='dir-step'){d.dirSteps[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='dir-plan'){T.directionPlans=T.directionPlans||{};var di=+el.getAttribute('data-i'),dk=el.getAttribute('data-k');T.directionPlans[di]=T.directionPlans[di]||{};T.directionPlans[di][dk]=el.value;save(P);return}
+    if(act==='support-week'){T.support=T.support||{};T.support.weeklyExperience=T.support.weeklyExperience||{};T.support.weeklyExperience[el.getAttribute('data-w')]=el.value;save(P);return}
+    if(act==='support-note'){T.support=T.support||{};T.support.note=el.value;save(P);return}
     if(act==='ifthen'){T.ifthens=T.ifthens||['','','']; T.ifthens[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='note'){d.note=el.value; save(P); return}
     if(act==='journal'){d.journal=d.journal||{};d.journal[el.getAttribute('data-id')]=el.value;save(P);return}
