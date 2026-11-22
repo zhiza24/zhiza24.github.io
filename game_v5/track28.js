@@ -1110,7 +1110,7 @@ function bind(){
     if(act==='mirror-archive-back'){delete T.mirrorArchiveIndex;save(P);render();return}
     if(act==='mirror-continue'){
       var M=T.mirror||{};
-      if(M.phase!=='report'||!Array.isArray(M.endWheel)||M.endWheel.length!==8||!Array.isArray(M.endResearch)||M.endResearch.length!==24){alert('Сначала завершите повторное исследование в Зеркале.');return}
+      if(M.phase!=='report'||!Array.isArray(M.endWheel)||M.endWheel.length!==8||M.endWheel.some(function(v){return typeof v!=='number'||!isFinite(v)})||!Array.isArray(M.endResearch)||M.endResearch.length!==24||M.endResearch.some(function(v){return v!=='na'&&(typeof v!=='number'||!isFinite(v))})){alert('Проверьте повторное исследование: заполните все оценки колеса и ответы. Для исследовательского вопроса можно выбрать «не знаю».');return}
       P.retest={wheel:M.endWheel.slice(),beh:null,fromMirror:true,d:new Date().toLocaleDateString('ru'),mirror:{initialResearch:(M.initialResearch||mirrorInitialResearch(P)||[]).slice(),endResearch:M.endResearch.slice(),initialWheel:(M.initialWheel||P.wheel||[]).slice(),completedAt:M.completedAt||Date.now()}};
       save(P);location.href='slot.html?id=compare';return;
     }
