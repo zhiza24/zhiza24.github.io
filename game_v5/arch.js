@@ -161,11 +161,12 @@ function resultScreen(box,skin,html,part,save){
  var resultPoints={a:'Точка 0',b:'Точка 0',v:'Точка А',p:'Точка Б',d:'Точка С'};
 box.innerHTML=html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="'+k.go+'" id="arNext">'+(retakeMode?'Дальше: Задания':preview&&part==='d'?'Закончить просмотр':preview?'Дальше':({a:'Дальше: Эхо',b:'Дальше: Первые настройки',v:'Дальше: итог Точки А',p:'Дальше: основание установки'})[part]||'Дальше')+'</button>';box.querySelector('#arNext').onclick=function(){go(part)};
  if(window.GResultCard){
-  var summary=blocks(data(),part);
+  var snapshot=data(),summary=blocks(snapshot,part),source=snapshot[FIELD[part]]||{};
   GResultCard.attachDiaryBar(box,{
    id:'arch_'+part,step:resultSteps[part],title:resultTitles[part],passed:resultPoints[part],
    lead:'Промежуточная карта наблюдений. Это не окончательный вывод о тебе: следующие этапы помогут проверить и уточнить увиденное.',
    insightLabel:'Что показали собранные наблюдения',insightMore:blocksHTML(summary),
+   answers:source.answers||source,at:source.at||Date.now(),
    preview:preview,before:box.querySelector('#arNext')
   });
  }
