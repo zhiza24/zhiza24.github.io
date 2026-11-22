@@ -280,7 +280,7 @@ var drawBase=Runner.prototype.draw;Runner.prototype.draw=function(){var it=this.
 
 /* ---------- сохранение, вход в Реактор, дневник ---------- */
 function reactorIn(P){var r={v:VER,at:Date.now(),tests:{}};Object.keys(STEP).forEach(function(k){var x=P[STEP[k].f];if(!x||k==='vsort'||k==='im')return;r.tests[k]={status:x.status||'tentative',top:x.top||null,leadingScales:x.leadingScales||x.leading||[]}});if(P.valuesCore)r.values3=P.valuesCore.top3;if(P.desireLab&&P.desireLab.step)r.desireStep=P.desireLab.step;return r}
-function store(k,res,log){if(preview)return;var P=load(),S=STEP[k];if(P.testDrafts)delete P.testDrafts[S.mod];if(window.GProfile){try{P=GProfile.saveResult(S.mod,res,{version:VER},{profile:P,save:false})}catch(e){P[S.f]=res}}else P[S.f]=res;
+function store(k,res,log){if(preview)return;var P=load(),S=STEP[k];if(P.testDrafts)delete P.testDrafts[S.mod];if(k==='vsort')delete P.valuesCoreDraft;if(window.GProfile){try{P=GProfile.saveResult(S.mod,res,{version:VER},{profile:P,save:false})}catch(e){P[S.f]=res}}else P[S.f]=res;
  P[S.f]=res;P.reactorIn=reactorIn(P);(P.log=P.log||[]).push({t:Date.now(),x:log});persist(P)}
 function quoteKey(k){return STEP[k].u}
 function result(box,k,built,retake){var S=STEP[k],n=nextOf(S.u);box.innerHTML=built.html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="next" id="nx">'+(retakeMode?'Дальше: Задания':n?'Дальше: '+esc(n.t):'Дальше')+'</button><div class="gt-links">'+(retake?'<button type="button" id="gtRe">Пройти заново</button>':'')+'<a href="diary.html">В дневник</a></div>';
@@ -307,17 +307,30 @@ function mountTest(k,box){css();var P=load(),S=STEP[k],have=P[S.f];
 
 /* ---------- три ориентира: важно / отложить / вычеркнуть, затем ровно три ---------- */
 var VALS=['Свобода','Безопасность','Любовь','Семья','Здоровье','Деньги','Признание','Творчество','Развитие','Дружба','Красота','Спокойствие','Честность','Помощь людям','Приключения','Духовность','Власть и влияние','Стабильность','Удовольствие','Смысл'];
-function mountValues(box){css();var P=load(),have=P.valuesCore,V=(P.values&&P.values.order&&P.values.order.length)?P.values.order:[],list=V.concat(VALS.filter(function(x){return V.indexOf(x)<0})),sort={},i=0,pick=[];
+function mountValues(box){
+ css();var P=load(),have=P.valuesCore,V=(P.values&&P.values.order&&P.values.order.length)?P.values.order:[],list=V.concat(VALS.filter(function(x){return V.indexOf(x)<0}));
+ var draft=P.valuesCoreDraft&&P.valuesCoreDraft.v===1?P.valuesCoreDraft:null,sort=draft&&draft.sort?Object.assign({},draft.sort):{},i=draft?Math.max(0,Math.min(list.length,+draft.i||0)):0,pick=draft&&Array.isArray(draft.pick)?draft.pick.slice():[],fallback=false;
+ function saveDraft(){if(preview||retakeMode)return;var P=load();P.valuesCoreDraft={v:1,sort:Object.assign({},sort),i:i,pick:pick.slice(),at:Date.now()};persist(P)}
  function intro(){box.innerHTML='<span class="tag">Точка Б</span><span class="tag">Ценности</span><div class="aq">Три ориентира</div><p>'+h(T.link.svToValues)+'</p><p class="ar-ctx">Разложи ценности по трем корзинам: «Важно сейчас», «Отложить», «Вычеркнуть». Потом выбери из важных ровно три.</p><button class="next" id="gtGo">Начать</button>';box.querySelector('#gtGo').onclick=card}
- function card(){window.gBack=function(){if(i>0){i--;card();return true}return false};if(i>=list.length){choose();return}var v=list[i];box.innerHTML='<div class="al">Ценность '+(i+1)+' из '+list.length+'</div><div class="aq" style="text-align:center;margin:24px 0">'+esc(v)+'</div><div id="gtOp">'+[['imp','Важно сейчас'],['later','Отложить'],['cross','Вычеркнуть']].map(function(o){return '<button class="ao'+(sort[v]===o[0]?' ar-on':'')+'" data-c="'+o[0]+'">'+o[1]+'</button>'}).join('')+'</div>';
-  box.querySelectorAll('#gtOp button').forEach(function(x){x.onclick=function(){sort[v]=x.dataset.c;i++;card();scrollTo(0,0)}})}
- function choose(){window.gBack=function(){i=list.length-1;card();return true};var imp=list.filter(function(v){return sort[v]==='imp'}),pool=imp.length>=3?imp:imp.concat(list.filter(function(v){return sort[v]==='later'}));
-  box.innerHTML='<div class="aq">Выбери ровно три</div><p class="ar-ctx">'+(imp.length>=3?'Из тех, что ты '+g('{отметил|отметила}')+' как важные сейчас.':'Важных меньше трех, поэтому здесь есть и отложенные.')+'</p><div id="gtOp">'+pool.map(function(v){return '<button class="ao'+(pick.indexOf(v)>=0?' ar-on':'')+'" data-c="'+esc(v)+'">'+esc(v)+'</button>'}).join('')+'</div><p class="ar-ctx" id="gtCnt"></p><button class="next" id="gtGo">Готово</button>';
-  function mk(){box.querySelectorAll('#gtOp button').forEach(function(x){x.classList.toggle('ar-on',pick.indexOf(x.dataset.c)>=0)});box.querySelector('#gtCnt').textContent='Выбрано: '+pick.length+' из 3';box.querySelector('#gtGo').disabled=pick.length!==3}
-  box.querySelectorAll('#gtOp button').forEach(function(x){x.onclick=function(){var c=x.dataset.c,n=pick.indexOf(c);if(n>=0)pick.splice(n,1);else if(pick.length<3)pick.push(c);mk()}});mk();
-  box.querySelector('#gtGo').onclick=function(){if(pick.length!==3)return;var res={v:VER,sort:sort,top3:pick.slice(),status:'supported',top:pick.join(', '),answers:sort,at:Date.now()};store('vsort',res,'Три ориентира: '+pick.join(', '));show(res)}}
- function show(res){result(box,'vsort',{html:'<span class="tag">Точка Б</span><span class="tag">Ценности</span><div class="al">Твои три ориентира</div><ol class="gt-sum">'+res.top3.map(function(v){return '<li><b>'+esc(v)+'</b></li>'}).join('')+'</ol>'+P_(h(T.link.valuesToReactor))+'<details class="ar-det"><summary>Как ты '+g('{разложил|разложила}')+' ценности</summary>'+[['imp','Важно сейчас'],['later','Отложить'],['cross','Вычеркнуть']].map(function(o){var l=Object.keys(res.sort).filter(function(v){return res.sort[v]===o[0]});return l.length?'<p><b>'+o[1]+':</b> '+esc(l.join(', '))+'</p>':''}).join('')+'</details>'},function(){sort={};i=0;pick=[];intro()})}
- if(have&&have.top3&&!preview){show(have);return}intro()}
-
+ function card(){
+  window.gBack=function(){if(i>0){i--;saveDraft();card();return true}return false};
+  if(i>=list.length){choose();return}
+  var v=list[i];box.innerHTML='<div class="al">Ценность '+(i+1)+' из '+list.length+'</div><div class="aq" style="text-align:center;margin:24px 0">'+esc(v)+'</div><div id="gtOp">'+[['imp','Важно сейчас'],['later','Отложить'],['cross','Вычеркнуть']].map(function(o){return '<button class="ao'+(sort[v]===o[0]?' ar-on':'')+'" data-c="'+o[0]+'">'+o[1]+'</button>'}).join('')+'</div>';
+  box.querySelectorAll('#gtOp button').forEach(function(x){x.onclick=function(){sort[v]=x.dataset.c;i++;saveDraft();card();scrollTo(0,0)}})
+ }
+ function choose(){
+  window.gBack=function(){i=list.length-1;saveDraft();card();return true};
+  var imp=list.filter(function(v){return sort[v]==='imp'}),later=list.filter(function(v){return sort[v]==='later'}),pool=imp.length>=3?imp:imp.concat(later);
+  fallback=pool.length<3;if(fallback)pool=list.slice();
+  pick=pick.filter(function(v){return pool.indexOf(v)>=0}).slice(0,3);
+  box.innerHTML='<div class="aq">Выбери ровно три</div><p class="ar-ctx">'+(imp.length>=3?'Из тех, что ты '+g('{отметил|отметила}')+' как важные сейчас.':fallback?'Пока в корзинах «Важно сейчас» и «Отложить» меньше трех ценностей. Можно выбрать три из полного списка или вернуться и изменить расклад.':'Важных пока меньше трех, поэтому здесь есть и отложенные.')+'</p><div id="gtOp">'+pool.map(function(v){return '<button class="ao'+(pick.indexOf(v)>=0?' ar-on':'')+'" data-c="'+esc(v)+'">'+esc(v)+'</button>'}).join('')+'</div><p class="ar-ctx" id="gtCnt"></p><button class="next" id="gtGo">Готово</button>';
+  function mk(){box.querySelectorAll('#gtOp button').forEach(function(x){x.classList.toggle('ar-on',pick.indexOf(x.dataset.c)>=0)});box.querySelector('#gtCnt').textContent='Выбрано: '+pick.length+' из 3';box.querySelector('#gtGo').disabled=pick.length!==3;saveDraft()}
+  box.querySelectorAll('#gtOp button').forEach(function(x){x.onclick=function(){var c=x.dataset.c,n=pick.indexOf(c);if(n>=0)pick.splice(n,1);else if(pick.length<3)pick.push(c);mk()}});
+  mk();box.querySelector('#gtGo').onclick=function(){if(pick.length!==3)return;var res={v:VER,sort:sort,top3:pick.slice(),status:'supported',top:pick.join(', '),answers:sort,at:Date.now(),selectionFallback:fallback};var P=load();delete P.valuesCoreDraft;persist(P);store('vsort',res,'Три ориентира: '+pick.join(', '));show(res)}
+ }
+ function show(res){result(box,'vsort',{html:'<span class="tag">Точка Б</span><span class="tag">Ценности</span><div class="al">Твои три ориентира</div><ol class="gt-sum">'+res.top3.map(function(v){return '<li><b>'+esc(v)+'</b></li>'}).join('')+'</ol>'+P_(h(T.link.valuesToReactor))+'<details class="ar-det"><summary>Как ты '+g('{разложил|разложила}')+' ценности</summary>'+[['imp','Важно сейчас'],['later','Отложить'],['cross','Вычеркнуть']].map(function(o){var l=Object.keys(res.sort||{}).filter(function(v){return res.sort[v]===o[0]});return l.length?'<p><b>'+o[1]+':</b> '+esc(l.join(', '))+'</p>':''}).join('')+'</details>'},function(){sort={};i=0;pick=[];intro()})}
+ if(have&&have.top3&&!preview){show(have);return}
+ if(draft&&i>0)card();else intro()
+}
 window.GTests={STEP:STEP,BUILD:BUILD,ITEMS:ITEMS,reactorIn:reactorIn,mount:function(k,box){if(k==='im'&&window.GBackgroundTest){GBackgroundTest.mount(box);return}if(k==='im'&&window.GInner){GInner.mount(box);return}if(k==='vsort')mountValues(box);else if(k==='lab_d'&&window.GLabD)GLabD.mount(box);else mountTest(k,box)},keys:Object.keys(STEP),W:W,css:css,store:store,result:result,load:load,persist:persist,g:g,h:h,esc:esc,P_:P_,fem:fem,preview:preview,retakeMode:retakeMode,VER:VER};
 })();
