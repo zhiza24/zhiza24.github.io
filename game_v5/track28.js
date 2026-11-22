@@ -199,6 +199,7 @@ function injectNav(html,space){
 function render(){
   if(!host)return;
   var P=ensure(), T=Tget(P);
+  if(T.archiveIndex!=null){host.innerHTML=viewArchive(P,T);bind();return;}
   if(!T.strategySeen&&T.strategy&&window.GStrategy&&T.view!=='mirror'&&T.space!=='mirror'){
     host.innerHTML=viewStrategy(P,T); bind(); return;
   }
@@ -876,6 +877,17 @@ function viewResults(P,T){
     html+='<div class="row-line"><b>Неделя 1 и неделя 4</b>'+cmp.map(function(x){return '<p>'+esc(x.name)+': '+(x.w1==null?'нет отметок':x.w1)+(x.w4==null?'':' → '+x.w4)+'</p>'}).join('')+'</div>';
   }
   html+='<button type="button" class="quiet-btn" data-act="space" data-s="mirror">Открыть «Зеркало прожитой жизни»</button>';
+  var archivedCycles=P.trackerHistory||[];
+  if(archivedCycles.length){
+    html+='<section class="row-line"><b>Архив циклов</b><p class="mute">Здесь хранятся завершенные циклы. Архив доступен для просмотра и не изменяет текущие записи.</p>';
+    html+=archivedCycles.map(function(a,i){
+      var date=a.archivedAt||a.cycleEndedAt||a.start||Date.now(),filled=0,events=0;
+      for(var d=1;d<=28;d++){var rec=(a.days||{})[String(d)]||{};if(rec.note||rec.res||rec.wishMark||(rec.signs||[]).length||(rec.grat||[]).length||(rec.choose||[]).length||Object.keys(rec.sliders||{}).length)filled++}
+      Object.keys(a.events24||{}).forEach(function(k){events+=(a.events24[k]||[]).length});
+      return '<div class="archive-cycle"><b>Цикл '+(a.cycle||i+1)+'</b><span>'+new Date(date).toLocaleDateString('ru-RU')+' · дней с записями: '+filled+'/28 · событий: '+events+'</span><button type="button" class="quiet-btn" data-act="archive-open" data-i="'+i+'">Открыть дневник цикла</button>'+(a.mirror&&a.mirror.phase==='report'?'<button type="button" class="quiet-btn" data-act="mirror-archive" data-i="'+i+'">Открыть отчет Зеркала</button>':'')+'</div>';
+    }).join('');
+    html+='</section>';
+  }
   html+=svgChart(T,1,28,T.hiddenMet||{},'')+recipeOf(T);
   var rew=[7,14,21,28].filter(function(d){return T.rewards[d]}).map(function(d){return '<p>День '+d+': '+esc(T.rewards[d])+'</p>'}).join('');
   html+='<div class="row-line"><b>Награда за цикл</b><input type="text" data-act="reward" data-d="28" maxlength="160" placeholder="награда себе за 28 дней" value="'+esc(T.rewards[28]||'')+'">'+rew+'</div>';
@@ -884,6 +896,33 @@ function viewResults(P,T){
   if(today>=28||T.finale)html+=finaleBlock(P,T);
   html+='<button type="button" class="quiet-btn" data-act="settings">Настройки</button>';
   html+='<button type="button" class="quiet-btn" data-act="space" data-s="path">К итогам</button></div>';
+  return html;
+}
+function viewArchive(P,T){
+  var i=+T.archiveIndex,A=(P.trackerHistory||[])[i];
+  if(!A){delete T.archiveIndex;save(P);return viewResults(P,T)}
+  var date=A.archivedAt||A.cycleEndedAt||A.start||Date.now();
+  var html='<div class="t28"><p class="dk">Архив · цикл '+(A.cycle||i+1)+'</p><h1>История цикла</h1><p class="cap28">Начало: '+(A.start?new Date(A.start).toLocaleDateString('ru-RU'):'дата не записана')+' · завершение: '+new Date(date).toLocaleDateString('ru-RU')+'</p>';
+  html+='<p class="mute">Это сохраненная копия. Записи доступны для просмотра и не редактируются.</p>';
+  if(A.directions&&A.directions.length)html+='<section class="row-line"><b>Направления цикла</b>'+A.directions.map(function(x){return '<p>'+esc(typeof x==='string'?x:(x.text||x.t||x.name||''))+'</p>'}).join('')+'</section>';
+  for(var n=1;n<=28;n++){
+    var d=(A.days||{})[String(n)]||{},evs=(A.events24||{})[n]||[],cps=(A.checkpoints24||{})[n]||[],proofs=(A.proofs||[]).filter(function(x){return +x.day===n});
+    var has=!!(d.note||d.res||d.wishMark||(d.signs||[]).length||(d.grat||[]).length||(d.choose||[]).length||Object.keys(d.sliders||{}).length||Object.keys(d.journal||{}).length||evs.length||cps.length||proofs.length);
+    if(!has)continue;
+    html+='<section class="row-line diary-day"><b>День '+n+'</b>';
+    if(d.note)html+='<p>'+esc(d.note)+'</p>';
+    if(d.res&&(d.res.saw||d.res.proof))html+='<p>'+esc(d.res.saw||'')+' '+esc(d.res.proof||'')+'</p>';
+    if((d.signs||[]).length)html+='<div><b>Знаки</b>'+d.signs.map(function(x){return '<p>'+esc(x.tag||'')+' '+esc(x.text||'')+'</p>'}).join('')+'</div>';
+    if((d.grat||[]).length)html+='<div><b>Благодарность</b>'+d.grat.map(function(x){return '<p>'+esc(x.text||x)+'</p>'}).join('')+'</div>';
+    if((d.choose||[]).length)html+='<div><b>Выборы и действия</b>'+d.choose.map(function(x){return '<p>'+esc(x.text||'')+' · '+esc(x.status||'')+'</p>'}).join('')+'</div>';
+    Object.keys(d.journal||{}).forEach(function(k){if(d.journal[k])html+='<p><b>'+esc(k)+'</b> · '+esc(d.journal[k])+'</p>'});
+    if(proofs.length)html+='<div><b>Доказательства</b>'+proofs.map(function(x){return '<p>'+esc(x.text||'')+'</p>'}).join('')+'</div>';
+    evs.forEach(function(e){html+='<div class="diary-event"><b>'+esc(e.title||'Событие')+'</b><span>'+trackClock(e.startMin)+'–'+trackClock(e.endMin)+'</span><p>'+[e.sphere,e.motive,e.emotion,e.after].filter(Boolean).map(esc).join(' · ')+'</p></div>'});
+    cps.forEach(function(x){html+='<p class="mute">Контрольная точка '+trackClock(x.minute)+' · настроение '+x.mood+'/10 · энергия '+x.energy+'/10 '+esc(x.note||'')+'</p>'});
+    html+='</section>';
+  }
+  if(A.mirror&&A.mirror.phase==='report')html+='<button type="button" class="quiet-btn" data-act="mirror-archive" data-i="'+i+'">Открыть отчет Зеркала этого цикла</button>';
+  html+='<button type="button" class="go" data-act="archive-close">Вернуться к результатам</button></div>';
   return html;
 }
 function avgWeek(T,w,key){
@@ -972,6 +1011,8 @@ function bind(){
     var act=b.getAttribute('data-act');
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T), d=dayRec(T,n);
     tick();
+    if(act==='archive-open'){T.archiveIndex=+b.getAttribute('data-i');save(P);render();return}
+    if(act==='archive-close'){delete T.archiveIndex;save(P);render();return}
     if(act==='space'){
       var sp=b.getAttribute('data-s');
       T.space=sp;
