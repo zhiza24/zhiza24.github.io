@@ -73,7 +73,7 @@ var STEPS=[
   ['balanced','Как могла бы звучать более точная формулировка?','area','Например: «Отказ может вызвать недовольство, но я могу учитывать свои возможности и выбирать безопасный способ ответа».'],
   ['choice','Какой небольшой выбор доступен тебе в реальных обстоятельствах?','area','Действие необязательно. Это может быть сбор информации, пауза, разговор с безопасным человеком или отказ от эксперимента.'],
   ['experiment','Если это безопасно и уместно, что можно проверить без большого риска?','area','Опишите маленькую обратимую проверку. Не проводите ее, если возможны насилие, наказание, потеря жилья, дохода или другой серьезный ущерб.'],
-  ['review','По каким признакам ты поймешь, что формулировка или выбор стали полезнее?','area','Не по «позитивности», а по точности, безопасности, соответствию Вашим ценностям и реальным результатам.']
+  ['review','По каким признакам ты поймешь, что формулировка или выбор стали полезнее?','area','Не по «позитивности», а по точности, безопасности, соответствию твоим ценностям и реальным результатам.']
  ]}
 ];
 var state={items:[],current:null,step:0};
@@ -95,7 +95,7 @@ function renderHome(){
 function make(){var x={id:id(),title:'',created:Date.now(),updated:Date.now(),step:0,done:false,answers:{}};state.items.push(x);state.current=x.id;state.step=0;save();renderStep()}
 function openItem(k){state.current=k;var x=current();state.step=x.step||0;if(x.done)renderResult();else renderStep()}
 function fieldHtml(f){var key=f[0],label=f[1],type=f[2],help=f[3],v=current().answers[key]||'';
- if(type==='select')return '<label for="'+key+'">'+esc(label)+'<div class="field-help">'+esc(help)+'</div></label><select id="'+key+'"><option value="">Выберите, если хотите</option>'+f[4].map(function(o){return '<option '+(v===o?'selected':'')+'>'+esc(o)+'</option>'}).join('')+'</select>';
+ if(type==='select')return '<label for="'+key+'">'+esc(label)+'<div class="field-help">'+esc(help)+'</div></label><select id="'+key+'"><option value="">Выбери, если хочешь</option>'+f[4].map(function(o){return '<option '+(v===o?'selected':'')+'>'+esc(o)+'</option>'}).join('')+'</select>';
  return '<label for="'+key+'">'+esc(label)+'<div class="field-help">'+esc(help)+'</div></label><textarea id="'+key+'" data-field="'+key+'" placeholder="Можно ответить своими словами…">'+esc(v)+'</textarea>';
 }
 function renderStep(){
