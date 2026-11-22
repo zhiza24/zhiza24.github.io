@@ -1,0 +1,26 @@
+{
+  "id": "./map.html",
+  "name": "Путь Алхимика — Архитектура личности",
+  "short_name": "Путь Алхимика",
+  "description": "Личное исследование, маршрут и 28-дневный Реактор.",
+  "start_url": "./map.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0C10",
+  "theme_color": "#0B0C10",
+  "icons": [
+    {
+      "src": "./img/hero_icon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
