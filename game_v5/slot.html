@@ -21,7 +21,7 @@ R.pb_end_go=function(){
   document.getElementById('pbOwnSave').onclick=function(){var P=GPro.load(),t=document.getElementById('pbOwn').value.trim();if(!t){document.getElementById('pbOwn').focus();return}P.lab=P.lab||{};P.lab.ownCorrection=t;P.lab.agree='corrected';P.lab.agreementAt=Date.now();save('Собственная формулировка противоречия',t,P);nx()}
  }
 };
-R.sort=function(){var p=GPAT[GLead().lead];return '<span class="tag">Точка Б</span><span class="tag">Исследование</span><h1>Разбор привычной схемы</h1><p>Перед тобой шесть частей описания: ситуация, реакция, правило, защитная функция, цена и возможная новая настройка. Не нужно делить их на «Эго» и «Самость». Отметьте, насколько каждая часть соответствует твоему опыту.</p><div id="pp"></div><div class="fb" id="fb"></div>'};
+R.sort=function(){var p=GPAT[GLead().lead];return '<span class="tag">Точка Б</span><span class="tag">Исследование</span><h1>Разбор привычной схемы</h1><p>Перед тобой шесть частей описания: ситуация, реакция, правило, защитная функция, цена и возможная новая настройка. Не нужно делить их на «Эго» и «Самость». Отметь, насколько каждая часть соответствует твоему опыту.</p><div id="pp"></div><div class="fb" id="fb"></div>'};
 R.sort_go=function(){
  var lead=GLead().lead,p=GPAT[lead],P0=GPro.load(),d0=P0.lab&&P0.lab.sortDraft;
  var i=d0&&d0.lead===lead?Math.max(0,Math.min(p.parts.length,+d0.i||0)):0;
@@ -250,7 +250,7 @@ R.retest_go=function(){if(!window.nx)return;var bh=[null,null,null];document.que
  nx.onclick=function(){var miss=[].filter.call(document.querySelectorAll('input[id^=r]'),function(e){return e.dataset.t!='1'}).length+bh.filter(function(x){return x===null}).length;if(miss){nx.textContent='Ответьте на все вопросы (осталось '+miss+')';return}var P=GPro.load();if(!(GTrackDay(P).done))return;P.retest={wheel:WN.map(function(_,i){return +document.getElementById('r'+i).value}),beh:bh,d:new Date().toLocaleDateString('ru')};save('Повторный замер','сделан',P);location.href=GRoute.advance()}};
 R.compare=function(){
  var P=GPro.load(),RTEST=P.retest||{},a=P.wheel||[],b=RTEST.wheel||[];
- if(!b.length)return '<h1>Было и стало</h1><p>Сначала пройдите повторный замер.</p><a class="st" href="slot.html?id=retest">К повторному замеру</a>';
+ if(!b.length)return '<h1>Было и стало</h1><p>Сначала пройди повторный замер.</p><a class="st" href="slot.html?id=retest">К повторному замеру</a>';
  var wheelHtml=WN.map(function(n,i){var x=typeof a[i]==='number'?a[i]:null,y=typeof b[i]==='number'?b[i]:null,d=x!=null&&y!=null?y-x:null;return '<div>'+n+': '+(x==null?'—':x)+' → <b>'+(y==null?'—':y)+'</b> '+(d>0?'<span style="color:#9fd47f">+'+d+'</span>':d<0?'<span style="color:#d0664a">'+d+'</span>':'')+'</div><div class="bar"><i style="width:'+(x==null?0:x*10)+'%;background:#6b5535"></i><i style="width:'+(y==null?0:y*10)+'%;background:#e8c16c;opacity:.75"></i></div>'}).join('');
  if(RTEST.fromMirror){
   var M=RTEST.mirror||{},initial=M.initialResearch||[],answers=M.endResearch||[],rows=WN.map(function(n,i){
@@ -311,7 +311,7 @@ R.end_go=function(){
 /* Комплект текстов 12.11.2026, раздел 9: вход в Реактор и финал с подтверждением игрока. */
 var KIT9={reactorIn:'Реактор не оценивает тебя и не требует идеального поведения. Он собирает твои результаты, выбранные ценности и реальные ограничения, чтобы предложить небольшой следующий шаг, который можно проверить в жизни.',
  finalIn:'Финал соединяет не отдельные ярлыки, а наблюдения из разных частей пути: твои опоры, привычные реакции, ценности, желания и доступные точки влияния.',
- finalSum:'Посмотрите на эту карту как на рабочую гипотезу, а не окончательное описание личности. Отметьте, что точно узнаете, что требует проверки и что уже можно попробовать изменить.',
+ finalSum:'Посмотри на эту карту как на рабочую гипотезу, а не окончательное описание личности. Отметь, что точно узнаешь, что требует проверки и что уже можно попробовать изменить.',
  finalAsk:'Что из этого описания действительно совпадает с твоим опытом? Ты можешь подтвердить весь вывод, выбрать только часть или написать свою формулировку. Твой ответ важнее автоматической интерпретации системы.'};
 (function(){var PC=R.pc_intro;R.pc_intro=function(){var P=GPro.load(),v3=(P.valuesCore&&P.valuesCore.top3)||(P.values&&P.values.order)||[],vb=v3.length?'<p class="pt">Твои три ориентира: '+v3.slice(0,3).map(GEsc).join(', ')+'.</p>':'';return PC().replace('<button class="next" id="nx">','<p>'+KIT9.reactorIn+'</p>'+vb+'<button class="next" id="nx">')}})();
 function FOBS(P){var o=[],E=GEsc,arr=function(a){return (Array.isArray(a)?a:[]).map(function(x){return typeof x==='string'?x:(x&&(x.t||x.name||x.title))||''}).filter(Boolean)};
@@ -375,7 +375,7 @@ if(id==='map_all'){var h='<h1>Вся линия игры</h1><p>Сплошная
 else if(id==='mirrors'){GMirrors.mount(m)}
 else if(window.GTests&&GTests.STEP[id]){GTests.mount(id,m);window.gNext=flowNext()}
 else if(id==='dialog'&&window.GTri){window.gNext=flowNext();GTri.mount(m,function(){if(!window.GReview&&window.GArts)GArts.grant('mirror');m.innerHTML=R.dialog();R.dialog_go();if(window.GReview&&window.nx)nx.textContent='К заданиям'})}
-else if(R[id]){m.innerHTML=R[id]();R[id+'_go']();if(window.GReview&&window.nx)nx.textContent='К заданиям';if(id==='source')GMirrors.context(m);if(window.GQuote&&['pa_end','pb_end','compare'].indexOf(id)>=0&&!/Сначала пройдите повторный замер/.test(m.textContent))GQuote.add(m,'slot.html?id='+id,m.querySelector('button.next,#nx'));window.gNext=flowNext();if(['pb_end','leverage'].indexOf(id)>=0&&window.GPassport){var own=GPassport.context().themes;if(own.length){var ownBox=document.createElement('p');ownBox.className='pt';ownBox.textContent='В своих наблюдениях Вы отмечаете: '+own.slice(0,4).map(function(t){return t.name}).join(', ')+'. Вспомните свои примеры, выбирая следующий шаг.';m.insertBefore(ownBox,m.querySelector('button.next'))}}}
+else if(R[id]){m.innerHTML=R[id]();R[id+'_go']();if(window.GReview&&window.nx)nx.textContent='К заданиям';if(id==='source')GMirrors.context(m);if(window.GQuote&&['pa_end','pb_end','compare'].indexOf(id)>=0&&!/Сначала пройди повторный замер/.test(m.textContent))GQuote.add(m,'slot.html?id='+id,m.querySelector('button.next,#nx'));window.gNext=flowNext();if(['pb_end','leverage'].indexOf(id)>=0&&window.GPassport){var own=GPassport.context().themes;if(own.length){var ownBox=document.createElement('p');ownBox.className='pt';ownBox.textContent='В своих наблюдениях Вы отмечаете: '+own.slice(0,4).map(function(t){return t.name}).join(', ')+'. Вспомните свои примеры, выбирая следующий шаг.';m.insertBefore(ownBox,m.querySelector('button.next'))}}}
 else{var s=(window.GSLOTS&&window.GSLOTS[id])||{k:'Экран',h:'Раздел еще не настроен',d:'Этот пункт пока не содержит отдельного интерактивного задания. Можно вернуться к карте пути.'},i=gIdx(),pt=i>=0?GFLOW[i].pt:'';
 m.innerHTML='<span class="tag">'+(pt==='Финал'?'Финал':'Точка '+pt)+'</span><span class="tag">'+s.k+'</span><h1>'+s.h+'</h1><p>'+s.d+'</p><button class="next" id="nx">Дальше</button>';
 document.getElementById('nx').onclick=function(){var n=GRoute.advance();if(n)location.href=n};window.gNext=flowNext()}
