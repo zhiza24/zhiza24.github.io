@@ -77,7 +77,7 @@ function updateField(el){
   s.answers[key]=a;
  }else if(el.type==='checkbox')s.answers[key]=!!el.checked;
  else s.answers[key]=el.value;
- save();if(key==='functionNote'&&s.answers.unknownFunction){var u=app.querySelector('[data-field="unknownFunction"]');if(u)u.checked=false;s.answers.unknownFunction=false;save()}
+ save();if(key==='safetyConcern'){render();return}if(key==='functionNote'&&s.answers.unknownFunction){var u=app.querySelector('[data-field="unknownFunction"]');if(u)u.checked=false;s.answers.unknownFunction=false;save()}
 }
 app.addEventListener('input',function(e){if(e.target.hasAttribute('data-field'))updateField(e.target)});
 app.addEventListener('change',function(e){if(e.target.hasAttribute('data-field'))updateField(e.target)});
