@@ -491,7 +491,7 @@ function dayPanel(P,T,n){
   });
   html+='</div>';
   html+=razborBlock(P,T,n);
-  var evCount=((T.events24||{})[n]||[]).length;html+=acc('events24','24 часа · события и занятия',evCount?'записей: '+evCount:'добавить запись',events24Body(T,n));
+  var evCount=((T.events24||{})[n]||[]).length+(((T.events24||{})[n-1]||[]).filter(function(x){return +x.endMin>1440}).length);html+=acc('events24','24 часа · события и занятия',evCount?'записей: '+evCount:'добавить запись',events24Body(T,n));
 
   if(actOn(T,'signs',n)){
   html+='<div class="row-line"><b>Знаки дня</b><div class="signs">';
