@@ -20,7 +20,7 @@ var HINTS=[
   "Интонация или слова собеседника могут дать новую информацию. Сохраните то, что оказалось полезным.",
   "Старые записи или заметки могут напомнить о том, что раньше было важно.",
   "Обратите внимание на доступные ресурсы: контакт, инструмент, время или помощь.",
-  "В первые минуты после пробуждения можно заметить образ или чувство, связанное с Вашим желанием.",
+  "В первые минуты после пробуждения можно заметить образ или чувство, связанное с твоим желанием.",
   "Если день принесет необычное совпадение, можно записать его без поспешных выводов.",
   "Небольшой жест заботы о себе может сделать день приятнее. Выбери то, что доступно.",
   "Можно спокойно обозначить свое направление человеку, которому ты доверяешь.",
@@ -620,7 +620,7 @@ function dayPanel(P,T,n){
     var st=d.dirState[i]||'';
     html+='<div class="row-line"><b>'+esc(dir.text)+'</b>';
     html+='<input type="text" data-act="dir-step" data-i="'+i+'" placeholder="маленький шаг сегодня" value="'+esc(d.dirSteps[i]||'')+'">';
-    html+='<div class="step-row"><button type="button" data-act="dir-st" data-i="'+i+'" data-s="done" class="'+(st==='done'?'on':'')+'">Выполнить</button></div>';
+    html+='<div class="step-row"><button type="button" data-act="dir-st" data-i="'+i+'" data-s="done" class="'+(st==='done'?'on':'')+'">Сделать</button></div>';
     html+='<input type="text" data-act="ifthen" data-i="'+i+'" placeholder="если … то …" value="'+esc((T.ifthens&&T.ifthens[i])||'')+'">';
     html+=markBtns(d.dirMarks[i]||'','data-who="dir" data-i="'+i+'"');
     html+='</div>';
@@ -811,7 +811,7 @@ function weekStrat(T,w){
   var ex=Math.round(pts/7*100),inn=mood.length?(mood.reduce(function(x,y){return x+y},0)/mood.length).toFixed(1):'—';
   return '<div class="row-line"><b>'+esc(W.t)+'</b><p class="mute">'+esc(W.d)+'</p></div>'+
    '<div class="nums nums3"><div><b>'+ex+'%</b><span>Исполнение</span></div><div><b>'+ch+'</b><span>Изменения</span></div><div><b>'+inn+'</b><span>Внутренний опыт</span></div></div>'+
-   '<p class="cap28 soft">Три отдельных показателя. Исполнение отражает выполненные действия, изменения — замеченные Вами сдвиги, внутренний опыт — Ваши оценки.</p>'+
+   '<p class="cap28 soft">Три отдельных показателя. Исполнение отражает выполненные действия, изменения — замеченные Вами сдвиги, внутренний опыт — твои оценки.</p>'+
    '<div class="row-line wd-list"><b>Шаги недели</b>'+list+'</div>'+
    '<p class="cap28">Вопрос недели: '+esc(W.q)+'</p>';
 }
@@ -939,7 +939,7 @@ function viewReview(P,T){
   if(done)lines.push('Маленький шаг выполнен'+(done>1?': '+done+'.':'.'));
   if(d.wishMark==='better'||(d.dirMarks||[]).indexOf('better')>=0)lines.push('Есть отметка «стало лучше».');
   if((d.brakeWords||[]).length)lines.push(gx('{Поймал|Поймала} слово-тормоз и {увидел|увидела} мягкую замену.'));
-  var RV={done:'Шаг дня сделан.',part:'Шаг сделан частично. Это тоже движение.',min:'Ты выбрал(а) минимальную версию. Так система остается гибкой в трудные дни.',other:'Вы выбрали другой шаг. Он тоже засчитан.',fail:'Сегодня не получилось. Ничего не обнуляется: завтра игра предложит шаг полегче.'};
+  var RV={done:'Шаг дня сделан.',part:'Шаг сделан частично. Это тоже движение.',min:'Ты выбрал(а) минимальную версию. Так система остается гибкой в трудные дни.',other:'Ты выбрал(а) другой шаг. Он тоже засчитан.',fail:'Сегодня не получилось. Ничего не обнуляется: завтра игра предложит шаг полегче.'};
   if(d.res&&RV[d.res.v])lines.unshift(gx(RV[d.res.v]));
   if(T.strategy&&n<28){var nx=GStrategy.adapt(T,n+1);if(nx)lines.push('Завтра: '+nx.m)}
   if(!lines.length)lines.push('День можно дозаполнить позже. Без штрафа.');
