@@ -7,10 +7,18 @@ var R={};
 /* Большой тест «Архитектура личности»: Эхо, Зодчий, Страж, Архитектор (arch.js). */
 ['b','v','p','d'].forEach(function(k){R['arch_'+k]=function(){return ''};R['arch_'+k+'_go']=function(){GArch.mount(k,m,'slot')}});
 R.pb_end=function(){var L=GLead(),p=GPAT[L.lead];return '<span class="tag">Точка Б</span><span class="tag">Итог</span><h1>Твое главное противоречие</h1><div class="pt">'+GContra()+'</div><p>Ведущая установка: <b>'+p.n+'</b>. Твоя ветка пути: <b>'+p.br+'</b>.'+(L.queue.length?' Следующие в очереди: '+L.queue.slice(0,2).map(function(k){return GPAT[k].n}).join(', ')+'.':'')+'</p><p>Про тебя?</p><div class="row"><button id="ya">Да, это про меня</button><button id="yn">Нет, не то</button></div><div id="alt"></div>'};
-R.pb_end_go=function(){function nx(){location.href=GRoute.advance()}
- ya.onclick=function(){var P=GPro.load();P.lab.agree=true;save('Противоречие',GContra(),P);nx()};
- yn.onclick=function(){var P=GPro.load(),q=[P.lab.lead].concat(P.lab.queue);alt.innerHTML='<p>Выбери, что ближе:</p>'+q.slice(1).map(function(k){return '<button class="next" data-k="'+k+'" style="background:#20170e;color:#f4ecdf;border:1px solid #9e783a">'+GPAT[k].n+'</button>'}).join('');
-  alt.querySelectorAll('button').forEach(function(b){b.onclick=function(){var P=GPro.load(),k=b.dataset.k;P.lab.queue=[P.lab.lead].concat(P.lab.queue).filter(function(x){return x!==k});P.lab.lead=k;P.lab.agree=true;GPro.save(P);location.reload()}})}};
+R.pb_end_go=function(){
+ function nx(){location.href=GRoute.advance()}
+ ya.onclick=function(){var P=GPro.load();P.lab=P.lab||{};P.lab.agree=true;P.lab.agreementAt=Date.now();save('Противоречие',GContra(),P);nx()};
+ yn.onclick=function(){
+  var P=GPro.load(),L=P.lab||{},q=[L.lead].concat(L.queue||[]),choices=q.slice(1);
+  alt.innerHTML='<p>Выбери другое направление, если оно точнее. Если ни одно не подходит, можно сформулировать собственное наблюдение.</p>'+
+   (choices.length?choices.map(function(k){return '<button class="next" data-k="'+k+'" style="background:#20170e;color:#f4ecdf;border:1px solid #9e783a">'+GEsc(GPAT[k].n)+'</button>'}).join(''):'<p class="pt">Других готовых вариантов в очереди нет. Можно оставить свою формулировку или вернуться к исследованию позже.</p>')+
+   '<textarea id="pbOwn" rows="3" placeholder="Моя формулировка или важное уточнение" style="width:100%;box-sizing:border-box;background:#20170e;color:#f4ecdf;border:1px solid #9e783a;border-radius:8px;padding:10px;font:inherit"></textarea><button class="next" id="pbOwnSave">Сохранить как открытую гипотезу</button>';
+  alt.querySelectorAll('button[data-k]').forEach(function(b){b.onclick=function(){var P=GPro.load(),k=b.dataset.k,old=P.lab.lead;P.lab.queue=[old].concat(P.lab.queue||[]).filter(function(x){return x!==k});P.lab.lead=k;P.lab.agree=true;P.lab.correctedFrom=old;P.lab.agreementAt=Date.now();GPro.save(P);location.reload()}});
+  document.getElementById('pbOwnSave').onclick=function(){var P=GPro.load(),t=document.getElementById('pbOwn').value.trim();if(!t){document.getElementById('pbOwn').focus();return}P.lab=P.lab||{};P.lab.ownCorrection=t;P.lab.agree='corrected';P.lab.agreementAt=Date.now();save('Собственная формулировка противоречия',t,P);nx()}
+ }
+};
 R.sort=function(){var p=GPAT[GLead().lead];return '<span class="tag">Точка Б</span><span class="tag">Исследование</span><h1>Разбор привычной схемы</h1><p>Перед тобой шесть частей описания: ситуация, реакция, правило, защитная функция, цена и возможная новая настройка. Не нужно делить их на «Эго» и «Самость». Отметь, насколько каждая часть соответствует твоему опыту.</p><div id="pp"></div><div class="fb" id="fb"></div>'};
 R.sort_go=function(){
  var lead=GLead().lead,p=GPAT[lead],P0=GPro.load(),d0=P0.lab&&P0.lab.sortDraft;
