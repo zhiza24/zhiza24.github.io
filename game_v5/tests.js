@@ -62,11 +62,17 @@ function css(){if(window.GArch&&GArch.css)GArch.css();if(document.getElementById
 '.gt-cards{display:grid;grid-template-columns:1fr;gap:8px}.gt-sum li{margin:6px 0}';document.head.appendChild(s)}
 
 /* ---------- раннер ---------- */
-function Runner(box,items,done,mod){this.box=box;this.items=items;this.done=done;this.mod=mod;this.i=0;this.hist=[];this.ans={};var self=this;
- window.gBack=function(){if(self.hist.length){self.i=self.hist.pop();self.draw();scrollTo(0,0);return true}return false}}
-Runner.prototype.next=function(){this.hist.push(this.i);this.i++;this.draw();scrollTo(0,0)};
+function Runner(box,items,done,mod){
+ this.box=box;this.items=items;this.done=done;this.mod=mod;this.i=0;this.hist=[];this.ans={};
+ var P=(!preview&&!retakeMode)?load():{},draft=P.testDrafts&&P.testDrafts[mod];
+ if(draft&&draft.v===1){this.i=Math.max(0,Math.min(items.length,+draft.i||0));this.hist=Array.isArray(draft.hist)?draft.hist.slice():[];this.ans=draft.answers&&typeof draft.answers==='object'?Object.assign({},draft.answers):{}}
+ var self=this;
+ window.gBack=function(){if(self.hist.length){self.i=self.hist.pop();self.saveDraft();self.draw();scrollTo(0,0);return true}return false}
+}
+Runner.prototype.saveDraft=function(){if(preview||retakeMode||!this.mod)return;var P=load();P.testDrafts=P.testDrafts||{};P.testDrafts[this.mod]={v:1,i:this.i,hist:this.hist.slice(),answers:Object.assign({},this.ans),at:Date.now()};persist(P)};
+Runner.prototype.next=function(){this.hist.push(this.i);this.i++;this.saveDraft();this.draw();scrollTo(0,0)};
 Runner.prototype.raw=function(id,v){if(preview||!window.GProfile||!this.mod)return;try{GProfile.recordRaw(this.mod,id,v,{v:VER})}catch(e){}};
-Runner.prototype.set=function(id,v){if(v===undefined)delete this.ans[id];else this.ans[id]=v;this.raw(id,v===undefined?null:v)};
+Runner.prototype.set=function(id,v){if(v===undefined)delete this.ans[id];else this.ans[id]=v;this.raw(id,v===undefined?null:v);this.saveDraft()};
 Runner.prototype.draw=function(){var it=this.items[this.i],self=this,b=this.box;if(!it){this.done(this.ans);return}
  var qs=this.items.filter(function(x){return x.q}),ix=qs.indexOf(it);
  var head=(ix>=0?'<div class="al">Вопрос '+(ix+1)+' из '+qs.length+'</div>':'')+(it.h?'<div class="al" style="opacity:.8">'+h(it.h)+'</div>':'')+(it.t?'<div class="aq">'+h(it.t)+'</div>':'')+(it.ctx?'<p class="ar-ctx">'+h(it.ctx)+'</p>':'');
@@ -83,15 +89,16 @@ Runner.prototype.draw=function(){var it=this.items[this.i],self=this,b=this.box;
  if(it.kind==='multi'){var sel=Array.isArray(this.ans[it.id])?this.ans[it.id].slice():[];var excl=it.excl||[];
   b.innerHTML=head+(it.max?'<p class="ar-ctx">Можно выбрать до '+it.max+'.</p>':'<p class="ar-ctx">Можно выбрать несколько.</p>')+'<div id="gtOp">'+it.o.map(function(o){return '<button class="ao" data-c="'+esc(o)+'">'+h(o)+'</button>'}).join('')+'</div>'+(it.other?'<textarea class="ar-ta" id="gtTx" rows="2" maxlength="200" placeholder="Если «Другое», напиши коротко" style="display:none"></textarea>':'')+'<button class="next" id="gtGo">Готово</button>'+skip;bindSkip();
   var tx=b.querySelector('#gtTx');if(tx)tx.value=this.ans[it.id+'_text']||'';
-  function mark(){b.querySelectorAll('#gtOp button').forEach(function(x){x.classList.toggle('ar-on',sel.indexOf(x.dataset.c)>=0)});if(tx)tx.style.display=sel.indexOf(it.other)>=0?'':'none';b.querySelector('#gtGo').disabled=!sel.length}
+  function mark(){b.querySelectorAll('#gtOp button').forEach(function(x){x.classList.toggle('ar-on',sel.indexOf(x.dataset.c)>=0)});if(tx)tx.style.display=sel.indexOf(it.other)>=0?'':'none';b.querySelector('#gtGo').disabled=!sel.length;self.set(it.id,sel.slice())}
+  if(tx)tx.oninput=function(){self.set(it.id+'_text',tx.value)};
   b.querySelectorAll('#gtOp button').forEach(function(x){x.onclick=function(){var c=x.dataset.c,n=sel.indexOf(c);if(n>=0)sel.splice(n,1);else if(excl.indexOf(c)>=0)sel=[c];else{sel=sel.filter(function(z){return excl.indexOf(z)<0});if(!it.max||sel.length<it.max)sel.push(c)}mark()}});mark();
   b.querySelector('#gtGo').onclick=function(){if(!sel.length)return;self.set(it.id,sel.slice());if(tx){var t=tx.value.trim();self.set(it.id+'_text',sel.indexOf(it.other)>=0&&t?t:undefined)}self.next()};return}
- if(it.kind==='text'){b.innerHTML=head+'<textarea class="ar-ta" id="gtTx" rows="3" maxlength="300"></textarea><button class="next" id="gtGo">Дальше</button>'+(it.dk?'<button class="ar-skip" id="gtDk">Пока не знаю</button>':skip);var t=b.querySelector('#gtTx');t.value=typeof this.ans[it.id]==='string'&&this.ans[it.id]!=='dk'&&this.ans[it.id]!=='skip'?this.ans[it.id]:'';
+ if(it.kind==='text'){b.innerHTML=head+'<textarea class="ar-ta" id="gtTx" rows="3" maxlength="300"></textarea><button class="next" id="gtGo">Дальше</button>'+(it.dk?'<button class="ar-skip" id="gtDk">Пока не знаю</button>':skip);var t=b.querySelector('#gtTx');t.value=typeof this.ans[it.id]==='string'&&this.ans[it.id]!=='dk'&&this.ans[it.id]!=='skip'?this.ans[it.id]:'';t.oninput=function(){self.set(it.id,t.value)};
   b.querySelector('#gtGo').onclick=function(){var v=t.value.trim();self.set(it.id,v||'skip');self.next()};var dk=b.querySelector('#gtDk');if(dk)dk.onclick=function(){self.set(it.id,'dk');self.next()};bindSkip();return}
  if(it.kind==='grid'){var rows=it.rows(this.ans);if(!rows.length){this.i++;this.draw();return}var val=Object.assign({},this.ans[it.id]||{});
   b.innerHTML=head+rows.map(function(r,k){return '<div class="gt-lv">'+h(r)+'</div><div class="gt-row" data-k="'+k+'">'+it.o.map(function(o){return '<button data-c="'+o[0]+'">'+h(o[1])+'</button>'}).join('')+'</div>'}).join('')+'<button class="next" id="gtGo">Дальше</button>'+skip;bindSkip();
   function mk(){b.querySelectorAll('.gt-row').forEach(function(rw){var r=rows[+rw.dataset.k];rw.querySelectorAll('button').forEach(function(x){x.classList.toggle('ar-on',val[r]===x.dataset.c)})})}
-  b.querySelectorAll('.gt-row button').forEach(function(x){x.onclick=function(){val[rows[+x.parentNode.dataset.k]]=x.dataset.c;mk()}});mk();b.querySelector('#gtGo').onclick=function(){self.set(it.id,val);self.next()};return}
+  b.querySelectorAll('.gt-row button').forEach(function(x){x.onclick=function(){val[rows[+x.parentNode.dataset.k]]=x.dataset.c;self.set(it.id,Object.assign({},val));mk()}});mk();b.querySelector('#gtGo').onclick=function(){self.set(it.id,val);self.next()};return}
 };
 
 /* ---------- подсчет шкал 0–4 ---------- */
@@ -273,7 +280,7 @@ var drawBase=Runner.prototype.draw;Runner.prototype.draw=function(){var it=this.
 
 /* ---------- сохранение, вход в Реактор, дневник ---------- */
 function reactorIn(P){var r={v:VER,at:Date.now(),tests:{}};Object.keys(STEP).forEach(function(k){var x=P[STEP[k].f];if(!x||k==='vsort'||k==='im')return;r.tests[k]={status:x.status||'tentative',top:x.top||null,leadingScales:x.leadingScales||x.leading||[]}});if(P.valuesCore)r.values3=P.valuesCore.top3;if(P.desireLab&&P.desireLab.step)r.desireStep=P.desireLab.step;return r}
-function store(k,res,log){if(preview)return;var P=load(),S=STEP[k];if(window.GProfile){try{P=GProfile.saveResult(S.mod,res,{version:VER},{profile:P,save:false})}catch(e){P[S.f]=res}}else P[S.f]=res;
+function store(k,res,log){if(preview)return;var P=load(),S=STEP[k];if(P.testDrafts)delete P.testDrafts[S.mod];if(window.GProfile){try{P=GProfile.saveResult(S.mod,res,{version:VER},{profile:P,save:false})}catch(e){P[S.f]=res}}else P[S.f]=res;
  P[S.f]=res;P.reactorIn=reactorIn(P);(P.log=P.log||[]).push({t:Date.now(),x:log});persist(P)}
 function quoteKey(k){return STEP[k].u}
 function result(box,k,built,retake){var S=STEP[k],n=nextOf(S.u);box.innerHTML=built.html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="next" id="nx">'+(retakeMode?'Дальше: Задания':n?'Дальше: '+esc(n.t):'Дальше')+'</button><div class="gt-links">'+(retake?'<button type="button" id="gtRe">Пройти заново</button>':'')+'<a href="diary.html">В дневник</a></div>';
