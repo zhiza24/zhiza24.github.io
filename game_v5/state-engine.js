@@ -136,7 +136,7 @@ function evaluate(P){
  Object.keys(states).forEach(function(id){
   var s=states[id],sr=s.signals.SR.length,ch=s.signals.CH.length,nr=s.signals.NR.length;
   var layersN=(sr?1:0)+(ch?1:0)+(nr?1:0),situations=s.situations.length;
-  if(layersN>=2&&situations>=3){s.confidence='вероятно, контекст не определен';s.status='probable';}
+  if(layersN>=2&&situations>=3){s.confidence='гипотеза: сигналы есть в нескольких слоях и ситуациях; контекст требует проверки';s.status='hypothesis';}
   else if(layersN>=1||situations>=2){s.confidence='гипотеза';s.status='hypothesis';}
   else{s.confidence='нет достаточных данных';s.status='unassessed';}
   var falsifierList=arr(DATA.falsifiers).filter(function(x){return x.state===id});
