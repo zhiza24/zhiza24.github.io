@@ -966,8 +966,13 @@ function viewSettings(P,T){
     '<div class="row-line"><b>Мягкое напоминание</b>'+
     '<input type="time" data-act="notify-time" value="'+(T.notifyTime||'')+'">'+
     '<button type="button" class="quiet-btn" data-act="notify-on">'+(T.notifyOn?'Напоминание включено':'Включить, если браузер позволит')+'</button></div>'+
+    '<section class="row-line"><b>Резервная копия</b><p class="mute">Экспорт сохраняет профиль, основной маршрут, записи Реактора и архив циклов в один файл. Храни его в безопасном месте. При импорте текущие данные сначала сохраняются в резервную копию на этом устройстве.</p>'+
+    '<button type="button" class="quiet-btn" data-act="profile-export">Экспортировать все данные</button>'+
+    '<button type="button" class="quiet-btn" data-act="profile-import-open">Импортировать файл</button>'+
+    '<input type="file" accept="application/json,.json" data-act="profile-import" style="display:none">'+
+    '<button type="button" class="quiet-btn" data-act="profile-restore">Восстановить последнюю резервную копию</button></section>'+
     '<button type="button" class="quiet-btn" data-act="monthg">К итогам</button>'+
-    '<button type="button" class="quiet-btn" data-act="back">К сетке</button></div>';
+    '<button type="button" class="quiet-btn" data-act="back">К календарю</button></div>';
 }
 
 function viewReview(P,T){
@@ -1019,6 +1024,13 @@ function bind(){
       T.view=({map:'month',path:'monthg',results:'monthg',lab:'practs',practs:'practs',labs:'labs',diary:'diary',directions:'directions',mirror:'mirror',hero:'hero',day:'day'})[sp]||'day';
       if(sp==='day'&&!T.openDay)T.openDay=todayNum(T);
       save(P); render(); try{window.scrollTo(0,0)}catch(e){} return;
+    }
+    if(act==='profile-export'){if(window.GPro)GPro.exportFile();else alert('Экспорт сейчас недоступен.');return}
+    if(act==='profile-import-open'){var file=host.querySelector('[data-act="profile-import"]');if(file)file.click();return}
+    if(act==='profile-restore'){
+      if(!window.GPro||!confirm('Заменить текущие данные последней резервной копией? Перед восстановлением текущая версия тоже будет сохранена.'))return;
+      GPro.restoreBackup(function(ok){if(ok){alert('Резервная копия восстановлена. Игра перезагрузится.');location.reload()}else alert('Не удалось восстановить резервную копию.')});
+      return;
     }
     if(act==='start-cycle'){T.strategySeen=true;T.space='day';T.view='day';if(!T.start)T.start=Date.now();if(!P.cycleBaseline){P.cycleBaseline={wheel:(Array.isArray(P.wheel)?P.wheel:[]).slice(),research:mirrorInitialResearch(P),cycle:T.cycle||1,capturedAt:Date.now(),source:'initial'};}T.openDay=todayNum(T);save(P);render();try{window.scrollTo(0,0)}catch(e){}return}
     if(act==='open'){
@@ -1251,6 +1263,12 @@ function bind(){
   host.onchange=function(e){
     var el=e.target, act=el.getAttribute('data-act'); if(!act)return;
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T);
+    if(act==='profile-import'){
+      var selected=el.files&&el.files[0];if(!selected)return;
+      if(!window.GPro){alert('Импорт сейчас недоступен.');return}
+      GPro.importFile(selected,function(ok){if(ok){alert('Данные импортированы. Игра перезагрузится.');location.reload()}else alert('Файл не удалось импортировать. Проверь его формат и размер.')});
+      return;
+    }
     if(act==='mirror-wheel'){T.mirror=T.mirror||{version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0};T.mirror.endWheel=T.mirror.endWheel||Array(8).fill(null);T.mirror.endWheel[+el.getAttribute('data-i')]=el.value===''?null:+el.value;save(P);return}
     if(act==='mirror-note'){T.mirror=T.mirror||{};T.mirror.reflection=T.mirror.reflection||{};T.mirror.reflection[el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='support-five'){T.support=T.support||{};T.support.fiveMinDays=T.support.fiveMinDays||{};T.support.fiveMinDays[todayNum(T)]=!!el.checked;save(P);return}
