@@ -1026,7 +1026,12 @@ function bind(){
     if(act==='checkpoint-delete'){var dn=+b.getAttribute('data-day'),did=b.getAttribute('data-id');T.checkpoints24=T.checkpoints24||{};T.checkpoints24[dn]=(T.checkpoints24[dn]||[]).filter(function(x){return x.id!==did});if(!T.checkpoints24[dn].length)delete T.checkpoints24[dn];save(P);render();openAccAfterRender('events24');return}
     if(act==='mirror-archive'){T.mirrorArchiveIndex=+b.getAttribute('data-i');save(P);render();return}
     if(act==='mirror-archive-back'){delete T.mirrorArchiveIndex;save(P);render();return}
-    if(act==='mirror-continue'){location.href='slot.html?id=retest';return}
+    if(act==='mirror-continue'){
+      var M=T.mirror||{};
+      if(M.phase!=='report'||!Array.isArray(M.endWheel)||M.endWheel.length!==8||!Array.isArray(M.endResearch)||M.endResearch.length!==24){alert('Сначала завершите повторное исследование в Зеркале.');return}
+      P.retest={wheel:M.endWheel.slice(),beh:null,fromMirror:true,d:new Date().toLocaleDateString('ru'),mirror:{initialResearch:(M.initialResearch||mirrorInitialResearch(P)||[]).slice(),endResearch:M.endResearch.slice(),initialWheel:(M.initialWheel||P.wheel||[]).slice(),completedAt:M.completedAt||Date.now()}};
+      save(P);location.href='slot.html?id=compare';return;
+    }
     if(act==='mirror-start'||act==='mirror-restart'){
       var hist=(T.mirror&&T.mirror.history)||[];
       if(T.mirror&&T.mirror.phase==='report')hist=hist.concat([{startedAt:T.mirror.startedAt,completedAt:T.mirror.completedAt,endWheel:T.mirror.endWheel,endResearch:T.mirror.endResearch,reflection:T.mirror.reflection}]);
@@ -1063,8 +1068,31 @@ function bind(){
       save(P); if(window.GArts)GArts.grant('proof_sign'); render(); return;
     }
     if(act==='newcycle'){
-      T.prev=(T.prev||[]).concat([{start:T.start,finale:T.finale,days:T.days,weekPlans:T.weekPlans,rewards:T.rewards,events24:T.events24,checkpoints24:T.checkpoints24,strategy:T.strategy}]);
-      T.days={}; T.events24={}; T.eventDraft={}; T.checkpoints24={}; T.checkpointDraft={}; T.start=Date.now(); T.finale=null; T.openDay=0; T.view='month'; T.cycle=(T.cycle||1)+1; T.weekPlans={};
+      var archived=JSON.parse(JSON.stringify(T));
+      archived.archivedAt=Date.now();
+      P.trackerHistory=P.trackerHistory||[];
+      P.trackerHistory.push(archived);
+      var nextCycle={
+        version:T.version||1,
+        cycle:(T.cycle||1)+1,
+        start:Date.now(),
+        days:{},events24:{},eventDraft:{},checkpoints24:{},checkpointDraft:{},
+        weekPlans:{},rewards:{},proofs:[],openDay:1,view:'month',space:'map',
+        directions:JSON.parse(JSON.stringify(T.directions||[])),
+        strategy:JSON.parse(JSON.stringify(T.strategy||null)),
+        strategySeen:!!T.strategySeen,
+        declared:!!T.declared,
+        ifthens:(T.ifthens||['','','']).slice(),
+        hiddenMet:{},
+        practices:JSON.parse(JSON.stringify(T.practices||{})),
+        act:JSON.parse(JSON.stringify(T.act||{})),
+        practHist:[],
+        notifyOn:!!T.notifyOn,
+        notifyTime:T.notifyTime||'',
+        mirror:null,
+        prev:[]
+      };
+      P.tracker=nextCycle;
       save(P); render(); return;
     }
     if(act==='card'){try{drawCard(P,T)}catch(e){} return}
