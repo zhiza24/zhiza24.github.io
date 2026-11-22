@@ -576,11 +576,12 @@ function centerView(){
     (lit?'':'<div class="composer"><label for="btx">Я хочу...</label><div class="row"><input id="btx" maxlength="240" placeholder="самое заветное желание" autocomplete="off"><button class="send" id="ignite" aria-label="Зажечь">✦</button></div></div>')
   );
   if(!lit){
-    var inp=document.getElementById('btx');
+    var inp=document.getElementById('btx');inp.value=P.wishMod.bigDraft||'';
+    inp.oninput=function(){P=ensure();P.wishMod.bigDraft=inp.value;save(P)};
     function ignite(){
       var t=(inp.value||'').trim(); if(!t){inp.focus();return}
       P=ensure();
-      P.wishMod.big={id:P.wishMod.big&&P.wishMod.big.id||uid(), text:t, raw:(P.wishMod.big&&P.wishMod.big.raw)||t, at:now()};
+      P.wishMod.big={id:P.wishMod.big&&P.wishMod.big.id||uid(), text:t, raw:(P.wishMod.big&&P.wishMod.big.raw)||t, at:now()};delete P.wishMod.bigDraft;
       save(P); centerView();
     }
     document.getElementById('ignite').onclick=ignite;
