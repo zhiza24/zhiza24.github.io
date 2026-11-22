@@ -189,8 +189,9 @@ var host=null;
 function mount(el){host=el; var P=ensure(); var T=Tget(P); if(T.openDay==null)T.openDay=0;try{if(location.search.indexOf('view=mirror')>=0){T.space='mirror';T.view='mirror'}}catch(e){} save(P); render()}
 
 function spacesNav(space){
-  var tabs=[['day','Мой день'],['map','Карта'],['lab','Практики'],['hero','Герой'],['mirror','Зеркало жизни'],['path','Путь']];
-  return '<nav class="spaces">'+tabs.map(function(t){return '<button type="button" class="'+(space===t[0]?'on':'')+'" data-act="space" data-s="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</nav>';
+  var active=space==='path'?'results':space==='lab'?'practs':space;
+  var tabs=[['day','Мой день'],['diary','Дневник'],['directions','Мои направления'],['practs','Практики'],['labs','Лаборатории'],['results','Результаты']];
+  return '<nav class="spaces">'+tabs.map(function(t){return '<button type="button" class="'+(active===t[0]?'on':'')+'" data-act="space" data-s="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</nav>';
 }
 function injectNav(html,space){
   return String(html).replace('<div class="t28">','<div class="t28">'+spacesNav(space)).replace('<div class="t28 res">','<div class="t28 res">'+spacesNav(space));
@@ -205,11 +206,14 @@ function render(){
   if(T.view==='review'){host.innerHTML=viewReview(P,T); bind(); return}
   if(T.view==='week'){host.innerHTML=injectNav(viewWeek(P,T),'map'); bind(); return}
   var space=T.space||'day';
-  if(space==='lab'||T.view==='practs'){host.innerHTML=injectNav(viewPracts(P,T),'lab'); bind(); return}
-  if(space==='hero'){host.innerHTML=injectNav(viewHero(P,T),'hero'); bind(); return}
-  if(space==='mirror'||T.view==='mirror'){host.innerHTML=injectNav(viewMirror(P,T),'mirror'); bind(); return}
-  if(space==='path'||T.view==='monthg'||T.view==='finale'){host.innerHTML=injectNav(viewResults(P,T),'path'); bind(); return}
-  if(space==='map'){host.innerHTML=injectNav(viewMonth(P,T),'map'); bind(); return}
+  if(space==='labs'||T.view==='labs'){host.innerHTML=injectNav(viewLabs(P,T),'labs'); bind(); return}
+  if(space==='practs'||space==='lab'||T.view==='practs'){host.innerHTML=injectNav(viewPracts(P,T),'practs'); bind(); return}
+  if(space==='diary'||T.view==='diary'){host.innerHTML=injectNav(viewDiary(P,T),'diary'); bind(); return}
+  if(space==='directions'||T.view==='directions'){host.innerHTML=injectNav(viewDirections(P,T),'directions'); bind(); return}
+  if(space==='hero'){host.innerHTML=injectNav(viewHero(P,T),'day'); bind(); return}
+  if(space==='mirror'||T.view==='mirror'){host.innerHTML=injectNav(viewMirror(P,T),'results'); bind(); return}
+  if(space==='results'||space==='path'||T.view==='monthg'||T.view==='finale'){host.innerHTML=injectNav(viewResults(P,T),'results'); bind(); return}
+  if(space==='map'){host.innerHTML=injectNav(viewMonth(P,T),'diary'); bind(); return}
   host.innerHTML=injectNav(viewDay(P,T),'day'); bind();
 }
 function viewStrategy(P,T){
@@ -389,6 +393,56 @@ function viewPracts(P,T){
     });
   });
   h+='<div class="row-line"><b>Мои доказательства</b>'+proofBody(T)+'</div>';
+  return h+'</div>';
+}
+function trackClock(minute){
+  var m=((+minute||0)%1440+1440)%1440;
+  return ('0'+Math.floor(m/60)).slice(-2)+':'+('0'+(m%60)).slice(-2);
+}
+function viewDiary(P,T){
+  var html='<div class="t28"><p class="dk">История наблюдений</p><h1>Дневник</h1><p class="cap28">Здесь собраны события и контрольные точки, которые Вы внесли в течение 28 дней. Пустые промежутки не трактуются как бездействие.</p>';
+  html+='<button type="button" class="quiet-btn" data-act="space" data-s="map">Открыть календарь 28 дней</button>';
+  var total=0;
+  for(var n=1;n<=28;n++){
+    var evs=(T.events24&&T.events24[n])||[], cps=(T.checkpoints24&&T.checkpoints24[n])||[];
+    if(!evs.length&&!cps.length)continue;
+    total+=evs.length;
+    html+='<section class="row-line diary-day"><b>День '+n+'</b>';
+    evs.slice().sort(function(a,b){return (+a.startMin)-(+b.startMin)}).forEach(function(e){
+      html+='<div class="diary-event"><div><b>'+esc(e.title||'Событие')+'</b><span>'+trackClock(e.startMin)+'–'+trackClock(e.endMin)+(e.endMin>1440?' · после полуночи':'')+'</span></div>';
+      html+='<p class="mute">'+[e.sphere,e.motive,e.emotion,e.focus].filter(Boolean).map(esc).join(' · ')+'</p>';
+      if(e.after)html+='<p>После: '+esc(e.after)+'</p>';
+      html+='<div class="row"><button type="button" class="quiet-btn" data-act="event-edit" data-day="'+n+'" data-id="'+esc(e.id)+'">Изменить</button><button type="button" class="quiet-btn" data-act="event-delete" data-day="'+n+'" data-id="'+esc(e.id)+'">Удалить</button></div></div>';
+    });
+    cps.slice().sort(function(a,b){return (+a.minute)-(+b.minute)}).forEach(function(c){
+      html+='<div class="diary-event checkpoint"><b>Состояние · '+trackClock(c.minute)+'</b><p>Настроение: '+c.mood+'/10 · Энергия: '+c.energy+'/10</p>'+(c.note?'<p>'+esc(c.note)+'</p>':'')+'</div>';
+    });
+    html+='<button type="button" class="quiet-btn" data-act="open" data-n="'+n+'">Открыть день '+n+'</button></section>';
+  }
+  if(!total&&!Object.keys(T.checkpoints24||{}).length)html+='<div class="row-line"><p>Записей пока нет. Вы можете добавить событие или контрольную точку из раздела «Мой день».</p><button type="button" class="go" data-act="today">Перейти к сегодняшнему дню</button></div>';
+  html+='</div>';return html;
+}
+function viewDirections(P,T){
+  var ds=dirs(T),plans=T.directionPlans||{},html='<div class="t28"><p class="dk">Три выбранных направления</p><h1>Мои направления</h1><p class="cap28">Не нужно превращать жизнь в жесткий план. Для каждого направления зафиксируйте желаемое изменение, минимальный шаг и ближайшее действие.</p>';
+  if(!ds.length)return html+'<div class="row-line"><p>Сначала выберите и подтвердите три направления на «Небе желаний».</p><a class="go" href="wish.html">Открыть Небо желаний</a></div></div>';
+  ds.forEach(function(d,i){
+    var p=plans[i]||{},done=0,marks=0;
+    for(var n=1;n<=28;n++){var day=dayRec(T,n);if(day.dirState[i]==='done')done++;if(day.dirMarks[i])marks++}
+    html+='<section class="row-line direction-plan"><p class="dk">Направление '+(i+1)+'</p><h2>'+esc(d.text)+'</h2><p class="mute">Выполнено шагов: '+done+' · отметок о динамике: '+marks+'</p>';
+    html+='<label>Какого изменения Вы хотите?<textarea rows="2" maxlength="500" data-act="dir-plan" data-i="'+i+'" data-k="goal" placeholder="Опишите желаемое положение">'+esc(p.goal||'')+'</textarea></label>';
+    html+='<label>Минимальный шаг, доступный даже в сложный день<textarea rows="2" maxlength="300" data-act="dir-plan" data-i="'+i+'" data-k="minimum" placeholder="Самая небольшая версия действия">'+esc(p.minimum||'')+'</textarea></label>';
+    html+='<label>Ближайшее регулярное действие<textarea rows="2" maxlength="300" data-act="dir-plan" data-i="'+i+'" data-k="next" placeholder="Что можно повторять без перегрузки">'+esc(p.next||'')+'</textarea></label>';
+    html+='</section>';
+  });
+  html+='<p class="mute">План можно пересматривать. Изменение цели не считается неудачей: это часть настройки маршрута.</p></div>';return html;
+}
+function viewLabs(P,T){
+  var h='<div class="t28"><p class="dk">Самостоятельные инструменты исследования</p><h1>Лаборатории</h1><p class="cap28">Каждая лаборатория решает отдельную задачу. Ее можно проходить независимо от ежедневных отметок Реактора.</p>';
+  h+='<a class="lab-link" href="samost.html"><b>Самость</b><span>Отдельное исследование внутренней опоры и собственных решений</span></a>';
+  h+='<a class="lab-link" href="wish.html"><b>Небо желаний</b><span>Желания, мотивы, направления и выбор того, что действительно важно</span></a>';
+  h+='<div class="row-line"><b>Зеркало прожитой жизни</b><p>Сопоставление самооценки, исследовательских ответов и зарегистрированных событий за цикл.</p><button type="button" class="quiet-btn" data-act="space" data-s="mirror">Открыть зеркало</button></div>';
+  h+='<div class="row-line"><b>Разбор привычной схемы</b><p>Инструмент основного маршрута Точки Б. В отдельную бонусную лабораторию будет вынесен после UX-проверки, чтобы не смешивать результаты двух режимов.</p><a class="sky-link" href="map.html">Открыть основной маршрут</a></div>';
+  h+='<div class="row-line"><b>Что удерживает меня на месте?</b><p>Шестиступенчатое исследование повторяющегося выбора. Следующий отдельный модуль Реактора.</p></div>';
   return h+'</div>';
 }
 function viewDay(P,T){
@@ -893,7 +947,8 @@ function bind(){
     tick();
     if(act==='space'){
       var sp=b.getAttribute('data-s');
-      T.space=sp; T.view=(sp==='map'?'month':sp==='path'?'monthg':sp==='lab'?'practs':sp==='mirror'?'mirror':'day');
+      T.space=sp;
+      T.view=({map:'month',path:'monthg',results:'monthg',lab:'practs',practs:'practs',labs:'labs',diary:'diary',directions:'directions',mirror:'mirror',hero:'hero',day:'day'})[sp]||'day';
       if(sp==='day'&&!T.openDay)T.openDay=todayNum(T);
       save(P); render(); try{window.scrollTo(0,0)}catch(e){} return;
     }
@@ -1053,13 +1108,14 @@ function bind(){
     if(act==='mirror-back-self'){if(T.mirror){T.mirror.phase='self';save(P);render()}return}
     if(act==='event-edit'){
       var eday=+b.getAttribute('data-day'),eid=b.getAttribute('data-id'),ex=((T.events24||{})[eday]||[]).filter(function(x){return x.id===eid})[0];
-      if(!ex||eday!==n)return;
+      if(!ex)return;
+      n=eday;T.openDay=eday;T.space='day';T.view='day';
       function tm(v){v=+v;return ('0'+Math.floor((v%1440)/60)).slice(-2)+':'+('0'+(v%60)).slice(-2)}
       T.editingEvent={day:eday,id:eid};T.eventDraft=T.eventDraft||{};T.eventDraft[n]={title:ex.title,start:tm(ex.startMin),end:tm(ex.endMin),type:ex.type||'activity',sphere:ex.sphere||'',motive:ex.motive||'',emotion:ex.emotion||'',planned:ex.planned||'',focus:ex.focus||'',completion:ex.completion||'',after:ex.after||'',alternative:ex.alternative||''};save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='event-cancel'){if(T.eventDraft)delete T.eventDraft[n];T.editingEvent=null;save(P);render();openAccAfterRender('events24');return}
     if(act==='event-delete'){
-      var en=+b.getAttribute('data-day'),eid=b.getAttribute('data-id');if(T.editingEvent&&T.editingEvent.id===eid){T.editingEvent=null;if(T.eventDraft)delete T.eventDraft[n]}T.events24=T.events24||{};T.events24[en]=(T.events24[en]||[]).filter(function(x){return x.id!==eid});if(!T.events24[en].length)delete T.events24[en];save(P);render();openAccAfterRender('events24');return;
+      var en=+b.getAttribute('data-day'),eid=b.getAttribute('data-id');if(T.editingEvent&&T.editingEvent.id===eid){T.editingEvent=null;if(T.eventDraft)delete T.eventDraft[en]}T.events24=T.events24||{};T.events24[en]=(T.events24[en]||[]).filter(function(x){return x.id!==eid});if(!T.events24[en].length)delete T.events24[en];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='hour-t'){d.openHour=d.openHour===+b.getAttribute('data-h')?null:+b.getAttribute('data-h'); save(P); render(); openAccAfterRender('hours'); return}
     if(act==='fate'){
@@ -1116,6 +1172,7 @@ function bind(){
     if(act==='checkpoint-field'){T.checkpointDraft=T.checkpointDraft||{};T.checkpointDraft[n]=T.checkpointDraft[n]||{};T.checkpointDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='slider'){d.sliders[el.getAttribute('data-k')]=+el.value; save(P); var m=MET.filter(function(x){return x.key===el.getAttribute('data-k')})[0]; var tip=el.parentNode.querySelector('.soft-tip'); if(tip)tip.textContent=sliderHint(m,+el.value); var sm=el.parentNode.querySelector('label small'); if(sm&&m)sm.textContent=m.sub+' · '+el.value; return}
     if(act==='dir-step'){d.dirSteps[+el.getAttribute('data-i')]=el.value; save(P); return}
+    if(act==='dir-plan'){T.directionPlans=T.directionPlans||{};var di=+el.getAttribute('data-i'),dk=el.getAttribute('data-k');T.directionPlans[di]=T.directionPlans[di]||{};T.directionPlans[di][dk]=el.value;save(P);return}
     if(act==='ifthen'){T.ifthens=T.ifthens||['','','']; T.ifthens[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='note'){d.note=el.value; save(P); return}
     if(act==='journal'){d.journal=d.journal||{};d.journal[el.getAttribute('data-id')]=el.value;save(P);return}
