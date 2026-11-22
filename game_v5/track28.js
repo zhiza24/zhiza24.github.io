@@ -7,29 +7,29 @@ var HINTS=[
   "Если заметите совпадение или повторяющийся мотив, можно записать его без попытки сразу объяснить.",
   "Случайная фраза, статья или предложение могут подсказать новый ракурс. Достаточно отметить это.",
   "Обрати внимание на телесные ощущения: какое состояние помогает приблизиться к желаемому?",
-  "Если появится небольшая возможность, оцените, подходит ли она твоим обстоятельствам.",
+  "Если появится небольшая возможность, оцени, подходит ли она твоим обстоятельствам.",
   "Возможно, сегодня найдется один небольшой шаг к желаемому. Он не обязан быть большим.",
   "В разговоре может прозвучать полезная мысль. Можно сохранить ее и вернуться позже.",
   "Если встретится книга, публикация или разговор на знакомую тему, обратите внимание на важную деталь.",
   "Если возникнет развилка, не торопитесь. Сначала можно заметить, какой вариант кажется более подходящим.",
   "Обрати внимание, что происходит в теле, когда ты думаешь о желаемом.",
   "Опыт другого человека может подсказать направление. Не обязательно повторять его путь.",
-  "Если услышите фразу, которая зацепила внимание, запишите ее своими словами.",
+  "Если услышишь фразу, которая зацепила внимание, запишите ее своими словами.",
   "Свободное окно или приглашение можно рассмотреть как возможность, а не обязательство.",
   "Отметь, что уже сделано сегодня и что немного приблизило тебя к желаемому.",
-  "Интонация или слова собеседника могут дать новую информацию. Сохраните то, что оказалось полезным.",
+  "Интонация или слова собеседника могут дать новую информацию. Сохрани то, что оказалось полезным.",
   "Старые записи или заметки могут напомнить о том, что раньше было важно.",
   "Обрати внимание на доступные ресурсы: контакт, инструмент, время или помощь.",
   "В первые минуты после пробуждения можно заметить образ или чувство, связанное с твоим желанием.",
   "Если день принесет необычное совпадение, можно записать его без поспешных выводов.",
   "Небольшой жест заботы о себе может сделать день приятнее. Выбери то, что доступно.",
   "Можно спокойно обозначить свое направление человеку, которому ты доверяешь.",
-  "Информация может прийти из неожиданного источника. Сохраняйте любопытство и проверяйте факты.",
+  "Информация может прийти из неожиданного источника. Сохраняй любопытство и проверяй факты.",
   "Если появится возможность попробовать новый формат, оцени, подходит ли он тебе сейчас.",
   "Заметь момент, когда становится спокойнее или яснее. Возможно, это подскажет следующий шаг.",
   "Разговор или встреча могут соединить знакомые идеи. Запиши то, что хочется обдумать.",
   "Сегодня можно уделить несколько минут тому, что давно хотелось попробовать.",
-  "Если планы изменятся, посмотрите, какие варианты остаются доступными.",
+  "Если планы изменятся, посмотри, какие варианты остаются доступными.",
   "В конце дня отметьте один момент, который хочется сохранить в памяти."
 ];
 var MET=[
@@ -45,7 +45,7 @@ var MARKS=[
   {id:'solved', t:'вопрос решился'}
 ];
 var SIGN_TAGS=['встреча','совпадение','информация','возможность','чувство'];
-var BONUS_HINT='Эта строка — подсказка для внимания. Когда желание остается в поле зрения, легче замечать связанные с ним идеи, людей и возможности. Отмечайте то, что оказалось значимым, и продолжайте: выбираю, делаю, сделано.';
+var BONUS_HINT='Эта строка — подсказка для внимания. Когда желание остается в поле зрения, легче замечать связанные с ним идеи, людей и возможности. Отмечай то, что оказалось значимым, и продолжайте: выбираю, делаю, сделано.';
 var WD=['пн','вт','ср','чт','пт','сб','вс'];
 
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
@@ -441,13 +441,13 @@ function viewDiary(P,T){
   html+='</div>';return html;
 }
 function viewDirections(P,T){
-  var ds=dirs(T),plans=T.directionPlans||{},html='<div class="t28"><p class="dk">Три выбранных направления</p><h1>Мои направления</h1><p class="cap28">Не нужно превращать жизнь в жесткий план. Для каждого направления зафиксируйте желаемое изменение, минимальный шаг и ближайшее действие.</p>';
-  if(!ds.length)return html+'<div class="row-line"><p>Сначала выберите и подтвердите три направления на «Небе желаний».</p><a class="go" href="wish.html">Открыть Небо желаний</a></div></div>';
+  var ds=dirs(T),plans=T.directionPlans||{},html='<div class="t28"><p class="dk">Три выбранных направления</p><h1>Мои направления</h1><p class="cap28">Не нужно превращать жизнь в жесткий план. Для каждого направления зафиксируй желаемое изменение, минимальный шаг и ближайшее действие.</p>';
+  if(!ds.length)return html+'<div class="row-line"><p>Сначала выбери и подтверди три направления на «Небе желаний».</p><a class="go" href="wish.html">Открыть Небо желаний</a></div></div>';
   ds.forEach(function(d,i){
     var p=plans[i]||{},done=0,marks=0;
     for(var n=1;n<=28;n++){var day=dayRec(T,n);if(day.dirState[i]==='done')done++;if(day.dirMarks[i])marks++}
     html+='<section class="row-line direction-plan"><p class="dk">Направление '+(i+1)+'</p><h2>'+esc(d.text)+'</h2><p class="mute">Выполнено шагов: '+done+' · отметок о динамике: '+marks+'</p>';
-    html+='<label>Какого изменения ты хочешь?<textarea rows="2" maxlength="500" data-act="dir-plan" data-i="'+i+'" data-k="goal" placeholder="Опишите желаемое положение">'+esc(p.goal||'')+'</textarea></label>';
+    html+='<label>Какого изменения ты хочешь?<textarea rows="2" maxlength="500" data-act="dir-plan" data-i="'+i+'" data-k="goal" placeholder="Опиши желаемое положение">'+esc(p.goal||'')+'</textarea></label>';
     html+='<label>Минимальный шаг, доступный даже в сложный день<textarea rows="2" maxlength="300" data-act="dir-plan" data-i="'+i+'" data-k="minimum" placeholder="Самая небольшая версия действия">'+esc(p.minimum||'')+'</textarea></label>';
     html+='<label>Ближайшее регулярное действие<textarea rows="2" maxlength="300" data-act="dir-plan" data-i="'+i+'" data-k="next" placeholder="Что можно повторять без перегрузки">'+esc(p.next||'')+'</textarea></label>';
     html+='</section>';
@@ -667,7 +667,7 @@ function dayPanel(P,T,n){
     html+='<textarea data-act="journal" data-id="'+id+'" rows="2" maxlength="240" placeholder="'+esc(gx(it.min))+'">'+esc((d.journal&&d.journal[id])||'')+'</textarea></div>';
   });}
   var lc=d.lightCounters||{};
-  var lightBody='<p class="mute">Не медицинский дневник и не норма. Отмечайте только то, что помогает тебе наблюдать за днем. Пропуски ничего не означают.</p>';
+  var lightBody='<p class="mute">Не медицинский дневник и не норма. Отмечай только то, что помогает тебе наблюдать за днем. Пропуски ничего не означают.</p>';
   [['water','Вода · стаканы',1],['movement','Движение · минуты',5],['meals','Приемы пищи',1]].forEach(function(x){
     var v=+lc[x[0]]||0;
     lightBody+='<div class="light-counter"><b>'+x[1]+'</b><div><button type="button" class="quiet-btn" data-act="counter" data-k="'+x[0]+'" data-delta="-'+x[2]+'">−</button><strong>'+v+'</strong><button type="button" class="quiet-btn" data-act="counter" data-k="'+x[0]+'" data-delta="'+x[2]+'">+</button></div></div>';
@@ -715,7 +715,7 @@ function events24Body(T,n){
  own.forEach(function(e){if(+e.startMin<1440)rows.push({e:e,owner:n,from:+e.startMin,to:Math.min(1440,+e.endMin),continued:false,overnight:+e.endMin>1440})});
  prev.forEach(function(e){if(+e.endMin>1440)rows.push({e:e,owner:n-1,from:0,to:Math.min(1440,+e.endMin-1440),continued:true,overnight:false})});
  rows.sort(function(a,b){return a.from-b.from});
- var html='<div class="d24"><p class="mute">Записывайте события по ходу дня или вечером. Пустые промежутки остаются неизвестными — мы не считаем их отдыхом или бездействием. События могут пересекаться; в сводной картине пересечения будут показаны отдельно, чтобы не считать одни и те же минуты дважды.</p><div class="d24-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>';
+ var html='<div class="d24"><p class="mute">Записывай события по ходу дня или вечером. Пустые промежутки остаются неизвестными — мы не считаем их отдыхом или бездействием. События могут пересекаться; в сводной картине пересечения будут показаны отдельно, чтобы не считать одни и те же минуты дважды.</p><div class="d24-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>';
  if(rows.length){html+=rows.map(function(r){var e=r.e,from=r.from,to=r.to,dur=Math.max(0,to-from),left=from/1440*100,width=Math.max(0,dur/1440*100),time=r.continued?'00:00–'+day24Fmt(to):day24Fmt(e.startMin)+'–'+(r.overnight?day24Fmt(e.endMin-1440)+' следующего дня':day24Fmt(e.endMin));var details=[N.type[e.type]||'Событие',N.sphere[e.sphere]||'',N.motive[e.motive]||'',N.emotion[e.emotion]||'',N.focus[e.focus]||'',e.planned==='yes'?'Плановое':e.planned==='no'?'Спонтанное':'',N.completion[e.completion]||'',N.after[e.after]||''].filter(Boolean).join(' · ');
  return '<div class="d24-row"><div class="d24-meta"><b>'+esc(e.title)+(r.continued?' · продолжение':'')+'</b><small>'+time+' · '+Math.floor(dur/60)+' ч '+(dur%60)+' мин</small><small>'+esc(details)+'</small>'+(e.alternative?'<small>В следующий раз: '+esc(e.alternative)+'</small>':'')+'</div><div class="d24-track"><i style="left:'+left+'%;width:'+width+'%"></i></div>'+(r.continued?'':'<button type="button" class="quiet-btn" data-act="event-edit" data-day="'+r.owner+'" data-id="'+esc(e.id)+'">Изменить</button>')+'<button type="button" class="quiet-btn" data-act="event-delete" data-day="'+r.owner+'" data-id="'+esc(e.id)+'">Удалить</button></div>'}).join('')}
  else html+='<p class="mute">Пока нет записей за этот день.</p>';
@@ -775,7 +775,7 @@ function razborBlock(P,T,n){
 }
 function betrayBody(d){
   if(window.GBW){var P=load(),T=(P.tracker||{}),r=cycleRange(T),A=GBW.daysAgg(P,r[0],r[1]);GBW.css();
-    return '<p class="mute">Отмечайте это в «Разборе дня» выше. Колесо отражает записи за 28 дней.</p>'+(A.days?GBW.svg(A.vals,{size:230})+GBW.legend():'<p class="mute">Пока нет отметок.</p>');}
+    return '<p class="mute">Отмечай это в «Разборе дня» выше. Колесо отражает записи за 28 дней.</p>'+(A.days?GBW.svg(A.vals,{size:230})+GBW.legend():'<p class="mute">Пока нет отметок.</p>');}
   var cur=d.betrayMarks||[];
   return '<div class="brake">'+BETRAY.map(function(w){
     return '<button type="button" class="'+(cur.indexOf(w.id)>=0?'on':'')+'" data-act="betray-mark" data-id="'+w.id+'">'+esc(w.t)+'</button>';
@@ -1148,7 +1148,7 @@ function bind(){
       var dr=(T.eventDraft&&T.eventDraft[n])||{},title=String(dr.title||'').trim(),start=String(dr.start||''),end=String(dr.end||'');
       function toMin(v){var m=/^(\d{2}):(\d{2})$/.exec(v);return m?(+m[1]*60+ +m[2]):null}
       var sm=toMin(start),em=toMin(end);
-      if(!title||sm===null||em===null){alert('Укажите название события, время начала и окончания.');return}
+      if(!title||sm===null||em===null){alert('Укажи название события, время начала и окончания.');return}
       if(em<=sm)em+=1440;
       if(em-sm>1440){alert('Одно событие можно записать длительностью не более 24 часов.');return}
       T.events24=T.events24||{};T.events24[n]=T.events24[n]||[];
@@ -1160,7 +1160,7 @@ function bind(){
     if(act==='checkpoint-add'){
       var cd=(T.checkpointDraft&&T.checkpointDraft[n])||{},tm=String(cd.time||''),mm=+cd.mood,ee=+cd.energy;
       function cm(v){var z=/^(\d{2}):(\d{2})$/.exec(v);return z?(+z[1]*60+ +z[2]):null}
-      var mn=cm(tm);if(mn===null||!(mm>=1&&mm<=10)||!(ee>=1&&ee<=10)){alert('Укажите время, настроение и энергию от 1 до 10.');return}
+      var mn=cm(tm);if(mn===null||!(mm>=1&&mm<=10)||!(ee>=1&&ee<=10)){alert('Укажи время, настроение и энергию от 1 до 10.');return}
       T.checkpoints24=T.checkpoints24||{};T.checkpoints24[n]=T.checkpoints24[n]||[];T.checkpoints24[n].push({id:uid(),minute:mn,mood:mm,energy:ee,note:String(cd.note||'').trim(),at:Date.now()});T.checkpointDraft=T.checkpointDraft||{};delete T.checkpointDraft[n];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='checkpoint-delete'){var dn=+b.getAttribute('data-day'),did=b.getAttribute('data-id');T.checkpoints24=T.checkpoints24||{};T.checkpoints24[dn]=(T.checkpoints24[dn]||[]).filter(function(x){return x.id!==did});if(!T.checkpoints24[dn].length)delete T.checkpoints24[dn];save(P);render();openAccAfterRender('events24');return}
@@ -1168,7 +1168,7 @@ function bind(){
     if(act==='mirror-archive-back'){delete T.mirrorArchiveIndex;save(P);render();return}
     if(act==='mirror-continue'){
       var M=T.mirror||{};
-      if(M.phase!=='report'||!Array.isArray(M.endWheel)||M.endWheel.length!==8||M.endWheel.some(function(v){return typeof v!=='number'||!isFinite(v)})||!Array.isArray(M.endResearch)||M.endResearch.length!==24||M.endResearch.some(function(v){return v!=='na'&&(typeof v!=='number'||!isFinite(v))})){alert('Проверьте повторное исследование: заполните все оценки колеса и ответы. Для исследовательского вопроса можно выбрать «не знаю».');return}
+      if(M.phase!=='report'||!Array.isArray(M.endWheel)||M.endWheel.length!==8||M.endWheel.some(function(v){return typeof v!=='number'||!isFinite(v)})||!Array.isArray(M.endResearch)||M.endResearch.length!==24||M.endResearch.some(function(v){return v!=='na'&&(typeof v!=='number'||!isFinite(v))})){alert('Проверь повторное исследование: заполни все оценки колеса и ответы. Для исследовательского вопроса можно выбрать «не знаю».');return}
       P.retest={wheel:M.endWheel.slice(),beh:null,fromMirror:true,d:new Date().toLocaleDateString('ru'),mirror:{initialResearch:(M.initialResearch||mirrorInitialResearch(P)||[]).slice(),endResearch:M.endResearch.slice(),initialWheel:(M.initialWheel||P.wheel||[]).slice(),completedAt:M.completedAt||Date.now()}};
       save(P);location.href='slot.html?id=compare';return;
     }
@@ -1180,7 +1180,7 @@ function bind(){
     }
     if(act==='mirror-wheel-save'){
       var M=T.mirror||{},W=M.endWheel||[];
-      if(W.length!==8||W.some(function(v){return typeof v!=='number'||v<1||v>10})){alert('Поставьте оценку для каждой из восьми сфер.');return}
+      if(W.length!==8||W.some(function(v){return typeof v!=='number'||v<1||v>10})){alert('Поставь оценку для каждой из восьми сфер.');return}
       M.phase='research';M.researchIndex=0;M.endResearch=M.endResearch||Array(24).fill(null);T.mirror=M;save(P);render();return;
     }
     if(act==='mirror-answer'){
