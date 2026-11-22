@@ -235,7 +235,7 @@ R.end_go=function(){
   P.cycleHistory=P.cycleHistory||[];
   P.trackerHistory=P.trackerHistory||[];
   var archivedTracker=P.tracker?JSON.parse(JSON.stringify(P.tracker)):null;
-  if(archivedTracker)P.trackerHistory.push(archivedTracker);
+  if(archivedTracker&&!P.trackerHistory.some(function(x){return x&&x.cycle===archivedTracker.cycle&&x.start===archivedTracker.start}))P.trackerHistory.push(archivedTracker);
   var snapshot=JSON.parse(JSON.stringify(P));delete snapshot.cycleHistory;
   P.cycleHistory.push({cycle:L.cycle||1,lead:L.lead,closedAt:Date.now(),profile:snapshot});
   if(!L.queue||!L.queue.length){
