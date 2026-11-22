@@ -551,7 +551,7 @@ function day24Names(){
  return {type:{activity:'Занятие',sleep:'Сон',travel:'Дорога',care:'Забота',rest:'Отдых',other:'Другое'},
  sphere:{health:'Здоровье',money:'Финансы',work:'Работа',relationships:'Отношения',family:'Семья',friends:'Друзья',growth:'Развитие',rest:'Отдых',other:'Другое'},
  motive:{own:'Собственное желание / выбор',need:'Значимая необходимость',care:'Забота',duty:'Чувство долга',external:'Внешнее требование',habit:'Привычка',avoid:'Избегание / откладывание',mixed:'Смешанный мотив',other:'Другое'},
- emotion:{calm:'Спокойствие',joy:'Радость',interest:'Интерес',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',neutral:'Нейтрально'}};
+ emotion:{calm:'Спокойствие',joy:'Радость',interest:'Интерес',satisfaction:'Удовлетворение',neutral:'Нейтральность',tension:'Напряжение',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',emptiness:'Опустошение'},completion:{done:'Выполнено',partial:'Частично',not_done:'Не выполнено',ongoing:'Продолжается',na:'Не применимо'},after:{better:'Стало лучше',same:'Без заметных изменений',worse:'Стало хуже',unknown:'Не определено'}};
 }
 function events24Body(T,n){
  var all=T.events24||{},own=all[n]||[],prev=all[n-1]||[],rows=[],N=day24Names(),draft=(T.eventDraft&&T.eventDraft[n])||{},cps=((T.checkpoints24||{})[n]||[]),cpDraft=(T.checkpointDraft&&T.checkpointDraft[n])||{};
@@ -935,7 +935,7 @@ function bind(){
       if(em<=sm)em+=1440;
       if(em-sm>1440){alert('Одно событие можно записать длительностью не более 24 часов.');return}
       T.events24=T.events24||{};T.events24[n]=T.events24[n]||[];
-      T.events24[n].push({id:uid(),title:title,startMin:sm,endMin:em,type:dr.type||'activity',sphere:dr.sphere||'',motive:dr.motive||'',emotion:dr.emotion||'',planned:dr.planned||'',createdAt:Date.now()});
+      T.events24[n].push({id:uid(),title:title,startMin:sm,endMin:em,type:dr.type||'activity',sphere:dr.sphere||'',motive:dr.motive||'',emotion:dr.emotion||'',planned:dr.planned||'',completion:dr.completion||'',after:dr.after||'',alternative:String(dr.alternative||'').trim(),createdAt:Date.now()});
       T.eventDraft=T.eventDraft||{};delete T.eventDraft[n];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='event-delete'){
