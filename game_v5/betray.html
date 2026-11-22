@@ -90,7 +90,7 @@ function result(){
    if(typeof f.shadow.score==='number'&&f.shadow.score>=50)shadow.push(f.shadow.title);
   })});
   GBW.QUESTIONS.forEach(function(q){var v=answers[q.id],label=v==='left'?q.left:v==='right'?q.right:v==='both'?'Оба способа бывают':v==='none'?'Ни один не подходит':'Нет ответа';evidence.push(q.text+' — '+label)});
-  GResultCard.attachDiaryBar(box,{id:'betray_start',step:'betray.html',title:'Колесо самопредательства и опоры',passed:'Точка 0',lead:'Карта показывает выбранные способы в конкретных ситуациях. Проценты — доля ответов внутри пары ситуаций, а не процент личности и не оценка характера.',strong:support.join(' · '),insight:shadow.join(' · '),insightLabel:'Где ты можешь отодвигать себя ради привычной защиты',insightMore:GBW.detailsHtml(rec),answers:evidence,at:rec.completedAt||Date.now()});
+  GResultCard.attachDiaryBar(box,{id:AGAIN?'betray_end':'betray_start',step:'betray.html',title:AGAIN?'Повторная карта самоподдержки и реакций':'Колесо самопредательства и опоры',passed:AGAIN?'Финал':'Точка 0',lead:'Карта показывает выбранные способы в конкретных ситуациях. Проценты — доля ответов внутри пары ситуаций, а не процент личности и не оценка характера.',strong:support.join(' · '),insight:shadow.join(' · '),insightLabel:'Где ты можешь отодвигать себя ради привычной защиты',insightMore:GBW.detailsHtml(rec),answers:evidence,at:rec.completedAt||Date.now()});
  }
  document.getElementById('go').onclick=function(){finish(false,rec)};
 }
