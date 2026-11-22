@@ -7,23 +7,23 @@ var HINTS=[
   "Если заметите совпадение или повторяющийся мотив, можно записать его без попытки сразу объяснить.",
   "Случайная фраза, статья или предложение могут подсказать новый ракурс. Достаточно отметить это.",
   "Обратите внимание на телесные ощущения: какое состояние помогает приблизиться к желаемому?",
-  "Если появится небольшая возможность, оцените, подходит ли она Вашим обстоятельствам.",
+  "Если появится небольшая возможность, оцените, подходит ли она твоим обстоятельствам.",
   "Возможно, сегодня найдется один небольшой шаг к желаемому. Он не обязан быть большим.",
   "В разговоре может прозвучать полезная мысль. Можно сохранить ее и вернуться позже.",
   "Если встретится книга, публикация или разговор на знакомую тему, обратите внимание на важную деталь.",
   "Если возникнет развилка, не торопитесь. Сначала можно заметить, какой вариант кажется более подходящим.",
-  "Обратите внимание, что происходит в теле, когда Вы думаете о желаемом.",
+  "Обратите внимание, что происходит в теле, когда ты думаешь о желаемом.",
   "Опыт другого человека может подсказать направление. Не обязательно повторять его путь.",
   "Если услышите фразу, которая зацепила внимание, запишите ее своими словами.",
   "Свободное окно или приглашение можно рассмотреть как возможность, а не обязательство.",
-  "Отметьте, что уже сделано сегодня и что немного приблизило Вас к желаемому.",
+  "Отметьте, что уже сделано сегодня и что немного приблизило тебя к желаемому.",
   "Интонация или слова собеседника могут дать новую информацию. Сохраните то, что оказалось полезным.",
   "Старые записи или заметки могут напомнить о том, что раньше было важно.",
   "Обратите внимание на доступные ресурсы: контакт, инструмент, время или помощь.",
   "В первые минуты после пробуждения можно заметить образ или чувство, связанное с Вашим желанием.",
   "Если день принесет необычное совпадение, можно записать его без поспешных выводов.",
-  "Небольшой жест заботы о себе может сделать день приятнее. Выберите то, что доступно.",
-  "Можно спокойно обозначить свое направление человеку, которому Вы доверяете.",
+  "Небольшой жест заботы о себе может сделать день приятнее. Выбери то, что доступно.",
+  "Можно спокойно обозначить свое направление человеку, которому ты доверяешь.",
   "Информация может прийти из неожиданного источника. Сохраняйте любопытство и проверяйте факты.",
   "Если появится возможность попробовать новый формат, оцените, подходит ли он Вам сейчас.",
   "Заметьте момент, когда становится спокойнее или яснее. Возможно, это подскажет следующий шаг.",
@@ -36,7 +36,7 @@ var MET=[
   {key:'energy', name:'Энергия', sub:'сколько сил сейчас есть', color:'#C4A35A', low:'Сил мало. Может, сейчас достаточно короткой паузы «Вдох-выдох».'},
   {key:'mood', name:'Настроение', sub:'какой тон дня', color:'#7FA968', low:'День может быть непростым. Не обязательно ничего форсировать: достаточно заметить свое состояние.'},
   {key:'well', name:'Самочувствие', sub:'как тело откликается', color:'#6C86A0', low:'Телу может быть нужна вода, воздух или короткая опора. Один маленький жест уже достаточно.'},
-  {key:'presence', name:'Присутствие', sub:'насколько Вы присутствуете в моменте', color:'#B4552D', low:'Внимание рассеялось. Несколько медленных вдохов могут помочь вернуться к текущему моменту.'},
+  {key:'presence', name:'Присутствие', sub:'насколько ты присутствуешь в моменте', color:'#B4552D', low:'Внимание рассеялось. Несколько медленных вдохов могут помочь вернуться к текущему моменту.'},
   {key:'support', name:'Внутренняя опора', sub:'насколько ощущается внутренняя опора', color:'#C47A8A', low:'Внутренняя опора может ощущаться непрочной. Иногда достаточно одного небольшого собственного выбора.'}
 ];
 var MARKS=[
@@ -217,7 +217,7 @@ function render(){
   host.innerHTML=injectNav(viewDay(P,T),'day'); bind();
 }
 function viewStrategy(P,T){
-  var h='<div class="t28">'+((window.GStrategy&&GStrategy.html)?GStrategy.html(T.strategy):'<h1>Ваша стратегия готова</h1>');
+  var h='<div class="t28">'+((window.GStrategy&&GStrategy.html)?GStrategy.html(T.strategy):'<h1>Твоя стратегия готова</h1>');
   h+='<button class="go" type="button" data-act="start-cycle">Начать 28 дней</button></div>';
   return h;
 }
@@ -373,7 +373,7 @@ function practCard(P,T,n,item,reason){
 }
 function viewPracts(P,T){
   var n=todayNum(T);
-  var h='<div class="t28"><p class="dk">Лаборатория практик</p><h1>Практики</h1><p class="cap28">Система предлагает практики, а Вы решаете, подходят ли они сейчас. Одновременно активны не более двух дополнительных практик. Пропуск ничего не обнуляет.</p>';
+  var h='<div class="t28"><p class="dk">Лаборатория практик</p><h1>Практики</h1><p class="cap28">Система предлагает практики, а ты решаешь, подходят ли они сейчас. Одновременно активны не более двух дополнительных практик. Пропуск ничего не обнуляет.</p>';
   var recs=(window.GPract&&GPract.recs(P,T,n))||[];
   if(recs.length){
     h+='<h2 class="lab-h">Сейчас рекомендуется</h2>';
@@ -436,7 +436,7 @@ function viewDiary(P,T){
     });
     html+='<button type="button" class="quiet-btn" data-act="open" data-n="'+n+'">Открыть день '+n+'</button></section>';
   }
-  if(!records)html+='<div class="row-line"><p>Записей пока нет. Вы можете добавить событие, заметку или контрольную точку из раздела «Мой день».</p><button type="button" class="go" data-act="today">Перейти к сегодняшнему дню</button></div>';
+  if(!records)html+='<div class="row-line"><p>Записей пока нет. ты можешь добавить событие, заметку или контрольную точку из раздела «Мой день».</p><button type="button" class="go" data-act="today">Перейти к сегодняшнему дню</button></div>';
   html+='</div>';return html;
 }
 function viewDirections(P,T){
@@ -446,7 +446,7 @@ function viewDirections(P,T){
     var p=plans[i]||{},done=0,marks=0;
     for(var n=1;n<=28;n++){var day=dayRec(T,n);if(day.dirState[i]==='done')done++;if(day.dirMarks[i])marks++}
     html+='<section class="row-line direction-plan"><p class="dk">Направление '+(i+1)+'</p><h2>'+esc(d.text)+'</h2><p class="mute">Выполнено шагов: '+done+' · отметок о динамике: '+marks+'</p>';
-    html+='<label>Какого изменения Вы хотите?<textarea rows="2" maxlength="500" data-act="dir-plan" data-i="'+i+'" data-k="goal" placeholder="Опишите желаемое положение">'+esc(p.goal||'')+'</textarea></label>';
+    html+='<label>Какого изменения ты хочешь?<textarea rows="2" maxlength="500" data-act="dir-plan" data-i="'+i+'" data-k="goal" placeholder="Опишите желаемое положение">'+esc(p.goal||'')+'</textarea></label>';
     html+='<label>Минимальный шаг, доступный даже в сложный день<textarea rows="2" maxlength="300" data-act="dir-plan" data-i="'+i+'" data-k="minimum" placeholder="Самая небольшая версия действия">'+esc(p.minimum||'')+'</textarea></label>';
     html+='<label>Ближайшее регулярное действие<textarea rows="2" maxlength="300" data-act="dir-plan" data-i="'+i+'" data-k="next" placeholder="Что можно повторять без перегрузки">'+esc(p.next||'')+'</textarea></label>';
     html+='</section>';
@@ -527,8 +527,8 @@ function viewMirror(P,T,isArchive){
  if(!isArchive&&T.mirrorArchiveIndex!=null){var old=(P.trackerHistory||[])[+T.mirrorArchiveIndex];if(old&&old.mirror&&old.mirror.phase==='report')return viewMirror(P,old,true);delete T.mirrorArchiveIndex;save(P)}
  var M=T.mirror||{},ready=!!(T.finale&&T.finale.done)||todayNum(T)>=28;
  if(M.phase==='self'){
-  var h='<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни · повторный замер</p><h1>Как Вы воспринимаете свою жизнь сейчас?</h1><p class="cap28">Оцените каждую сферу по собственному ощущению. Прежние оценки, ответы и дневниковая статистика пока скрыты — сначала зафиксируйте сегодняшний взгляд.</p><div class="mirror-self-grid">';
-  MIRROR_SPHERES.forEach(function(x,i){h+='<label class="mirror-self-item"><b>'+x.n+'</b><select data-act="mirror-wheel" data-i="'+i+'"><option value="">Выберите оценку</option>'+Array.from({length:10},function(_,j){var v=j+1;return '<option value="'+v+'" '+(+M.endWheel[i]===v?'selected':'')+'>'+v+' / 10</option>'}).join('')+'</select></label>'});
+  var h='<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни · повторный замер</p><h1>Как ты воспринимаешь свою жизнь сейчас?</h1><p class="cap28">Оцени каждую сферу по собственному ощущению. Прежние оценки, ответы и дневниковая статистика пока скрыты — сначала зафиксируйте сегодняшний взгляд.</p><div class="mirror-self-grid">';
+  MIRROR_SPHERES.forEach(function(x,i){h+='<label class="mirror-self-item"><b>'+x.n+'</b><select data-act="mirror-wheel" data-i="'+i+'"><option value="">Выбери оценку</option>'+Array.from({length:10},function(_,j){var v=j+1;return '<option value="'+v+'" '+(+M.endWheel[i]===v?'selected':'')+'>'+v+' / 10</option>'}).join('')+'</select></label>'});
   h+='</div><button class="go" type="button" data-act="mirror-wheel-save">Зафиксировать самооценку</button><p class="mute">Можно вернуться и изменить оценки до завершения повторного исследования.</p></div>';return h;
  }
  if(M.phase==='research'){
@@ -540,22 +540,22 @@ function viewMirror(P,T,isArchive){
  }
  if(M.phase!=='report'){
   var events=Object.values(T.events24||{}).reduce(function(n,a){return n+(a||[]).length},0),prior=(P.trackerHistory||[]).map(function(x,i){return {t:x,i:i}}).filter(function(x){return x.t.mirror&&x.t.mirror.phase==='report'}),priorHtml=prior.length?'<details><summary>Отчеты предыдущих циклов: '+prior.length+'</summary>'+prior.map(function(x){return '<p><button type="button" class="quiet-btn" data-act="mirror-archive" data-i="'+x.i+'">Открыть отчет · '+new Date(x.t.mirror.completedAt||x.t.mirror.startedAt||Date.now()).toLocaleDateString('ru-RU')+'</button></p>'}).join('')+'</details>':'';
-  return '<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни</p><h1>Три картины одной жизни</h1><p class="cap28">В начале цикла Вы уже увидели собственную оценку сфер и прошли исследовательские вопросы. За 28 дней можно было записывать события, время, мотивы и состояние. В конце мы сопоставим эти разные источники — не как оценку правильной жизни, а как материал для понимания.</p><div class="mirror-stage"><ol><li><b>Первый взгляд</b><span>Исходная самооценка сфер.</span></li><li><b>Исследовательская картина</b><span>Подробные ответы по восьми сферам и парные наблюдения.</span></li><li><b>Наблюдаемая картина</b><span>Зарегистрированные события, длительности, мотивы и состояние. Пустые промежутки не считаются бездействием.</span></li><li><b>Новый взгляд</b><span>Повторная самооценка и исследовательские вопросы — до показа прежних данных.</span></li></ol></div>'+(ready?'<p class="mute">Цикл достиг 28-го дня. Записано событий: '+events+'. Можно пройти повторный замер. Незаполненные дни не мешают завершить исследование.</p><button type="button" class="go" data-act="mirror-start">Начать повторный замер</button>':'<p class="mute">Повторный замер откроется на 28-й день цикла. Сейчас можно продолжать вести дневник событий и контрольных точек.</p>')+priorHtml+'<button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button></div>';
+  return '<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни</p><h1>Три картины одной жизни</h1><p class="cap28">В начале цикла ты уже увидел(а) собственную оценку сфер и прошли исследовательские вопросы. За 28 дней можно было записывать события, время, мотивы и состояние. В конце мы сопоставим эти разные источники — не как оценку правильной жизни, а как материал для понимания.</p><div class="mirror-stage"><ol><li><b>Первый взгляд</b><span>Исходная самооценка сфер.</span></li><li><b>Исследовательская картина</b><span>Подробные ответы по восьми сферам и парные наблюдения.</span></li><li><b>Наблюдаемая картина</b><span>Зарегистрированные события, длительности, мотивы и состояние. Пустые промежутки не считаются бездействием.</span></li><li><b>Новый взгляд</b><span>Повторная самооценка и исследовательские вопросы — до показа прежних данных.</span></li></ol></div>'+(ready?'<p class="mute">Цикл достиг 28-го дня. Записано событий: '+events+'. Можно пройти повторный замер. Незаполненные дни не мешают завершить исследование.</p><button type="button" class="go" data-act="mirror-start">Начать повторный замер</button>':'<p class="mute">Повторный замер откроется на 28-й день цикла. Сейчас можно продолжать вести дневник событий и контрольных точек.</p>')+priorHtml+'<button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button></div>';
  }
  var init=M.initialWheel||((P.cycleBaseline&&P.cycleBaseline.wheel)||P.wheel||[]),initResearch=M.initialResearch||mirrorInitialResearch(P),finalWheel=M.endWheel||[],finalResearch=mirrorResearchAvg(M.endResearch||[]),stats=mirrorActivityStats(T),shares={};
  MIRROR_SPHERES.forEach(function(x){shares[x.k]=stats.total?stats.bySphere[x.k]/stats.total*100:0});
  var sn={own:'Собственное желание',important:'Осознанный выбор',need:'Необходимость',care:'Забота / любовь',duty:'Чувство долга',external:'Внешнее требование',habit:'Привычка',avoid:'Избегание',restore:'Восстановление',mixed:'Смешанный мотив',unclassified:'Не указано',joy:'Радость',calm:'Спокойствие',interest:'Интерес',satisfaction:'Удовлетворение',neutral:'Нейтральность',tension:'Напряжение',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',emptiness:'Опустошение',better:'Стало лучше',same:'Без заметных изменений',worse:'Стало хуже',unknown:'Не определено',self:'Для себя',other:'Для другого',shared:'Общее / совместное',both:'Для себя и других',yes:'Плановое',no:'Спонтанное',done:'Выполнено',partial:'Частично',not_done:'Не выполнено',ongoing:'Продолжается',na:'Не применимо'};
  var h='<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни · отчет</p><h1>Пять разных взглядов на одну жизнь</h1><p class="cap28">Это не единый рейтинг и не объективная оценка благополучия. Самооценка, исследовательские ответы и зарегистрированная активность измеряют разные стороны опыта.</p>';
- h+='<div class="mirror-report-grid"><details open><summary>1. Исходная самооценка</summary>'+mirrorWheelSvg(init,'Как Вы оценивали сферы в начале',10)+'</details><details><summary>2. Исходные исследовательские ответы</summary>'+mirrorWheelSvg(initResearch,'Подробные ответы в начале',10)+'</details><details open><summary>3. Наблюдаемая активность за 28 дней</summary>';
+ h+='<div class="mirror-report-grid"><details open><summary>1. Исходная самооценка</summary>'+mirrorWheelSvg(init,'Как ты оценивал(а) сферы в начале',10)+'</details><details><summary>2. Исходные исследовательские ответы</summary>'+mirrorWheelSvg(initResearch,'Подробные ответы в начале',10)+'</details><details open><summary>3. Наблюдаемая активность за 28 дней</summary>';
  h+='<p class="mute">Событий: '+stats.events+' · дни с записями: '+stats.days+' из 28 · контрольные точки состояния: '+stats.checkpoints+(stats.checkpoints?' · среднее настроение '+stats.moodAvg.toFixed(1)+'/10 · энергия '+stats.energyAvg.toFixed(1)+'/10':'')+'. Учтено без пересечений: '+Math.round(stats.total/60*10)/10+' ч. Пересекающееся время: '+Math.round(stats.overlap/60*10)/10+' ч — показано отдельно и не добавлено повторно. Другое или сфера не указана: '+Math.round(stats.unknown/60*10)/10+' ч.</p>';
  h+=stats.total?mirrorWheelSvg(MIRROR_SPHERES.map(function(x){return shares[x.k]}),'Доля зарегистрированного времени по сферам, %',100):'<p class="mute">Недостаточно записей, чтобы построить распределение. Это не означает, что в эти дни ничего не происходило.</p>';
  h+='<h3>Время по сферам</h3>'+mirrorBars(stats.bySphere,stats.total,Object.assign({unclassified:'Не указано'},Object.fromEntries(MIRROR_SPHERES.map(function(x){return [x.k,x.n]}))));
  h+='<h3>Плановые и спонтанные события</h3>'+mirrorBars(stats.byPlanned,stats.total,sn)+'<h3>На кого было направлено время</h3>'+mirrorBars(stats.byFocus,stats.total,sn)+'<h3>Мотивы зарегистрированных событий</h3>'+mirrorBars(stats.byMotive,stats.total,sn)+'<h3>Эмоциональные отметки</h3>'+mirrorBars(stats.byEmotion,stats.total,sn);
  h+='<h3>Степень выполнения</h3>'+Object.keys(stats.completion).map(function(k){return '<p>'+esc(sn[k]||k)+': '+stats.completion[k]+'</p>'}).join('')+'<h3>Последействие</h3>'+Object.keys(stats.after).map(function(k){return '<p>'+esc(sn[k]||k)+': '+stats.after[k]+'</p>'}).join('')+(stats.alternatives.length?'<h3>Что хотелось бы попробовать иначе</h3>'+stats.alternatives.slice(0,8).map(function(x){return '<p>· '+esc(x)+'</p>'}).join(''):'')+'</details>';
- h+='<details open><summary>4. Новая самооценка</summary>'+mirrorWheelSvg(finalWheel,'Как Вы оцениваете сферы сейчас',10)+'</details><details><summary>5. Повторные исследовательские ответы</summary>'+mirrorWheelSvg(finalResearch,'Подробные ответы сейчас',10)+'</details></div>';
+ h+='<details open><summary>4. Новая самооценка</summary>'+mirrorWheelSvg(finalWheel,'Как ты оцениваешь сферы сейчас',10)+'</details><details><summary>5. Повторные исследовательские ответы</summary>'+mirrorWheelSvg(finalResearch,'Подробные ответы сейчас',10)+'</details></div>';
  h+='<h2>Сопоставление</h2><div class="mirror-compare"><div class="mirror-compare-head"><span>Сфера</span><span>Было</span><span>Исслед.</span><span>Время</span><span>Стало</span><span>Исслед.</span></div>';
  MIRROR_SPHERES.forEach(function(x,i){h+='<div class="mirror-compare-row"><b>'+x.n+'</b><span>'+(init[i]==null?'—':init[i])+'</span><span>'+(initResearch[i]==null?'—':initResearch[i].toFixed(1))+'</span><span>'+(stats.total?Math.round(shares[x.k])+'%':'—')+'</span><span>'+(finalWheel[i]==null?'—':finalWheel[i])+'</span><span>'+(finalResearch[i]==null?'—':finalResearch[i].toFixed(1))+'</span></div>'});
- h+='</div><p class="mute">Расхождение между тем, что Вы ощущаете, что показывают ответы и на что уходит записанное время, не означает ошибку или самообман. Возможны изменение приоритетов, неполнота записей, внешние обстоятельства и разные способы измерения. Время по сферам рассчитано по непересекающимся интервалам; перекрытия вынесены отдельно.</p>';
+ h+='</div><p class="mute">Расхождение между тем, что ты ощущаешь, что показывают ответы и на что уходит записанное время, не означает ошибку или самообман. Возможны изменение приоритетов, неполнота записей, внешние обстоятельства и разные способы измерения. Время по сферам рассчитано по непересекающимся интервалам; перекрытия вынесены отдельно.</p>';
  var note=M.reflection||{};h+='<div class="mirror-note"><h3>Что я замечаю в этой картине?</h3><label>Что оказалось неожиданным?<textarea data-act="mirror-note" data-key="surprise" rows="3">'+esc(note.surprise||'')+'</textarea></label><label>Что я хочу сохранить в своей жизни?<textarea data-act="mirror-note" data-key="keep" rows="3">'+esc(note.keep||'')+'</textarea></label><label>Что я хочу изменить или исследовать дальше?<textarea data-act="mirror-note" data-key="next" rows="3">'+esc(note.next||'')+'</textarea></label></div>';
  if(isArchive){h+='<button type="button" class="quiet-btn" data-act="mirror-archive-back">Вернуться к текущему отчету</button>'}
  else{h+='<button type="button" class="go" data-act="mirror-continue">Продолжить к финальному сравнению</button><button type="button" class="quiet-btn" data-act="mirror-restart">Пройти повторное исследование еще раз</button><button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button>'}
@@ -573,18 +573,18 @@ function viewHero(P,T){
       var tr=it.trend>0.4?' растет':(it.trend<-0.4?' снижается':'');
       return '<div><b>'+esc(it.name)+'</b><span>'+v+esc(tr)+'</span></div>';
     }).join('')+'</div>';
-    h+='<p class="mute">Числа 0–100 пересчитаны из Ваших самооценок 1–10. Расчет динамики не подменяет самооценку и не повышает показатели за выполнение практик.</p>';
+    h+='<p class="mute">Числа 0–100 пересчитаны из твоих самооценок 1–10. Расчет динамики не подменяет самооценку и не повышает показатели за выполнение практик.</p>';
   }
   h+=svgChart(T,1,Math.max(n,7),T.hiddenMet||{},'Динамика');
   var S=T.strategy||{};
-  if(S.res&&S.res.length)h+='<div class="row-line"><b>На что Вы можете опереться</b>'+S.res.slice(0,4).map(function(x){return '<p><b>'+esc(x.t)+'.</b> '+esc(x.x)+'</p>'}).join('')+'</div>';
+  if(S.res&&S.res.length)h+='<div class="row-line"><b>На что ты можешь опереться</b>'+S.res.slice(0,4).map(function(x){return '<p><b>'+esc(x.t)+'.</b> '+esc(x.x)+'</p>'}).join('')+'</div>';
   h+='<div class="row-line"><b>Достижения цикла</b><p>Дней с отметкой: '+filledCount(T)+' из 28. Доказательств: '+((T.proofs||[]).length)+'. Знаков: '+ (function(){var c=0;for(var i=1;i<=28;i++)c+=(dayRec(T,i).signs||[]).length;return c})()+'.</p></div>';
   h+='<p class="cap28"><a class="sky-link" href="hero.html?v=h5">Открыть вкладку героя</a> · <a class="sky-link" href="wish.html">Небо желаний</a></p>';
   return h+'</div>';
 }
 function viewMonth(P,T){
   var today=todayNum(T), open=+T.openDay||0;
-  var html='<div class="t28"><p class="dk">Карта 28 дней</p><h1>Четыре недели</h1><p class="cap28">Выберите день, чтобы открыть его. Номер недели открывает обзор недели.</p>';
+  var html='<div class="t28"><p class="dk">Карта 28 дней</p><h1>Четыре недели</h1><p class="cap28">Выбери день, чтобы открыть его. Номер недели открывает обзор недели.</p>';
   html+='<div class="cal"><span></span>';
   WD.forEach(function(w){html+='<span class="hd">'+w+'</span>'});
   for(var w=0;w<4;w++){
@@ -666,7 +666,7 @@ function dayPanel(P,T,n){
     html+='<textarea data-act="journal" data-id="'+id+'" rows="2" maxlength="240" placeholder="'+esc(gx(it.min))+'">'+esc((d.journal&&d.journal[id])||'')+'</textarea></div>';
   });}
   var lc=d.lightCounters||{};
-  var lightBody='<p class="mute">Не медицинский дневник и не норма. Отмечайте только то, что помогает Вам наблюдать за днем. Пропуски ничего не означают.</p>';
+  var lightBody='<p class="mute">Не медицинский дневник и не норма. Отмечайте только то, что помогает тебе наблюдать за днем. Пропуски ничего не означают.</p>';
   [['water','Вода · стаканы',1],['movement','Движение · минуты',5],['meals','Приемы пищи',1]].forEach(function(x){
     var v=+lc[x[0]]||0;
     lightBody+='<div class="light-counter"><b>'+x[1]+'</b><div><button type="button" class="quiet-btn" data-act="counter" data-k="'+x[0]+'" data-delta="-'+x[2]+'">−</button><strong>'+v+'</strong><button type="button" class="quiet-btn" data-act="counter" data-k="'+x[0]+'" data-delta="'+x[2]+'">+</button></div></div>';
@@ -798,7 +798,7 @@ function practBody(T){
 }
 function proofBody(T){
   var L=(T.proofs||[]).slice().reverse().map(function(p){return '<div class="sign-item">'+esc(p.text)+(p.day?' <span class="mute">· день '+p.day+'</span>':'')+'</div>'}).join('');
-  return L||'<p class="mute">Сюда попадают знаки дня и то, что Вы '+((window.GG&&GG('заметил','заметила'))||'заметил')+' в бонусной строке.</p>';
+  return L||'<p class="mute">Сюда попадают знаки дня и то, что ты '+((window.GG&&GG('заметил','заметила'))||'заметил')+' в бонусной строке.</p>';
 }
 
 function weekStrat(T,w){
@@ -860,7 +860,7 @@ function recipeOf(T){
   if(hiEnergy && hiEnergy>=2)bits.push('когда энергия была выше');
   if(better)bits.push('когда {ставил|ставила} отметку «стало лучше»');
   if(!bits.length)return '';
-  return '<div class="res"><b>Рецепт успеха</b><p>Чаще сдвигалось '+bits.map(function(s){return gx(s)}).join(', ')+'. Это не правило, а только то, что видно по Вашим отметкам.</p></div>';
+  return '<div class="res"><b>Рецепт успеха</b><p>Чаще сдвигалось '+bits.map(function(s){return gx(s)}).join(', ')+'. Это не правило, а только то, что видно по твоим отметкам.</p></div>';
 }
 
 function viewResults(P,T){
@@ -939,7 +939,7 @@ function viewReview(P,T){
   if(done)lines.push('Маленький шаг выполнен'+(done>1?': '+done+'.':'.'));
   if(d.wishMark==='better'||(d.dirMarks||[]).indexOf('better')>=0)lines.push('Есть отметка «стало лучше».');
   if((d.brakeWords||[]).length)lines.push(gx('{Поймал|Поймала} слово-тормоз и {увидел|увидела} мягкую замену.'));
-  var RV={done:'Шаг дня сделан.',part:'Шаг сделан частично. Это тоже движение.',min:'Вы выбрали минимальную версию. Так система остается гибкой в трудные дни.',other:'Вы выбрали другой шаг. Он тоже засчитан.',fail:'Сегодня не получилось. Ничего не обнуляется: завтра игра предложит шаг полегче.'};
+  var RV={done:'Шаг дня сделан.',part:'Шаг сделан частично. Это тоже движение.',min:'Ты выбрал(а) минимальную версию. Так система остается гибкой в трудные дни.',other:'Вы выбрали другой шаг. Он тоже засчитан.',fail:'Сегодня не получилось. Ничего не обнуляется: завтра игра предложит шаг полегче.'};
   if(d.res&&RV[d.res.v])lines.unshift(gx(RV[d.res.v]));
   if(T.strategy&&n<28){var nx=GStrategy.adapt(T,n+1);if(nx)lines.push('Завтра: '+nx.m)}
   if(!lines.length)lines.push('День можно дозаполнить позже. Без штрафа.');
