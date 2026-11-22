@@ -1125,6 +1125,10 @@ function bind(){
       save(P); if(window.GArts)GArts.grant('proof_sign'); render(); return;
     }
     if(act==='newcycle'){
+      if(T.mirror&&T.mirror.phase==='report'&&Array.isArray(T.mirror.endWheel)&&Array.isArray(T.mirror.endResearch)){
+        P.wheel=T.mirror.endWheel.slice();
+        P.cycleBaseline={wheel:T.mirror.endWheel.slice(),research:mirrorResearchAvg(T.mirror.endResearch),capturedAt:Date.now()};
+      }
       var archived=JSON.parse(JSON.stringify(T));
       archived.archivedAt=Date.now();
       if(P.cycleBaseline)archived.cycleBaseline=JSON.parse(JSON.stringify(P.cycleBaseline));
