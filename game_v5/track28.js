@@ -198,7 +198,7 @@ function injectNav(html,space){
 function render(){
   if(!host)return;
   var P=ensure(), T=Tget(P);
-  if(!T.strategySeen&&T.strategy&&window.GStrategy){
+  if(!T.strategySeen&&T.strategy&&window.GStrategy&&T.view!=='mirror'&&T.space!=='mirror'){
     host.innerHTML=viewStrategy(P,T); bind(); return;
   }
   if(T.view==='settings'){host.innerHTML=viewSettings(P,T); bind(); return}
