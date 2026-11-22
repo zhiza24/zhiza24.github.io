@@ -189,7 +189,7 @@ var host=null;
 function mount(el){host=el; var P=ensure(); var T=Tget(P); if(T.openDay==null)T.openDay=0; save(P); render()}
 
 function spacesNav(space){
-  var tabs=[['day','Мой день'],['map','Карта'],['lab','Практики'],['hero','Герой'],['path','Путь']];
+  var tabs=[['day','Мой день'],['map','Карта'],['lab','Практики'],['hero','Герой'],['mirror','Зеркало жизни'],['path','Путь']];
   return '<nav class="spaces">'+tabs.map(function(t){return '<button type="button" class="'+(space===t[0]?'on':'')+'" data-act="space" data-s="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</nav>';
 }
 function injectNav(html,space){
@@ -207,6 +207,7 @@ function render(){
   var space=T.space||'day';
   if(space==='lab'||T.view==='practs'){host.innerHTML=injectNav(viewPracts(P,T),'lab'); bind(); return}
   if(space==='hero'){host.innerHTML=injectNav(viewHero(P,T),'hero'); bind(); return}
+  if(space==='mirror'||T.view==='mirror'){host.innerHTML=injectNav(viewMirror(P,T),'mirror'); bind(); return}
   if(space==='path'||T.view==='monthg'||T.view==='finale'){host.innerHTML=injectNav(viewResults(P,T),'path'); bind(); return}
   if(space==='map'){host.innerHTML=injectNav(viewMonth(P,T),'map'); bind(); return}
   host.innerHTML=injectNav(viewDay(P,T),'day'); bind();
@@ -405,6 +406,14 @@ function viewDay(P,T){
   h+='<p class="cap28"><a class="sky-link" href="wish.html">Открыть небо желаний</a></p>';
   h+=dayPanel(P,T,n);
   return h+'</div>';
+}
+function viewMirror(P,T){
+  var h='<div class="t28 mirror-placeholder"><p class="dk">Зеркало прожитой жизни</p><h1>Как Вы на самом деле проживаете свои дни</h1>';
+  h+='<p class="cap28">Это пространство будущего исследования: здесь мы сопоставим Ваше представление о жизни, результаты исследований и картину, которую соберут Ваши ежедневные наблюдения за 28 дней.</p>';
+  h+='<div class="mirror-stage"><span class="mirror-kicker">В разработке</span><h2>Три картины одной жизни</h2><ol><li><b>Как я воспринимаю свою жизнь</b><span>Первое колесо жизненного баланса и исходные ответы.</span></li><li><b>На что фактически уходят мои время и внимание</b><span>Записи занятий, мотивы, эмоциональные точки и связь с личными ценностями.</span></li><li><b>Как я воспринимаю свою жизнь теперь</b><span>Повторная самооценка и сравнение с наблюдениями за 28 дней.</span></li></ol></div>';
+  h+='<p class="cap28">Пока эта вкладка сохраняет место и замысел будущего модуля. Сбор данных и расчеты здесь еще не включены.</p>';
+  h+='<button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button></div>';
+  return h;
 }
 function viewHero(P,T){
   var n=todayNum(T), pan=window.GSim?GSim.panel(T,n):null;
@@ -771,7 +780,7 @@ function bind(){
     tick();
     if(act==='space'){
       var sp=b.getAttribute('data-s');
-      T.space=sp; T.view=(sp==='map'?'month':sp==='path'?'monthg':sp==='lab'?'practs':'day');
+      T.space=sp; T.view=(sp==='map'?'month':sp==='path'?'monthg':sp==='lab'?'practs':sp==='mirror'?'mirror':'day');
       if(sp==='day'&&!T.openDay)T.openDay=todayNum(T);
       save(P); render(); try{window.scrollTo(0,0)}catch(e){} return;
     }
