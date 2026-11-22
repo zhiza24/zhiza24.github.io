@@ -1223,12 +1223,13 @@ function bind(){
       var archived=JSON.parse(JSON.stringify(T));
       archived.archiveVersion=2;
       archived.archivedAt=Date.now();
+      archived.archiveId='cycle-'+(T.cycle||1)+'-'+(T.start||archived.archivedAt);
       archived.cycleStartedAt=T.start||null;
       archived.cycleEndedAt=archived.archivedAt;
       if(baselineBefore)archived.cycleBaseline=baselineBefore;
       if(retestBefore)archived.retest=retestBefore;
       P.trackerHistory=P.trackerHistory||[];
-      if(!P.trackerHistory.some(function(x){return x&&x.cycle===(T.cycle||1)&&((x.start||null)===(T.start||null))}))P.trackerHistory.push(archived);
+      if(!P.trackerHistory.some(function(x){return x&&x.archiveId===archived.archiveId}))P.trackerHistory.push(archived);
       if(completedMirror){
         var nextWheel=T.mirror.endWheel.slice(),nextResearch=mirrorResearchAvg(T.mirror.endResearch);
         P.wheel=nextWheel.slice();
