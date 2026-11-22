@@ -421,7 +421,7 @@ function mirrorResearchAvg(arr){
  return MIRROR_SPHERES.map(function(x,i){var a=(arr||[]).slice(i*3,i*3+3).filter(function(v){return typeof v==='number'&&isFinite(v)});return a.length?a.reduce(function(p,c){return p+c},0)/a.length:null});
 }
 function mirrorInitialResearch(P){
- var w=P.wheelTest||{};if(Array.isArray(w.averages)&&w.averages.length===8)return w.averages;
+ if(P.cycleBaseline&&Array.isArray(P.cycleBaseline.research)&&P.cycleBaseline.research.length===8)return P.cycleBaseline.research;var w=P.wheelTest||{};if(Array.isArray(w.averages)&&w.averages.length===8)return w.averages;
  return (w.spheres||[]).map(function(s){var a=(s.ratings||[]).filter(function(v){return typeof v==='number'&&isFinite(v)});return a.length?a.reduce(function(p,c){return p+c},0)/a.length:null});
 }
 function mirrorActivityStats(T){
@@ -469,7 +469,7 @@ function viewMirror(P,T){
   var events=Object.values(T.events24||{}).reduce(function(n,a){return n+(a||[]).length},0);
   return '<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни</p><h1>Три картины одной жизни</h1><p class="cap28">В начале цикла Вы уже увидели собственную оценку сфер и прошли исследовательские вопросы. За 28 дней можно было записывать события, время, мотивы и состояние. В конце мы сопоставим эти разные источники — не как оценку правильной жизни, а как материал для понимания.</p><div class="mirror-stage"><ol><li><b>Первый взгляд</b><span>Исходная самооценка сфер.</span></li><li><b>Исследовательская картина</b><span>Подробные ответы по восьми сферам и парные наблюдения.</span></li><li><b>Наблюдаемая картина</b><span>Зарегистрированные события, длительности, мотивы и состояние. Пустые промежутки не считаются бездействием.</span></li><li><b>Новый взгляд</b><span>Повторная самооценка и исследовательские вопросы — до показа прежних данных.</span></li></ol></div>'+(ready?'<p class="mute">Цикл достиг 28-го дня. Записано событий: '+events+'. Можно пройти повторный замер. Незаполненные дни не мешают завершить исследование.</p><button type="button" class="go" data-act="mirror-start">Начать повторный замер</button>':'<p class="mute">Повторный замер откроется на 28-й день цикла. Сейчас можно продолжать вести дневник событий и контрольных точек.</p>')+'<button type="button" class="go" data-act="mirror-continue">Продолжить к финальному сравнению</button><button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button></div>';
  }
- var init=P.wheel||[],initResearch=mirrorInitialResearch(P),finalWheel=M.endWheel||[],finalResearch=mirrorResearchAvg(M.endResearch||[]),stats=mirrorActivityStats(T),shares={};
+ var init=(P.cycleBaseline&&P.cycleBaseline.wheel)||P.wheel||[],initResearch=mirrorInitialResearch(P),finalWheel=M.endWheel||[],finalResearch=mirrorResearchAvg(M.endResearch||[]),stats=mirrorActivityStats(T),shares={};
  MIRROR_SPHERES.forEach(function(x){shares[x.k]=stats.total?stats.bySphere[x.k]/stats.total*100:0});
  var sn={own:'Собственное желание',important:'Осознанный выбор',need:'Необходимость',care:'Забота / любовь',duty:'Чувство долга',external:'Внешнее требование',habit:'Привычка',avoid:'Избегание',restore:'Восстановление',mixed:'Смешанный мотив',unclassified:'Не указано',joy:'Радость',calm:'Спокойствие',interest:'Интерес',satisfaction:'Удовлетворение',neutral:'Нейтральность',tension:'Напряжение',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',emptiness:'Опустошение',better:'Стало лучше',same:'Без заметных изменений',worse:'Стало хуже',unknown:'Не определено',self:'Для себя',other:'Для другого',shared:'Общее / совместное',both:'Для себя и других'};
  var h='<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни · отчет</p><h1>Пять разных взглядов на одну жизнь</h1><p class="cap28">Это не единый рейтинг и не объективная оценка благополучия. Самооценка, исследовательские ответы и зарегистрированная активность измеряют разные стороны опыта.</p>';
@@ -1021,7 +1021,7 @@ function bind(){
       T.checkpoints24=T.checkpoints24||{};T.checkpoints24[n]=T.checkpoints24[n]||[];T.checkpoints24[n].push({id:uid(),minute:mn,mood:mm,energy:ee,note:String(cd.note||'').trim(),at:Date.now()});T.checkpointDraft=T.checkpointDraft||{};delete T.checkpointDraft[n];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='checkpoint-delete'){var dn=+b.getAttribute('data-day'),did=b.getAttribute('data-id');T.checkpoints24=T.checkpoints24||{};T.checkpoints24[dn]=(T.checkpoints24[dn]||[]).filter(function(x){return x.id!==did});if(!T.checkpoints24[dn].length)delete T.checkpoints24[dn];save(P);render();openAccAfterRender('events24');return}
-    if(act==='mirror-start'||act==='mirror-restart'){
+    if(act==='mirror-continue'){location.href='slot.html?id=retest';return}\n    if(act==='mirror-start'||act==='mirror-restart'){
       var hist=(T.mirror&&T.mirror.history)||[];
       if(T.mirror&&T.mirror.phase==='report')hist=hist.concat([{startedAt:T.mirror.startedAt,completedAt:T.mirror.completedAt,endWheel:T.mirror.endWheel,endResearch:T.mirror.endResearch,reflection:T.mirror.reflection}]);
       T.mirror={version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0,startedAt:Date.now(),history:hist};
