@@ -46,7 +46,7 @@ function collect(P){
   var freq=['Почти никогда','Редко','Иногда','Часто','Очень часто'];
   if(mag.R!=null&&freq[mag.R])ev.push('Маг · частота похожего чувства: '+freq[mag.R]);
   var detail=lead?(ra&&ra.title?ra.title:phrase||lead)+'. Это чувство особенно заметно в тех ситуациях, о которых ты рассказал.':'Сейчас на первый план выходят разные чувства в разных обстоятельствах.';
-  if(mag.period)detail+=' Период ответа: '+({P1:'последние 2–3 месяца',P2:'последний год',P3:'сложный текущий период',P4:'период не определен'})[mag.period]+'.';
+  if(mag.period)detail+=' Период, о котором ты рассказывал: '+({P1:'последние 2–3 месяца',P2:'последний год',P3:'сложный текущий период',P4:'период не определен'})[mag.period]+'.';
   if(mag.R!=null&&freq[mag.R])detail+=' Частота по самооценке: '+freq[mag.R].toLowerCase()+'.';
   if(mag.skips!=null)detail+=' Пропущено вопросов: '+mag.skips+'.';
   out.fragments.push({domain:'Фоновое состояние',title:lead?(phrase||mag.top||lead):'Один фон пока не выделился',detail:detail,status:lead?'preliminary':'unclear',source:'mag',evidence:ev});
@@ -182,7 +182,7 @@ function mount(box){
       active.forEach(function(state){
        var questions=GStateEngine.falsifiers(state.id);
        if(!questions.length)return;
-       falsifierHtml+='<article class="im-card"><div class="im-card-k">Проверка гипотезы · '+esc(state.name)+'</div>';
+       falsifierHtml+='<article class="im-card"><div class="im-card-k">Еще один взгляд · '+esc(state.name)+'</div>';
        questions.forEach(function(q,index){
         var key=state.id+'::'+q.question,answer=falsifierAnswers[key];
         falsifierHtml+='<p>'+esc(q.question)+'</p><div class="im-actions">'+
@@ -198,7 +198,7 @@ function mount(box){
      html+='<section class="im-group"><h2>Другие слои картины</h2>';
      if(cx.reactionStrategy){
       var rp=cx.reactionStrategy.pattern;
-      html+='<article class="im-card"><div class="im-card-k">GLead / GPAT · способ реагирования</div><h3>'+esc(cx.reactionStrategy.label)+'</h3><p>Это отдельный слой привычной стратегии, а не доказательство одного из 19 состояний.</p>'+
+      html+='<article class="im-card"><div class="im-card-k">Твой способ реагирования</div><h3>'+esc(cx.reactionStrategy.label)+'</h3><p>Посмотри, что запускает эту реакцию, что она дает и какую цену иногда приходится за нее платить.</p>'+
        (rp?'<p><b>Триггер:</b> '+esc(rp.trigger)+'</p><p><b>Автоматическая реакция:</b> '+esc(rp.reaction)+'</p><p><b>Скрытое правило:</b> «'+esc(rp.rule)+'»</p><p><b>Что дает:</b> '+esc(rp.benefit)+'</p><p><b>Цена:</b> '+esc(rp.cost)+'</p><p><b>Новая настройка:</b> '+esc(rp.newSetting)+'</p>':'')+
        (cx.reactionStrategy.secondary.length?'<p>Другие заметные стратегии: '+esc(cx.reactionStrategy.secondary.join(', '))+'</p>':'')+'</article>';
      }
@@ -244,9 +244,7 @@ function mount(box){
   var modelSummary='';
   if(data.stateModel){
    var marked=data.stateModel.states.filter(function(x){return x.status!=='unassessed'});
-   modelSummary='<section class="im-group"><h2>Твои внутренние настройки</h2>'+\n    (marked.length?marked.slice(0,8).map(function(x){return '<article class="im-card"><h3>'+esc(x.name)+'</h3><p>'+esc(x.stance)+'</p></article>'}).join(''):'<p>По мере прохождения пути ты увидишь больше своих привычных способов реагировать.</p>')+'</section>';/*
-    (marked.length?marked.slice(0,8).map(function(x){return '<p><b>'+esc(x.name)+'</b> — '+esc(x.confidence)+(x.needsDiscriminator.length?' · требуется различитель':'')+'</p>'}).join(''):'<p>Прямых совпадений пока нет.</p>')+
-    (data.stateModel.families.length?'<p>Семейства, требующие различения: '+data.stateModel.families.map(function(x){return esc(x.states.join(' / '))}).join('; ')+'.</p>':'')+'</section>';
+   modelSummary='<section class="im-group"><h2>Твои внутренние настройки</h2>'+(marked.length?marked.slice(0,8).map(function(x){return '<article class="im-card"><h3>'+esc(x.name)+'</h3><p>'+esc(x.stance)+'</p></article>'}).join(''):'<p>По мере прохождения пути ты увидишь больше своих привычных способов реагировать.</p>')+'</section>';
   }
   return '<div class="im-stage"><div class="im-eyebrow">Собранное отражение</div><h1>Твоя карта внутренней архитектуры</h1>'+map+modelSummary+'<div class="im-final"><div class="im-final-num">'+data.sources.length+'</div><div>исследований помогли собрать эту карту</div><div class="im-final-line"></div><b>'+esc(status)+'</b></div>'+
   (confirmed.length?'<h2>Что ты подтвердил</h2>'+confirmed.map(function(x){return '<p>✧ '+esc(x.title)+'</p>'}).join(''):'')+
