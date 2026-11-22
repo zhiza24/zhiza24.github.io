@@ -201,12 +201,12 @@ function build(P){
  function fa(k){return FOC[k]||{min:'Сделай самую маленькую часть этого шага.',alt:'Выбери любое другое действие в сторону желания.',obs:'Заметь, что изменилось после шага.'}}
  function mk(main,min,alt,obs,dir){return {m:gx(main,f),n:gx(min,f),a:gx(alt,f),o:gx(obs,f),dir:dir}}
  for(var d=1;d<=28;d++){var wk=Math.floor((d-1)/7),i=(d-1)%7,x;
-  if(d===1){x=mk(C.first,'Запиши одну фразу о своем желании.',fa(k1).alt,'Заметь, что ты почувствовал{|а}, когда начал{|а}.',0)}
+  if(d===1){x=mk(C.first,'Запиши одну фразу о своем желании.',fa(k1).alt,'Заметь, что Вы почувствовали, когда начал{|а}.',0)}
   else if(low&&d<=3){var s=SUPPORT.acts[d-2];x=mk(s.m,s.n,'Сделай что-то, что тебя наполняет.','Заметь, сколько сил стало к вечеру.',2)}
   else if(wk===0){x=(i%2)?mk(pr1[i%pr1.length]||acts[0].m,fa(k1).min,fa(k1).alt,fa(k1).obs,0):(function(){var a=acts[ai++%acts.length];return mk(a.m,a.n,fa(k1).alt,'Заметь, где внутри включилось '+(FOC[k1].t.toLowerCase())+'.',0)})()}
   else if(wk===1){x=(i%3===0)?mk(pr2[i%pr2.length]||acts[1].m,fa(k2).min,fa(k2).alt,fa(k2).obs,1):(i%3===1?mk(pr1[(i+3)%pr1.length]||acts[2].m,fa(k1).min,fa(k1).alt,'Заметь, стало ли это легче, чем на первой неделе.',0):(function(){var a=acts[ai++%acts.length];return mk(a.m,a.n,fa(k2).alt,'Заметь, что помогает тебе продолжать.',2)})())}
   else if(wk===2){var a2=acts[ai++%acts.length];x=(i===3)?mk(pr2[(i+2)%pr2.length]||a2.m,fa(k2).min,fa(k2).alt,fa(k2).obs,1):mk(a2.m,a2.n,fa(k1).alt,'Заметь, как на это реагирует жизнь вокруг: люди, события, возможности.',i%2?2:0)}
-  else{x=(i===6)?mk('Сравни, что было в начале цикла и что сейчас: что ты сделал{|а}, что изменилось, что понял{|а} о себе.','Запиши одно отличие.','Перечитай свои отметки за 28 дней.','Заметь, что из нового стало естественным.',2):(i%2?mk(pr1[(i+5)%pr1.length]||acts[3].m,fa(k1).min,fa(k1).alt,'Заметь, что уже получается без усилия.',0):(function(){var a=acts[ai++%acts.length];return mk(a.m,a.n,fa(k2).alt,'Заметь, что из этого ты хочешь оставить.',2)})())}
+  else{x=(i===6)?mk('Сравни, что было в начале цикла и что сейчас: что Вы сделали, что изменилось, что поняли о себе.','Запиши одно отличие.','Перечитай свои отметки за 28 дней.','Заметь, что из нового стало естественным.',2):(i%2?mk(pr1[(i+5)%pr1.length]||acts[3].m,fa(k1).min,fa(k1).alt,'Заметь, что уже получается без усилия.',0):(function(){var a=acts[ai++%acts.length];return mk(a.m,a.n,fa(k2).alt,'Заметь, что из этого ты хочешь оставить.',2)})())}
   x.w=wk;days.push(x)}
  return {v:1,at:Date.now(),wish:wish,cat:ck,need:need,focus:focus,stars:stars,obst:obst,res:res,result:C.result,signs:C.signs.slice(),first:gx(C.first,f),weeks:WEEKS,days:days,lead:k1,second:k2,low:low,weak:!!L.weak,practRec:precs,modelActions:modelActions,positive:!!(P.backgroundProfile&&P.backgroundProfile.positive)}}
 
