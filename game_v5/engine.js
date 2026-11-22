@@ -64,7 +64,7 @@ window.GLead=function(){var P=load(),k=inKey(P);if(!P.lab||!P.lab.lead||(P.lab.a
 
 // Противоречие одной фразой
 var WN=['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'];
-window.GContra=function(){var P=load(),L=GLead(),p=PAT[L.lead],v=(P.values&&P.values.order||[])[0]||'свобода',w=P.wheel||[],lo='';
+window.GContra=function(){var P=load(),L=GLead(),p=PAT[L.lead],v=(P.valuesCore&&P.valuesCore.top3&&P.valuesCore.top3[0])||(P.values&&P.values.order||[])[0]||'свобода',w=P.wheel||[],lo='';
  if(w.length){var m=0;w.forEach(function(x,i){if(x<w[m])m=i});lo=WN[m]}
  return 'Для тебя важна ценность «'+v+'», но внутри работает правило «'+p.parts[2][1].toLowerCase()+'»'+(lo?'. Сильнее всего это видно в сфере «'+lo+'»':'')+'.'};
 
