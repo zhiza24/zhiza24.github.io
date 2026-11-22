@@ -31,7 +31,7 @@ function collect(P){
   });
   arr(background.adaptations).forEach(function(a){if(a.situations&&a.situations.length)out.fragments.push({domain:'Адаптация',title:a.title,detail:a.description+' Отмечено в '+a.situations.length+' ситуациях.',source:'backgroundState'})});
   arr(background.resources).forEach(function(r){if(r.weight>0)out.fragments.push({domain:'Ресурсы',title:(r.id==='A5'?'Гибкая перестройка':r.id==='A6'?'Самостоятельное начало':r.id),detail:r.description||((BD.RES||{})[r.id]||''),source:'backgroundState'})});
-  if(background.coverage&&background.coverage.answered<12)out.unknown.push('Фоновое состояние: отвечено меньше половины ситуационных вопросов; картина предварительная.');
+  if(background.coverage&&background.coverage.answered<12)out.unknown.push('Чтобы картина стала полнее, ответь на оставшиеся вопросы о своих состояниях.');
  }
  function source(id,name,detail){out.sources.push({id:id,name:name,detail:detail||''})}
  if(mag&&mag.v===2){source('mag','Маг','Повторяющийся эмоциональный итог в разных жизненных ситуациях');}
@@ -55,14 +55,14 @@ function collect(P){
   var fl=arr(fs.leading),names=Object.keys(fs.outcome||{});
   names.forEach(function(n){
    var r=fs.outcome[n],c=fs.child&&fs.child[n],now=fs.now&&fs.now[n];
-   out.fragments.push({domain:'Адаптация',title:n,detail:r==='kept'?'Этот способ заметен и в детских, и в нынешних ответах.':r==='weaker'?'В нынешних ответах он выражен слабее, чем в детских.':r==='changed'?'В ответах заметен переход к другой стратегии.':r==='later'?'В нынешних ответах способ заметен сильнее, чем в детских.':r==='notwas'?'В детских ответах отмечено «не было»; сейчас способ не выделился.':r==='few'?'Для сопоставления пока недостаточно ответов.':'Устойчивое совпадение не выявлено.',status:r,child:c,now:now,source:'firstSet'});
+   out.fragments.push({domain:'Адаптация',title:n,detail:r==='kept'?'Этот способ заметен и в детских, и в нынешних ответах.':r==='weaker'?'В нынешних ответах он выражен слабее, чем в детских.':r==='changed'?'В ответах заметен переход к другой стратегии.':r==='later'?'В нынешних ответах способ заметен сильнее, чем в детских.':r==='notwas'?'В детских ответах отмечено «не было»; сейчас способ не выделился.':r==='few'?'Этот период пока трудно сравнить с детскими воспоминаниями.':'Устойчивое совпадение не выявлено.',status:r,child:c,now:now,source:'firstSet'});
   });
   if(fl.length)out.fragments.push({domain:'Адаптация',title:'Сейчас заметнее',detail:fl.join(' · '),status:fs.status,source:'firstSet'});
  }
  if(km&&km.v){
   var scales=arr(km.scales),lead=arr(km.leadingScales),top=scales.filter(function(x){return lead.indexOf(x.id)>=0});
   if(top.length)top.forEach(function(x){out.fragments.push({domain:'Картина мира',title:x.name,detail:'В исследовании выделился этот фильтр восприятия (уровень: '+(x.level==null?'не определен':x.level)+').',status:km.status,source:'km',score:x.score})});
-  else out.fragments.push({domain:'Картина мира',title:'Выраженный фильтр не выделился',detail:km.status==='insufficient'?'Ответов недостаточно для вывода.':'По текущим ответам ведущий фильтр не определился.',status:km.status,source:'km'});
+  else out.fragments.push({domain:'Картина мира',title:'Выраженный фильтр не выделился',detail:km.status==='insufficient'?'Ответов пока мало, чтобы увидеть привычный способ восприятия.':'В разных ситуациях ты смотришь на происходящее по-разному.',status:km.status,source:'km'});
  }
  var echoCodes=[];
  if(echo){
@@ -145,7 +145,6 @@ function sourceName(id){return ({backgroundState:'Фоновое состоян�
 function card(x,idx,interactive){
  var trace=arr(x.sources||[x.source]).filter(Boolean).map(function(s){return '<p>'+esc(sourceName(s))+'</p>'}).join('')+arr(x.evidence).map(function(e){return '<p class="im-evidence">'+esc(e)+'</p>'}).join('');
  return '<article class="im-card"><div class="im-card-k">'+esc(x.domain||'Отражение')+'</div><h3>'+esc(x.title)+'</h3><p>'+esc(x.detail)+'</p>'+
- '<details><summary>Откуда появилось это отражение</summary>'+trace+'</details>'+
  (interactive?'<div class="im-feedback" data-idx="'+idx+'"><b>Узнаешь это в своем опыте?</b><div class="im-actions"><button data-v="yes">Да, узнаю</button><button data-v="part">Отчасти</button><button data-v="no">Нет, не так</button><button data-v="later">Пока не знаю</button></div></div>':'')+'</article>';
 }
 function mount(box){
@@ -207,9 +206,9 @@ function mount(box){
       if(cx.mageFinal&&cx.mageFinal.length)html+='<p>Важные эмоциональные темы: '+esc(cx.mageFinal.map(function(x){return x.meaning}).join('; '))+'.</p>';
       if(cx.mageContext&&cx.mageContext.length)html+='<p>Другие сигналы Мага, оставленные в контексте: '+esc(cx.mageContext.map(function(x){return x.meaning}).join('; '))+'.</p>';
       if(cx.echoStrategies&&cx.echoStrategies.length)html+='<p>В ситуациях тебе также свойственны такие способы реагирования: '+esc(cx.echoStrategies.map(function(x){return x.meaning}).join('; '))+'.</p>';
-      html+='<p>Первые настройки: '+(cx.firstSettingsAvailable?'результат есть':'пока нет')+' · Колесо: '+(cx.wheelAvailable?'результат есть':'пока нет')+' · Исследование желаний: '+(cx.desireResearchAvailable?'результат есть':'пока нет')+'</p>';
+      html+='';
      if(cx.values.length)html+='<p>Выбранные ценности: '+esc(cx.values.join(', '))+'</p>';
-     html+='<p class="im-muted">Все эти стороны вместе помогают увидеть, что поддерживает тебя и где может находиться точка перемен.</p></section>';
+     html+='<p class="im-muted">Все эти стороны вместе помогают увидеть, что поддерживает тебя и где находится твоя точка перемен.</p></section>';
     }
     
    }
@@ -253,7 +252,7 @@ function mount(box){
   (confirmed.length?'<h2>Что ты подтвердил</h2>'+confirmed.map(function(x){return '<p>✧ '+esc(x.title)+'</p>'}).join(''):'')+
   (denied.length?'<h2>Что ты уточнил</h2>'+denied.map(function(x){return '<p>✧ '+esc(x.title)+' — не совпало с твоим опытом</p>'}).join(''):'')+
   (data.unknown.length?'<h2>Что осталось открытым</h2>'+data.unknown.map(function(x){return '<p>'+esc(x)+'</p>'}).join(''):'')+
-  '<p class="im-muted">Карта не ставит диагнозов и не объясняет прошлое настоящим. Она показывает, какие наблюдения уже есть, насколько они согласуются и где требуется больше личного опыта.</p><button class="next" id="imFinish">Сохранить в дневник</button></div>';
+  '<p class="im-muted">Это твоя карта внутренней архитектуры. Возвращайся к ней по мере прохождения пути и отмечай, что меняется в твоих решениях и действиях.</p><button class="next" id="imFinish">Сохранить в дневник</button></div>';
  }
  function bind(){
   var n=box.querySelector('#imNext');if(n)n.onclick=function(){scene++;draw()};
