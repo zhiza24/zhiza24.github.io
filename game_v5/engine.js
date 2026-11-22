@@ -8,9 +8,64 @@ function load(){var P={};try{P=JSON.parse(localStorage.getItem(K))||{}}catch(e){
  if(window.GProfile)P=GProfile.migrate(P);
  return P}
 function save(P){if(window.GProfile)P=GProfile.migrate(P);localStorage.setItem(K,JSON.stringify(P))}
-window.GPro={load:load,save:save,
- exportFile:function(){var b=new Blob([JSON.stringify(load(),null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='put-alhimika-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove()},
- importFile:function(f,cb){var r=new FileReader();r.onload=function(){try{var P=JSON.parse(r.result);save(P);cb&&cb(true)}catch(e){cb&&cb(false)}};r.readAsText(f)}};
+function objectLike(v){return !!v&&typeof v==='object'&&!Array.isArray(v)}
+function validImport(P){
+ if(!objectLike(P))return false;
+ if(P.schemaVersion!=null&&(!isFinite(+P.schemaVersion)||+P.schemaVersion<1||+P.schemaVersion>(window.GProfile&&GProfile.schemaVersion||3)))return false;
+ if(P.wheel!=null&&!Array.isArray(P.wheel))return false;
+ if(P.arts!=null&&!Array.isArray(P.arts))return false;
+ if(P.tracker!=null&&!objectLike(P.tracker))return false;
+ if(P.trackerHistory!=null&&!Array.isArray(P.trackerHistory))return false;
+ if(P.cycleHistory!=null&&!Array.isArray(P.cycleHistory))return false;
+ if(P.modules!=null&&!objectLike(P.modules))return false;
+ if(P.diary!=null&&!objectLike(P.diary))return false;
+ if(P.fractal!=null&&!objectLike(P.fractal))return false;
+ if(P.lab!=null&&!objectLike(P.lab))return false;
+ return true;
+}
+function backupCurrent(){
+ var raw=localStorage.getItem(K);
+ if(raw===null)raw=JSON.stringify(load());
+ var backups=[];
+ try{backups=JSON.parse(localStorage.getItem('alch_v5_profile_backups')||'[]')}catch(e){backups=[]}
+ if(!Array.isArray(backups))backups=[];
+ backups.push({at:Date.now(),raw:raw});
+ backups=backups.slice(-3);
+ localStorage.setItem('alch_v5_profile_backups',JSON.stringify(backups));
+ return raw;
+}
+window.GPro={
+ load:load,save:save,
+ exportFile:function(){var b=new Blob([JSON.stringify(load(),null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='put-alhimika-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},1000)},
+ importFile:function(f,cb){
+  if(!f||f.size>20*1024*1024){cb&&cb(false);return}
+  var r=new FileReader();
+  r.onerror=function(){cb&&cb(false)};
+  r.onload=function(){
+   var P,raw;
+   try{
+    P=JSON.parse(r.result);
+    if(!validImport(P))throw new Error('invalid profile structure');
+    raw=backupCurrent();
+    try{save(P)}catch(e){if(raw!==null)localStorage.setItem(K,raw);throw e}
+    cb&&cb(true);
+   }catch(e){cb&&cb(false)}
+  };
+  r.readAsText(f);
+ },
+ restoreBackup:function(cb){
+  try{
+   var backups=JSON.parse(localStorage.getItem('alch_v5_profile_backups')||'[]');
+   if(!Array.isArray(backups)||!backups.length)throw new Error('no backup');
+   var target=backups[backups.length-1],P=JSON.parse(target.raw);
+   if(!validImport(P))throw new Error('invalid backup');
+   var raw=localStorage.getItem(K);
+   backups.push({at:Date.now(),raw:raw===null?JSON.stringify(load()):raw});
+   localStorage.setItem('alch_v5_profile_backups',JSON.stringify(backups.slice(-3)));
+   save(P);cb&&cb(true);
+  }catch(e){cb&&cb(false)}
+ }
+};
 
 // Библиотека установок: 6 частей, ветка, практики
 var PAT={
