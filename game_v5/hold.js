@@ -6,11 +6,11 @@ var FIELDS=[
  [['sphere','Сфера жизни','select'],['problem','Что именно сейчас не устраивает?','text'],['when','В каких ситуациях это особенно заметно?','text'],['tried','Что Вы уже пробовали изменить?','text']],
  [['desired','Как выглядит положение, которого Вы хотите?','text'],['evidence','По каким наблюдаемым признакам Вы поймете, что стало иначе?','text'],['meaning','Что важного для Вас появится в этом положении?','text']],
  [['actual','Что фактически происходит сейчас?','text'],['pattern','Какой выбор, действие или отказ повторяется?','text'],['constraints','Какие реальные обстоятельства ограничивают выбор?','text']],
- [['functionNote','Возможные функции привычного выбора — это только гипотезы, не готовые ответы. Что из этого может быть близко?','checks'],['benefit','Что привычный выбор дает или сохраняет прямо сейчас?','text'],['avoid','С чем он помогает не сталкиваться?','text'],['unknownFunction','Пока не знаю / не вижу скрытой функции','check']],
+ [['functionNote','Возможные функции привычного выбора — это только гипотезы, не готовые ответы. Что из этого может быть близко?','checks'],['benefit','Что привычный выбор дает или сохраняет прямо сейчас?','text'],['avoid','С чем он помогает не сталкиваться?','text'],['functionOther','Если выбрали «Другая функция», опишите ее своими словами','text'],['unknownFunction','Пока не знаю / не вижу скрытой функции','check']],
  [['shortCost','Какова цена этого выбора сегодня или в ближайшее время?','text'],['longCost','Что может измениться, если так будет продолжаться еще полгода?','text'],['lost','Чего Вы лишаетесь или что постоянно откладываете?','text']],
- [['step','Какой небольшой и безопасный шаг можно проверить?','text'],['conditions','Что должно быть учтено, чтобы этот шаг был реалистичным?','text'],['support','Какая поддержка или ресурс Вам пригодится?','text'],['review','Когда Вы вернетесь к этому наблюдению?','text']]
+ [['step','Какой небольшой и безопасный шаг можно проверить?','text'],['conditions','Что должно быть учтено, чтобы этот шаг был реалистичным?','text'],['support','Какая поддержка или ресурс Вам пригодится?','text'],['review','Когда Вы вернетесь к этому наблюдению?','text'],['safetyConcern','Сейчас есть давление, угроза, принуждение или зависимость, из-за которых изменение может быть небезопасным','check']]
 ];
-var LABELS={sphere:'Сфера',problem:'Неудовлетворенность',when:'Когда проявляется',tried:'Что уже пробовали',desired:'Желаемое положение',evidence:'Признаки изменений',meaning:'Зачем это важно',functionNote:'Возможные функции',benefit:'Что сохраняет',avoid:'Чего помогает избежать',unknownFunction:'Не знаю',actual:'Фактическая ситуация',pattern:'Повторяющийся выбор',constraints:'Реальные ограничения',shortCost:'Ближайшая цена',longCost:'Цена в перспективе',lost:'Что откладывается',step:'Небольшой шаг',conditions:'Условия безопасности и реалистичности',support:'Поддержка',review:'Вернуться к наблюдению'};
+var LABELS={sphere:'Сфера',problem:'Неудовлетворенность',when:'Когда проявляется',tried:'Что уже пробовали',desired:'Желаемое положение',evidence:'Признаки изменений',meaning:'Зачем это важно',functionNote:'Возможные функции',functionOther:'Своя формулировка функции',benefit:'Что сохраняет',avoid:'Чего помогает избежать',unknownFunction:'Не знаю',actual:'Фактическая ситуация',pattern:'Повторяющийся выбор',constraints:'Реальные ограничения',shortCost:'Ближайшая цена',longCost:'Цена в перспективе',lost:'Что откладывается',step:'Небольшой шаг',conditions:'Условия безопасности и реалистичности',support:'Поддержка',review:'Вернуться к наблюдению',safetyConcern:'Сначала безопасность'};
 var FUNCTIONS=['Сохраняет ощущение безопасности','Помогает избежать конфликта или отказа','Сохраняет отношения или одобрение','Защищает от риска и неопределенности','Экономит силы или другие ресурсы','Позволяет не сталкиваться с возможной ошибкой','Сохраняет привычный порядок','Другая функция — опишу своими словами'];
 var app=document.getElementById('app');
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
@@ -53,8 +53,9 @@ function render(){
  'Не требуется перевернуть жизнь одним решением. Выберите небольшой шаг, который безопасно проверить в реальных условиях.'
  ];
  h+='<p class="lead">'+intros[step]+'</p>';
- if(step===2||step===3||step===5)h+='<div class="hint">Если на ситуацию влияют насилие, принуждение, угрозы, финансовая зависимость или риск потерять безопасность, не нужно заставлять себя действовать иначе. Сначала учитывайте безопасность, доступные ресурсы и поддержку.</div>';
- FIELDS[step].forEach(function(f){h+=field(f[0],f[1],f[2])});
+ if(step>=2)h+='<div class="hint">Если на ситуацию влияют насилие, принуждение, угрозы, финансовая зависимость или риск потерять безопасность, не нужно заставлять себя действовать иначе. Сначала учитывайте безопасность, доступные ресурсы и поддержку.</div>';
+ FIELDS[step].forEach(function(f){if(step===5&&f[0]==='step'&&s.answers.safetyConcern)return;h+=field(f[0],f[1],f[2])});
+ if(step===5&&s.answers.safetyConcern)h+='<div class="hint">Вы отметили риск для безопасности. Не планируйте проверочный шаг, который может усилить давление или угрозу. Сначала определите безопасные условия и доступную поддержку.</div>';
  h+='<p class="muted">Ответы сохраняются автоматически в этом браузере.</p><div class="actions"><button class="secondary" data-action="back" '+(step===0?'disabled':'')+'>Назад</button><button class="primary" data-action="'+(step===5?'finish':'next')+'">'+(step===5?(s.completedAt?'Обновить итог':'Сохранить итог'):'Сохранить и продолжить')+'</button></div>';
  if(s.completedAt)h+=renderSummary(s);
  h+='</section>';
@@ -67,14 +68,16 @@ function updateField(el){
  var s=current();if(!s)return;
  var key=el.getAttribute('data-field');if(!key)return;
  s.answers=s.answers||{};
+ if(el.type==='checkbox'&&key==='unknownFunction'){s.answers.unknownFunction=!!el.checked;if(el.checked){s.answers.functionNote=[];app.querySelectorAll('[data-field="functionNote"]').forEach(function(x){x.checked=false})}save();render();return}
  if(el.type==='checkbox'&&key==='functionNote'){
   var a=Array.isArray(s.answers[key])?s.answers[key].slice():[];
   if(el.checked&&a.indexOf(el.value)<0)a.push(el.value);
   if(!el.checked)a=a.filter(function(x){return x!==el.value});
+  if(a.length)s.answers.unknownFunction=false;
   s.answers[key]=a;
  }else if(el.type==='checkbox')s.answers[key]=!!el.checked;
  else s.answers[key]=el.value;
- save();
+ save();if(key==='functionNote'&&s.answers.unknownFunction){var u=app.querySelector('[data-field="unknownFunction"]');if(u)u.checked=false;s.answers.unknownFunction=false;save()}
 }
 app.addEventListener('input',function(e){if(e.target.hasAttribute('data-field'))updateField(e.target)});
 app.addEventListener('change',function(e){if(e.target.hasAttribute('data-field'))updateField(e.target)});
