@@ -248,6 +248,7 @@ R.end_go=function(){
   P.flow.completed['slot.html?id=end']=Date.now();
   (L.done=L.done||[]).push(L.lead);
   L.lead=L.queue.shift();L.cycle=(L.cycle||1)+1;L.agree=null;
+  delete P.tracker;
   delete L.sort;delete L.found;delete L.foundScore;delete L.foundStatus;
   P.reactor={day:0,days:{}};
   delete P.wishBack;delete P.pathPlan;delete P.pathFinal;delete P.retest;delete P.guard;delete P.fractal;delete P.found;
