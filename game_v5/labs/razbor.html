@@ -93,7 +93,7 @@ function renderHome(){
  show('home');
 }
 function make(){var x={id:id(),title:'',created:Date.now(),updated:Date.now(),step:0,done:false,answers:{}};state.items.push(x);state.current=x.id;state.step=0;save();renderStep()}
-function openItem(k){state.current=k;var x=current();state.step=x.step||0;renderStep()}
+function openItem(k){state.current=k;var x=current();state.step=x.step||0;if(x.done)renderResult();else renderStep()}
 function fieldHtml(f){var key=f[0],label=f[1],type=f[2],help=f[3],v=current().answers[key]||'';
  if(type==='select')return '<label for="'+key+'">'+esc(label)+'<div class="field-help">'+esc(help)+'</div></label><select id="'+key+'"><option value="">Выберите, если хотите</option>'+f[4].map(function(o){return '<option '+(v===o?'selected':'')+'>'+esc(o)+'</option>'}).join('')+'</select>';
  return '<label for="'+key+'">'+esc(label)+'<div class="field-help">'+esc(help)+'</div></label><textarea id="'+key+'" data-field="'+key+'" placeholder="Можно ответить своими словами…">'+esc(v)+'</textarea>';
