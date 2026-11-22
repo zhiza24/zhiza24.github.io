@@ -74,6 +74,51 @@ R.eraser_go=function(){
 };
 
 
+/* Источник: контекст из исследования «Два зеркала». */
+R.source=function(){
+ var P=GPro.load(),ready=!!(P.mirror_exercise&&P.mirror_exercise.completed_at);
+ return '<span class="tag">Точка А</span><span class="tag">Контекст</span><h1>Источник: тело и энергия</h1><p>Здесь собраны наблюдения из исследования «Два зеркала». Они не объясняют всю ситуацию и не заменяют Ваш собственный взгляд, но помогают учитывать телесные сигналы, нагрузку и доступные ресурсы.</p>'+
+ (ready?'<div class="pt">Сохраненная запись исследования будет показана ниже.</div>':'<div class="pt"><b>Сохраненной записи пока нет.</b><p>Можно вернуться к исследованию «Два зеркала» и завершить его. Если сейчас это не подходит, продолжайте маршрут без этой записи.</p><a class="st" href="slot.html?id=mirrors">Вернуться к двум зеркалам</a></div>')+
+ '<button class="next" id="nx">Продолжить</button>';
+};
+R.source_go=function(){if(window.nx)nx.onclick=function(){location.href=GRoute.advance()}};
+/* Пустыня миражей: отделяем факт от объяснения и проверяем версии. */
+R.mirage=function(){return '<span class="tag">Точка Б</span><span class="tag">Проверка предположений</span><h1>Пустыня миражей</h1><p>Когда ситуация задевает, объяснение может быстро показаться фактом. Это исследование помогает разделить наблюдаемое событие, собственную интерпретацию, известное и неизвестное. Система не выбирает версию за Вас.</p><div id="mg"></div>'};
+R.mirage_go=function(){
+ var STEPS=[
+  {t:'Событие',q:'Что произошло? Опишите только то, что можно увидеть, услышать или проверить.',p:'Без объяснений мотивов других людей и без оценок себя.'},
+  {t:'Первая интерпретация',q:'Какое объяснение или вывод возникли у Вас?',p:'Какая мысль появилась первой?'},
+  {t:'Известное и неизвестное',q:'Что Вы знаете точно, а что пока остается предположением?',p:'Разделите факты, догадки и вопросы, на которые пока нет ответа.'},
+  {t:'Подтверждения и несоответствия',q:'Какие наблюдения поддерживают эту версию? Какие с ней не совпадают?',p:'Учитывайте не только подтверждения, но и контрпримеры.'},
+  {t:'Другие объяснения',q:'Какие еще объяснения этой ситуации возможны?',p:'Можно перечислить несколько вариантов или написать «пока не знаю».'},
+  {t:'Проверка и границы',q:'Что могло бы безопасно прояснить ситуацию? Что сейчас не зависит от Вас?',p:'Не требуется действовать немедленно. Если проверка может усилить угрозу или давление, приоритет — безопасность.'}
+ ];
+ var P0=GPro.load(),LAB=P0.lab||{},draft=LAB.mirageDraft||null,prior=LAB.mirage||{},A=(draft&&Array.isArray(draft.answers)?draft.answers.slice():Array.isArray(prior.answers)?prior.answers.slice():[]),i=draft?Math.max(0,Math.min(6,+draft.i||0)):(prior.completed?6:0),host=document.getElementById('mg');
+ function persist(){var P=GPro.load();P.lab=P.lab||{};P.lab.mirageDraft={i:i,answers:A.slice(),updatedAt:Date.now()};GPro.save(P)}
+ function summary(){
+  var h='<div class="pt"><small>Исследование завершено</small><h2>Карта проверки предположения</h2><p>Это не вердикт и не оценка личности. Сохранены Ваши ответы и вопросы, которые остаются открытыми.</p></div>';
+  STEPS.forEach(function(s,j){h+='<div class="pt"><small>'+(j+1)+'. '+s.t+'</small><p>'+GEsc(A[j]||'Пока не определено')+'</p></div>'});
+  h+='<button class="next" id="mgEdit">Изменить ответы</button><button class="next" id="mgDone" style="background:#20170e;color:#f4ecdf;border:1px solid #9e783a">Продолжить маршрут</button>';
+  host.innerHTML=h;
+  document.getElementById('mgEdit').onclick=function(){i=0;persist();render()};
+  document.getElementById('mgDone').onclick=function(){location.href=GRoute.advance()};
+ }
+ function render(){
+  if(i>=STEPS.length){var P=GPro.load();P.lab=P.lab||{};P.lab.mirage={version:1,completed:true,answers:A.slice(),at:Date.now()};delete P.lab.mirageDraft;GPro.save(P);save('Пустыня миражей','исследование завершено',P);summary();return}
+  var s=STEPS[i],h='<div class="pt"><small>Шаг '+(i+1)+' из 6 · '+s.t+'</small><h2>'+s.t+'</h2><p>'+s.q+'</p><p><small>'+s.p+'</small></p></div>';
+  h+='<textarea id="mgAnswer" rows="4" style="width:100%;box-sizing:border-box;background:#20170e;color:#f4ecdf;border:1px solid #9e783a;border-radius:8px;padding:10px;font:inherit" placeholder="Можно ответить коротко или оставить вопрос открытым">'+GEsc(A[i]||'')+'</textarea>';
+  h+='<div class="row"><button type="button" id="mgBack" '+(i===0?'disabled':'')+'>Назад</button><button type="button" id="mgSkip">Пока не знаю</button></div><button class="next" id="mgNext">'+(i===5?'Сохранить исследование':'Продолжить')+'</button>';
+  host.innerHTML=h;
+  var input=document.getElementById('mgAnswer');input.oninput=function(){A[i]=input.value;persist()};
+  document.getElementById('mgBack').onclick=function(){if(i>0){A[i]=input.value;i--;persist();render()}};
+  document.getElementById('mgSkip').onclick=function(){A[i]='Пока не могу определить';advance()};
+  document.getElementById('mgNext').onclick=function(){A[i]=input.value.trim();advance()};
+  function advance(){persist();i++;if(i>=STEPS.length){render();return}persist();render()}
+ }
+ window.gBack=function(){if(i>0){var input=document.getElementById('mgAnswer');if(input)A[i]=input.value;i--;persist();render();return true}return false};
+ render();
+};
+
 var WK=['health','money','work','relationships','family','environment','self_development','rest'],WN=['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'];
 function WI(k){var w=GFR.world[k];return '<p><small>'+GT(w.title)+'</small></p><p>'+GT(w.intro)+'</p>'}
 R.evidence=function(){return '<span class="tag">Точка Б</span>'+WI('manifestations')+'<h1>Где повторяется схема?</h1><p>Колесо баланса показывает Вашу оценку сфер, но само по себе не доказывает наличие повторяющейся схемы. Выберите от одной до трех сфер, в которых хотите проверить свои наблюдения.</p><div id="evPick">'+WK.map(function(k,i){return '<label class="pt" style="display:flex;gap:10px;align-items:center"><input type="checkbox" data-sphere="'+k+'" style="width:20px;height:20px"><span>'+WN[i]+'</span></label>'}).join('')+'</div><p id="evErr" class="fb"></p><button class="next" id="evStart">Начать исследование</button><div id="ev"></div>'};
@@ -329,7 +374,7 @@ else if(id==='mirrors'){GMirrors.mount(m)}
 else if(window.GTests&&GTests.STEP[id]){GTests.mount(id,m);window.gNext=flowNext()}
 else if(id==='dialog'&&window.GTri){window.gNext=flowNext();GTri.mount(m,function(){if(!window.GReview&&window.GArts)GArts.grant('mirror');m.innerHTML=R.dialog();R.dialog_go();if(window.GReview&&window.nx)nx.textContent='К заданиям'})}
 else if(R[id]){m.innerHTML=R[id]();R[id+'_go']();if(window.GReview&&window.nx)nx.textContent='К заданиям';if(id==='source')GMirrors.context(m);if(window.GQuote&&['pa_end','pb_end','compare'].indexOf(id)>=0&&!/Сначала пройди повторный замер/.test(m.textContent))GQuote.add(m,'slot.html?id='+id,m.querySelector('button.next,#nx'));window.gNext=flowNext();if(['pb_end','leverage'].indexOf(id)>=0&&window.GPassport){var own=GPassport.context().themes;if(own.length){var ownBox=document.createElement('p');ownBox.className='pt';ownBox.textContent='В своих наблюдениях ты отмечаешь: '+own.slice(0,4).map(function(t){return t.name}).join(', ')+'. Вспомни свои примеры, выбирая следующий шаг.';m.insertBefore(ownBox,m.querySelector('button.next'))}}}
-else{var s=GSLOTS[id]||{k:'Экран',h:'Скоро',d:''},i=gIdx(),pt=i>=0?GFLOW[i].pt:'';
+else{var s=(window.GSLOTS&&window.GSLOTS[id])||{k:'Экран',h:'Раздел еще не настроен',d:'Этот пункт пока не содержит отдельного интерактивного задания. Можно вернуться к карте пути.'},i=gIdx(),pt=i>=0?GFLOW[i].pt:'';
 m.innerHTML='<span class="tag">'+(pt==='Финал'?'Финал':'Точка '+pt)+'</span><span class="tag">'+s.k+'</span><h1>'+s.h+'</h1><p>'+s.d+'</p><button class="next" id="nx">Дальше</button>';
 document.getElementById('nx').onclick=function(){var n=GRoute.advance();if(n)location.href=n};window.gNext=flowNext()}
 </script></body></html>
