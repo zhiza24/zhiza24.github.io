@@ -922,7 +922,7 @@ function bind(){
     }
     if(act==='event-add'){
       var dr=(T.eventDraft&&T.eventDraft[n])||{},title=String(dr.title||'').trim(),start=String(dr.start||''),end=String(dr.end||'');
-      function toMin(v){var m=/^(\\d{2}):(\\d{2})$/.exec(v);return m?(+m[1]*60+ +m[2]):null}
+      function toMin(v){var m=/^(\d{2}):(\d{2})$/.exec(v);return m?(+m[1]*60+ +m[2]):null}
       var sm=toMin(start),em=toMin(end);
       if(!title||sm===null||em===null){alert('Укажите название события, время начала и окончания.');return}
       if(em<=sm)em+=1440;
@@ -950,6 +950,7 @@ function bind(){
   host.onchange=function(e){
     var el=e.target, act=el.getAttribute('data-act'); if(!act)return;
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T);
+    if(act==='event-field'){T.eventDraft=T.eventDraft||{};T.eventDraft[n]=T.eventDraft[n]||{};T.eventDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='plan-done'){
       var i=+el.getAttribute('data-i'), plan=weekPlan(T,(T.weekN||0)+1);
       plan.done[i]=!!el.checked; save(P); render(); return;
@@ -958,7 +959,8 @@ function bind(){
   host.oninput=function(e){
     var el=e.target, act=el.getAttribute('data-act'); if(!act)return;
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T), d=dayRec(T,n);
-    if(act==='event-field'){T.eventDraft=T.eventDraft||{};T.eventDraft[n]=T.eventDraft[n]||{};T.eventDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}\n    if(act==='slider'){d.sliders[el.getAttribute('data-k')]=+el.value; save(P); var m=MET.filter(function(x){return x.key===el.getAttribute('data-k')})[0]; var tip=el.parentNode.querySelector('.soft-tip'); if(tip)tip.textContent=sliderHint(m,+el.value); var sm=el.parentNode.querySelector('label small'); if(sm&&m)sm.textContent=m.sub+' · '+el.value; return}
+    if(act==='event-field'){T.eventDraft=T.eventDraft||{};T.eventDraft[n]=T.eventDraft[n]||{};T.eventDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
+    if(act==='slider'){d.sliders[el.getAttribute('data-k')]=+el.value; save(P); var m=MET.filter(function(x){return x.key===el.getAttribute('data-k')})[0]; var tip=el.parentNode.querySelector('.soft-tip'); if(tip)tip.textContent=sliderHint(m,+el.value); var sm=el.parentNode.querySelector('label small'); if(sm&&m)sm.textContent=m.sub+' · '+el.value; return}
     if(act==='dir-step'){d.dirSteps[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='ifthen'){T.ifthens=T.ifthens||['','','']; T.ifthens[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='note'){d.note=el.value; save(P); return}
