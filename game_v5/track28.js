@@ -920,6 +920,20 @@ function bind(){
       if(par)par.classList.add('open');
       return;
     }
+    if(act==='event-add'){
+      var dr=(T.eventDraft&&T.eventDraft[n])||{},title=String(dr.title||'').trim(),start=String(dr.start||''),end=String(dr.end||'');
+      function toMin(v){var m=/^(\\d{2}):(\\d{2})$/.exec(v);return m?(+m[1]*60+ +m[2]):null}
+      var sm=toMin(start),em=toMin(end);
+      if(!title||sm===null||em===null){alert('Укажите название события, время начала и окончания.');return}
+      if(em<=sm)em+=1440;
+      if(em-sm>1440){alert('Одно событие можно записать длительностью не более 24 часов.');return}
+      T.events24=T.events24||{};T.events24[n]=T.events24[n]||[];
+      T.events24[n].push({id:uid(),title:title,startMin:sm,endMin:em,type:dr.type||'activity',sphere:dr.sphere||'',motive:dr.motive||'',emotion:dr.emotion||'',planned:dr.planned||'',createdAt:Date.now()});
+      T.eventDraft=T.eventDraft||{};delete T.eventDraft[n];save(P);render();openAccAfterRender('events24');return;
+    }
+    if(act==='event-delete'){
+      var en=+b.getAttribute('data-day'),eid=b.getAttribute('data-id');T.events24=T.events24||{};T.events24[en]=(T.events24[en]||[]).filter(function(x){return x.id!==eid});if(!T.events24[en].length)delete T.events24[en];save(P);render();openAccAfterRender('events24');return;
+    }
     if(act==='hour-t'){d.openHour=d.openHour===+b.getAttribute('data-h')?null:+b.getAttribute('data-h'); save(P); render(); openAccAfterRender('hours'); return}
     if(act==='fate'){
       T.finale=T.finale||{}; T.finale.fate=b.getAttribute('data-v'); T.finale.done=true; T.finale.at=Date.now();
@@ -944,7 +958,7 @@ function bind(){
   host.oninput=function(e){
     var el=e.target, act=el.getAttribute('data-act'); if(!act)return;
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T), d=dayRec(T,n);
-    if(act==='slider'){d.sliders[el.getAttribute('data-k')]=+el.value; save(P); var m=MET.filter(function(x){return x.key===el.getAttribute('data-k')})[0]; var tip=el.parentNode.querySelector('.soft-tip'); if(tip)tip.textContent=sliderHint(m,+el.value); var sm=el.parentNode.querySelector('label small'); if(sm&&m)sm.textContent=m.sub+' · '+el.value; return}
+    if(act==='event-field'){T.eventDraft=T.eventDraft||{};T.eventDraft[n]=T.eventDraft[n]||{};T.eventDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}\n    if(act==='slider'){d.sliders[el.getAttribute('data-k')]=+el.value; save(P); var m=MET.filter(function(x){return x.key===el.getAttribute('data-k')})[0]; var tip=el.parentNode.querySelector('.soft-tip'); if(tip)tip.textContent=sliderHint(m,+el.value); var sm=el.parentNode.querySelector('label small'); if(sm&&m)sm.textContent=m.sub+' · '+el.value; return}
     if(act==='dir-step'){d.dirSteps[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='ifthen'){T.ifthens=T.ifthens||['','','']; T.ifthens[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='note'){d.note=el.value; save(P); return}
