@@ -35,7 +35,7 @@ function button(txt,fn,cls){var b=node('button',txt,cls||'');b.type='button';b.o
 function setHead(step,t,d){ph.textContent=step;title.textContent=t;desc.textContent=d}
 function field(label,key,obj,placeholder){var wrap=node('div');wrap.style.margin='14px 0';wrap.append(node('label',label));var ta=node('textarea');ta.rows=3;ta.style.cssText='width:100%;margin-top:7px;padding:12px;border-radius:10px;background:#17110b;color:#fff3da;border:1px solid #80633c;font:inherit;';ta.placeholder=placeholder||'Можно ответить своими словами…';ta.value=obj[key]||'';ta.oninput=function(){obj[key]=ta.value;save()};wrap.append(ta);return wrap}
 function choices(label,items,current,onChange,multi){var w=node('div');w.style.margin='12px 0';w.append(node('p',label,'hint'));var g=node('div');g.className='grid';items.forEach(function(it){var active=multi?current.indexOf(it.id)>=0:current===it.id;g.append(button(it.name||it.label, function(){if(multi){var i=current.indexOf(it.id);if(i>=0)current.splice(i,1);else current.push(it.id);onChange(current.slice());render()}else{onChange(it.id);render()}},active?'on':''))});w.append(g);return w}
-function valueChips(label,current){return choices(label,VALUES,current,function(v){current.splice(0,current.length);v.forEach(function(x){current.push(x)});save()},true)}
+function valueChips(label,current,max){return choices(label,VALUES,current,function(v){if(max&&v.length>max)v=v.slice(0,max);current.splice(0,current.length);v.forEach(function(x){current.push(x)});save()},true)}
 function nav(next,back){var w=node('div');w.className='two';w.style.marginTop='20px';if(back)w.append(button('Назад',function(){A.layer=back;save();render()}));w.append(button(next?'Сохранить и продолжить':'Сохранить',function(){save();if(next){A.layer=next;render();scrollTo(0,0)}else render()},'next'));card.append(w)}
 function render(){
 card.replaceChildren();
@@ -44,7 +44,7 @@ if(l===1){
 setHead('Исследование ценностей · 1 из 6','Что Вы называете важным?','Выберите от пяти до восьми ориентиров, которые действительно хотите видеть в своей жизни. Можно добавить собственную формулировку. Это Ваше самоописание — не обещание всегда поступать именно так.');
 card.append(valueChips('Выберите 5–8 ориентиров',A.declared));
 card.append(field('Свой ориентир, если его нет в списке','ownLabel',A));
-card.append(valueChips('Какие два из выбранных Вы особенно не хотели бы потерять?',A.privateChoice));
+card.append(valueChips('Какие два из выбранных Вы особенно не хотели бы потерять?',A.privateChoice,2));
 card.append(field('Какой из этих ориентиров Вы выбрали бы, даже если бы никто не узнал о Вашем выборе?','privateNote',A));
 var n=button('Перейти к ситуациям',function(){if(A.declared.length<5||A.declared.length>8){alert('Выберите от 5 до 8 ориентиров.');return}if(A.privateChoice.length>2)A.privateChoice=A.privateChoice.slice(0,2);save();A.layer=2;render()},'next');card.append(n);return;
 }
@@ -99,8 +99,8 @@ card.append(button('Собрать мою карту ценностей',finish,
 }
 }
 function calculate(){
-var counts={};VALUES.forEach(function(v){counts[v.id]={presented:0,selected:0,tied:0,conditional:0,skipped:0,index:null}});
-D.forEach(function(d){var a=A.dilemmas[d.id];if(!a||!a.choice)return;[d.av,d.bv].forEach(function(id){counts[id].presented++});if(a.choice==='a')counts[d.av].selected++;else if(a.choice==='b')counts[d.bv].selected++;else if(a.choice==='tie'){counts[d.av].tied++;counts[d.bv].tied++}else if(a.choice==='depends'){counts[d.av].conditional++;counts[d.bv].conditional++}else if(a.choice==='skip'||a.choice==='neither'){counts[d.av].skipped++;counts[d.bv].skipped++}});
+var counts={};VALUES.forEach(function(v){counts[v.id]={presented:0,selected:0,tied:0,conditional:0,neither:0,noExperience:0,index:null}});
+D.forEach(function(d){var a=A.dilemmas[d.id];if(!a||!a.choice)return;[d.av,d.bv].forEach(function(id){counts[id].presented++});if(a.choice==='a')counts[d.av].selected++;else if(a.choice==='b')counts[d.bv].selected++;else if(a.choice==='tie'){counts[d.av].tied++;counts[d.bv].tied++}else if(a.choice==='depends'){counts[d.av].conditional++;counts[d.bv].conditional++}else if(a.choice==='neither'){counts[d.av].neither++;counts[d.bv].neither++}else if(a.choice==='skip'){counts[d.av].noExperience++;counts[d.bv].noExperience++}});
 VALUES.forEach(function(v){var c=counts[v.id];c.index=c.presented>=2?Math.round(100*(c.selected+.5*c.tied)/c.presented):null});
 var episodeTags={};(A.episodes||[]).forEach(function(e){(e.tags||[]).forEach(function(id){episodeTags[id]=(episodeTags[id]||0)+1})});
 var declared=A.declared.slice(),actionValues=Object.keys(episodeTags),shared=declared.filter(function(x){return actionValues.indexOf(x)>=0});
