@@ -47,7 +47,7 @@ function a12Code(ans){var selected=Array.isArray(ans.A11)?ans.A11:[];var m=selec
 function scoreB(ans){var s={},availability={},rates={},hits={};BCODES.forEach(function(c){s[c]=0;availability[c]=0;hits[c]=0});var answered=0,coded=0;
  D.B.forEach(function(q){var c=ans[q.id],seen={};if(c!=null&&c!=='skip')answered++;if(c&&c!=='0'&&c!=='skip'&&s[c]!=null){s[c]++;hits[c]++;coded++}q.o.forEach(function(o){if(availability[o[0]]!=null&&!seen[o[0]]){availability[o[0]]++;seen[o[0]]=1}})});
  BCODES.forEach(function(c){rates[c]=availability[c]?s[c]/availability[c]:0});
- var ord=BCODES.slice().sort(function(x,y){return s[y]-s[x]||rates[y]-rates[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}),top=s[ord[0]]||0,topRate=rates[ord[0]]||0,cand=ord.filter(function(c){return s[c]>0}).slice(0,2),status=top>=3?'leading':top>=2?'tentative':'weak',leaders=status==='leading'?[ord[0]]:[];
+ var ord=BCODES.slice().sort(function(x,y){return s[y]-s[x]||rates[y]-rates[x]||BCODES.indexOf(x)-BCODES.indexOf(y)}),top=s[ord[0]]||0,topRate=rates[ord[0]]||0,cand=ord.filter(function(c){return s[c]>0}).slice(0,2),topCodes=top?ord.filter(function(c){return s[c]===top}):[],status=top>=2&&topCodes.length>1?'mixed':top>=3?'leading':top>=2?'tentative':'weak',leaders=status==='leading'?[ord[0]]:status==='mixed'?topCodes:[];
  return {scores:s,count:JSON.parse(JSON.stringify(s)),hits:hits,availability:availability,rates:rates,cand:cand,leaders:leaders,topScore:top,topRate:topRate,answered:answered,coded:coded,status:status}}
 function modeOf(ans){var s={C1:0,C2:0,C3:0,C4:0};D.C.forEach(function(q){var c=ans[q.id];if(c&&s[c]!=null)s[c]++});
  var mx=Math.max(s.C1,s.C2,s.C3,s.C4),tops=Object.keys(s).filter(function(k){return s[k]===mx});
