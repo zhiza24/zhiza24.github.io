@@ -812,7 +812,7 @@ function weekStrat(T,w){
   var ex=Math.round(pts/7*100),inn=mood.length?(mood.reduce(function(x,y){return x+y},0)/mood.length).toFixed(1):'—';
   return '<div class="row-line"><b>'+esc(W.t)+'</b><p class="mute">'+esc(W.d)+'</p></div>'+
    '<div class="nums nums3"><div><b>'+ex+'%</b><span>Исполнение</span></div><div><b>'+ch+'</b><span>Изменения</span></div><div><b>'+inn+'</b><span>Внутренний опыт</span></div></div>'+
-   '<p class="cap28 soft">Три отдельных показателя. Исполнение отражает выполненные действия, изменения — замеченные Вами сдвиги, внутренний опыт — твои оценки.</p>'+
+   '<p class="cap28 soft">Три отдельных показателя. Исполнение отражает выполненные действия, изменения — замеченные тобой сдвиги, внутренний опыт — твои оценки.</p>'+
    '<div class="row-line wd-list"><b>Шаги недели</b>'+list+'</div>'+
    '<p class="cap28">Вопрос недели: '+esc(W.q)+'</p>';
 }
