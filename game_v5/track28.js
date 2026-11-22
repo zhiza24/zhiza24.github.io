@@ -407,13 +407,86 @@ function viewDay(P,T){
   h+=dayPanel(P,T,n);
   return h+'</div>';
 }
+var MIRROR_SPHERES=[{k:'health',n:'Здоровье'},{k:'money',n:'Финансы'},{k:'work',n:'Карьера'},{k:'relationships',n:'Отношения'},{k:'family',n:'Семья'},{k:'friends',n:'Друзья'},{k:'growth',n:'Рост'},{k:'rest',n:'Отдых'}];
+function mirrorWheelSvg(values,label,maxValue){
+ var cx=180,cy=150,r=94,max=maxValue||10,pts=[],all=true,labels=MIRROR_SPHERES.map(function(x){return x.n});
+ var svg='<div class="mirror-wheel-card"><b>'+esc(label)+'</b><svg viewBox="0 0 360 310" role="img" aria-label="'+esc(label)+'">';
+ [0.25,0.5,0.75,1].forEach(function(v){svg+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(r*v)+'" fill="none" stroke="#8a795f" stroke-opacity=".35" stroke-width="1"/>'});
+ MIRROR_SPHERES.forEach(function(x,i){var an=-Math.PI/2+i*Math.PI/4,ex=cx+Math.cos(an)*r,ey=cy+Math.sin(an)*r,lx=cx+Math.cos(an)*(r+24),ly=cy+Math.sin(an)*(r+24);svg+='<line x1="'+cx+'" y1="'+cy+'" x2="'+ex.toFixed(1)+'" y2="'+ey.toFixed(1)+'" stroke="#8a795f" stroke-opacity=".35"/><text x="'+lx.toFixed(1)+'" y="'+(ly+3).toFixed(1)+'" text-anchor="middle" font-size="9" fill="#d7c6a7">'+labels[i]+'</text>';var v=values&&values[i];if(typeof v==='number'&&isFinite(v)){var rr=Math.max(0,Math.min(max,v))/max*r;pts.push([cx+Math.cos(an)*rr,cy+Math.sin(an)*rr])}else{all=false;pts.push(null)}});
+ if(all){svg+='<polygon points="'+pts.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1)}).join(' ')+'" fill="#a8b294" fill-opacity=".25" stroke="#d1b27b" stroke-width="2"/>'}
+ pts.forEach(function(p){if(p)svg+='<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3.8" fill="#e4c58d" stroke="#352719" stroke-width="1"/>'});
+ svg+='</svg></div>';return svg;
+}
+function mirrorResearchAvg(arr){
+ return MIRROR_SPHERES.map(function(x,i){var a=(arr||[]).slice(i*3,i*3+3).filter(function(v){return typeof v==='number'&&isFinite(v)});return a.length?a.reduce(function(p,c){return p+c},0)/a.length:null});
+}
+function mirrorInitialResearch(P){
+ var w=P.wheelTest||{};if(Array.isArray(w.averages)&&w.averages.length===8)return w.averages;
+ return (w.spheres||[]).map(function(s){var a=(s.ratings||[]).filter(function(v){return typeof v==='number'&&isFinite(v)});return a.length?a.reduce(function(p,c){return p+c},0)/a.length:null});
+}
+function mirrorActivityStats(T){
+ var all=T.events24||{},bySphere={},byMotive={},byEmotion={},after={},eventIds={},days=0,checkpoints=0,overlap=0,total=0,unknown=0,alternatives=[];
+ MIRROR_SPHERES.forEach(function(x){bySphere[x.k]=0});
+ for(var n=1;n<=28;n++){
+  var own=all[n]||[],prev=all[n-1]||[],evs=[];
+  own.forEach(function(e){if(+e.startMin<1440)evs.push({e:e,s:+e.startMin,t:Math.min(1440,+e.endMin)})});
+  prev.forEach(function(e){if(+e.endMin>1440)evs.push({e:e,s:0,t:Math.min(1440,+e.endMin-1440)})});
+  if(evs.length)days++;
+  evs.forEach(function(x){if(x.e.id)eventIds[x.e.id]=x.e;else eventIds['n'+n+'_'+evs.indexOf(x)]=x.e});
+  var bounds=[0,1440];evs.forEach(function(x){bounds.push(Math.max(0,Math.min(1440,x.s)),Math.max(0,Math.min(1440,x.t)))});
+  bounds=Array.from(new Set(bounds)).sort(function(a,b){return a-b});
+  for(var j=0;j<bounds.length-1;j++){
+   var from=bounds[j],to=bounds[j+1],dur=to-from;if(dur<=0)continue;
+   var active=evs.filter(function(x){return x.s<to&&x.t>from});
+   if(active.length>1){overlap+=dur;continue}
+   if(active.length===1){var e=active[0].e,sp=e.sphere||'unclassified',mo=e.motive||'unclassified',em=e.emotion||'unclassified';if(bySphere[sp]==null)bySphere[sp]=0;bySphere[sp]+=dur;if(sp==='unclassified')unknown+=dur;byMotive[mo]=(byMotive[mo]||0)+dur;byEmotion[em]=(byEmotion[em]||0)+dur;total+=dur}
+  }
+ }
+ Object.keys(eventIds).forEach(function(id){var e=eventIds[id];after[e.after||'unclassified']=(after[e.after||'unclassified']||0)+1;if(e.alternative)alternatives.push(e.alternative)});
+ Object.keys(T.checkpoints24||{}).forEach(function(k){checkpoints+=(T.checkpoints24[k]||[]).length});
+ return {bySphere:bySphere,byMotive:byMotive,byEmotion:byEmotion,after:after,total:total,overlap:overlap,unknown:unknown,days:days,events:Object.keys(eventIds).length,checkpoints:checkpoints,alternatives:alternatives};
+}
+function mirrorBars(values,total,names){
+ var keys=Object.keys(values||{}).filter(function(k){return values[k]>0}).sort(function(a,b){return values[b]-values[a]});
+ if(!keys.length)return '<p class="mute">Пока недостаточно записей.</p>';
+ return keys.map(function(k){var v=values[k],pct=total?Math.round(v/total*100):0;return '<div class="mirror-bar"><div><b>'+esc((names&&names[k])||k)+'</b><span>'+Math.round(v/60*10)/10+' ч · '+pct+'%</span></div><i><em style="width:'+pct+'%"></em></i></div>'}).join('');
+}
 function viewMirror(P,T){
-  var h='<div class="t28 mirror-placeholder"><p class="dk">Зеркало прожитой жизни</p><h1>Как Вы на самом деле проживаете свои дни</h1>';
-  h+='<p class="cap28">Это пространство будущего исследования: здесь мы сопоставим Ваше представление о жизни, результаты исследований и картину, которую соберут Ваши ежедневные наблюдения за 28 дней.</p>';
-  h+='<div class="mirror-stage"><span class="mirror-kicker">В разработке</span><h2>Три картины одной жизни</h2><ol><li><b>Как я воспринимаю свою жизнь</b><span>Первое колесо жизненного баланса и исходные ответы.</span></li><li><b>На что фактически уходят мои время и внимание</b><span>Записи занятий, мотивы, эмоциональные точки и связь с личными ценностями.</span></li><li><b>Как я воспринимаю свою жизнь теперь</b><span>Повторная самооценка и сравнение с наблюдениями за 28 дней.</span></li></ol></div>';
-  h+='<p class="cap28">Пока эта вкладка сохраняет место и замысел будущего модуля. Сбор данных и расчеты здесь еще не включены.</p>';
-  h+='<button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button></div>';
-  return h;
+ var M=T.mirror||{},ready=todayNum(T)>=28;
+ if(M.phase==='self'){
+  var h='<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни · повторный замер</p><h1>Как Вы воспринимаете свою жизнь сейчас?</h1><p class="cap28">Оцените каждую сферу по собственному ощущению. Прежние оценки, ответы и дневниковая статистика пока скрыты — сначала зафиксируйте сегодняшний взгляд.</p><div class="mirror-self-grid">';
+  MIRROR_SPHERES.forEach(function(x,i){h+='<label class="mirror-self-item"><b>'+x.n+'</b><select data-act="mirror-wheel" data-i="'+i+'"><option value="">Выберите оценку</option>'+Array.from({length:10},function(_,j){var v=j+1;return '<option value="'+v+'" '+(+M.endWheel[i]===v?'selected':'')+'>'+v+' / 10</option>'}).join('')+'</select></label>'});
+  h+='</div><button class="go" type="button" data-act="mirror-wheel-save">Зафиксировать самооценку</button><p class="mute">Можно вернуться и изменить оценки до завершения повторного исследования.</p></div>';return h;
+ }
+ if(M.phase==='research'){
+  var idx=+M.researchIndex||0,sph=Math.floor(idx/3),q=idx%3,Q=window.WHEEL_QUESTIONS&&WHEEL_QUESTIONS[sph]&&WHEEL_QUESTIONS[sph].questions[q];
+  if(!Q){M.phase='report';M.completedAt=Date.now();save(P);return viewMirror(P,T)}
+  var ans=M.endResearch||[],h='<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни · исследовательский повтор</p><p class="cap28">Вопрос '+(idx+1)+' из 24 · '+MIRROR_SPHERES[sph].n+'</p><h1>'+esc(gx(Q.text))+'</h1><p class="mute">Отвечайте по своему нынешнему опыту. Предыдущие ответы и статистика все еще скрыты.</p><div class="mirror-answers">';
+  Q.options.forEach(function(o){h+='<button type="button" class="mirror-answer" data-act="mirror-answer" data-v="'+o.score+'">'+esc(gx(o.text))+'</button>'});
+  h+='<button type="button" class="mirror-answer na" data-act="mirror-answer" data-v="na">Не относится ко мне</button></div><button type="button" class="quiet-btn" data-act="mirror-back-self">Вернуться к самооценке</button></div>';return h;
+ }
+ if(M.phase!=='report'){
+  var events=Object.values(T.events24||{}).reduce(function(n,a){return n+(a||[]).length},0);
+  return '<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни</p><h1>Три картины одной жизни</h1><p class="cap28">В начале цикла Вы уже увидели собственную оценку сфер и прошли исследовательские вопросы. За 28 дней можно было записывать события, время, мотивы и состояние. В конце мы сопоставим эти разные источники — не как оценку правильной жизни, а как материал для понимания.</p><div class="mirror-stage"><ol><li><b>Первый взгляд</b><span>Исходная самооценка сфер.</span></li><li><b>Исследовательская картина</b><span>Подробные ответы по восьми сферам и парные наблюдения.</span></li><li><b>Наблюдаемая картина</b><span>Зарегистрированные события, длительности, мотивы и состояние. Пустые промежутки не считаются бездействием.</span></li><li><b>Новый взгляд</b><span>Повторная самооценка и исследовательские вопросы — до показа прежних данных.</span></li></ol></div>'+(ready?'<p class="mute">Цикл достиг 28-го дня. Записано событий: '+events+'. Можно пройти повторный замер. Незаполненные дни не мешают завершить исследование.</p><button type="button" class="go" data-act="mirror-start">Начать повторный замер</button>':'<p class="mute">Повторный замер откроется на 28-й день цикла. Сейчас можно продолжать вести дневник событий и контрольных точек.</p>')+'<button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button></div>';
+ }
+ var init=P.wheel||[],initResearch=mirrorInitialResearch(P),finalWheel=M.endWheel||[],finalResearch=mirrorResearchAvg(M.endResearch||[]),stats=mirrorActivityStats(T),shares={};
+ MIRROR_SPHERES.forEach(function(x){shares[x.k]=stats.total?stats.bySphere[x.k]/stats.total*100:0});
+ var sn={unclassified:'Не указано',own:'Собственное желание',important:'Осознанный выбор',need:'Необходимость',care:'Забота / любовь',duty:'Чувство долга',external:'Внешнее требование',habit:'Привычка',avoid:'Избегание',restore:'Восстановление',mixed:'Смешанный мотив',unclassified:'Не указано',joy:'Радость',calm:'Спокойствие',interest:'Интерес',satisfaction:'Удовлетворение',neutral:'Нейтральность',tension:'Напряжение',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',emptiness:'Опустошение',better:'Стало лучше',same:'Без заметных изменений',worse:'Стало хуже',unknown:'Не определено'};
+ var h='<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни · отчет</p><h1>Пять разных взглядов на одну жизнь</h1><p class="cap28">Это не единый рейтинг и не объективная оценка благополучия. Самооценка, исследовательские ответы и зарегистрированная активность измеряют разные стороны опыта.</p>';
+ h+='<div class="mirror-report-grid"><details open><summary>1. Исходная самооценка</summary>'+mirrorWheelSvg(init,'Как Вы оценивали сферы в начале',10)+'</details><details><summary>2. Исходные исследовательские ответы</summary>'+mirrorWheelSvg(initResearch,'Подробные ответы в начале',10)+'</details><details open><summary>3. Наблюдаемая активность за 28 дней</summary>';
+ h+='<p class="mute">Событий: '+stats.events+' · дни с записями: '+stats.days+' из 28 · контрольные точки состояния: '+stats.checkpoints+'. Учтено без пересечений: '+Math.round(stats.total/60*10)/10+' ч. Пересекающееся время: '+Math.round(stats.overlap/60*10)/10+' ч — показано отдельно и не добавлено повторно. Без указанной сферы: '+Math.round(stats.unknown/60*10)/10+' ч.</p>';
+ h+=stats.total?mirrorWheelSvg(MIRROR_SPHERES.map(function(x){return shares[x.k]}),'Доля зарегистрированного времени по сферам, %',100):'<p class="mute">Недостаточно записей, чтобы построить распределение. Это не означает, что в эти дни ничего не происходило.</p>';
+ h+='<h3>Время по сферам</h3>'+mirrorBars(stats.bySphere,stats.total,Object.assign({unclassified:'Не указано'},Object.fromEntries(MIRROR_SPHERES.map(function(x){return [x.k,x.n]}))));
+ h+='<h3>Мотивы зарегистрированных событий</h3>'+mirrorBars(stats.byMotive,stats.total,sn)+'<h3>Эмоциональные отметки</h3>'+mirrorBars(stats.byEmotion,stats.total,sn);
+ h+='<h3>Последействие</h3>'+Object.keys(stats.after).map(function(k){return '<p>'+esc(sn[k]||k)+': '+stats.after[k]+'</p>'}).join('')+(stats.alternatives.length?'<h3>Что хотелось бы попробовать иначе</h3>'+stats.alternatives.slice(0,8).map(function(x){return '<p>· '+esc(x)+'</p>'}).join(''):'')+'</details>';
+ h+='<details open><summary>4. Новая самооценка</summary>'+mirrorWheelSvg(finalWheel,'Как Вы оцениваете сферы сейчас',10)+'</details><details><summary>5. Повторные исследовательские ответы</summary>'+mirrorWheelSvg(finalResearch,'Подробные ответы сейчас',10)+'</details></div>';
+ h+='<h2>Сопоставление</h2><div class="mirror-compare"><div class="mirror-compare-head"><span>Сфера</span><span>Было</span><span>Исслед.</span><span>Время</span><span>Стало</span><span>Исслед.</span></div>';
+ MIRROR_SPHERES.forEach(function(x,i){h+='<div class="mirror-compare-row"><b>'+x.n+'</b><span>'+(init[i]==null?'—':init[i])+'</span><span>'+(initResearch[i]==null?'—':initResearch[i].toFixed(1))+'</span><span>'+(stats.total?Math.round(shares[x.k])+'%':'—')+'</span><span>'+(finalWheel[i]==null?'—':finalWheel[i])+'</span><span>'+(finalResearch[i]==null?'—':finalResearch[i].toFixed(1))+'</span></div>'});
+ h+='</div><p class="mute">Расхождение между тем, что Вы ощущаете, что показывают ответы и на что уходит записанное время, не означает ошибку или самообман. Возможны изменение приоритетов, неполнота записей, внешние обстоятельства и разные способы измерения. Время по сферам рассчитано по непересекающимся интервалам; перекрытия вынесены отдельно.</p>';
+ var note=M.reflection||{};h+='<div class="mirror-note"><h3>Что я замечаю в этой картине?</h3><label>Что оказалось неожиданным?<textarea data-act="mirror-note" data-key="surprise" rows="3">'+esc(note.surprise||'')+'</textarea></label><label>Что я хочу сохранить в своей жизни?<textarea data-act="mirror-note" data-key="keep" rows="3">'+esc(note.keep||'')+'</textarea></label><label>Что я хочу изменить или исследовать дальше?<textarea data-act="mirror-note" data-key="next" rows="3">'+esc(note.next||'')+'</textarea></label></div>';
+ h+='<button type="button" class="quiet-btn" data-act="mirror-restart">Пройти повторное исследование еще раз</button><button type="button" class="quiet-btn" data-act="space" data-s="day">Вернуться к моему дню</button>';
+ if(M.history&&M.history.length)h+='<details><summary>Предыдущие отчеты: '+M.history.length+'</summary>'+M.history.map(function(x,i){return '<p>Круг '+(i+1)+' · '+new Date(x.completedAt||x.startedAt||Date.now()).toLocaleDateString('ru-RU')+'</p>'}).join('')+'</details>';
+ return h+'</div>';
 }
 function viewHero(P,T){
   var n=todayNum(T), pan=window.GSim?GSim.panel(T,n):null;
@@ -491,6 +564,7 @@ function dayPanel(P,T,n){
   });
   html+='</div>';
   html+=razborBlock(P,T,n);
+  var evCount=((T.events24||{})[n]||[]).length+(((T.events24||{})[n-1]||[]).filter(function(x){return +x.endMin>1440}).length);html+=acc('events24','24 часа · события и занятия',evCount?'записей: '+evCount:'добавить запись',events24Body(T,n));
 
   if(actOn(T,'signs',n)){
   html+='<div class="row-line"><b>Знаки дня</b><div class="signs">';
@@ -543,6 +617,41 @@ function chooseBody(d,T,n){
     return line+'</div>';
   }).join('');
   return rows+'<input type="text" data-act="ch-in" placeholder="Выбираю…" maxlength="160"><button type="button" class="add" data-act="ch-add">Добавить</button>';
+}
+/* 24-hour event journal. Records are stored per cycle day; endMin may exceed 1440 for overnight events. */
+function day24Fmt(v){v=Math.max(0,Math.round(v));if(v===1440)return '24:00';v=v%1440;return ('0'+Math.floor(v/60)).slice(-2)+':'+('0'+(v%60)).slice(-2)}
+function day24Names(){
+ return {type:{activity:'Занятие',sleep:'Сон',travel:'Дорога',care:'Забота',rest:'Отдых',other:'Другое'},
+ sphere:{health:'Здоровье',money:'Финансы',work:'Работа',relationships:'Отношения',family:'Семья',friends:'Друзья',growth:'Развитие',rest:'Отдых',other:'Другое'},
+ motive:{own:'Собственное желание',important:'Осознанный выбор по важности',need:'Необходимость',care:'Забота / любовь',duty:'Чувство долга',external:'Внешнее требование',habit:'Привычка / автоматизм',avoid:'Избегание / откладывание',restore:'Восстановление по потребности',mixed:'Смешанный мотив',other:'Другое'},
+ emotion:{calm:'Спокойствие',joy:'Радость',interest:'Интерес',satisfaction:'Удовлетворение',neutral:'Нейтральность',tension:'Напряжение',anxiety:'Тревога',sadness:'Грусть',irritation:'Раздражение',fatigue:'Усталость',emptiness:'Опустошение'},completion:{done:'Выполнено',partial:'Частично',not_done:'Не выполнено',ongoing:'Продолжается',na:'Не применимо'},after:{better:'Стало лучше',same:'Без заметных изменений',worse:'Стало хуже',unknown:'Не определено'}};
+}
+function events24Body(T,n){
+ var all=T.events24||{},own=all[n]||[],prev=all[n-1]||[],rows=[],N=day24Names(),draft=(T.eventDraft&&T.eventDraft[n])||{},cps=((T.checkpoints24||{})[n]||[]),cpDraft=(T.checkpointDraft&&T.checkpointDraft[n])||{};
+ own.forEach(function(e){if(+e.startMin<1440)rows.push({e:e,owner:n,from:+e.startMin,to:Math.min(1440,+e.endMin),continued:false,overnight:+e.endMin>1440})});
+ prev.forEach(function(e){if(+e.endMin>1440)rows.push({e:e,owner:n-1,from:0,to:Math.min(1440,+e.endMin-1440),continued:true,overnight:false})});
+ rows.sort(function(a,b){return a.from-b.from});
+ var html='<div class="d24"><p class="mute">Записывайте события по ходу дня или вечером. Пустые промежутки остаются неизвестными — мы не считаем их отдыхом или бездействием. События могут пересекаться; в сводной картине пересечения будут показаны отдельно, чтобы не считать одни и те же минуты дважды.</p><div class="d24-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>';
+ if(rows.length){html+=rows.map(function(r){var e=r.e,from=r.from,to=r.to,dur=Math.max(0,to-from),left=from/1440*100,width=Math.max(0,dur/1440*100),time=r.continued?'00:00–'+day24Fmt(to):day24Fmt(e.startMin)+'–'+(r.overnight?'00:00 следующего дня':day24Fmt(e.endMin));var details=[N.type[e.type]||'Событие',N.sphere[e.sphere]||'',N.motive[e.motive]||'',N.emotion[e.emotion]||'',e.planned==='yes'?'Плановое':e.planned==='no'?'Спонтанное':'',N.completion[e.completion]||'',N.after[e.after]||''].filter(Boolean).join(' · ');
+ return '<div class="d24-row"><div class="d24-meta"><b>'+esc(e.title)+(r.continued?' · продолжение':'')+'</b><small>'+time+' · '+Math.floor(dur/60)+' ч '+(dur%60)+' мин</small><small>'+esc(details)+'</small>'+(e.alternative?'<small>В следующий раз: '+esc(e.alternative)+'</small>':'')+'</div><div class="d24-track"><i style="left:'+left+'%;width:'+width+'%"></i></div><button type="button" class="quiet-btn" data-act="event-delete" data-day="'+r.owner+'" data-id="'+esc(e.id)+'">Удалить</button></div>'}).join('')}
+ else html+='<p class="mute">Пока нет записей за этот день.</p>';
+ html+='<details class="d24-add"><summary>Добавить событие</summary><div class="d24-form">';
+ html+='<label>Что происходило<input type="text" maxlength="120" data-act="event-field" data-key="title" value="'+esc(draft.title||'')+'" placeholder="Например, работа над проектом"></label>';
+ html+='<div class="d24-times"><label>Начало<input type="time" data-act="event-field" data-key="start" value="'+esc(draft.start||'')+'"></label><label>Окончание<input type="time" data-act="event-field" data-key="end" value="'+esc(draft.end||'')+'"></label></div>';
+ function opts(key,items){return '<label>'+key+'<select data-act="event-field" data-key="'+key+'">'+items.map(function(x){return '<option value="'+x[0]+'" '+((draft[key]||'')===x[0]?'selected':'')+'>'+x[1]+'</option>'}).join('')+'</select></label>'}
+ html+=opts('type',[['activity','Занятие'],['sleep','Сон'],['travel','Дорога'],['care','Забота'],['rest','Отдых'],['other','Другое']]);
+ html+=opts('sphere',[['','Сферу можно не указывать'],['health','Здоровье'],['money','Финансы'],['work','Карьера'],['relationships','Отношения'],['family','Семья'],['friends','Друзья'],['growth','Рост'],['rest','Отдых'],['other','Другое']]);
+ html+=opts('motive',[['','Мотив можно не указывать'],['own','Собственное желание'],['important','Осознанный выбор по важности'],['care','Забота / любовь'],['duty','Чувство долга'],['need','Необходимость'],['habit','Привычка / автоматизм'],['avoid','Избегание / откладывание'],['restore','Восстановление по потребности'],['mixed','Смешанный мотив'],['other','Другое']]);
+ html+=opts('emotion',[['','Эмоцию можно не указывать'],['joy','Радость'],['calm','Спокойствие'],['interest','Интерес'],['satisfaction','Удовлетворение'],['neutral','Нейтральность'],['tension','Напряжение'],['irritation','Раздражение'],['anxiety','Тревога'],['fatigue','Усталость'],['emptiness','Опустошение']]);
+ html+=opts('planned',[['','План / спонтанность — по желанию'],['yes','Плановое'],['no','Спонтанное']]);
+ html+=opts('completion',[['','Степень выполнения — по желанию'],['done','Выполнено'],['partial','Частично'],['not_done','Не выполнено'],['ongoing','Продолжается'],['na','Не применимо']]);
+ html+=opts('after',[['','Последействие — по желанию'],['better','Стало лучше'],['same','Без заметных изменений'],['worse','Стало хуже'],['unknown','Не могу определить']]);
+ html+='<label>Что в следующий раз хотелось бы сделать иначе? <textarea rows="2" data-act="event-field" data-key="alternative" placeholder="Необязательно">'+esc(draft.alternative||'')+'</textarea></label>';
+ html+='<button type="button" class="add" data-act="event-add">Сохранить событие</button><p class="mute">Если окончание раньше начала, запись продолжится после полуночи. Сон и другие события можно отмечать через границу дня.</p></div></details>';
+ html+='<div class="d24-checkpoints"><b>Контрольные точки состояния</b><p class="mute">Это отдельные отметки времени, настроения и энергии. Они не привязываются автоматически к событию.</p>';
+ if(cps.length)html+=cps.map(function(c){return '<div class="d24-check"><b>'+day24Fmt(c.minute)+'</b><span>Настроение '+c.mood+'/10 · энергия '+c.energy+'/10</span>'+(c.note?'<small>'+esc(c.note)+'</small>':'')+'<button type="button" class="quiet-btn" data-act="checkpoint-delete" data-day="'+n+'" data-id="'+esc(c.id)+'">Удалить</button></div>'}).join('');
+ html+='<div class="d24-form"><div class="d24-times"><label>Время<input type="time" data-act="checkpoint-field" data-key="time" value="'+esc(cpDraft.time||'')+'"></label><label>Настроение (1–10)<input type="number" min="1" max="10" data-act="checkpoint-field" data-key="mood" value="'+esc(cpDraft.mood||'')+'"></label><label>Энергия (1–10)<input type="number" min="1" max="10" data-act="checkpoint-field" data-key="energy" value="'+esc(cpDraft.energy||'')+'"></label></div><label>Что важно отметить? <input type="text" maxlength="140" data-act="checkpoint-field" data-key="note" value="'+esc(cpDraft.note||'')+'" placeholder="Необязательно"></label><button type="button" class="add" data-act="checkpoint-add">Добавить отметку состояния</button></div></div></div>';
+ return html;
 }
 function hoursBody(d){
   var h='<div class="hours">';
@@ -891,6 +1000,46 @@ function bind(){
       if(par)par.classList.add('open');
       return;
     }
+    if(act==='event-add'){
+      var dr=(T.eventDraft&&T.eventDraft[n])||{},title=String(dr.title||'').trim(),start=String(dr.start||''),end=String(dr.end||'');
+      function toMin(v){var m=/^(\d{2}):(\d{2})$/.exec(v);return m?(+m[1]*60+ +m[2]):null}
+      var sm=toMin(start),em=toMin(end);
+      if(!title||sm===null||em===null){alert('Укажите название события, время начала и окончания.');return}
+      if(em<=sm)em+=1440;
+      if(em-sm>1440){alert('Одно событие можно записать длительностью не более 24 часов.');return}
+      T.events24=T.events24||{};T.events24[n]=T.events24[n]||[];
+      T.events24[n].push({id:uid(),title:title,startMin:sm,endMin:em,type:dr.type||'activity',sphere:dr.sphere||'',motive:dr.motive||'',emotion:dr.emotion||'',planned:dr.planned||'',completion:dr.completion||'',after:dr.after||'',alternative:String(dr.alternative||'').trim(),createdAt:Date.now()});
+      T.eventDraft=T.eventDraft||{};delete T.eventDraft[n];save(P);render();openAccAfterRender('events24');return;
+    }
+    if(act==='checkpoint-add'){
+      var cd=(T.checkpointDraft&&T.checkpointDraft[n])||{},tm=String(cd.time||''),mm=+cd.mood,ee=+cd.energy;
+      function cm(v){var z=/^(\d{2}):(\d{2})$/.exec(v);return z?(+z[1]*60+ +z[2]):null}
+      var mn=cm(tm);if(mn===null||!(mm>=1&&mm<=10)||!(ee>=1&&ee<=10)){alert('Укажите время, настроение и энергию от 1 до 10.');return}
+      T.checkpoints24=T.checkpoints24||{};T.checkpoints24[n]=T.checkpoints24[n]||[];T.checkpoints24[n].push({id:uid(),minute:mn,mood:mm,energy:ee,note:String(cd.note||'').trim(),at:Date.now()});T.checkpointDraft=T.checkpointDraft||{};delete T.checkpointDraft[n];save(P);render();openAccAfterRender('events24');return;
+    }
+    if(act==='checkpoint-delete'){var dn=+b.getAttribute('data-day'),did=b.getAttribute('data-id');T.checkpoints24=T.checkpoints24||{};T.checkpoints24[dn]=(T.checkpoints24[dn]||[]).filter(function(x){return x.id!==did});if(!T.checkpoints24[dn].length)delete T.checkpoints24[dn];save(P);render();openAccAfterRender('events24');return}
+    if(act==='mirror-start'||act==='mirror-restart'){
+      var hist=(T.mirror&&T.mirror.history)||[];
+      if(T.mirror&&T.mirror.phase==='report')hist=hist.concat([{startedAt:T.mirror.startedAt,completedAt:T.mirror.completedAt,endWheel:T.mirror.endWheel,endResearch:T.mirror.endResearch,reflection:T.mirror.reflection}]);
+      T.mirror={version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0,startedAt:Date.now(),history:hist};
+      save(P);render();return;
+    }
+    if(act==='mirror-wheel-save'){
+      var M=T.mirror||{},W=M.endWheel||[];
+      if(W.length!==8||W.some(function(v){return typeof v!=='number'||v<1||v>10})){alert('Поставьте оценку для каждой из восьми сфер.');return}
+      M.phase='research';M.researchIndex=0;M.endResearch=M.endResearch||Array(24).fill(null);T.mirror=M;save(P);render();return;
+    }
+    if(act==='mirror-answer'){
+      var M=T.mirror||{},ix=+M.researchIndex||0,v=b.getAttribute('data-v');
+      if(ix<0||ix>=24)return;
+      M.endResearch=M.endResearch||Array(24).fill(null);M.endResearch[ix]=v==='na'?'na':+v;M.researchIndex=ix+1;
+      if(M.researchIndex>=24){M.phase='report';M.completedAt=Date.now()}
+      T.mirror=M;save(P);render();return;
+    }
+    if(act==='mirror-back-self'){if(T.mirror){T.mirror.phase='self';save(P);render()}return}
+    if(act==='event-delete'){
+      var en=+b.getAttribute('data-day'),eid=b.getAttribute('data-id');T.events24=T.events24||{};T.events24[en]=(T.events24[en]||[]).filter(function(x){return x.id!==eid});if(!T.events24[en].length)delete T.events24[en];save(P);render();openAccAfterRender('events24');return;
+    }
     if(act==='hour-t'){d.openHour=d.openHour===+b.getAttribute('data-h')?null:+b.getAttribute('data-h'); save(P); render(); openAccAfterRender('hours'); return}
     if(act==='fate'){
       T.finale=T.finale||{}; T.finale.fate=b.getAttribute('data-v'); T.finale.done=true; T.finale.at=Date.now();
@@ -898,15 +1047,19 @@ function bind(){
       save(P); if(window.GArts)GArts.grant('proof_sign'); render(); return;
     }
     if(act==='newcycle'){
-      T.prev=(T.prev||[]).concat([{start:T.start,finale:T.finale,days:T.days,weekPlans:T.weekPlans,rewards:T.rewards}]);
-      T.days={}; T.start=Date.now(); T.finale=null; T.openDay=0; T.view='month'; T.cycle=(T.cycle||1)+1; T.weekPlans={};
+      T.prev=(T.prev||[]).concat([{start:T.start,finale:T.finale,days:T.days,weekPlans:T.weekPlans,rewards:T.rewards,events24:T.events24,checkpoints24:T.checkpoints24,strategy:T.strategy}]);
+      T.days={}; T.events24={}; T.eventDraft={}; T.checkpoints24={}; T.checkpointDraft={}; T.start=Date.now(); T.finale=null; T.openDay=0; T.view='month'; T.cycle=(T.cycle||1)+1; T.weekPlans={};
       save(P); render(); return;
     }
     if(act==='card'){try{drawCard(P,T)}catch(e){} return}
   };
   host.onchange=function(e){
     var el=e.target, act=el.getAttribute('data-act'); if(!act)return;
-    var P=ensure(), T=Tget(P);
+    var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T);
+    if(act==='mirror-wheel'){T.mirror=T.mirror||{version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0};T.mirror.endWheel=T.mirror.endWheel||Array(8).fill(null);T.mirror.endWheel[+el.getAttribute('data-i')]=el.value===''?null:+el.value;save(P);return}
+    if(act==='mirror-note'){T.mirror=T.mirror||{};T.mirror.reflection=T.mirror.reflection||{};T.mirror.reflection[el.getAttribute('data-key')]=el.value;save(P);return}
+    if(act==='event-field'){T.eventDraft=T.eventDraft||{};T.eventDraft[n]=T.eventDraft[n]||{};T.eventDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
+    if(act==='checkpoint-field'){T.checkpointDraft=T.checkpointDraft||{};T.checkpointDraft[n]=T.checkpointDraft[n]||{};T.checkpointDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='plan-done'){
       var i=+el.getAttribute('data-i'), plan=weekPlan(T,(T.weekN||0)+1);
       plan.done[i]=!!el.checked; save(P); render(); return;
@@ -915,6 +1068,8 @@ function bind(){
   host.oninput=function(e){
     var el=e.target, act=el.getAttribute('data-act'); if(!act)return;
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T), d=dayRec(T,n);
+    if(act==='event-field'){T.eventDraft=T.eventDraft||{};T.eventDraft[n]=T.eventDraft[n]||{};T.eventDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
+    if(act==='checkpoint-field'){T.checkpointDraft=T.checkpointDraft||{};T.checkpointDraft[n]=T.checkpointDraft[n]||{};T.checkpointDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='slider'){d.sliders[el.getAttribute('data-k')]=+el.value; save(P); var m=MET.filter(function(x){return x.key===el.getAttribute('data-k')})[0]; var tip=el.parentNode.querySelector('.soft-tip'); if(tip)tip.textContent=sliderHint(m,+el.value); var sm=el.parentNode.querySelector('label small'); if(sm&&m)sm.textContent=m.sub+' · '+el.value; return}
     if(act==='dir-step'){d.dirSteps[+el.getAttribute('data-i')]=el.value; save(P); return}
     if(act==='ifthen'){T.ifthens=T.ifthens||['','','']; T.ifthens[+el.getAttribute('data-i')]=el.value; save(P); return}
