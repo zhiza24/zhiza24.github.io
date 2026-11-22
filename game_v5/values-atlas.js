@@ -36,7 +36,7 @@ function setHead(step,t,d){ph.textContent=step;title.textContent=t;desc.textCont
 function field(label,key,obj,placeholder){var wrap=node('div');wrap.style.margin='14px 0';wrap.append(node('label',label));var ta=node('textarea');ta.rows=3;ta.style.cssText='width:100%;margin-top:7px;padding:12px;border-radius:10px;background:#17110b;color:#fff3da;border:1px solid #80633c;font:inherit;';ta.placeholder=placeholder||'Можно ответить своими словами…';ta.value=obj[key]||'';ta.oninput=function(){obj[key]=ta.value;save()};wrap.append(ta);return wrap}
 function choices(label,items,current,onChange,multi){var w=node('div');w.style.margin='12px 0';w.append(node('p',label,'hint'));var g=node('div');g.className='grid';items.forEach(function(it){var active=multi?current.indexOf(it.id)>=0:current===it.id;g.append(button(it.name||it.label, function(){if(multi){var i=current.indexOf(it.id);if(i>=0)current.splice(i,1);else current.push(it.id);onChange(current.slice());render()}else{onChange(it.id);render()}},active?'on':''))});w.append(g);return w}
 function valueChips(label,current,max){return choices(label,VALUES,current,function(v){if(max&&v.length>max)v=v.slice(0,max);current.splice(0,current.length);v.forEach(function(x){current.push(x)});save()},true)}
-function nav(next,back){var w=node('div');w.className='two';w.style.marginTop='20px';if(back)w.append(button('Назад',function(){A.layer=back;save();render()}));w.append(button(next?'Сохранить и продолжить':'Сохранить',function(){save();if(next){A.layer=next;render();scrollTo(0,0)}else render()},'next'));card.append(w)}
+function nav(next,back){var w=node('div');w.className='two';w.style.marginTop='20px';if(back)w.append(button('Назад',function(){A.layer=back;save();render();scrollTo(0,0)}));w.append(button(next?'Сохранить и продолжить':'Сохранить',function(){if(next){A.layer=next;save();render();scrollTo(0,0)}else{save();render()}},'next'));card.append(w)}
 function render(){
 card.replaceChildren();
 var l=A.layer||1;
@@ -47,7 +47,7 @@ card.append(valueChips('Выберите 5–8 ориентиров',A.declared)
 card.append(field('Свой ориентир, если его нет в списке','ownLabel',A));
 card.append(valueChips('Какие два из выбранных Вы особенно не хотели бы потерять?',A.privateChoice,2));
 card.append(field('Какой из этих ориентиров Вы выбрали бы, даже если бы никто не узнал о Вашем выборе?','privateNote',A));
-var n=button('Перейти к ситуациям',function(){if(A.declared.length<5||A.declared.length>8){alert('Выберите от 5 до 8 ориентиров.');return}if(A.privateChoice.length>2)A.privateChoice=A.privateChoice.slice(0,2);save();A.layer=2;render()},'next');card.append(n);return;
+var n=button('Перейти к ситуациям',function(){if(A.declared.length<5||A.declared.length>8){alert('Выберите от 5 до 8 ориентиров.');return}if(A.privateChoice.length>2)A.privateChoice=A.privateChoice.slice(0,2);A.layer=2;save();render()},'next');card.append(n);return;
 }
 if(l===2){
 var idx=A.dilemmaIndex||0;
@@ -56,10 +56,10 @@ var d=D[idx],ans=A.dilemmas[d.id]||{choice:'',note:'',condition:''};A.dilemmas[d
 setHead('Исследование ценностей · 2 из 6','Выбор в конкретной ситуации','Ситуация '+(idx+1)+' из '+D.length+'. Здесь нет правильного ответа. Выбирайте то, что ближе именно сейчас, а не то, как следовало бы поступить.');
 card.append(node('h2',d.title),node('p',d.text,'muted'));
 var opts=[{id:'a',name:d.a},{id:'b',name:d.b},{id:'tie',name:'Оба одинаково важны — не хочу выбирать'},{id:'depends',name:'Зависит от обстоятельств'},{id:'neither',name:'Ни один вариант не подходит'},{id:'skip',name:'Не могу ответить / не было такого опыта'}];
-var g=node('div');g.className='pair';opts.forEach(function(o){g.append(button(o.name,function(){ans.choice=o.id;save();A.dilemmaIndex=idx+1;render();scrollTo(0,0)},ans.choice===o.id?'on':''))});card.append(g);
+var g=node('div');g.className='pair';opts.forEach(function(o){g.append(button(o.name,function(){ans.choice=o.id;A.dilemmaIndex=idx+1;save();render();scrollTo(0,0)},ans.choice===o.id?'on':''))});card.append(g);
 card.append(field(d.ask,'note',ans),field('При каких обстоятельствах Вы выбрали бы иначе?','condition',ans));
 card.append(button('Сохранить уточнения',function(){save();A.dilemmaIndex=idx+1;render()},'next'));
-card.append(button('Вернуться к предыдущей ситуации',function(){A.dilemmaIndex=Math.max(0,idx-1);render()},'quiet-link'));return;
+card.append(button('Вернуться к предыдущей ситуации',function(){A.dilemmaIndex=Math.max(0,idx-1);save();render()},'quiet-link'));return;
 }
 if(l===3){
 setHead('Исследование ценностей · 3 из 6','Что Вы поддерживаете поступками?','Вспомните два-три конкретных эпизода за последние 6–12 месяцев. Важны реальные действия, вложенные ресурсы и обстоятельства — не только намерения.');
@@ -132,7 +132,7 @@ var th=node('div');['loss','consequence','prevention','cost'].forEach(function(k
 var pr=node('div');var react={boundary:'Обозначаю границу',yield:'Уступаю или молчу',prove:'Объясняю и доказываю',control:'Усиливаю контроль',withdraw:'Отстраняюсь',attack:'Резко отвечаю',freeze:'Замираю или откладываю',support:'Ищу поддержку',other:'Другое'};if(A.protection.response)pr.append(node('p','Первая реакция: '+(react[A.protection.response]||A.protection.response),'muted'));['context','protected','outcome','repair'].forEach(function(k,i){var labels=['Ситуация','Что пытался сохранить','Что произошло','Что сделал бы иначе'];if(A.protection[k])pr.append(node('p',labels[i]+': '+A.protection[k],'muted'))});if(A.protection.tags.length)pr.append(node('p','Что Вы сами связываете с защищаемым: '+A.protection.tags.map(name).join(', '),'hint'));section('6. Как Вы защищаете важное',pr);
 var links=node('div');if(r.links.length)r.links.forEach(function(x){links.append(node('p',x.title+': '+x.values.map(name).join(', '),'hint'))});else links.append(node('p','По текущим ответам пока не выделились устойчивые связи между слоями. Это не мешает использовать каждую часть карты отдельно.','muted'));section('Связи между слоями',links);
 card.append(node('p','Эта карта остается открытой для дополнений. Новые примеры могут уточнять ее, не отменяя прежний опыт.','muted'));
-card.append(button('Вернуться к карте и дополнить ответы',function(){A.layer=1;render();scrollTo(0,0)},'next'));
+card.append(button('Вернуться к карте и дополнить ответы',function(){A.layer=1;save();render();scrollTo(0,0)},'next'));
 card.append(button('Дальше: Зодчий',function(){location.href=(window.GRoute&&GRoute.advance())||'slot.html?id=arch_v'},'next'));
 }
 function legacyMap(){
