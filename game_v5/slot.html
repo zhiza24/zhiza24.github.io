@@ -167,7 +167,7 @@ R.wish_back_go=function(){var ok=document.getElementById('wbOk');if(!ok)return;
  ok.onclick=function(){fin('confirmed')};
  document.getElementById('wbEd').onclick=function(){var P=GPro.load();wbBox.innerHTML='<p>Сформулируй так, чтобы было понятно, что изменится в жизни, когда желание сбудется.</p>'+fld('wbT','Мое желание',wishText(P),3)+'<button class="next" id="wbS">Сохранить и дальше</button>';document.getElementById('wbS').onclick=function(){var t=val('wbT');if(t.length<3)return;fin('refined',t)}}};
 /* Точка С: конструктор пути */
-R.builder=function(){var P=GPro.load();if(!window.GStrategy)return '<p>Загрузка…</p>';var T=P.tracker||{},S=(T.strategy&&T.strategy.v)?T.strategy:GStrategy.build(P);window._S=S;
+R.builder=function(){var P=GPro.load();if(!window.GStrategy)return '<p>Загрузка…</p>';var T=P.tracker||{},S=(T.strategy&&T.strategy.edited)?T.strategy:GStrategy.build(P);window._S=S;
  return '<span class="tag">Точка С</span><div class="sg">'+GStrategy.html(S)+'</div>'+
  '<details class="sg-b sg-ed"><summary><small>Настроить под себя</small></summary><p><small>Стратегия собрана по твоим ответам. Если хочешь, поправь формулировки.</small></p>'+fld('sgW','Мое желание',S.wish,2)+fld('sgR','Что хочу получить за 28 дней',S.result,3)+fld('sgF','Мой первый шаг',S.first,2)+'</details>'+
  '<button class="next" id="nx">Начать мой 28-дневный цикл</button>'};
