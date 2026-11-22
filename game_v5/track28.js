@@ -1018,6 +1018,25 @@ function bind(){
       T.checkpoints24=T.checkpoints24||{};T.checkpoints24[n]=T.checkpoints24[n]||[];T.checkpoints24[n].push({id:uid(),minute:mn,mood:mm,energy:ee,note:String(cd.note||'').trim(),at:Date.now()});T.checkpointDraft=T.checkpointDraft||{};delete T.checkpointDraft[n];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='checkpoint-delete'){var dn=+b.getAttribute('data-day'),did=b.getAttribute('data-id');T.checkpoints24=T.checkpoints24||{};T.checkpoints24[dn]=(T.checkpoints24[dn]||[]).filter(function(x){return x.id!==did});if(!T.checkpoints24[dn].length)delete T.checkpoints24[dn];save(P);render();openAccAfterRender('events24');return}
+    if(act==='mirror-start'||act==='mirror-restart'){
+      var hist=(T.mirror&&T.mirror.history)||[];
+      if(T.mirror&&T.mirror.phase==='report')hist=hist.concat([{startedAt:T.mirror.startedAt,completedAt:T.mirror.completedAt,endWheel:T.mirror.endWheel,endResearch:T.mirror.endResearch,reflection:T.mirror.reflection}]);
+      T.mirror={version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0,startedAt:Date.now(),history:hist};
+      save(P);render();return;
+    }
+    if(act==='mirror-wheel-save'){
+      var M=T.mirror||{},W=M.endWheel||[];
+      if(W.length!==8||W.some(function(v){return typeof v!=='number'||v<1||v>10})){alert('Поставьте оценку для каждой из восьми сфер.');return}
+      M.phase='research';M.researchIndex=0;M.endResearch=M.endResearch||Array(24).fill(null);T.mirror=M;save(P);render();return;
+    }
+    if(act==='mirror-answer'){
+      var M=T.mirror||{},ix=+M.researchIndex||0,v=b.getAttribute('data-v');
+      if(ix<0||ix>=24)return;
+      M.endResearch=M.endResearch||Array(24).fill(null);M.endResearch[ix]=v==='na'?'na':+v;M.researchIndex=ix+1;
+      if(M.researchIndex>=24){M.phase='report';M.completedAt=Date.now()}
+      T.mirror=M;save(P);render();return;
+    }
+    if(act==='mirror-back-self'){if(T.mirror){T.mirror.phase='self';save(P);render()}return}
     if(act==='event-delete'){
       var en=+b.getAttribute('data-day'),eid=b.getAttribute('data-id');T.events24=T.events24||{};T.events24[en]=(T.events24[en]||[]).filter(function(x){return x.id!==eid});if(!T.events24[en].length)delete T.events24[en];save(P);render();openAccAfterRender('events24');return;
     }
@@ -1037,6 +1056,8 @@ function bind(){
   host.onchange=function(e){
     var el=e.target, act=el.getAttribute('data-act'); if(!act)return;
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T);
+    if(act==='mirror-wheel'){T.mirror=T.mirror||{version:1,phase:'self',endWheel:Array(8).fill(null),endResearch:Array(24).fill(null),researchIndex:0};T.mirror.endWheel=T.mirror.endWheel||Array(8).fill(null);T.mirror.endWheel[+el.getAttribute('data-i')]=el.value===''?null:+el.value;save(P);return}
+    if(act==='mirror-note'){T.mirror=T.mirror||{};T.mirror.reflection=T.mirror.reflection||{};T.mirror.reflection[el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='event-field'){T.eventDraft=T.eventDraft||{};T.eventDraft[n]=T.eventDraft[n]||{};T.eventDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='checkpoint-field'){T.checkpointDraft=T.checkpointDraft||{};T.checkpointDraft[n]=T.checkpointDraft[n]||{};T.checkpointDraft[n][el.getAttribute('data-key')]=el.value;save(P);return}
     if(act==='plan-done'){
