@@ -1134,6 +1134,7 @@ function bind(){
       save(P); if(window.GArts)GArts.grant('proof_sign'); render(); return;
     }
     if(act==='newcycle'){
+      if(!window.confirm('Сохранить весь текущий цикл в архиве и начать новый?'))return;
       if(T.mirror&&T.mirror.phase==='report'&&Array.isArray(T.mirror.endWheel)&&Array.isArray(T.mirror.endResearch)){
         P.wheel=T.mirror.endWheel.slice();
         P.cycleBaseline={wheel:T.mirror.endWheel.slice(),research:mirrorResearchAvg(T.mirror.endResearch),capturedAt:Date.now()};
