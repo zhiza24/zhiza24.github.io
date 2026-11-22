@@ -138,3 +138,11 @@
 .lab-link{display:block;margin:12px 0;padding:15px;border:1px solid rgba(201,154,69,.38);border-radius:14px;background:rgba(32,23,14,.42);color:#f4ecdf;text-decoration:none}
 .lab-link b{display:block;margin-bottom:5px;color:#f0c870;font:700 20px 'Cormorant Garamond',serif}
 .lab-link span{display:block;color:#cdbd9f;font:500 13px/1.45 Manrope,sans-serif}
+
+
+.support-panel h2{margin:2px 0 10px;color:#f0c870;font:700 22px 'Cormorant Garamond',serif}
+.support-check{display:flex;gap:10px;align-items:flex-start;margin:12px 0;padding:11px 12px;border:1px solid rgba(158,120,58,.38);border-radius:12px;background:rgba(32,23,14,.32);color:#e8dcc8;font:600 13px/1.45 Manrope,sans-serif}
+.support-check input{flex:0 0 auto;margin-top:3px;accent-color:#d9b16c}
+.support-panel label:not(.support-check){display:block;margin:12px 0 6px;color:#e4d7c1;font:600 13px Manrope,sans-serif}
+.support-phrase{margin:14px 0 0;padding:12px;border-left:3px solid #a8b294;background:rgba(168,178,148,.08);border-radius:0 10px 10px 0}
+.support-phrase p{margin:0;color:#e8dcc8;font:600 15px/1.5 'Cormorant Garamond',serif}
