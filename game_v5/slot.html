@@ -222,11 +222,42 @@ R.compare=function(){
  return html.replace(btn,blk+btn)}})();
 R.compare_go=function(){if(window.nx)nx.onclick=function(){location.href=GRoute.advance()}};
 R.end=function(){var P=GPro.load();if(!(GTrackDay(P).done)||!P.retest)return '<h1>Твой путь продолжается</h1><p>Впереди еще есть шаги этого круга.</p><a class="st" href="map.html">Вернуться к пути</a>';var L=GLead(),nxt=L.queue[0];return '<span class="tag">Финал</span><h1>Круг '+(L.cycle||1)+' пройден</h1>'+(function(){var d=GTrackDay(GPro.load());return '<p>Установка «'+GPAT[L.lead].n+'» разобрана. В трекере заполнено дней: <b>'+d.filled+' из 28</b>.</p>'})()+(nxt?'<p>Следующая в очереди: <b>'+GPAT[nxt].n+'</b>. Новый круг начнется с разбора и нового Реактора, твои данные сохранятся.</p><button class="next" id="nx">Начать новый круг</button>':'<p>Все установки из очереди пройдены.</p><button class="next" id="nx">Завершить путь</button>')};
-R.end_go=function(){if(window.nx)nx.onclick=function(){var P=GPro.load(),L=P.lab;if(!L||!(GTrackDay(P).done)||!P.retest){nx.textContent='Сначала заверши Реактор и повторный замер';return}if(!L.queue||!L.queue.length){GRoute.complete('slot.html?id=end');location.href='tasks.html';return}P.flow=P.flow||{};P.flow.completed=P.flow.completed||{};P.flow.completed['slot.html?id=end']=Date.now();P.cycleHistory=P.cycleHistory||[];var snapshot=JSON.parse(JSON.stringify(P));delete snapshot.cycleHistory;P.cycleHistory.push({cycle:L.cycle||1,lead:L.lead,closedAt:Date.now(),profile:snapshot});(L.done=L.done||[]).push(L.lead);L.lead=L.queue.shift();L.cycle=(L.cycle||1)+1;L.agree=null;delete L.sort;delete L.found;delete L.foundScore;delete L.foundStatus;if(P.retest&&P.retest.fromMirror&&P.retest.mirror){
- var endResearch=P.retest.mirror.endResearch||[];
- P.cycleBaseline={wheel:(P.retest.wheel||P.wheel||[]).slice(),research:WN.map(function(_,i){var vals=endResearch.slice(i*3,i*3+3).filter(function(v){return typeof v==='number'&&isFinite(v)});return vals.length?vals.reduce(function(a,b){return a+b},0)/vals.length:null}),capturedAt:Date.now()};
-}
-P.wheel=P.retest.wheel||P.wheel;P.reactor={day:0,days:{}};if(P.tracker){(P.trackerHistory=P.trackerHistory||[]).push(P.tracker);delete P.tracker}delete P.wishBack;delete P.pathPlan;delete P.pathFinal;delete P.retest;delete P.guard;delete P.fractal;delete P.found;P.flow=P.flow||{};var keep={},keptResults={};GFLOW.filter(function(s){return s.pt==='0'||s.pt==='А'}).forEach(function(s){if((P.flow.completed||{})[s.u])keep[s.u]=P.flow.completed[s.u];if((P.flow.results||{})[s.u])keptResults[s.u]=P.flow.results[s.u]});P.flow.completed=keep;P.flow.results=keptResults;P.flow.current=P.flow.last='slot.html?id=pb_intro';GPro.save(P);location.href='slot.html?id=pb_intro'}};
+R.end_go=function(){
+ if(!window.nx)return;
+ nx.onclick=function(){
+  var P=GPro.load(),L=P.lab;
+  if(!L||!(GTrackDay(P).done)||!P.retest){nx.textContent='Сначала заверши Реактор и повторный замер';return}
+  P.wheel=P.retest.wheel||P.wheel;
+  if(P.retest&&P.retest.fromMirror&&P.retest.mirror){
+   var endResearch=P.retest.mirror.endResearch||[];
+   P.cycleBaseline={wheel:(P.retest.wheel||P.wheel||[]).slice(),research:WN.map(function(_,i){var vals=endResearch.slice(i*3,i*3+3).filter(function(v){return typeof v==='number'&&isFinite(v)});return vals.length?vals.reduce(function(a,b){return a+b},0)/vals.length:null}),capturedAt:Date.now()};
+  }
+  P.cycleHistory=P.cycleHistory||[];
+  P.trackerHistory=P.trackerHistory||[];
+  var archivedTracker=P.tracker?JSON.parse(JSON.stringify(P.tracker)):null;
+  if(archivedTracker)P.trackerHistory.push(archivedTracker);
+  var snapshot=JSON.parse(JSON.stringify(P));delete snapshot.cycleHistory;
+  P.cycleHistory.push({cycle:L.cycle||1,lead:L.lead,closedAt:Date.now(),profile:snapshot});
+  if(!L.queue||!L.queue.length){
+   GPro.save(P);
+   GRoute.complete('slot.html?id=end');
+   location.href='tasks.html';
+   return;
+  }
+  P.flow=P.flow||{};P.flow.completed=P.flow.completed||{};
+  P.flow.completed['slot.html?id=end']=Date.now();
+  (L.done=L.done||[]).push(L.lead);
+  L.lead=L.queue.shift();L.cycle=(L.cycle||1)+1;L.agree=null;
+  delete L.sort;delete L.found;delete L.foundScore;delete L.foundStatus;
+  P.reactor={day:0,days:{}};
+  delete P.wishBack;delete P.pathPlan;delete P.pathFinal;delete P.retest;delete P.guard;delete P.fractal;delete P.found;
+  P.flow=P.flow||{};
+  var keep={},keptResults={};
+  GFLOW.filter(function(s){return s.pt==='0'||s.pt==='А'}).forEach(function(s){if((P.flow.completed||{})[s.u])keep[s.u]=P.flow.completed[s.u];if((P.flow.results||{})[s.u])keptResults[s.u]=P.flow.results[s.u]});
+  P.flow.completed=keep;P.flow.results=keptResults;P.flow.current=P.flow.last='slot.html?id=pb_intro';
+  GPro.save(P);location.href='slot.html?id=pb_intro';
+ };
+};
 /* Комплект текстов 12.11.2026, раздел 9: вход в Реактор и финал с подтверждением игрока. */
 var KIT9={reactorIn:'Реактор не оценивает тебя и не требует идеального поведения. Он собирает твои результаты, выбранные ценности и реальные ограничения, чтобы предложить небольшой следующий шаг, который можно проверить в жизни.',
  finalIn:'Финал соединяет не отдельные ярлыки, а наблюдения из разных частей пути: твои опоры, привычные реакции, ценности, желания и доступные точки влияния.',
