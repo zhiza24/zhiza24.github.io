@@ -228,10 +228,12 @@ R.end_go=function(){
   var P=GPro.load(),L=P.lab;
   if(!L||!(GTrackDay(P).done)||!P.retest){nx.textContent='Сначала заверши Реактор и повторный замер';return}
   P.wheel=P.retest.wheel||P.wheel;
+  var baselineResearch=[];
   if(P.retest&&P.retest.fromMirror&&P.retest.mirror){
    var endResearch=P.retest.mirror.endResearch||[];
-   P.cycleBaseline={wheel:(P.retest.wheel||P.wheel||[]).slice(),research:WN.map(function(_,i){var vals=endResearch.slice(i*3,i*3+3).filter(function(v){return typeof v==='number'&&isFinite(v)});return vals.length?vals.reduce(function(a,b){return a+b},0)/vals.length:null}),capturedAt:Date.now()};
+   baselineResearch=WN.map(function(_,i){var vals=endResearch.slice(i*3,i*3+3).filter(function(v){return typeof v==='number'&&isFinite(v)});return vals.length?vals.reduce(function(a,b){return a+b},0)/vals.length:null});
   }
+  P.cycleBaseline={wheel:(P.wheel||[]).slice(),research:baselineResearch,capturedAt:Date.now(),source:P.retest&&P.retest.fromMirror?'mirror':'retest'};
   P.cycleHistory=P.cycleHistory||[];
   P.trackerHistory=P.trackerHistory||[];
   var archivedTracker=P.tracker?JSON.parse(JSON.stringify(P.tracker)):null;
