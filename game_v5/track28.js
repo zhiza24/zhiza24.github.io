@@ -406,6 +406,7 @@ function trackClock(minute){
   return ('0'+Math.floor(m/60)).slice(-2)+':'+('0'+(m%60)).slice(-2);
 }
 function viewDiary(P,T){
+  var chooseStatus={pick:'выбрано',do:'в работе',done:'сделано',switched:'изменен шаг',bonus:'дополнительная запись'};
   var html='<div class="t28"><p class="dk">История наблюдений</p><h1>Дневник</h1><p class="cap28">Здесь собраны события, заметки, знаки, благодарность, выборы и контрольные точки, внесенные за 28 дней. Пустые промежутки не трактуются как бездействие.</p>';
   html+='<button type="button" class="quiet-btn" data-act="space" data-s="map">Открыть календарь 28 дней</button>';
   var records=0;
@@ -421,7 +422,7 @@ function viewDiary(P,T){
     if(d.res&&(d.res.saw||d.res.proof))html+='<div class="diary-event"><b>Наблюдение и подтверждение</b>'+(d.res.saw?'<p>'+esc(d.res.saw)+'</p>':'')+(d.res.proof?'<p>'+esc(d.res.proof)+'</p>':'')+'</div>';
     if((d.signs||[]).length)html+='<div class="diary-event"><b>Знаки и совпадения</b>'+d.signs.map(function(x){return '<p>'+esc(x.tag?x.tag+' · ':'')+esc(x.text||'')+'</p>'}).join('')+'</div>';
     if((d.grat||[]).length)html+='<div class="diary-event"><b>Благодарность и хорошее</b>'+d.grat.map(function(x){return '<p>'+esc(x.text||x)+'</p>'}).join('')+'</div>';
-    if((d.choose||[]).length)html+='<div class="diary-event"><b>Выборы и шаги</b>'+d.choose.map(function(x){return '<p>'+esc(x.text||'')+(x.status?' · '+esc(x.status):'')+'</p>'}).join('')+'</div>';
+    if((d.choose||[]).length)html+='<div class="diary-event"><b>Выборы и шаги</b>'+d.choose.map(function(x){return '<p>'+esc(x.text||'')+(x.status?' · '+esc(chooseStatus[x.status]||x.status):'')+'</p>'}).join('')+'</div>';
     if(journal.length)html+='<div class="diary-event"><b>Записи практик</b>'+journal.map(function(k){return '<p><b>'+esc(k)+'</b> · '+esc(d.journal[k])+'</p>'}).join('')+'</div>';
     if(proofs.length)html+='<div class="diary-event"><b>Доказательства и наблюдения</b>'+proofs.map(function(x){return '<p>'+esc(x.text||'')+'</p>'}).join('')+'</div>';
     evs.slice().sort(function(a,b){return (+a.startMin)-(+b.startMin)}).forEach(function(e){
