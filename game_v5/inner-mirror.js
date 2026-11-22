@@ -16,6 +16,7 @@ function collect(P){
  var echo=P.archB||P.modules&&P.modules.archB&&P.modules.archB.result||null;
  var wheel=P.betray&&P.betray.start||P.betrayWheel||P.modules&&P.modules.betrayWheel&&P.modules.betrayWheel.result||null;
  var out={sources:[],fragments:[],links:[],tensions:[],unknown:[]};
+ if(window.GTests&&GTests.preview&&window.GBackgroundPreviewResult){P.backgroundProfile=P.backgroundProfile||{};P.backgroundProfile.backgroundState=window.GBackgroundPreviewResult}
  var background=P.backgroundProfile&&P.backgroundProfile.backgroundState;
  if(background&&background.version===1){
   source('backgroundState','Фоновое состояние','24 ситуации и 8 эмоциональных итогов');
