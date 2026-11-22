@@ -1149,7 +1149,7 @@ function bind(){
       T.checkpoints24=T.checkpoints24||{};T.checkpoints24[n]=T.checkpoints24[n]||[];T.checkpoints24[n].push({id:uid(),minute:mn,mood:mm,energy:ee,note:String(cd.note||'').trim(),at:Date.now()});T.checkpointDraft=T.checkpointDraft||{};delete T.checkpointDraft[n];save(P);render();openAccAfterRender('events24');return;
     }
     if(act==='checkpoint-delete'){var dn=+b.getAttribute('data-day'),did=b.getAttribute('data-id');T.checkpoints24=T.checkpoints24||{};T.checkpoints24[dn]=(T.checkpoints24[dn]||[]).filter(function(x){return x.id!==did});if(!T.checkpoints24[dn].length)delete T.checkpoints24[dn];save(P);render();openAccAfterRender('events24');return}
-    if(act==='mirror-archive'){T.mirrorArchiveIndex=+b.getAttribute('data-i');save(P);render();return}
+    if(act==='mirror-archive'){delete T.archiveIndex;T.mirrorArchiveIndex=+b.getAttribute('data-i');save(P);render();return}
     if(act==='mirror-archive-back'){delete T.mirrorArchiveIndex;save(P);render();return}
     if(act==='mirror-continue'){
       var M=T.mirror||{};
