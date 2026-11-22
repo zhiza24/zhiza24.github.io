@@ -154,7 +154,22 @@ Runner.prototype.draw=function(){var it=this.items()[this.i];if(!it){this.o.done
 Runner.prototype.raw=function(it,c){if(preview||!window.GProfile||!this.o.module)return;try{GProfile.recordRaw(this.o.module,it.id,c,{})}catch(e){}};
 
 /* ---------- части ---------- */
-function resultScreen(box,skin,html,part,save){var k=SKIN[skin];save();box.innerHTML=html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="'+k.go+'" id="arNext">'+(retakeMode?'Дальше: Задания':preview&&part==='d'?'Закончить просмотр':preview?'Дальше':({a:'Дальше: Эхо',b:'Дальше: Первые настройки',v:'Дальше: итог Точки А',p:'Дальше: основание установки'})[part]||'Дальше')+'</button>';box.querySelector('#arNext').onclick=function(){go(part)};if(window.GQuote)GQuote.add(box,{a:'ego.html',b:'slot.html?id=arch_b',v:'slot.html?id=arch_v',p:'slot.html?id=arch_p',d:'slot.html?id=arch_d'}[part],box.querySelector('#arNext'));if(window.GSupport)GSupport.after(box,'test',box.querySelector('#arNext'));scrollTo(0,0)}
+function resultScreen(box,skin,html,part,save){
+ var k=SKIN[skin];save();
+ var resultSteps={a:'ego.html',b:'slot.html?id=arch_b',v:'slot.html?id=arch_v',p:'slot.html?id=arch_p',d:'slot.html?id=arch_d'};
+ var resultTitles={a:'Первые сигналы',b:'Привычные стратегии',v:'Сверка наблюдений',p:'Точка переключения',d:'Выбор состояния'};
+ var resultPoints={a:'Точка 0',b:'Точка 0',v:'Точка А',p:'Точка Б',d:'Точка С'};
+box.innerHTML=html+(preview?'<p class="ar-ctx">Просмотр: ответы не сохраняются в твой путь.</p>':'')+'<button class="'+k.go+'" id="arNext">'+(retakeMode?'Дальше: Задания':preview&&part==='d'?'Закончить просмотр':preview?'Дальше':({a:'Дальше: Эхо',b:'Дальше: Первые настройки',v:'Дальше: итог Точки А',p:'Дальше: основание установки'})[part]||'Дальше')+'</button>';box.querySelector('#arNext').onclick=function(){go(part)};
+ if(window.GResultCard){
+  var summary=blocks(data(),part);
+  GResultCard.attachDiaryBar(box,{
+   id:'arch_'+part,step:resultSteps[part],title:resultTitles[part],passed:resultPoints[part],
+   lead:'Промежуточная карта наблюдений. Это не окончательный вывод о тебе: следующие этапы помогут проверить и уточнить увиденное.',
+   insightLabel:'Что показали собранные наблюдения',insightMore:blocksHTML(summary),
+   preview:preview,before:box.querySelector('#arNext')
+  });
+ }
+ if(window.GQuote)GQuote.add(box,{a:'ego.html',b:'slot.html?id=arch_b',v:'slot.html?id=arch_v',p:'slot.html?id=arch_p',d:'slot.html?id=arch_d'}[part],box.querySelector('#arNext'));if(window.GSupport)GSupport.after(box,'test',box.querySelector('#arNext'));scrollTo(0,0)}
 function partA(box,skin,hooks){var items=[{kind:'intro',key:'a'},{kind:'one',id:'S1',t:D.period.t,o:D.period.o}];
  D.A.forEach(function(q){items.push({kind:'one',id:q.id,h:q.h,t:q.t,o:q.o,shuffle:true})});
  items.push({kind:'multi',id:'A11',h:D.A11.h,t:D.A11.t,hint:D.A11.hint,o:D.A11.o,shuffle:true});
