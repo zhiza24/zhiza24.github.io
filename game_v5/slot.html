@@ -217,7 +217,7 @@ function wishText(P){var D=(P.tracker||{}).declared;if(D&&D.text)return D.text;v
 /* Точка Б: итог в конце, после возвращения к желанию и Стража */
 (function(){var B=R.pb_end;R.pb_end=function(){var P=GPro.load(),w=wishText(P);
  return B().replace('<h1>Твое главное противоречие</h1>','<h1>Итог Точки Б: карта противоречий</h1><p>Ты разобрал'+GG('','а')+' схему и установку, проверил'+GG('','а')+' ее основание, уточнил'+GG('','а')+' желание, выбрал'+GG('','а')+' ориентиры и точку влияния. Вот что из этого сложилось.</p>'+(w?'<div class="pt">Подтвержденное желание: '+GEsc(w)+'</div>':'')+'<div id="mapB"></div><h2>Главное противоречие</h2>')};
- var BG=R.pb_end_go;R.pb_end_go=function(){BG();var b=document.getElementById('mapB');if(b&&window.GMaps)GMaps.render(b,['Б'])}})();
+ var BG=R.pb_end_go;R.pb_end_go=function(){BG();var b=document.getElementById('mapB');if(b&&window.GMaps)GMaps.render(b,['Б'],{arts:true})}})();
 /* Возвращение к желанию */
 R.wish_back=function(){var P=GPro.load(),w=wishText(P),v3=(P.valuesCore&&P.valuesCore.top3)||[];
  if(!w)return '<span class="tag">Точка Б</span><h1>Возвращение к желанию</h1><p>Ты пока не заявил'+GG('','а')+' желание. Загляни в небо желаний, выбери одно и возвращайся.</p><a class="st" href="wish.html">К небу желаний</a>';
