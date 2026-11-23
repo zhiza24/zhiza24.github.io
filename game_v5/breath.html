@@ -79,7 +79,13 @@ function onUp(){
 c.addEventListener('pointerdown',onDown,{passive:false});
 c.addEventListener('pointerup',onUp);
 c.addEventListener('pointercancel',onUp);
+c.addEventListener('lostpointercapture',onUp);
+/* Совместимость с мышью на ноутбуках: отпускание фиксируется даже вне сферы. */
+document.addEventListener('pointerup',onUp);
 window.addEventListener('pointerup',onUp);
+document.addEventListener('mouseup',onUp);
+window.addEventListener('mouseup',onUp);
+window.addEventListener('blur',onUp);
 go.addEventListener('click',function(){
   vib(20);
   location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance();
