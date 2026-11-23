@@ -81,11 +81,14 @@ c.addEventListener('pointerup',onUp);
 c.addEventListener('pointercancel',onUp);
 c.addEventListener('lostpointercapture',onUp);
 /* Совместимость с мышью на ноутбуках: отпускание фиксируется даже вне сферы. */
-document.addEventListener('pointerup',onUp);
-window.addEventListener('pointerup',onUp);
-document.addEventListener('mouseup',onUp);
-window.addEventListener('mouseup',onUp);
+/* Перехватываем отпускание в capture-фазе: на некоторых браузерах ноутбуков событие может не дойти до обычного обработчика после pointer capture. */
+document.addEventListener('pointerup',onUp,true);
+document.addEventListener('pointercancel',onUp,true);
+document.addEventListener('mouseup',onUp,true);
+window.addEventListener('pointerup',onUp,true);
+window.addEventListener('mouseup',onUp,true);
 window.addEventListener('blur',onUp);
+document.addEventListener('visibilitychange',function(){if(document.hidden)onUp()});
 go.addEventListener('click',function(){
   vib(20);
   location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance();
