@@ -39,5 +39,6 @@ $('samostSkip').onclick=function(){home()};
 $('samostPrev').onclick=function(){var o=readTopic();data.answers[TOPICS[active].id]=o;persist();openTopic(active-1)};
 $('samostNext').onclick=function(){var o=readTopic();data.answers[TOPICS[active].id]=o;persist();openTopic(active+1)};
 $('allySave').onclick=saveAlly;$('samostExport').onclick=exportData;$('samostClear').onclick=clearData;$('samostNewCycle').onclick=function(){if(!confirm('Сохранить текущие ответы в истории и открыть новый круг исследования?'))return;data.history.push({topic:'cycle',at:Date.now(),answer:{answers:data.answers,completed:data.completed}});data.answers={};data.completed={};persist();home()};
+syncProfile();
 renderHome();
 })();
