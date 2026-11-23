@@ -1,18 +1,11 @@
 'use strict';
-/*
- * Fast, progressive offline cache.
- * Do not download the whole game during service-worker installation:
- * the old install waited for hundreds of images, scripts and audio files.
- * Cache the small first-screen shell, then cache each asset as it is used.
- */
-const CACHE='alch-v5-fast-2026-11-23-v31';
+/* Progressive cache: never download the entire game during installation. */
+const CACHE='alch-v5-fast-2026-11-23-v32';
 const SHELL=[
  './index.html','./map.html','./theme.js','./sound.js','./flow.js',
  './opening.js','./route.js','./profile-layer.js','./route-gate.js',
- './engine.js','./passport-data.js','./passport.js','./texts.js',
- './nav.js','./nav.css','./sun-btn.css','./t/style.css',
- './img/map_axis.jpg','./img/scroll_closed.png',
- './img/scroll_open_top_f.png','./img/scroll_open_bot_f.png'
+ './engine.js','./passport-data.js','./passport.js','./texts.js','./nav.js',
+ './nav.css','./sun-btn.css','./t/style.css','./img/map_axis.jpg'
 ];
 self.addEventListener('install',event=>{
  event.waitUntil((async()=>{
@@ -39,33 +32,25 @@ self.addEventListener('fetch',event=>{
  if(req.method!=='GET'||req.headers.has('range'))return;
  const url=new URL(req.url);
  if(url.origin!==self.location.origin||/\.(mp4|webm)$/i.test(url.pathname))return;
- // Cached pages appear immediately on repeat visits; network fills the cache
- // on first visit and refreshes stale copies without blocking the screen.
  if(req.mode==='navigate'){
   event.respondWith((async()=>{
    const cache=await caches.open(CACHE);
    const hit=await cache.match(req,{ignoreSearch:true});
-   const network=fetch(req).then(async response=>{
+   if(hit)return hit;
+   try{
+    const response=await fetch(req);
     if(response&&response.ok)await cache.put(req,response.clone());
     return response;
-   });
-   if(hit){event.waitUntil(network.catch(()=>{}));return hit;}
-   try{return await network;}catch(e){
+   }catch(e){
     return (await cache.match(new URL('./offline.html',self.registration.scope).href))||Response.error();
    }
   })());
   return;
  }
- // Static files: cache-first for instant repeat navigation, then update cache.
  event.respondWith((async()=>{
   const cache=await caches.open(CACHE);
   const hit=await cache.match(req,{ignoreSearch:true});
-  if(hit){
-   event.waitUntil(fetch(req).then(response=>{
-    if(response&&response.ok)return cache.put(req,response.clone());
-   }).catch(()=>{}));
-   return hit;
-  }
+  if(hit)return hit;
   try{
    const response=await fetch(req);
    if(response&&response.ok)await cache.put(req,response.clone());
