@@ -13,6 +13,15 @@ window.GHeroSrc=function(kind){
 };
 window.GHeroApply=function(){
   document.querySelectorAll('[data-hero-img]').forEach(function(el){
-    el.src=window.GHeroSrc(el.getAttribute('data-hero-img')==='full'?'full':'portrait');
+    var url=window.GHeroSrc(el.getAttribute('data-hero-img')==='full'?'full':'portrait');
+    /* Не показываем HTML-портрет по умолчанию: сначала определяем пол героя,
+       затем показываем только полностью загруженный выбранный образ. */
+    el.style.visibility='hidden';
+    el.onload=function(){
+      if(el.src===url)el.style.visibility='visible';
+    };
+    el.onerror=function(){el.style.visibility='hidden'};
+    if(el.getAttribute('src')!==url)el.src=url;
+    else if(el.complete&&el.naturalWidth>0)el.style.visibility='visible';
   });
 };
