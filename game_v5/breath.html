@@ -60,7 +60,7 @@ function onDown(e){
   c.classList.add('hold');
   s.textContent='Отпусти, когда будешь '+(window.GG?GG('готов','готова'):'готов');
   go.classList.remove('show');
-  try{if(e&&e.pointerId!=null&&c.setPointerCapture)c.setPointerCapture(e.pointerId)}catch(err){}
+  try{if(e&&e.pointerId!=null&&e.pointerType!=='mouse'&&c.setPointerCapture)c.setPointerCapture(e.pointerId)}catch(err){}
   step();
 }
 function onUp(){
@@ -76,17 +76,16 @@ function onUp(){
   go.classList.add('show');
   vib(35);
 }
-c.addEventListener('pointerdown',onDown,{passive:false});
-c.addEventListener('pointerup',onUp);
-c.addEventListener('pointercancel',onUp);
-c.addEventListener('lostpointercapture',onUp);
-/* Совместимость с мышью на ноутбуках: отпускание фиксируется даже вне сферы. */
-/* Перехватываем отпускание в capture-фазе: на некоторых браузерах ноутбуков событие может не дойти до обычного обработчика после pointer capture. */
-document.addEventListener('pointerup',onUp,true);
+/* Сенсорные устройства используют Pointer Events, мышь — отдельную пару mouse events. */
+c.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse')onDown(e)},{passive:false});
+c.addEventListener('pointerup',function(e){if(e.pointerType!=='mouse')onUp()});
+c.addEventListener('pointercancel',function(e){if(e.pointerType!=='mouse')onUp()});
+c.addEventListener('lostpointercapture',function(e){if(e.pointerType!=='mouse')onUp()});
+c.addEventListener('mousedown',function(e){onDown(e)});
+document.addEventListener('mouseup',function(){onUp()});
+/* Потеря фокуса завершает упражнение, чтобы сфера не зависала в состоянии удержания. */
 document.addEventListener('pointercancel',onUp,true);
-document.addEventListener('mouseup',onUp,true);
-window.addEventListener('pointerup',onUp,true);
-window.addEventListener('mouseup',onUp,true);
+window.addEventListener('pointerup',function(e){if(e.pointerType!=='mouse')onUp()},true);
 window.addEventListener('blur',onUp);
 document.addEventListener('visibilitychange',function(){if(document.hidden)onUp()});
 go.addEventListener('click',function(){
