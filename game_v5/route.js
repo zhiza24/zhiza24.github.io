@@ -23,6 +23,7 @@ function ready(u,p){
  if(u==='slot.html?id=mirrors')return !mirrorReadonly()&&!((p.mirrors||{}).draft)&&!!(p.mirror_exercise&&p.mirror_exercise.completed_at);
  if(u==='form.html')return !!(p.name&&window.GPassport&&GPassport.parse(p.birth)&&['m','f'].includes(p.gender)&&p.points);
  if((p.flow||{}).completed&&p.flow.completed[u])return true;
+ if(u==='bridge.html')return !!(p.pocherk&&p.pocherk.doneAt);
  if(u==='choose.html')return !!p.mapStyle;
  if(u==='ego.html')return !!p.ego;
  if(u==='betray.html')return !!(p.betray&&(p.betray.done||p.betray.skipped));
@@ -63,7 +64,7 @@ function resume(){return state().url;}
 function reviewUrl(u){return visualReview(u)?u+(u.includes('?')?'&':'?')+'review=1':'tasks.html?review='+encodeURIComponent(u);}
 function complete(u,p){
  u=u||currentUrl();p=p||load();
- if(isVisualReview()||mirrorReadonly()||status(u,p)==='locked'||(u==='slot.html?id=mirrors'&&!ready(u,p)))return false;
+ if(isVisualReview()||mirrorReadonly()||status(u,p)==='locked'||((u==='slot.html?id=mirrors'||u==='bridge.html')&&!ready(u,p)))return false;
  if(!u||index(u)<0)return false;
  p.flow=p.flow||{};const f=p.flow;f.completed=f.completed||{};
  // Revisiting an already completed step must not change its date or route.
