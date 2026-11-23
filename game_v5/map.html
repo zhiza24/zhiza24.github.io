@@ -450,5 +450,7 @@ var SCROLL_AUDIO='snd/author.mp3';
   o.onclick=function(e){if(e.target==o)cl()};
 })();
 </script>
-</body>
+<script>
+(function(){if(!('serviceWorker' in navigator))return;window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js?v=32',{scope:'./'}).catch(function(e){console.warn('Offline cache unavailable',e)});},{once:true})})();
+</script></body>
 </html>
