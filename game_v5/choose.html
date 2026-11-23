@@ -52,8 +52,9 @@ body.gsc-open .nxs,body.gsc-first .nxs{opacity:0;pointer-events:none}
 .w{max-width:1180px;padding:calc(54px + env(safe-area-inset-top)) 28px calc(78px + env(safe-area-inset-bottom))}
 .deck{gap:28px;align-items:stretch}
 .th{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:auto;align-content:start;align-items:start;gap:12px;width:48%;flex:0 0 48%;padding:4px 0}
-.th button{width:100%;height:auto;aspect-ratio:3/4;max-height:none;min-width:0}
-.th button img{width:100%;height:100%;object-fit:contain}
+.th button{box-sizing:border-box;width:100%;height:clamp(112px,21dvh,188px);aspect-ratio:3/4;max-height:none;min-width:0;min-height:0;justify-self:center;align-self:start;overflow:hidden}
+.th button img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;background:#0c0804}
+.th{grid-template-rows:clamp(112px,21dvh,188px);grid-auto-rows:clamp(112px,21dvh,188px);}
 .desc{flex:1 1 0;width:0;min-width:0}
 .dsc{font-size:clamp(16px,1.45vw,20px);padding:4px 12px 8px 0}
 .dsc h2{font-size:1.55em}
