@@ -18,7 +18,7 @@ window.GHeroApply=function(){
        затем показываем только полностью загруженный выбранный образ. */
     el.style.visibility='hidden';
     el.onload=function(){
-      if(el.src===url)el.style.visibility='visible';
+      if(el.getAttribute('src')===url)el.style.visibility='visible';
     };
     el.onerror=function(){el.style.visibility='hidden'};
     if(el.getAttribute('src')!==url)el.src=url;
