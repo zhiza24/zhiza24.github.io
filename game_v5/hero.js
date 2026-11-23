@@ -90,6 +90,8 @@ $('chX').onclick=function(){dlg.close()};dlg.addEventListener('click',function(e
  var v=(P.valuesCore&&P.valuesCore.top3)||[];if(v.length)L.push(['Три ориентира',v.join(', ')]);
  if(P.fractal&&P.fractal.lever&&P.fractal.lever.title)L.push(['Точка влияния',P.fractal.lever.title]);
  if(P.archD&&P.archD.top&&P.archD.d1t)L.push(['Выбранное состояние',P.archD.top]);
+ var SM=P.samost||{};var smDone=Object.keys(SM.completed||{}).filter(function(k){return SM.completed[k]}).length;
+ if(smDone)L.push(['Исследование Самости',smDone+' из 9 тем отмечено']);
  var el=$('hPort');if(el){if(L.length)el.innerHTML='<div class="hh"><b>ТВОЙ ПОРТРЕТ</b><small>коротко</small></div><div class="prt">'+L.map(function(x){return '<div class="r"><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></div>'}).join('')+'</div>';else el.remove()}
  var es=$('hSum');if(es){var HS=window.GHeroSum?GHeroSum.build(P):null,blk='';if(HS){[['ЧТО У ТЕБЯ УЖЕ ХОРОШО РАБОТАЕТ',HS.good],['ЧТО ЧАЩЕ МЕШАЕТ',HS.hard],['ЧТО ТЫ УЗНАЛ'+(female?'А':'')+' О СЕБЕ',HS.learned]].forEach(function(z){if(z[1].length)blk+='<div class="hh"><b>'+z[0]+'</b></div><div class="prt">'+z[1].map(function(x){return '<div class="r"><b style="font-size:16px">'+esc(x)+'</b></div>'}).join('')+'</div>'})}if(blk)es.innerHTML=blk;else es.remove()}
  var ea=$('hArts');if(ea){if(arts.length)ea.innerHTML='<div class="hh" id="arts"><b>ТВОИ АРТЕФАКТЫ</b><small>'+arts.length+'</small></div><div class="artgrid">'+arts.map(function(a){return '<button type="button" class="art" data-art="'+esc(a)+'"><span>'+artHtml(a)+'</span><small>'+esc(artName(a))+'</small></button>'}).join('')+'</div>';else ea.remove()}

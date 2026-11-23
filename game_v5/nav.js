@@ -1,3 +1,18 @@
+/* Image loading policy shared by the main game screens: decode asynchronously and defer only images clearly below the first viewport. */
+(function(){
+ function tuneImages(){
+  var imgs=document.querySelectorAll('img');
+  imgs.forEach(function(img){
+   if(!img.hasAttribute('decoding'))img.decoding='async';
+   if(!img.hasAttribute('loading')){
+    var r=img.getBoundingClientRect();
+    img.loading=(r.top>window.innerHeight*1.35)?'lazy':'eager';
+   }
+  });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',tuneImages,{once:true});
+ else tuneImages();
+})();
 var _cur='tasks.html';
 (function(){var cur=document.body.dataset.page||'';var _f=location.pathname.split('/').pop()||'index.html';if(_f==='index.html'||_f==='cover_v1.html'||cur==='tracker')return;
 var built={'index.html':1,'map.html':1};
