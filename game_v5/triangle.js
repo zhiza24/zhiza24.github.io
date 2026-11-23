@@ -329,7 +329,7 @@ function mount(box){
    title:'Привычные реакции',
    lead:leadText,strong:strongLine,strongMore:strongMore,
    insight:insightLine,insightMore:insightMore,answers:chosenList,preview:preview,
-   nextLabel:nextStep?'Дальше: '+nextStep.t:'Дальше',
+   nextLabel:'Продолжить путь',
    onNext:function(){vib(20);if(preview||window.GReview){location.href='tasks.html';return}var u=GRoute.advance();if(u)location.href=u},
    onRetake:function(){idx=0;ans=[];showDeck();scrollTo(0,0)}
   });
