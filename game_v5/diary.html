@@ -5,7 +5,7 @@
 var P={};try{P=JSON.parse(localStorage.getItem('alch_v5_profile'))||{}}catch(e){}
 P.diary=P.diary||{};P.diary.q=P.diary.q||[];P.diary.ins=P.diary.ins||[];P.diary.blocks=P.diary.blocks||[];
 function save(){localStorage.setItem('alch_v5_profile',JSON.stringify(P))}
-var T=[['tests','Итоги'],['ins','Инсайты'],['q','Вопросы'],['path','Путь'],['cycles','Циклы'],['book','Книга Алхимика']];
+var T=[['tests','Итоги'],['samost','Самость'],['ins','Инсайты'],['q','Вопросы'],['path','Путь'],['cycles','Циклы'],['book','Книга Алхимика']];
 var cur=new URLSearchParams(location.search).get('tab')||'tests';
 function esc(x){return String(x==null?'':x).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
 function dt(t){var d=new Date(t);return isNaN(d)?(t||''):d.toLocaleDateString('ru-RU')+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}
@@ -25,7 +25,16 @@ function render(){
  if(wrap)wrap.classList.toggle('dbk-on',cur==='book');
  if(cur!=='book'&&window.GBook)GBook.close();
 
- if(cur==='ins'||cur==='q'){
+ if(cur==='samost'){
+  var S=P.samost||{};try{if(!S.answers)S=JSON.parse(localStorage.getItem('alch_samost'))||S}catch(e){}
+  var names={being:'Я есть',liking:'Что мне нравится',self_cancel:'Где я отменяю себя',inner_voice:'Чей голос звучит внутри',ally:'Внутренний союзник',desires:'Мои желания',past:'Мой опыт — часть моей истории',aliveness:'Качество проживаемого опыта',integration:'Моя собственная позиция'};
+  var order=Object.keys(names),done=order.filter(function(k){return S.completed&&S.completed[k]}).length;
+  h='<p class="muted">Самость — отдельная лаборатория. Здесь отображаются записи, сохраненные на этом устройстве. <a href="samost.html" style="color:#f0c870">Открыть лабораторию</a></p>'+card('Исследование', 'Отмечено тем: '+done+' из 9');
+  order.forEach(function(k){var a=S.answers&&S.answers[k];if(!a)return;var body='';Object.keys(a).forEach(function(key){if(a[key])body+='<p><b>'+esc(key)+'</b><br>'+esc(a[key])+'</p>'});if(body)h+=card(names[k],body)});
+  (S.allyHistory||[]).slice().reverse().forEach(function(a){var body='';[['Фраза',a.phrase],['Желание',a.want],['Потребность или ценность',a.need],['Ответ союзника',a.voice],['Выбор',a.choice]].forEach(function(x){if(x[1])body+='<p><b>'+x[0]+'</b><br>'+esc(x[1])+'</p>'});if(body)h+=card('Практика внутреннего союзника · '+dt(a.at),body)});
+  if(!done&&!Object.keys(S.answers||{}).length&&!(S.allyHistory||[]).length)h+='<p class="muted">Пока нет сохраненных записей Самости.</p>';
+ }
+ else if(cur==='ins'||cur==='q'){
   var L=P.diary[cur];
   h='<textarea id="tx" placeholder="'+(cur==='ins'?'Запиши свою мысль или открытие':'Запиши вопрос, который хочется разобрать')+'"></textarea><button class="add" id="ad">Записать</button>';
   if(!L.length)h+='<p class="muted">Пока записей нет.</p>';
