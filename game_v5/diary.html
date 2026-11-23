@@ -74,9 +74,6 @@ function render(){
    if(b.strongMore||b.insightMore){
     bHtml+='<details class="blk-det"><summary>Полная расшифровка</summary><div style="margin-top:6px">'+(window.GResultCard&&GResultCard.safeDiaryHtml?GResultCard.safeDiaryHtml(b.strongMore||'')+(GResultCard.safeDiaryHtml(b.insightMore||'')):(b.strongMore||'')+(b.insightMore||''))+'</div></details>';
    }
-   if(Array.isArray(b.answers)&&b.answers.length){
-    bHtml+='<details class="blk-det"><summary>Свидетельства ответов ('+b.answers.length+')</summary><ul>'+b.answers.map(function(a){return '<li>'+esc(a)+'</li>'}).join('')+'</ul></details>';
-   }
    if(Array.isArray(b.history)&&b.history.length){
     bHtml+='<details class="blk-det"><summary>Предыдущие прохождения ('+b.history.length+')</summary>'+b.history.slice().reverse().map(function(old){return '<div class="blk-det"><div class="dt">'+esc(old.passed||'')+(old.at?' · '+dt(old.at):'')+'</div>'+(old.title?'<b>'+esc(old.title)+'</b>':'')+(old.lead?'<p class="blk-p">'+esc(old.lead)+'</p>':'')+(old.strong?'<p class="blk-p"><b>Сильные стороны:</b> '+esc(old.strong)+'</p>':'')+(old.insight?'<p class="blk-p"><b>На что обратить внимание:</b> '+esc(old.insight)+'</p>':'')+((old.strongMore||old.insightMore)?'<details class="blk-det"><summary>Расшифровка прежнего результата</summary><div>'+ (window.GResultCard&&GResultCard.safeDiaryHtml?GResultCard.safeDiaryHtml(old.strongMore||'')+GResultCard.safeDiaryHtml(old.insightMore||''):(old.strongMore||'')+(old.insightMore||''))+'</div></details>':'')+(Array.isArray(old.answers)&&old.answers.length?'<details class="blk-det"><summary>Свидетельства прежних ответов ('+old.answers.length+')</summary><ul>'+old.answers.map(function(a){return '<li>'+esc(a)+'</li>'}).join('')+'</ul></details>':'')+'</div>'}).join('')+'</details>';
    }
