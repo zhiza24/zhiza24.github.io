@@ -83,6 +83,8 @@ c.addEventListener('pointercancel',function(e){if(e.pointerType!=='mouse')onUp()
 c.addEventListener('lostpointercapture',function(e){if(e.pointerType!=='mouse')onUp()});
 c.addEventListener('mousedown',function(e){onDown(e)});
 document.addEventListener('mouseup',function(){onUp()});
+/* Резерв для браузеров ноутбука, где отпускание мыши теряется: обычный клик по сфере завершает вдох. */
+c.addEventListener('click',function(){if(!go.classList.contains('show')){if(holding)onUp();else{onDown();onUp()}}});
 /* Потеря фокуса завершает упражнение, чтобы сфера не зависала в состоянии удержания. */
 document.addEventListener('pointercancel',onUp,true);
 window.addEventListener('pointerup',function(e){if(e.pointerType!=='mouse')onUp()},true);
