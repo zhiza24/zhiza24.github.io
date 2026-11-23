@@ -30,5 +30,5 @@ const c=document.getElementById('core');let AC;
 const ES=new Audio('snd/entry.mp3?v=8');ES.preload='none';
 c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}let gone=0;const go=()=>{if(!gone){gone=1;location.href='map.html?v=8'}};ES.currentTime=0;ES.onended=go;const pr=ES.play();if(pr&&pr.catch)pr.catch(()=>setTimeout(go,1500));c.classList.add('go');setTimeout(go,6000)};
 </script><script>
-(function(){if(!('serviceWorker' in navigator))return;window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js?v=32',{scope:'./'}).catch(function(e){console.warn('Offline cache unavailable',e)});},{once:true})})();
+(function(){if(!('serviceWorker' in navigator))return;window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js?v=33',{scope:'./'}).catch(function(e){console.warn('Offline cache unavailable',e)});},{once:true})})();
 </script></body></html>

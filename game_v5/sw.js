@@ -1,11 +1,11 @@
 'use strict';
 /* Progressive cache: never download the entire game during installation. */
-const CACHE='alch-v5-fast-2026-11-23-v32';
+const CACHE='alch-v5-fast-2026-11-23-v33';
 const SHELL=[
- './index.html','./map.html','./theme.js','./sound.js','./flow.js',
+ './index.html','./map.html','./choose.html','./offline.html','./theme.js','./sound.js','./flow.js',
  './opening.js','./route.js','./profile-layer.js','./route-gate.js',
  './engine.js','./passport-data.js','./passport.js','./texts.js','./nav.js',
- './nav.css','./sun-btn.css','./t/style.css','./img/map_axis.jpg'
+ './nav.css','./scroll.css','./sun-btn.css','./t/style.css','./scroll.js','./stages.js','./texts_fr.js','./upd.js','./gender.js','./img/map_axis.jpg','./img/card_s.jpg','./img/card_n.jpg','./img/card_str.jpg','./img/card_z.jpg','./img/wheel.webp'
 ];
 self.addEventListener('install',event=>{
  event.waitUntil((async()=>{
