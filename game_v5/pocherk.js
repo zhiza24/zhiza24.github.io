@@ -131,7 +131,7 @@ function ask(){
   requestAnimationFrame(function(){qz.classList.remove('swap')});
   locked=false;
   opts.querySelectorAll('.op').forEach(function(b){b.onclick=function(){pick(q,b)}});
- },wasOn?120:0);
+ },wasOn?80:0);
 }
 function pick(q,b){
  if(locked)return;locked=true;var k=+b.dataset.k;b.classList.add('sel');qz.classList.add('lock');vib(25);
@@ -145,12 +145,12 @@ function pick(q,b){
  });
 }
 function react(q,cb){
- if(q.st==='fog'){fogLevel();setTimeout(cb,260);return}
+ if(q.st==='fog'){fogLevel();setTimeout(cb,150);return}
  if(q.st==='bridge'){
   var n=q.id-3;setBuilt(n,true);
   if(n===2){var s=deck.children[1];s.classList.add('crack');setTimeout(function(){s.classList.remove('crack')},420)}
-  if(n===4){setTimeout(function(){crossed=true;posTokens(true)},620);setTimeout(cb,1250)}
-  else setTimeout(cb,650);
+  if(n===4){setTimeout(function(){crossed=true;posTokens(true)},420);setTimeout(cb,900)}
+  else setTimeout(cb,420);
   return;
  }
  if(q.st==='fire'){document.body.classList.add('flare');setTimeout(function(){document.body.classList.remove('flare')},420);setTimeout(cb,320)}
