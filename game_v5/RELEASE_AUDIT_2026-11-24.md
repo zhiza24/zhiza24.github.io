@@ -8,7 +8,7 @@ This document reconciles the independent static audit with the current source an
 - All 57 route entries resolve to existing HTML files. They use 20 distinct route pages.
 - The main task runner loads 44 local scripts; all are present in the service-worker precache.
 - All route HTML pages are present in the precache. The precache list contains 235 existing local assets.
-- The service-worker cache is version v33. The worker is registered from the shared theme entry on supported secure origins. `ver.txt` remains unchanged by design, per the updater contract in `README_AI.md`; `upd.js` continues to manage the `?u` URL parameter.
+- The service-worker cache is version v36 (235 unique precache entries). The worker is registered from the shared theme entry on supported secure origins. `ver.txt` remains unchanged by design, per the updater contract in `README_AI.md`; `upd.js` continues to manage the `?u` URL parameter.
 - BG16 is followed by the 10-section / 60-item inner-mechanism lab, then the Ideal Crooked World step.
 - Referenced local images, stylesheets, audio, video sources, and posters are checked by `tests/asset-integrity.test.cjs`. Used audio is precached. Chromium smoke confirms that the Elder voice plays after a user tap and both cinematic videos decode and play online. Video files are intentionally not precached because of their size; each video screen has a local cached poster fallback.
 - The Elder screen uses the existing `media/voice.mp3` from its explicit sound button. The former map-page reference to the nonexistent `snd/author.mp3` was removed. The first-visit author scroll now contains finished text instead of a placeholder; author narration is not included because no matching audio file is present.
@@ -28,6 +28,9 @@ This document reconciles the independent static audit with the current source an
 - Inner-mechanism resource and protective signals now enter the personal strategy as separate preliminary self-report signals. A family is surfaced only after at least three answers in that family.
 - A resource signal may suggest one optional supporting practice. A protective signal is presented as a question to check against real episodes and external circumstances; it does not automatically trigger a corrective practice or get forced into the 19-state model.
 - The 19-state engine evaluates structured self-report and situation-choice evidence. Free-text narrative is not automatically analyzed; this is an explicit methodological/privacy boundary, not an unfinished AI integration.
+- In «Идеальном Кривом Мире», «Не знаю» is excluded from scoring and coverage rather than counted as zero; saved results from the earlier scoring rule are recalculated from their original answers the next time that result screen is opened.
+- The «Карта ценностей» now validates the 5–8 selection inline and enforces the eight-item maximum.
+- The Reactor includes an optional, non-scored «Качество проживаемого опыта» note; it is saved in the day record, appears in the diary, and is included in the cycle mirror without becoming a life-quality metric.
 - The values atlas has six research layers: declared orientations, choices under constraint, repeated decisions, episodes, desires/envy/regret, and threat/protection. Adaptive follow-up branching is not part of this release.
 - The separate «Разбор убеждений» remains an optional bonus laboratory, not a mandatory route step.
 
@@ -53,11 +56,17 @@ The GitHub Actions suite now checks:
 - Lived Life Mirror overnight/overlap accounting, report rendering, and route-gated handoff;
 - strategy use of inner-mechanism signals and its minimum-evidence safeguards;
 - local asset resolution, offline audio, cached video posters, and inline-script syntax;
-- non-causal wording for signs and weekly progress.
+- non-causal wording for signs and weekly progress;
+- inline validation and scoring behavior when a player answers «Не знаю»;
+- 375px mobile viewport layout smoke coverage;
+- eraser text wrapping, non-negative score adjustments, and removal of identical test-result branches.
 
 ## Still not verified / deliberately deferred
 
-- A focused desktop Chromium smoke suite passes three checks: the map, inner-mechanism lab, new-player Reactor strategy, diary, hero, Elder, and cutscene screens open without page errors or missing local responses; the Elder voice and both cinematic videos play; the service worker installs and the mechanism lab reloads while offline. A full end-to-end walkthrough of all 57 steps and every branch has not been run.
+- A focused desktop Chromium smoke suite passes: the map, inner-mechanism lab, new-player Reactor strategy, diary, hero, Elder, and cutscene screens open without page errors or missing local responses; the Elder voice and both cinematic videos play; the service worker installs and the mechanism lab reloads while offline.
+- A 375px Chromium mobile-viewport smoke test checks the map, mechanism lab, Reactor, diary, hero, Elder, and cutscene for horizontal page overflow. This is not physical iPhone/Safari testing.
+- A Chromium route smoke test opens all 57 route destinations with the corresponding step marked current and checks for uncaught page errors, missing local responses, blank screens, and unexpected redirects. It verifies page rendering, not completion of every interaction or branch.
+- A full end-to-end walkthrough of all 57 steps and every branch has not been run.
 - The user's own iPhone/Safari test is deliberately deferred until the source and media are frozen.
 - Payment integration is deliberately deferred.
 - GitHub Pages build/deployment completed successfully for main commit `9ca83400d9f45cebe4b3c897d0b625ec4ad482c9`. The web viewer in this session could not independently fetch the live URL, so the final visual check should still be made in a normal browser.

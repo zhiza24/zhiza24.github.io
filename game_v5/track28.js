@@ -414,11 +414,11 @@ function viewDiary(P,T){
   for(var n=1;n<=28;n++){
     var evs=(T.events24&&T.events24[n])||[],cps=(T.checkpoints24&&T.checkpoints24[n])||[],d=(T.days||{})[String(n)]||{},proofs=(T.proofs||[]).filter(function(x){return +x.day===n}),custom=(T.custom||{})[n];
     var journal=Object.keys(d.journal||{}).filter(function(k){return String(d.journal[k]||'').trim()});
-    var hasNotes=!!(d.note||(d.res&&(d.res.saw||d.res.proof))||custom||(d.signs||[]).length||(d.grat||[]).length||(d.choose||[]).length||journal.length||proofs.length||d.lightCounters);
+    var hasNotes=!!(d.note||d.quality||(d.res&&(d.res.saw||d.res.proof))||custom||(d.signs||[]).length||(d.grat||[]).length||(d.choose||[]).length||journal.length||proofs.length||d.lightCounters);
     if(!evs.length&&!cps.length&&!hasNotes)continue;
     records++;
     html+='<section class="row-line diary-day"><b>День '+n+'</b>';
-    if(d.note)html+='<div class="diary-event"><b>Заметка дня</b><p>'+esc(d.note)+'</p></div>'; if(custom)html+='<div class="diary-event"><b>Своя запись</b><p>'+esc(custom)+'</p></div>';
+    if(d.note)html+='<div class="diary-event"><b>Заметка дня</b><p>'+esc(d.note)+'</p></div>';if(d.quality)html+='<div class="diary-event"><b>Качество проживаемого опыта</b><p>'+esc(d.quality)+'</p></div>'; if(custom)html+='<div class="diary-event"><b>Своя запись</b><p>'+esc(custom)+'</p></div>';
     if(d.lightCounters)html+='<div class="diary-event"><b>Легкие отметки</b><p>Вода: '+(+d.lightCounters.water||0)+' стак. · Движение: '+(+d.lightCounters.movement||0)+' мин · Приемы пищи: '+(+d.lightCounters.meals||0)+'</p></div>';
     if(d.res&&(d.res.saw||d.res.proof))html+='<div class="diary-event"><b>Наблюдение и подтверждение</b>'+(d.res.saw?'<p>'+esc(d.res.saw)+'</p>':'')+(d.res.proof?'<p>'+esc(d.res.proof)+'</p>':'')+'</div>';
     if((d.signs||[]).length)html+='<div class="diary-event"><b>Знаки и совпадения</b>'+d.signs.map(function(x){return '<p>'+esc(x.tag?x.tag+' · ':'')+esc(x.text||'')+'</p>'}).join('')+'</div>';
@@ -513,10 +513,11 @@ function continueMirror(P,T){
  return {ok:true,url:'slot.html?id=compare'};
 }
 function mirrorActivityStats(T){
- var all=T.events24||{},bySphere={},byMotive={},byEmotion={},byFocus={},byPlanned={},after={},completion={},eventIds={},days=0,checkpoints=0,overlap=0,total=0,unknown=0,alternatives=[];
+ var all=T.events24||{},bySphere={},byMotive={},byEmotion={},byFocus={},byPlanned={},after={},completion={},eventIds={},days=0,checkpoints=0,overlap=0,total=0,unknown=0,alternatives=[],qualityMoments=[];
  MIRROR_SPHERES.forEach(function(x){bySphere[x.k]=0});
  for(var n=1;n<=28;n++){
-  var own=all[n]||[],prev=all[n-1]||[],evs=[];
+  var own=all[n]||[],prev=all[n-1]||[],evs=[],daily=(T.days||{})[String(n)]||{},moment=String(daily.quality||'').trim();
+  if(moment)qualityMoments.push({day:n,text:moment});
   own.forEach(function(e){if(+e.startMin<1440)evs.push({e:e,s:+e.startMin,t:Math.min(1440,+e.endMin)})});
   prev.forEach(function(e){if(+e.endMin>1440)evs.push({e:e,s:0,t:Math.min(1440,+e.endMin-1440)})});
   if(evs.length)days++;
@@ -532,7 +533,7 @@ function mirrorActivityStats(T){
  }
  Object.keys(eventIds).forEach(function(id){var e=eventIds[id];after[e.after||'unclassified']=(after[e.after||'unclassified']||0)+1;completion[e.completion||'unclassified']=(completion[e.completion||'unclassified']||0)+1;if(e.alternative)alternatives.push(e.alternative)});
  var moodSum=0,energySum=0;Object.keys(T.checkpoints24||{}).forEach(function(k){(T.checkpoints24[k]||[]).forEach(function(c){checkpoints++;moodSum+=+c.mood||0;energySum+=+c.energy||0})});
- return {moodAvg:checkpoints?moodSum/checkpoints:null,energyAvg:checkpoints?energySum/checkpoints:null,bySphere:bySphere,byMotive:byMotive,byEmotion:byEmotion,byFocus:byFocus,byPlanned:byPlanned,after:after,completion:completion,total:total,overlap:overlap,unknown:unknown,days:days,events:Object.keys(eventIds).length,checkpoints:checkpoints,alternatives:alternatives};
+ return {moodAvg:checkpoints?moodSum/checkpoints:null,energyAvg:checkpoints?energySum/checkpoints:null,bySphere:bySphere,byMotive:byMotive,byEmotion:byEmotion,byFocus:byFocus,byPlanned:byPlanned,after:after,completion:completion,total:total,overlap:overlap,unknown:unknown,days:days,events:Object.keys(eventIds).length,checkpoints:checkpoints,alternatives:alternatives,qualityMoments:qualityMoments};
 }
 function mirrorBars(values,total,names){
  var keys=Object.keys(values||{}).filter(function(k){return values[k]>0}).sort(function(a,b){return values[b]-values[a]});
@@ -564,6 +565,7 @@ function viewMirror(P,T,isArchive){
  var h='<div class="t28 mirror"><p class="dk">Зеркало прожитой жизни · отчет</p><h1>Пять разных взглядов на одну жизнь</h1><p class="cap28">Это не единый рейтинг и не объективная оценка благополучия. Самооценка, исследовательские ответы и зарегистрированная активность измеряют разные стороны опыта.</p>';
  h+='<div class="mirror-report-grid"><details open><summary>1. Исходная самооценка</summary>'+mirrorWheelSvg(init,'Как ты оценивал(а) сферы в начале',10)+'</details><details><summary>2. Исходные исследовательские ответы</summary>'+mirrorWheelSvg(initResearch,'Подробные ответы в начале',10)+'</details><details open><summary>3. Наблюдаемая активность за 28 дней</summary>';
  h+='<p class="mute">Событий: '+stats.events+' · дни с записями: '+stats.days+' из 28 · контрольные точки состояния: '+stats.checkpoints+(stats.checkpoints?' · среднее настроение '+stats.moodAvg.toFixed(1)+'/10 · энергия '+stats.energyAvg.toFixed(1)+'/10':'')+'. Учтено без пересечений: '+Math.round(stats.total/60*10)/10+' ч. Пересекающееся время: '+Math.round(stats.overlap/60*10)/10+' ч — показано отдельно и не добавлено повторно. Другое или сфера не указана: '+Math.round(stats.unknown/60*10)/10+' ч.</p>';
+ h+='<details><summary>Качество проживаемого опыта · записей: '+stats.qualityMoments.length+'</summary><p class="mute">Это не балл и не рейтинг. Здесь собраны моменты, в которых жизнь ощущалась живой и ценной.</p>'+(stats.qualityMoments.length?stats.qualityMoments.map(function(x){return '<div class="diary-event"><b>День '+x.day+'</b><p>'+esc(x.text)+'</p></div>'}).join(''):'<p class="mute">Отдельных записей нет. Пустое поле не означает, что хорошего опыта не было.</p>')+'</details>';
  h+=stats.total?mirrorWheelSvg(MIRROR_SPHERES.map(function(x){return shares[x.k]}),'Доля зарегистрированного времени по сферам, %',100):'<p class="mute">Недостаточно записей, чтобы построить распределение. Это не означает, что в эти дни ничего не происходило.</p>';
  h+='<h3>Время по сферам</h3>'+mirrorBars(stats.bySphere,stats.total,Object.assign({unclassified:'Не указано'},Object.fromEntries(MIRROR_SPHERES.map(function(x){return [x.k,x.n]}))));
  h+='<h3>Плановые и спонтанные события</h3>'+mirrorBars(stats.byPlanned,stats.total,sn)+'<h3>На кого было направлено время</h3>'+mirrorBars(stats.byFocus,stats.total,sn)+'<h3>Мотивы зарегистрированных событий</h3>'+mirrorBars(stats.byMotive,stats.total,sn)+'<h3>Эмоциональные отметки</h3>'+mirrorBars(stats.byEmotion,stats.total,sn);
@@ -655,6 +657,8 @@ function dayPanel(P,T,n){
   });
   stateBody+='</div>';
   html+=acc('state','Состояние сейчас','пять оценок · по желанию',stateBody);
+  var qualityBody='<p class="mute">Жизнь не обязана ждать идеальных обстоятельств. Что сегодня было живым и ценным для тебя — удовольствие, интерес, красота, близость, смысл, спокойствие или что-то свое? Это не оценка и не задача. Если нечего добавить, поле можно оставить пустым.</p><textarea data-act="quality" rows="2" maxlength="300" placeholder="Один момент, ощущение или эпизод">'+esc(d.quality||'')+'</textarea>';
+  html+=acc('quality','Качество проживаемого опыта','по желанию · без оценки',qualityBody);
   html+=razborBlock(P,T,n);
   var evCount=((T.events24||{})[n]||[]).length+(((T.events24||{})[n-1]||[]).filter(function(x){return +x.endMin>1440}).length);html+=acc('events24','24 часа · события и занятия',evCount?'записей: '+evCount:'добавить запись',events24Body(T,n));
 
@@ -1325,6 +1329,7 @@ function bind(){
     if(act==='support-week'){T.support=T.support||{};T.support.weeklyExperience=T.support.weeklyExperience||{};T.support.weeklyExperience[el.getAttribute('data-w')]=el.value;save(P);return}
     if(act==='support-note'){T.support=T.support||{};T.support.note=el.value;save(P);return}
     if(act==='ifthen'){T.ifthens=T.ifthens||['','','']; T.ifthens[+el.getAttribute('data-i')]=el.value; save(P); return}
+    if(act==='quality'){d.quality=el.value;save(P);return}
     if(act==='note'){d.note=el.value; save(P); return}
     if(act==='journal'){d.journal=d.journal||{};d.journal[el.getAttribute('data-id')]=el.value;save(P);return}
     if(act==='res-saw'){d.res=d.res||{};d.res.saw=el.value;save(P);return}

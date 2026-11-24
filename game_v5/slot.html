@@ -65,7 +65,7 @@ R.eraser_go=function(){
  var p=GPAT[GLead().lead],P0=GPro.load(),actual=GActualRule(P0,p),oldRule=actual.text,c=document.getElementById('cv'),x=c.getContext('2d'),r=c.getBoundingClientRect(),ruleEdit=document.getElementById('ruleEdit');
  if(ruleEdit)ruleEdit.oninput=function(){var P=GPro.load();P.lab=P.lab||{};P.lab.newRuleDraft=ruleEdit.value;GPro.save(P)};
  c.width=Math.max(1,Math.round(r.width*devicePixelRatio));c.height=Math.max(1,Math.round(r.height*devicePixelRatio));x.scale(devicePixelRatio,devicePixelRatio);x.fillStyle='#2a2018';x.fillRect(0,0,r.width,r.height);x.fillStyle='#c9b591';x.font='600 19px Manrope';x.textAlign='center';x.textBaseline='middle';
- var words='«'+oldRule+'»'.split(' '),lines=[],line='';words.forEach(function(w){var next=line?line+' '+w:w;if(x.measureText(next).width>r.width-30&&line){lines.push(line);line=w}else line=next});if(line)lines.push(line);
+ var words=('«'+oldRule+'»').split(' '),lines=[],line='';words.forEach(function(w){var next=line?line+' '+w:w;if(x.measureText(next).width>r.width-30&&line){lines.push(line);line=w}else line=next});if(line)lines.push(line);
  var lineH=24,startY=r.height/2-(lines.length-1)*lineH/2;lines.forEach(function(t,i){x.fillText(t,r.width/2,startY+i*lineH,r.width-30)});
  x.globalCompositeOperation='destination-out';
  var done=false,down=false;

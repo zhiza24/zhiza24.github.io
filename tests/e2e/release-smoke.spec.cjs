@@ -77,7 +77,7 @@ test('main task runner remains available offline after service-worker install',a
  await page.goto('/slot.html?id=mechanism&u=T',{waitUntil:'domcontentloaded'});
  await expect(page.locator('body')).toContainText('Лаборатория внутреннего механизма');
  const cacheNames=await page.evaluate(()=>caches.keys());
- expect(cacheNames.some(x=>x.includes('2026-11-24-v33'))).toBeTruthy();
+ expect(cacheNames.some(x=>x.includes('2026-11-24-v36'))).toBeTruthy();
  await context.setOffline(true);
  await page.reload({waitUntil:'domcontentloaded'});
  await expect(page.locator('body')).toContainText('Лаборатория внутреннего механизма',{timeout:30000});
