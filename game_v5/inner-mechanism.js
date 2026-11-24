@@ -28,7 +28,22 @@ function mount(box){
    var key=q[2];groups[key]=groups[key]||{id:key,name:DATA.families[key]||key,items:[],score:0};
    groups[key].items.push(item);groups[key].score=Math.max(groups[key].score,v);
   });
-  Object.keys(groups).forEach(function(k){var x=groups[k];x.items.sort(function(a,b){return b.value-a.value});out.push(x)});
+  Object.keys(groups).forEach(function(k){
+   var x=groups[k];x.items.sort(function(a,b){return b.value-a.value});x.support=[];
+   DATA.sections.forEach(function(other){
+    if(other.id==='triggers')return;
+    other.items.forEach(function(q){
+     var v=S.answers[q[0]];
+     if(q[2]===k&&q[3]==='protective'&&typeof v==='number'&&v>=2){
+      var label=S.answerLabels&&S.answerLabels[q[0]];
+      if(!label){var opt=DATA.scale.filter(function(o){return o.v===v})[0];label=opt?opt.l:'Не указано'}
+      x.support.push({section:other.title,text:q[1],label:label,value:v});
+     }
+    });
+   });
+   x.support.sort(function(a,b){return b.value-a.value});
+   out.push(x);
+  });
   out.sort(function(a,b){return b.score-a.score||b.items.length-a.items.length});
   resources.sort(function(a,b){return b.value-a.value});
   return {groups:out,resources:resources,answered:sec.items.filter(function(q){return S.answers[q[0]]!==undefined}).length};
@@ -38,7 +53,7 @@ function mount(box){
   if(!data.groups.length)html+='<div class="gim-trigger-empty">Пока недостаточно ответов, чтобы выделить повторяющиеся условия. Они появятся здесь автоматически по мере заполнения первого блока.</div>';
   else data.groups.forEach(function(group){
    var top=group.items[0],rank=top.value===3?'Часто отмечается':top.value===2?'Иногда отмечается':'Редкий сигнал';
-   html+='<div class="gim-trigger-item"><b>'+esc(group.name)+'</b><span class="gim-trigger-pill">'+rank+'</span>'+group.items.map(function(item){return '<div>'+esc(item.text)+' <strong>— '+esc(item.label)+'</strong></div>'}).join('')+'</div>';
+   html+='<div class="gim-trigger-item"><b>'+esc(group.name)+'</b><span class="gim-trigger-pill">'+rank+'</span>'+group.items.map(function(item){return '<div>'+esc(item.text)+' <strong>— '+esc(item.label)+'</strong></div>'}).join('')+(group.support.length?'<p class="gim-small">Подтверждающие ответы из других блоков:</p>'+group.support.slice(0,3).map(function(item){return '<div class="gim-small">'+esc(item.section)+': '+esc(item.text)+' — '+esc(item.label)+'</div>'}).join(''):'')+'</div>';
   });
   if(data.resources.length)html+='<div class="gim-trigger-item gim-trigger-resource"><b>Ресурсный сигнал</b>'+data.resources.map(function(item){return '<div>'+esc(item.text)+' <strong>— '+esc(item.label)+'</strong></div>'}).join('')+'</div>';
   html+='<p>Мы показываем только то, что отмечено в ответах. Это рабочие сигналы, а не диагноз и не окончательное объяснение реакции.</p></section>';
