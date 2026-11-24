@@ -330,7 +330,7 @@ function adapt(T,n){var S=T.strategy;if(!S)return null;var base=S.days[n-1];if(!
 /* HTML экрана «Твоя стратегия готова» */
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function html(S){
- var h='<p class="sg-k">Твоя стратегия готова</p><h1 class="sg-h">Твой маршрут на 28 дней</h1>';
+ var h='<p class="sg-k">'+(S.weak?'Предварительный маршрут':'Твоя стратегия готова')+'</p><h1 class="sg-h">Твой маршрут на 28 дней</h1>';
  h+='<section class="sg-b"><small>Центральная звезда</small><p class="sg-w">'+esc(S.wish)+'</p></section>';
  if(S.stars&&S.stars.length)h+='<section class="sg-b"><small>Три звезды ближайшего пути</small>'+S.stars.map(function(x,i){return '<p><b>'+(i+1)+'. '+esc(x.text)+'</b></p>'}).join('')+'</section>';
  h+='<section class="sg-b"><small>Что стоит за этим желанием</small><p>'+esc(S.need)+'</p></section>';
