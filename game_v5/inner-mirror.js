@@ -3,7 +3,7 @@
 (function(){
 'use strict';
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-function genderText(s){return String(s==null?'':s).replace(/\\{([^|]*)\\|([^}]*)\\}/g,function(_,m,f){return window.GG?GG(m,f):m})}
+function genderText(s){return String(s==null?'':s).replace(/\{([^|]*)\|([^}]*)\}/g,function(_,m,f){return window.GG?GG(m,f):m})}
 function arr(x){return Array.isArray(x)?x:[]}
 function first(obj,keys){for(var i=0;i<keys.length;i++)if(obj&&obj[keys[i]]!=null)return obj[keys[i]];return null}
 function labelEcho(code){
