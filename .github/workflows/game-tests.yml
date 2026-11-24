@@ -29,3 +29,20 @@ jobs:
       - name: Run regression tests
         working-directory: tests
         run: npm test
+
+  browser-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        working-directory: tests
+        run: npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test
+      - name: Install Chromium
+        working-directory: tests
+        run: npx playwright install --with-deps chromium
+      - name: Run desktop browser smoke tests
+        working-directory: tests
+        run: npx playwright test --config=playwright.config.cjs
