@@ -3,6 +3,7 @@
 (function(){
 'use strict';
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function genderText(s){return String(s==null?'':s).replace(/\{([^|]*)\|([^}]*)\}/g,function(_,m,f){return window.GG?GG(m,f):m})}
 function arr(x){return Array.isArray(x)?x:[]}
 function first(obj,keys){for(var i=0;i<keys.length;i++)if(obj&&obj[keys[i]]!=null)return obj[keys[i]];return null}
 function labelEcho(code){
@@ -18,6 +19,32 @@ function collect(P){
  var out={sources:[],fragments:[],links:[],tensions:[],unknown:[]};
  if(window.GTests&&GTests.preview&&window.GBackgroundPreviewResult){P.backgroundProfile=P.backgroundProfile||{};P.backgroundProfile.backgroundState=window.GBackgroundPreviewResult}
  var background=P.backgroundProfile&&P.backgroundProfile.backgroundState;
+ if(background&&background.version===2){
+  source('backgroundState','Ведущее фоновое состояние','16 сцен в 8 сферах; ресурсные и защитные сигналы рассматриваются отдельно');
+  arr(background.families).forEach(function(f){
+   if(!f.situationCount)return;
+   var ev=arr(f.evidence).map(function(x){return x.sphere+' · '+genderText(x.prompt)+' → '+genderText(x.optionText)+(x.role==='secondary'?' (дополнительный сигнал)':'')});
+   var detail=(f.description||'Наблюдения в ситуациях.')+' '+(f.repeatLabel||'');
+   if(f.group==='resource'&&background.followup){
+    if(background.followup.resourceDuration)detail+=' Сохранение состояния: '+background.followup.resourceDuration+'.';
+    if(background.followup.resourceTransfer)detail+=' Перенос в другие сферы: '+background.followup.resourceTransfer+'.';
+   }
+   if(f.group==='protective'&&background.followup&&background.followup.protectiveRecovery)detail+=' Возврат к обычному состоянию: '+background.followup.protectiveRecovery+'.';
+   if(f.group==='protective'&&background.followup&&background.followup.protectiveContext)detail+=' Контекстная сверка: '+background.followup.protectiveContext+'.';
+   out.fragments.push({domain:f.group==='resource'?'Ресурсы':'Фоновое состояние',title:f.title,detail:detail,status:'preliminary',source:'backgroundState',evidence:ev,score:f.share});
+  });
+  var g=background.groups||{};
+  if(!arr(g.resource&&g.resource.leaders).length&&!arr(g.protective&&g.protective.leaders).length)
+   out.unknown.push('В 16 сценах пока не выделился ведущий сигнал. Отдельные ответы сохранены и могут быть сопоставлены с другими исследованиями.');
+  var special=background.special||{};
+  if((special.depends||0)+(special.none||0)>0)
+   out.unknown.push('В части ситуаций ответ зависел от обстоятельств или ни один вариант не подошел. Эти ответы сохранены отдельно и не распределены по семействам.');
+  if(background.followup&&background.followup.protectiveContext&&background.followup.protectiveContext.indexOf('Чаще есть конкретные факты')===0)
+   out.unknown.push('Часть защитных сигналов пользователь связывает с конкретными внешними фактами или ограничениями. Их нельзя автоматически трактовать как внутреннюю ошибку или недостаток адаптации.');
+  if(background.coverage&&background.coverage.answered<12)
+   out.unknown.push('В исследовании фонового состояния пока мало отвеченных сцен для уверенного сравнения разных сфер.');
+  out.unknown.push('Восемь семейств фонового состояния и каталог 19 внутренних настроек — разные уровни модели. Они сопоставляются в общей карте, но не приравниваются друг к другу.');
+ }
  if(background&&background.version===1){
   source('backgroundState','Фоновое состояние','24 ситуации и 8 эмоциональных итогов');
   var BD=window.GIMD||{};

@@ -13,7 +13,7 @@ function h(s){return esc(g(s))}
 function P_(html){return '<p>'+html+'</p>'}
 
 /* ---------- шаги, поля, подписи ---------- */
-var STEP={km:{u:'slot.html?id=km',f:'kmTest',mod:'km',name:'Идеальный Кривой Мир'},fs:{u:'slot.html?id=fs',f:'firstSet',mod:'firstSet',name:'Первые настройки'},
+var STEP={bg16:{u:'slot.html?id=bg16',f:'backgroundProfile',mod:'backgroundProfile',name:'Ведущее фоновое состояние'},km:{u:'slot.html?id=km',f:'kmTest',mod:'km',name:'Идеальный Кривой Мир'},fs:{u:'slot.html?id=fs',f:'firstSet',mod:'firstSet',name:'Первые настройки'},
  lab_d:{u:'slot.html?id=lab_d',f:'desireLab',mod:'desireLab',name:'Лабиринт желаний'},pi:{u:'slot.html?id=pi',f:'interact',mod:'interact',name:'Профиль взаимодействия'},
  rs:{u:'slot.html?id=rs',f:'respTest',mod:'respTest',name:'Ответственность'},ct:{u:'slot.html?id=ct',f:'ctTest',mod:'ctTest',name:'Критическое мышление'},
  sv:{u:'slot.html?id=sv',f:'selfWorth',mod:'selfWorth',name:'Самоценность'},vsort:{u:'slot.html?id=vsort',f:'valuesCore',mod:'valuesCore',name:'Три ориентира'},
@@ -279,7 +279,7 @@ var drawBase=Runner.prototype.draw;Runner.prototype.draw=function(){var it=this.
  this.items[this.i]=Object.assign({},it,{kind:'multi',o:o,max:2,other:'Свое направление'})}return drawBase.call(this)};
 
 /* ---------- сохранение, вход в Реактор, дневник ---------- */
-function reactorIn(P){var r={v:VER,at:Date.now(),tests:{}};Object.keys(STEP).forEach(function(k){var x=P[STEP[k].f];if(!x||k==='vsort'||k==='im')return;r.tests[k]={status:x.status||'tentative',top:x.top||null,leadingScales:x.leadingScales||x.leading||[]}});if(P.valuesCore)r.values3=P.valuesCore.top3;if(P.desireLab&&P.desireLab.step)r.desireStep=P.desireLab.step;return r}
+function reactorIn(P){var r={v:VER,at:Date.now(),tests:{}};Object.keys(STEP).forEach(function(k){var x=P[STEP[k].f];if(!x||k==='vsort'||k==='im'||k==='bg16')return;r.tests[k]={status:x.status||'tentative',top:x.top||null,leadingScales:x.leadingScales||x.leading||[]}});var bg=P.backgroundProfile&&P.backgroundProfile.backgroundState;if(bg&&bg.version===2){var fm={};(bg.families||[]).forEach(function(x){fm[x.id]=x});var rg=bg.groups&&bg.groups.resource,pg=bg.groups&&bg.groups.protective,ids=[].concat(rg&&rg.leaders||[],pg&&pg.leaders||[]);r.tests.bg16={status:'preliminary',top:ids.map(function(id){return fm[id]&&fm[id].title}).filter(Boolean).join(' / ')||null,leadingScales:ids.slice(),groups:{resource:rg&&rg.status||'no_clear_leader',protective:pg&&pg.status||'no_clear_leader'},coverage:bg.coverage||null};r.backgroundState={groups:{resource:rg||null,protective:pg||null},coverage:bg.coverage||null,special:bg.special||null,followup:bg.followup||null,families:(bg.families||[]).map(function(x){return {id:x.id,title:x.title,group:x.group,share:x.share,sphereCount:x.sphereCount}})}}if(P.valuesCore)r.values3=P.valuesCore.top3;if(P.desireLab&&P.desireLab.step)r.desireStep=P.desireLab.step;return r}
 function store(k,res,log){if(preview)return;var P=load(),S=STEP[k];if(P.testDrafts)delete P.testDrafts[S.mod];if(k==='vsort')delete P.valuesCoreDraft;if(window.GProfile){try{P=GProfile.saveResult(S.mod,res,{version:VER},{profile:P,save:false})}catch(e){P[S.f]=res}}else P[S.f]=res;
  P[S.f]=res;P.reactorIn=reactorIn(P);(P.log=P.log||[]).push({t:Date.now(),x:log});persist(P)}
 function quoteKey(k){return STEP[k].u}
@@ -332,5 +332,5 @@ function mountValues(box){
  if(have&&have.top3&&!preview){show(have);return}
  if(draft&&i>0)card();else intro()
 }
-window.GTests={STEP:STEP,BUILD:BUILD,ITEMS:ITEMS,reactorIn:reactorIn,mount:function(k,box){if(k==='im'&&window.GBackgroundTest){GBackgroundTest.mount(box);return}if(k==='im'&&window.GInner){GInner.mount(box);return}if(k==='vsort')mountValues(box);else if(k==='lab_d'&&window.GLabD)GLabD.mount(box);else mountTest(k,box)},keys:Object.keys(STEP),W:W,css:css,store:store,result:result,load:load,persist:persist,g:g,h:h,esc:esc,P_:P_,fem:fem,preview:preview,retakeMode:retakeMode,VER:VER};
+window.GTests={STEP:STEP,BUILD:BUILD,ITEMS:ITEMS,reactorIn:reactorIn,mount:function(k,box){if(k==='bg16'&&window.GBackgroundState16Test){GBackgroundState16Test.mount(box);return}if(k==='im'&&window.GInner){GInner.mount(box);return}if(k==='vsort')mountValues(box);else if(k==='lab_d'&&window.GLabD)GLabD.mount(box);else mountTest(k,box)},keys:Object.keys(STEP),W:W,css:css,store:store,result:result,load:load,persist:persist,g:g,h:h,esc:esc,P_:P_,fem:fem,preview:preview,retakeMode:retakeMode,VER:VER};
 })();

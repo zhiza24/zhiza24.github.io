@@ -96,7 +96,7 @@ var CAT=[
   {id:'contact', lv:2, group:'research', journal:true, t:'Восстанавливаю контакт', len:7, load:'3 минуты',
     d:'Один раз в день прямо говоришь о своей потребности или делаешь шаг навстречу.', why:'Если ты часто уходишь в себя или отдаляешься.',
     effect:'Больше поддержки рядом.', min:'Одно сообщение или фраза о себе.', done:'Семь записей.', daily:'Кому и о чем ты сегодня {сказал|сказала}?',
-    need:function(P){return fam(P,'S7')||ad(P,'A4')||bw(P,'detach')}},
+    need:function(P){return fam(P,'S7')||fam(P,'S4')||ad(P,'A4')||bw(P,'detach')}},
   {id:'myzone', lv:2, group:'research', journal:true, t:'Шаг в зоне влияния', len:7, load:'2 минуты',
     d:'Находишь одну вещь, которая точно зависит от тебя, и делаешь ее.', why:'Если бывает ощущение, что выбор ограничен.',
     effect:'Возвращается чувство выбора.', min:'Одно маленькое действие.', done:'Семь записей.', daily:'Что сегодня зависело от тебя и ты это {сделал|сделала}?',
@@ -104,7 +104,7 @@ var CAT=[
   {id:'mydecision', lv:2, group:'research', journal:true, t:'Мое решение', len:7, load:'2 минуты',
     d:'Фиксируешь одно решение, принятое по своему выбору, без ожидания одобрения.', why:'Если важна внешняя оценка.',
     effect:'Опора на свой выбор.', min:'Одно решение одной фразой.', done:'Семь записей.', daily:'Какое решение сегодня было твоим?',
-    need:function(P){return hi(P,'selfWorth','SV06')||hi(P,'kmTest','KM02')}},
+    need:function(P){return fam(P,'S3')||hi(P,'selfWorth','SV06')||hi(P,'kmTest','KM02')}},
   {id:'acceptsup', lv:2, group:'research', journal:true, t:'Принимаю поддержку', len:7, load:'2 минуты',
     d:'Каждый день принимаешь одну помощь или распределяешь одну задачу.', why:'Если ты привык{|ла} все делать сам{|а}.',
     effect:'Меньше перегрузки.', min:'Принять одну мелочь.', done:'Семь записей.', daily:'Какую поддержку ты сегодня {принял|приняла}?',
@@ -122,7 +122,7 @@ var CAT=[
 function lvOf(P,f,id){var x=P[f];if(!x||!x.scales)return null;var s=x.scales.filter(function(z){return z.id===id})[0];return s&&s.level!=null?s.level:null}
 function hi(P,f,id){var l=lvOf(P,f,id);return l!=null&&l>=2}
 function bw(P,id){var B=P.betray||{},r=B.end||B.start;if(r&&r.sh&&typeof r.sh[id]==='number')return r.sh[id]>=2;return (B.picked||[]).indexOf(id)>=0}
-function fam(P,s){var b=P.backgroundProfile;return !!(b&&b.levels&&b.levels[s]>=2)}
+function fam(P,s){var b=P.backgroundProfile,bg=b&&b.backgroundState;if(bg&&bg.version===2){var f=(bg.families||[]).filter(function(x){return x.id===s})[0],g=f&&bg.groups&&bg.groups[f.group];if(!(f&&g&&Array.isArray(g.leaders)&&g.leaders.indexOf(s)>=0))return false;if(f.group==='protective'){var context=bg.followup&&bg.followup.protectiveContext;return context==='Иногда есть факты, но моя реакция бывает сильнее самой ситуации.'||context==='Часто ощущение возникает раньше, чем я проверю факты и доступные варианты.'}return true}return !!(b&&b.levels&&b.levels[s]>=2)}
 function ad(P,a){var b=P.backgroundProfile;return !!(b&&(b.adaptHyp||[]).indexOf(a)>=0)}
 function selfHeavy(P){var b=P.backgroundProfile;return !!(b&&b.adaptations&&b.adaptations.A6>=5&&(b.adaptations.A3||0)<=2)}
 
