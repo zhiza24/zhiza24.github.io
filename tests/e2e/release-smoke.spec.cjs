@@ -37,6 +37,10 @@ test('main screens render without page errors or missing local responses',async(
   await expect(page.locator('body')).toBeVisible();
   if(item.text)await expect(page.locator('body')).toContainText(item.text);
   if(item.url.startsWith('/slot.html'))expect(page.url()).toContain('slot.html?id=mechanism');
+  if(item.url.startsWith('/reactor.html')){
+   await expect(page.locator('body')).toContainText('Предварительный маршрут');
+   await expect(page.locator('body')).not.toContainText('Скрытое правило');
+  }
   if(item.url.startsWith('/elder.html'))await expect(page.locator('#au')).toHaveAttribute('src','media/voice.mp3');
   if(item.url.startsWith('/cutscene.html'))expect(await page.locator('video').first().getAttribute('poster')).toBeTruthy();
   expect(errors,'errors while loading '+item.url).toEqual([]);
