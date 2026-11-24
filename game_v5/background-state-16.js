@@ -5,6 +5,7 @@
 var D=root.GBGS16,E=root.GBackgroundState16;
 if(!D||!E)return;
 function arr(x){return Array.isArray(x)?x:[]}
+function isFamily(id){return !!(D.FAM&&D.FAM[id])}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function tx(s){return String(s==null?'':s).replace(/\{([^{}|]*)\|([^{}]*)\}/g,function(_,a,b){return root.GG?root.GG(a,b):a}).replace(/§([^§|]+)\|([^§]+)§/g,function(_,a,b){return root.GG?root.GG(a,b):a})}
 function css(){
@@ -163,7 +164,7 @@ function mount(box){
   };
   var again=box.querySelector('#bg16Retake');if(again)again.onclick=function(){draft=freshDraft();step=0;saveDraft();intro()};
  }
- if(saved&&!(draft.updatedAt&&draft.updatedAt>(saved.completedAt||saved.at||0))&&!retake){result();return}
+ if(saved&&!(draft&&draft.updatedAt&&draft.updatedAt>(saved.completedAt||saved.at||0))&&!retake){result();return}
  intro();
 }
 root.GBackgroundState16Test={mount:mount};
