@@ -21,13 +21,13 @@ for(const file of files){
   const text=fs.readFileSync(file,'utf8');
   for(const m of text.matchAll(/\b(?:src|href|poster)=["']([^"']+)["']/gi))add(file,m[1],'html');
   for(const m of text.matchAll(/url\((?:["']?)([^)"']+)(?:["']?)\)/gi))add(file,m[1],'inline-css');
-  for(const m of text.matchAll(/["']((?:img|media|snd)\/[^"']+\\.(?:mp3|wav|ogg|mp4|webm|png|jpe?g|webp|svg))["']/gi))add(file,m[1],'inline-js');
+  for(const m of text.matchAll(/["']((?:img|media|snd)\/[^"']+\.(?:mp3|wav|ogg|mp4|webm|png|jpe?g|webp|svg))["']/gi))add(file,m[1],'inline-js');
  }else if(ext==='.css'){
   const text=fs.readFileSync(file,'utf8');
   for(const m of text.matchAll(/url\((?:["']?)([^)"']+)(?:["']?)\)/gi))add(file,m[1],'css');
  }else if(ext==='.js'){
   const text=fs.readFileSync(file,'utf8');
-  for(const m of text.matchAll(/["']((?:img|media|snd)\/[^"']+\\.(?:mp3|wav|ogg|mp4|webm|png|jpe?g|webp|svg))["']/gi))add(file,m[1],'js');
+  for(const m of text.matchAll(/["']((?:img|media|snd)\/[^"']+\.(?:mp3|wav|ogg|mp4|webm|png|jpe?g|webp|svg))["']/gi))add(file,m[1],'js');
  }
 }
 const missing=refs.filter(x=>!fs.existsSync(x.target));
