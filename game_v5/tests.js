@@ -132,7 +132,7 @@ BUILD.sv=function(ans){var sc=T.sv.scales,res=scoreScales(sc,ans),n=answered(sc,
  var main;if(n<18){out.status='insufficient';main=P_(esc(W.few))}
  else{var L=leaders(res,0),mx=L.length?L[0].score:0;out.status=statusOf(res);
   if(!L.length||mx<4){out.leadingScales=[];out.allClear=true;main='<div class="aq">Опора держится</div>'+P_(esc(g(T.sv.allClear)))}
-  else{out.leadingScales=L.map(function(r){return r.id});main='<div class="al">'+(L.length>1?'Заметнее всего здесь':'Заметнее всего здесь')+'</div>'+L.slice(0,2).map(function(r){return '<div class="aq">'+esc(r.name)+'</div><div class="gt-lv">'+esc(lvName(r,LVD))+'</div>'+P_(esc(lvText(sc,r)))}).join('')+(L.length>2?P_('Сопоставимо выражены еще: '+esc(L.slice(2).map(function(r){return r.name}).join(', '))+'.'):'')}}
+  else{out.leadingScales=L.map(function(r){return r.id});main='<div class="al">'+('Заметнее всего здесь')+'</div>'+L.slice(0,2).map(function(r){return '<div class="aq">'+esc(r.name)+'</div><div class="gt-lv">'+esc(lvName(r,LVD))+'</div>'+P_(esc(lvText(sc,r)))}).join('')+(L.length>2?P_('Сопоставимо выражены еще: '+esc(L.slice(2).map(function(r){return r.name}).join(', '))+'.'):'')}}
  out.top=out.status==='insufficient'?'Недостаточно данных':out.allClear?'Опора держится во всех шести областях':'Заметнее всего: '+res.filter(function(r){return (out.leadingScales||[]).indexOf(r.id)>=0}).map(function(r){return r.name}).join(', ');
  return {res:out,html:'<span class="tag">Точка Б</span><span class="tag">Самоценность</span>'+main+detailsScales(sc,res,LVD),log:'Самоценность: '+out.top}};
 BUILD.rs=function(ans){var sc=T.rs.scales,res=scoreScales(sc,ans),n=answered(sc,ans),out={v:VER,answers:ans,scales:res,answeredCount:n,possibleCount:24,at:Date.now()},main;
