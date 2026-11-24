@@ -29,6 +29,7 @@ function collect(P){
     if(background.followup.resourceTransfer)detail+=' Перенос в другие сферы: '+background.followup.resourceTransfer+'.';
    }
    if(f.group==='protective'&&background.followup&&background.followup.protectiveRecovery)detail+=' Возврат к обычному состоянию: '+background.followup.protectiveRecovery+'.';
+   if(f.group==='protective'&&background.followup&&background.followup.protectiveContext)detail+=' Контекстная сверка: '+background.followup.protectiveContext+'.';
    out.fragments.push({domain:f.group==='resource'?'Ресурсы':'Фоновое состояние',title:f.title,detail:detail,status:'preliminary',source:'backgroundState',evidence:ev,score:f.share});
   });
   var g=background.groups||{};
@@ -37,6 +38,8 @@ function collect(P){
   var special=background.special||{};
   if((special.depends||0)+(special.none||0)>0)
    out.unknown.push('В части ситуаций ответ зависел от обстоятельств или ни один вариант не подошел. Эти ответы сохранены отдельно и не распределены по семействам.');
+  if(background.followup&&background.followup.protectiveContext&&background.followup.protectiveContext.indexOf('Чаще есть конкретные факты')===0)
+   out.unknown.push('Часть защитных сигналов пользователь связывает с конкретными внешними фактами или ограничениями. Их нельзя автоматически трактовать как внутреннюю ошибку или недостаток адаптации.');
   if(background.coverage&&background.coverage.answered<12)
    out.unknown.push('В исследовании фонового состояния пока мало отвеченных сцен для уверенного сравнения разных сфер.');
   out.unknown.push('Восемь семейств фонового состояния и каталог 19 внутренних настроек — разные уровни модели. Они сопоставляются в общей карте, но не приравниваются друг к другу.');
