@@ -58,6 +58,7 @@ The GitHub Actions suite now checks:
 
 ## Still not verified / deliberately deferred
 
+- A narrow 375px Chromium viewport smoke test checks the main map, task runner, Reactor, diary, hero, Elder, and cutscene screens for horizontal overflow. This is a layout smoke test, not physical iPhone/Safari testing.
 - Full end-to-end browser walkthrough of all 57 steps and all branches has not been run. The current suite uses Node and jsdom plus static integrity checks; it is not a substitute for a real Chromium/Safari session.
 - The user's own iPhone/Safari test is deliberately deferred until the source and media are frozen.
 - Payment integration is deliberately deferred.
