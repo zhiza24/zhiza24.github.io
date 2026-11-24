@@ -16,8 +16,8 @@ assert.ok(noEvidenceHtml.includes('Пока недостаточно ответ�
 assert.ok(!noEvidenceHtml.includes('Скрытое правило'),'default pattern must not be presented as a discovered hidden rule');
 
 window.GPAT={
- avoid:{parts:[[],['Подстраиваюсь и жду одобрения'],['Меня любят, только если я это заслужу'],['Чувство принадлежности и безопасности'],[],['Моя ценность не зависит от одобрения']],pr:[]},
- deval:{parts:[[],['Обесцениваю свой результат'],['Мой результат никогда не будет достаточно хорош'],['Избегание стыда'],[],['Можно учиться на ошибках']],pr:[]}
+ avoid:{parts:[[],['reaction','Подстраиваюсь и жду одобрения'],['rule','Меня любят, только если я это заслужу'],['gain','Чувство принадлежности и безопасности'],[],['new','Моя ценность не зависит от одобрения']],pr:[]},
+ deval:{parts:[[],['reaction','Обесцениваю свой результат'],['rule','Мой результат никогда не будет достаточно хорош'],['gain','Избегание стыда'],[],['new','Можно учиться на ошибках']],pr:[]}
 };
 const legacyWeak=S.build({gender:'f',lab:{lead:'avoid',queue:['deval']}});
 assert.equal(legacyWeak.weak,true,'missing evidence-quality flag must be treated conservatively');
@@ -28,6 +28,7 @@ assert.equal(evidence.weak,false);
 assert.ok(evidenceHtml.includes('Твоя стратегия готова'));
 assert.ok(evidenceHtml.includes('Предварительная гипотеза для проверки'));
 assert.ok(evidenceHtml.includes('Возможная защитная функция'));
+assert.ok(evidenceHtml.includes('сохранить чувство принадлежности и безопасности'));
 assert.ok(evidenceHtml.includes('не установленный факт'));
 assert.ok(!evidenceHtml.includes('Скрытое правило'),'even supported lead signals remain hypotheses');
 const result={
