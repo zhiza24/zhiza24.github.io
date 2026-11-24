@@ -25,7 +25,7 @@ test('main screens render without page errors or missing local responses',async(
  const cases=[
   {url:'/map.html?u=T',text:'Приветствую вас, господа пробужденные'},
   {url:'/slot.html?id=mechanism&u=T',text:'Лаборатория внутреннего механизма'},
-  {url:'/reactor.html?u=T',text:'Мой день'},
+  {url:'/reactor.html?u=T',text:'Твой маршрут на 28 дней'},
   {url:'/diary.html?u=T',text:'Дневник'},
   {url:'/hero.html?u=T',text:'Герой'},
   {url:'/elder.html?review=1&u=T',text:'Вот твой мир'},
