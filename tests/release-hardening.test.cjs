@@ -48,4 +48,10 @@ const root=path.join(__dirname,'../game_v5');
  assert.equal(result.scoringVersion,2);
  dom.window.close();
 }
-console.log('PASS: inline values-atlas validation, eight-item selection limit, and non-scoring treatment of «Не знаю» in KM (including saved-result recalculation).');
+const slot=fs.readFileSync(path.join(root,'slot.html'),'utf8');
+const arch=fs.readFileSync(path.join(root,'arch.js'),'utf8');
+const tests=fs.readFileSync(path.join(root,'tests.js'),'utf8');
+assert.ok(slot.includes("var words=('«'+oldRule+'»').split(' '),lines=[],line='';"),'old rule must be wrapped as a whole string before splitting');
+assert.ok(arch.includes("bs[bc[0]]=Math.max(0,bs[bc[0]]-2)"),'disconfirmation must not create negative intermediate scores');
+assert.ok(!tests.includes("L.length>1?'Заметнее всего здесь':'Заметнее всего здесь'"),'remove identical ternary branches');
+console.log('PASS: inline values-atlas validation, eight-item selection limit, KM unknown scoring, eraser text wrapping, and non-negative disconfirmation.');
