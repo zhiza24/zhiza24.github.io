@@ -1,3 +1,18 @@
+/* PWA: the worker is registered from the shared theme entry, which is loaded
+   by the entry page, map, task screens, diary, hero and Reactor. */
+(function(){
+ if(!('serviceWorker' in navigator))return;
+ var secure=location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1';
+ if(!secure)return;
+ var register=function(){
+  window.GSWRegistration=navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(function(error){
+   if(window.console&&console.warn)console.warn('Service worker registration failed',error);
+   return null;
+  });
+ };
+ if(document.readyState==='complete')register();
+ else window.addEventListener('load',register,{once:true});
+})();
 /* Светлая и темная тема (localStorage alch_v5_theme = 'light' | 'dark', по умолчанию светлая).
    Загружается первым в <head>: ставит data-theme на <html> до отрисовки.
    Тема меняет только экраны тестов, вопросов и итогов (ego.html, slot.html кроме зеркал), Дневник и читалку Книги.
