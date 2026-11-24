@@ -10,6 +10,7 @@ assert.ok(S&&typeof S.testsLayer==='function'&&typeof S.practRec==='function'&&t
 const noEvidence=S.build({gender:'f'});
 assert.equal(noEvidence.weak,true,'missing lead evidence must remain weak');
 const noEvidenceHtml=S.html(noEvidence);
+assert.ok(noEvidenceHtml.includes('Предварительный маршрут'));
 assert.ok(noEvidenceHtml.includes('Возможные ориентиры'));
 assert.ok(noEvidenceHtml.includes('Пока недостаточно ответов'));
 assert.ok(!noEvidenceHtml.includes('Скрытое правило'),'default pattern must not be presented as a discovered hidden rule');
@@ -21,6 +22,7 @@ window.GPAT={
 const evidence=S.build({gender:'f',lab:{lead:'avoid',queue:['deval'],weak:false}});
 const evidenceHtml=S.html(evidence);
 assert.equal(evidence.weak,false);
+assert.ok(evidenceHtml.includes('Твоя стратегия готова'));
 assert.ok(evidenceHtml.includes('Предварительная гипотеза для проверки'));
 assert.ok(evidenceHtml.includes('Возможная защитная функция'));
 assert.ok(evidenceHtml.includes('не установленный факт'));
