@@ -45,12 +45,13 @@ var l=A.layer||1;
 if(l===7){renderResult(A.result&&A.result.dilemmas?A.result:calculate());return;}
 if(l===1){
 setHead('Исследование ценностей · 1 из 6','Что Вы называете важным?','Выберите от пяти до восьми ориентиров, которые действительно хотите видеть в своей жизни. Можно добавить собственную формулировку. Это Ваше самоописание — не обещание всегда поступать именно так.');
-card.append(valueChips('Выберите 5–8 ориентиров',A.declared));
+card.append(valueChips('Выберите 5–8 ориентиров',A.declared,8));
+var validation=node('p','Выберите от 5 до 8 ориентиров, чтобы перейти дальше.','muted');validation.setAttribute('role','status');validation.setAttribute('aria-live','polite');validation.tabIndex=-1;validation.hidden=true;validation.style.cssText='margin:10px 0;color:#f0c870;font-size:15px;';card.append(validation);
 if(A.legacySource&&A.legacySource.length)card.append(node('p','Ваши формулировки из прежней версии сохранены: '+A.legacySource.join(' · ')+'. Если среди них есть важное различие, запишите его ниже.','muted'));
 card.append(field('Свои формулировки и различия, если их нет в списке','ownLabel',A,'Можно перечислить несколько ориентиров через запятую…'));
 card.append(valueChips('Какие два из выбранных Вы особенно не хотели бы потерять?',A.privateChoice,2));
 card.append(field('Какой из этих ориентиров Вы выбрали бы, даже если бы никто не узнал о Вашем выборе?','privateNote',A));
-var n=button('Перейти к ситуациям',function(){if(A.declared.length<5||A.declared.length>8){alert('Выберите от 5 до 8 ориентиров.');return}if(A.privateChoice.length>2)A.privateChoice=A.privateChoice.slice(0,2);A.layer=2;save();render()},'next');card.append(n);return;
+var n=button('Перейти к ситуациям',function(){if(A.declared.length<5||A.declared.length>8){validation.hidden=false;validation.focus();return}validation.hidden=true;if(A.privateChoice.length>2)A.privateChoice=A.privateChoice.slice(0,2);A.layer=2;save();render()},'next');card.append(n);return;
 }
 if(l===2){
 var idx=A.dilemmaIndex||0;
