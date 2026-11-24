@@ -138,6 +138,8 @@ strategyDom.window.eval(fs.readFileSync(path.join(root,'strategy.js'),'utf8'));
 const strategyProfile={backgroundProfile:{backgroundState:{version:2,groups:{resource:{status:'leading',leaders:['S2']},protective:{status:'leading',leaders:['S5']}},families:[{id:'S2',title:'Интерес и движение',description:'Ресурс интереса.',group:'resource',sphereCount:8},{id:'S5',title:'Готовность заранее видеть сложности',description:'Повторяющееся ожидание возможных сложностей.',group:'protective',sphereCount:8}],followup:{protectiveContext:'Часто ощущение возникает раньше, чем я проверю факты и доступные варианты.'}}}};
 const recs=strategyDom.window.GStrategy.practRec(strategyProfile);
 assert.deepEqual(Array.from(recs.map(x=>x.id)),['create','risk']);
+const externallyLimited=JSON.parse(JSON.stringify(strategyProfile));externallyLimited.backgroundProfile.backgroundState.followup.protectiveContext='Чаще есть конкретные факты или ограничения, которые это объясняют.';
+assert.deepEqual(Array.from(strategyDom.window.GStrategy.practRec(externallyLimited).map(x=>x.id)),['create']);
 const layer=strategyDom.window.GStrategy.testsLayer(strategyProfile,false);
 assert.equal(layer.res[0].t,'Интерес и движение');
 assert.equal(layer.obst[0].t,'Готовность заранее видеть сложности');
@@ -153,13 +155,17 @@ w.GG=(male)=>male;
 w.GBackgroundState16Test.mount(box);
 box.querySelector('#bg16Start').click();
 for(let i=0;i<16;i++){
- const primary=box.querySelector('[data-bg16-primary]');
- assert.ok(primary,'scene '+(i+1)+' should offer a primary answer');
+ const choices=Array.from(box.querySelectorAll('[data-bg16-primary]'));
+ assert.ok(choices.length>=4,'scene '+(i+1)+' should offer four core choices');
+ const primary=choices.find(x=>x.dataset.bg16Primary==='S1')||choices.find(x=>x.dataset.bg16Primary==='S5')||choices[0];
  primary.click();
+ const secondary=box.querySelector('[data-bg16-secondary="S5"]');
+ if(primary.dataset.bg16Primary==='S1'&&secondary)secondary.click();
  const next=box.querySelector('#bg16Next');
  assert.ok(next&&!next.disabled,'scene '+(i+1)+' should allow continuing after a primary answer');
  next.click();
 }
+assert.match(box.textContent,/Контекстная сверка/);
 const finish=box.querySelector('#bg16Finish');
 assert.ok(finish,'the follow-up screen should offer result calculation');
 finish.click();
