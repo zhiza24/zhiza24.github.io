@@ -659,7 +659,7 @@ function dayPanel(P,T,n){
   var evCount=((T.events24||{})[n]||[]).length+(((T.events24||{})[n-1]||[]).filter(function(x){return +x.endMin>1440}).length);html+=acc('events24','24 часа · события и занятия',evCount?'записей: '+evCount:'добавить запись',events24Body(T,n));
 
   if(actOn(T,'signs',n)){
-  html+='<div class="row-line"><b>Знаки дня</b><div class="signs">';
+  html+='<div class="row-line"><b>Знаки дня</b><p class="mute">Здесь можно сохранить совпадения и детали, которые привлекли внимание. Сама запись не доказывает причинную связь и не предсказывает исход.</p><div class="signs">';
   (d.signs||[]).forEach(function(s){
     html+='<div class="sign-item">'+esc(s.tag?s.tag+' · ':'')+esc(s.text)+'</div>';
   });
@@ -835,7 +835,7 @@ function viewWeek(P,T){
   var w=T.weekN||0, a=w*7+1, b=a+6, week=w+1, N=weekNums(T,week), plan=weekPlan(T,week), sc=N.score;
   var scoreLine='';
   if(sc!=null){
-    scoreLine='<p class="score'+(sc>=85?' ok':'')+'">Выполнение '+sc+'%'+(sc>=85?'. Неделя уже удалась.':'')+'</p>';
+    scoreLine='<p class="score">Отмечено '+sc+'% выбранных пунктов плана. <small>Это не оценка качества недели.</small></p>';
   }
   var rewDay=week*7;
   T.rewards=T.rewards||{};
@@ -858,25 +858,22 @@ function viewWeek(P,T){
 }
 
 function recipeOf(T){
-  var signs=0, better=0, steps=0, filled=0, hiEnergy=0, withSigns=0;
+  var better=0,steps=0,filled=0,hiEnergy=0;
   for(var n=1;n<=28;n++){
     var d=dayRec(T,n);
     if(!dayFilled(T,n))continue;
     filled++;
-    var sg=(d.signs||[]).length; signs+=sg;
-    if(sg)withSigns++;
     if(d.wishMark==='better'||(d.dirMarks||[]).indexOf('better')>=0)better++;
     if((d.dirState||[]).indexOf('done')>=0)steps++;
     if(+d.sliders.energy>=7)hiEnergy++;
   }
   if(!filled)return '';
   var bits=[];
-  if(withSigns && withSigns>=Math.ceil(filled/3))bits.push('в дни, когда {появлялись|появлялись} знаки');
-  if(steps)bits.push('когда {был|была} сделан маленький шаг');
-  if(hiEnergy && hiEnergy>=2)bits.push('когда энергия была выше');
-  if(better)bits.push('когда {ставил|ставила} отметку «стало лучше»');
+  if(steps)bits.push('когда был сделан небольшой выбранный шаг');
+  if(hiEnergy && hiEnergy>=2)bits.push('в дни с более высокой отмеченной энергией');
+  if(better)bits.push('когда ты отмечал(а), что стало лучше');
   if(!bits.length)return '';
-  return '<div class="res"><b>Рецепт успеха</b><p>Чаще сдвигалось '+bits.map(function(s){return gx(s)}).join(', ')+'. Это не правило, а только то, что видно по твоим отметкам.</p></div>';
+  return '<div class="res"><b>Что сопровождало движение</b><p>В твоих записях чаще встречались такие обстоятельства: '+bits.join(', ')+'. Это наблюдение по неполным отметкам, а не доказательство причины и не универсальное правило.</p></div>';
 }
 
 function viewResults(P,T){
