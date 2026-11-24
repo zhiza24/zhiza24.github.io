@@ -108,7 +108,8 @@ assert.ok(fs.readFileSync(path.join(root,'background-state-16.js'),'utf8').inclu
 assert.ok(mirror.includes('background.version===2'));
 // The shared research snapshot includes the new result under its own namespace.
 const reactorDom=new JSDOM('<!doctype html><html><head></head><body></body></html>',{url:'https://game.test/slot.html',runScripts:'dangerously'});
-reactorDom.window.GTESTS={};reactorDom.window.GFLOW=[];
+reactorDom.window.GFLOW=[];
+reactorDom.window.eval(fs.readFileSync(path.join(root,'tests-data.js'),'utf8'));
 reactorDom.window.eval(fs.readFileSync(path.join(root,'tests.js'),'utf8'));
 const reactorProfile={backgroundProfile:{backgroundState:{version:2,groups:{resource:{status:'leading',leaders:['S1']},protective:{status:'no_clear_leader',leaders:[]}},families:[{id:'S1',title:'Умение радоваться тому, что есть',group:'resource',share:1,sphereCount:8}],coverage:{answered:16},special:{depends:0,none:0},followup:{}}}};
 const snapshot=reactorDom.window.GTests.reactorIn(reactorProfile);
