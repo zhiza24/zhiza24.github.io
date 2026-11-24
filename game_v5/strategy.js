@@ -235,7 +235,10 @@ function practRec(P){
  if(bg16&&bg16.version===2&&bg16.groups){
   var familyById={};(bg16.families||[]).forEach(function(x){familyById[x.id]=x});
   var practiceByFamily={S1:'keepgood',S2:'create',S3:'mydecision',S4:'contact',S5:'risk',S6:'mine',S7:'contact',S8:'myzone'};
+  var context=bg16.followup&&bg16.followup.protectiveContext;
+  var contextSupportsExperiment=context==='Иногда есть факты, но моя реакция бывает сильнее самой ситуации.'||context==='Часто ощущение возникает раньше, чем я проверю факты и доступные варианты.';
   ['resource','protective'].forEach(function(kind){
+   if(kind==='protective'&&!contextSupportsExperiment)return;
    var g=bg16.groups[kind],id=g&&g.leaders&&g.leaders[0],f=id&&familyById[id],practice=id&&practiceByFamily[id];
    if(f&&practice)add(practice,'В 16 сценах сигнал «'+f.title+'» повторился в '+f.sphereCount+' сферах. Это необязательная практика для проверки, подходит ли она тебе.');
   });
@@ -264,7 +267,7 @@ function testsLayer(P,f){
   var fm={};(bg16.families||[]).forEach(function(x){fm[x.id]=x});
   var rg=bg16.groups&&bg16.groups.resource,pg=bg16.groups&&bg16.groups.protective;
   (rg&&rg.leaders||[]).slice(0,2).forEach(function(id){var x=fm[id];if(x)res.push({t:x.title,x:x.description+' Повторилось в '+x.sphereCount+' сферах.'})});
-  (pg&&pg.leaders||[]).slice(0,2).forEach(function(id){var x=fm[id];if(x)obst.push({t:x.title,x:x.description+' Это предварительный сигнал, который стоит сверить с реальными эпизодами.'})});
+  (pg&&pg.leaders||[]).slice(0,2).forEach(function(id){var x=fm[id];if(x){var note=x.description+' Это предварительный сигнал, который стоит сверить с реальными эпизодами.';var context=bg16.followup&&bg16.followup.protectiveContext;if(context)note+=' Контекстная сверка: '+context+'.';obst.push({t:x.title,x:note})}});
  }
  /* Межмодульные различители из каталога 19 состояний. Они показываются как вопросы для проверки,
     но не превращаются в дополнительную ежедневную задачу. */
