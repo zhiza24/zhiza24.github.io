@@ -22,9 +22,9 @@ const stats=dom.window.GTrack28.mirrorActivityStats({
  days:{'1':{quality:'Красивый вечер и спокойный разговор'},'2':{quality:'   '},'3':{quality:'Интересный новый опыт'}},
  events24:{},checkpoints24:{}
 });
-assert.deepEqual(stats.qualityMoments,[
+assert.equal(JSON.stringify(stats.qualityMoments),JSON.stringify([
  {day:1,text:'Красивый вечер и спокойный разговор'},
  {day:3,text:'Интересный новый опыт'}
-]);
+]));
 dom.window.close();
 console.log('PASS: tracker separates attention notes from causal claims and task completion from quality of life; lived-experience notes persist into the cycle mirror.');
