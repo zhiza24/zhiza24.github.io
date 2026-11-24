@@ -66,4 +66,4 @@ The GitHub Actions suite now checks:
 
 ## Release statement
 
-The code hardening and automated regression suite are prepared for review. Do not describe the app as fully device-tested, fully offline-tested, or deployed until the deferred browser/device/deployment checks are completed.
+The code hardening was merged into main in commit `ac1ef374afde38e2d9f367ef2903a7155af04d13`. GitHub Actions passed on the merged main commit; the automated suite reports 704 local references resolving to existing assets. Do not describe the app as fully device-tested, fully offline-tested, or deployed until the deferred browser/device/deployment checks are completed.
