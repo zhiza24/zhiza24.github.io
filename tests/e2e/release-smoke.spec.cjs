@@ -51,6 +51,20 @@ test('main screens render without page errors or missing local responses',async(
   expect(errors,'errors while loading '+item.url).toEqual([]);
  }
 });
+test('both cinematic videos decode and can play online',async({page})=>{
+ await seedProfile(page);
+ for(const item of [
+  {url:'/elder.html?review=1&u=T',src:'media/elder.mp4'},
+  {url:'/cutscene.html?review=1&u=T',src:'media/iam.mp4'}
+ ]){
+  await page.goto(item.url,{waitUntil:'domcontentloaded'});
+  const video=page.locator('video').first();
+  await expect(video).toHaveAttribute('src',item.src);
+  await page.evaluate(async()=>{const v=document.querySelector('video');if(v){v.muted=true;await v.play()}});
+  await page.waitForFunction(()=>{const v=document.querySelector('video');return !!v&&v.readyState>=2&&v.currentTime>0},null,{timeout:45000});
+  await page.evaluate(()=>{const v=document.querySelector('video');if(v)v.pause()});
+ }
+});
 test('main task runner remains available offline after service-worker install',async({page,context})=>{
  await seedProfile(page);
  await page.route('**/*.mp4',route=>route.abort());
