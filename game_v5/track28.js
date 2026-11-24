@@ -497,6 +497,21 @@ function mirrorInitialResearch(P){
  if(P.cycleBaseline&&Array.isArray(P.cycleBaseline.research))return P.cycleBaseline.research.slice();var w=P.wheelTest||{};if(Array.isArray(w.averages)&&w.averages.length===8)return w.averages;
  return (w.spheres||[]).map(function(s){var a=(s.ratings||[]).filter(function(v){return typeof v==='number'&&isFinite(v)});return a.length?a.reduce(function(p,c){return p+c},0)/a.length:null});
 }
+function continueMirror(P,T){
+ if(!window.GRoute)return {ok:true,url:'slot.html?id=compare'};
+ /* The 28-day report may be opened before the cycle's final checkpoint.
+    Never jump over the route gate: the Reactor must be completed, then the
+    prefilled retest step is completed before the comparison page is opened. */
+ if(GRoute.status('reactor.html',P)==='current'){
+  if(!(T.finale&&T.finale.done))return {ok:false,reason:'cycle-finale'};
+  if(!GRoute.complete('reactor.html',P))return {ok:false,reason:'reactor'};
+ }
+ var rs=GRoute.status('slot.html?id=retest',P);
+ if(rs==='locked')return {ok:false,reason:'route'};
+ if(rs==='current'&&!GRoute.complete('slot.html?id=retest',P))return {ok:false,reason:'retest'};
+ if(GRoute.status('slot.html?id=compare',P)==='locked')return {ok:false,reason:'route'};
+ return {ok:true,url:'slot.html?id=compare'};
+}
 function mirrorActivityStats(T){
  var all=T.events24||{},bySphere={},byMotive={},byEmotion={},byFocus={},byPlanned={},after={},completion={},eventIds={},days=0,checkpoints=0,overlap=0,total=0,unknown=0,alternatives=[];
  MIRROR_SPHERES.forEach(function(x){bySphere[x.k]=0});
@@ -1180,7 +1195,10 @@ function bind(){
       var M=T.mirror||{};
       if(M.phase!=='report'||!Array.isArray(M.endWheel)||M.endWheel.length!==8||M.endWheel.some(function(v){return typeof v!=='number'||!isFinite(v)})||!Array.isArray(M.endResearch)||M.endResearch.length!==24||M.endResearch.some(function(v){return v!=='na'&&(typeof v!=='number'||!isFinite(v))})){alert('Проверь повторное исследование: заполни все оценки колеса и ответы. Для исследовательского вопроса можно выбрать «не знаю».');return}
       P.retest={wheel:M.endWheel.slice(),beh:null,fromMirror:true,d:new Date().toLocaleDateString('ru'),mirror:{initialResearch:(M.initialResearch||mirrorInitialResearch(P)||[]).slice(),endResearch:M.endResearch.slice(),initialWheel:(M.initialWheel||P.wheel||[]).slice(),completedAt:M.completedAt||Date.now()}};
-      save(P);location.href='slot.html?id=compare';return;
+      save(P);
+      var handoff=continueMirror(P,T);
+      if(!handoff.ok){T.space='results';T.view='finale';save(P);render();return}
+      location.href=handoff.url;return;
     }
     if(act==='mirror-start'||act==='mirror-restart'){
       var hist=(T.mirror&&T.mirror.history)||[];
@@ -1355,5 +1373,5 @@ if(!root){
 }
 mount(root);
 var P0=ensure(); if(P0.tracker&&P0.tracker.notifyOn)scheduleNote(P0.tracker);
-window.GTrack28={mount:mount,render:render,ensure:ensure,mirrorActivityStats:mirrorActivityStats,viewMirror:viewMirror};
+window.GTrack28={mount:mount,render:render,ensure:ensure,mirrorActivityStats:mirrorActivityStats,viewMirror:viewMirror,continueMirror:continueMirror};
 })();
