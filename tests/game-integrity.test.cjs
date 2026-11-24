@@ -21,7 +21,7 @@ let last=-1;
 ordered.forEach(name=>{const i=slot.indexOf('src="'+name);assert.ok(i>last,'slot must load '+name+' in dependency order');last=i});
 const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
 const cache=(sw.match(/const CACHE='([^']+)'/)||[])[1];
-assert.equal(cache,'alch-v5-static-2026-11-24-v32','release cache must be bumped after final asset changes');
+assert.equal(cache,'alch-v5-static-2026-11-24-v33','release cache must be bumped after final asset changes');
 const buildVersion=fs.readFileSync(path.join(root,'ver.txt'),'utf8').trim();
 assert.match(buildVersion,/^\d{10}$/,'app build version must be a ten-digit epoch value');
 
