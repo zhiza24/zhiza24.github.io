@@ -222,7 +222,7 @@ function practRec(P){
   if(bp.unstableJoy)add('keepgood','Радость есть, но после хорошего быстро возвращается нехватка. Закрепим хорошее.');
   if(L.S2>=2)add('create','Интерес и движение — твоя сильная сторона. Стоит давать им время.');
   add('keepgood','Твой фон устойчивый. Практика помогает сохранять то, что уже работает.');
-  return out}
+ }
  /* Новая модель состояний: практику предлагаем только при повторении прямых ситуационных выборов
     минимум в двух разных ситуациях и без неразрешенного различителя. */
  var sm=bp&&bp.stateModel,practiceByState={SIG:'mydecision',ABD:'contact',STD:'enough',INC:'myzone',EFF:'create',WRT:'keepgood',SEC:'contact',TRU:'acceptsup',MAS:'create',CUR:'create',GRA:'grat',FLO:'create',PLY:'pract',SCO:'keepgood'};
@@ -230,6 +230,15 @@ function practRec(P){
   sm.states.filter(function(x){return x.signals&&x.signals.CH&&x.signals.CH.length>=2&&!x.needsDiscriminator.length&&sm.stateGoals&&sm.stateGoals[x.id]==='Ослабить'})
    .sort(function(a,b){return b.signals.CH.length-a.signals.CH.length})
    .some(function(x){var id=practiceByState[x.id];if(!id)return false;add(id,'Ты выбрал(а) ослабить повторяющуюся тему «'+x.name+'». Это необязательная практика; проверь, подходит ли она.');return out.length>=2});
+ }
+ var bg16=bp&&bp.backgroundState;
+ if(bg16&&bg16.version===2&&bg16.groups){
+  var familyById={};(bg16.families||[]).forEach(function(x){familyById[x.id]=x});
+  var practiceByFamily={S1:'keepgood',S2:'create',S3:'mydecision',S4:'contact',S5:'risk',S6:'mine',S7:'contact',S8:'myzone'};
+  ['resource','protective'].forEach(function(kind){
+   var g=bg16.groups[kind],id=g&&g.leaders&&g.leaders[0],f=id&&familyById[id],practice=id&&practiceByFamily[id];
+   if(f&&practice)add(practice,'В 16 сценах сигнал «'+f.title+'» повторился в '+f.sphereCount+' сферах. Это необязательная практика для проверки, подходит ли она тебе.');
+  });
  }
  if(bp&&bp.unstableJoy)add('keepgood','После хороших событий быстро возвращается ощущение нехватки.');
  if(L.S6>=2)add('mine','Внимание чаще уходит к тому, чего еще нет. Учимся присваивать результат.');
@@ -249,6 +258,13 @@ function testsLayer(P,f){
  if(bp&&bp.status!=='insufficient'&&F){
   (bp.resources||[]).slice(0,2).forEach(function(s){if(F[s])res.push({t:F[s].t,x:gx(F[s].x,f)})});
   if(!bp.positive)(bp.vulnerabilities||[]).slice(0,2).forEach(function(s){if(F[s])obst.push({t:F[s].t,x:gx(F[s].g,f)})});
+ }
+ var bg16=bp&&bp.backgroundState;
+ if(bg16&&bg16.version===2){
+  var fm={};(bg16.families||[]).forEach(function(x){fm[x.id]=x});
+  var rg=bg16.groups&&bg16.groups.resource,pg=bg16.groups&&bg16.groups.protective;
+  (rg&&rg.leaders||[]).slice(0,2).forEach(function(id){var x=fm[id];if(x)res.push({t:x.title,x:x.description+' Повторилось в '+x.sphereCount+' сферах.'})});
+  (pg&&pg.leaders||[]).slice(0,2).forEach(function(id){var x=fm[id];if(x)obst.push({t:x.title,x:x.description+' Это предварительный сигнал, который стоит сверить с реальными эпизодами.'})});
  }
  /* Межмодульные различители из каталога 19 состояний. Они показываются как вопросы для проверки,
     но не превращаются в дополнительную ежедневную задачу. */
