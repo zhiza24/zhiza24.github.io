@@ -45,7 +45,8 @@ function mount(box){
   if(b.backgroundState){b.backgroundStateHistory=arr(b.backgroundStateHistory);b.backgroundStateHistory.push(b.backgroundState);if(b.backgroundStateHistory.length>5)b.backgroundStateHistory.shift()}
   b.backgroundState=result;b.algoVersion=2;delete b.backgroundStateDraft16;p.backgroundProfile=b;
   if(root.GProfile)GProfile.saveResult('backgroundProfile',b,null,{profile:p,save:true});else localStorage.setItem('alch_v5_profile',JSON.stringify(p));
-  saved=result;P=p;bp=b;
+  if(root.GTests&&GTests.reactorIn){var current=root.GProfile?GProfile.load():JSON.parse(localStorage.getItem('alch_v5_profile')||'{}');current.reactorIn=GTests.reactorIn(current);if(root.GProfile)GProfile.save(current);else localStorage.setItem('alch_v5_profile',JSON.stringify(current));P=current;bp=current.backgroundProfile||b}else{P=p;bp=b}
+  saved=result;
  }
  function shell(html){box.innerHTML='<div class="bg16">'+html+'</div>';bind()}
  function qById(id){return D.Q.filter(function(q){return q[0]===id})[0]}
