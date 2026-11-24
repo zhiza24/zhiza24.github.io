@@ -179,9 +179,19 @@ function build(P){
   focus=focus.map(function(x,i){return {k:x.k,t:stars[i].text,g:x.g,src:x.t,wish:stars[i].text}});
  }
  /* препятствия */
- var PT=window.GPAT||{},p1=PT[k1],p2=PT[k2],obst=[];
- if(p1){obst.push({t:'Привычная реакция',x:p1.parts[1][1]+'.'});if(P.lab&&P.lab.ownCorrection){obst.push({t:'Твоя формулировка гипотезы',x:'«'+P.lab.ownCorrection+'».'});obst.push({t:'Исходное правило для проверки',x:'«'+p1.parts[2][1]+'» — это исходная версия, а не установленный факт.'})}else obst.push({t:'Скрытое правило',x:'«'+p1.parts[2][1]+'».'});obst.push({t:'Что эта привычка дает взамен',x:p1.parts[3][1]+'. Поэтому отказаться от нее непросто.'})}
- if(p2)obst.push({t:'Второе правило, которое тормозит',x:'«'+p2.parts[2][1]+'».'});
+ var PT=window.GPAT||{},hasLeadEvidence=!!(P.lab&&P.lab.lead&&!L.weak),p1=hasLeadEvidence?PT[k1]:null,p2=hasLeadEvidence?PT[k2]:null,obst=[];
+ if(p1){
+  obst.push({t:'Привычная реакция',x:p1.parts[1][1]+'.'});
+  if(P.lab&&P.lab.ownCorrection){
+   obst.push({t:'Твоя формулировка гипотезы',x:'«'+P.lab.ownCorrection+'».'});
+   obst.push({t:'Исходное правило для проверки',x:'«'+p1.parts[2][1]+'» — это исходная версия, а не установленный факт.'});
+  }else{
+   obst.push({t:'Предварительная гипотеза для проверки',x:'«'+p1.parts[2][1]+'». Это версия для сверки с конкретными эпизодами, а не установленный факт.'});
+  }
+  var gain=String(p1.parts[3][1]||'').replace(/[.!?]+$/,'').trim();
+  if(gain)obst.push({t:'Возможная защитная функция',x:'Возможно, этот способ помогает сохранить '+gain+'. Проверь, совпадает ли это с твоим опытом.'});
+ }
+ if(p2)obst.push({t:'Еще одна возможная гипотеза',x:'«'+p2.parts[2][1]+'». Ее тоже стоит проверять по конкретным эпизодам, а не принимать как факт.'});
  if(P.betray&&(P.betray.picked||[]).length&&!bwr(P))obst.push({t:'Где ты отодвигаешь собственные интересы',x:gx('ты {отмечал|отмечала} это в колесе. В разборе дня трекера это можно отмечать одним касанием.',f)});
  /* ресурсы */
  var res=[];
@@ -323,7 +333,7 @@ function html(S){
  h+='<section class="sg-b"><small>Центральная звезда</small><p class="sg-w">'+esc(S.wish)+'</p></section>';
  if(S.stars&&S.stars.length)h+='<section class="sg-b"><small>Три звезды ближайшего пути</small>'+S.stars.map(function(x,i){return '<p><b>'+(i+1)+'. '+esc(x.text)+'</b></p>'}).join('')+'</section>';
  h+='<section class="sg-b"><small>Что стоит за этим желанием</small><p>'+esc(S.need)+'</p></section>';
- h+='<section class="sg-b"><small>Что сейчас требует внимания</small>'+S.focus.map(function(x,i){return '<p><b>'+(i+1)+'. '+esc(x.t)+'</b><br>'+esc(x.g)+'</p>'}).join('')+'</section>';
+ h+='<section class="sg-b"><small>'+(S.weak?'Возможные ориентиры':'Что сейчас требует внимания')+'</small>'+(S.weak?'<p class="mute">Пока недостаточно ответов, чтобы выделить ведущую привычную реакцию. Эти направления — ориентиры по желанию и доступным данным, а не вывод о причинах поведения.</p>':'')+S.focus.map(function(x,i){return '<p><b>'+(i+1)+'. '+esc(x.t)+'</b><br>'+esc(x.g)+'</p>'}).join('')+'</section>';
  if(S.obst.length)h+='<details class="sg-b"><summary><small>Что мешает движению</small></summary>'+S.obst.map(function(x){return '<p><b>'+esc(x.t)+'.</b> '+esc(x.x)+'</p>'}).join('')+'</details>';
  if(S.res.length)h+='<details class="sg-b"><summary><small>На что ты можешь опереться</small></summary>'+S.res.map(function(x){return '<p><b>'+esc(x.t)+'.</b> '+esc(x.x)+'</p>'}).join('')+'</details>';
  if(S.practRec&&S.practRec.length&&window.GPract)h+='<section class="sg-b"><small>Практики, подобранные под тебя</small>'+S.practRec.map(function(r){var it=GPract.byId(r.id);return it?'<p><b>'+esc(it.t)+'.</b> '+esc(r.why)+'</p>':''}).join('')+'<p class="mute">Включаются в Лаборатории практик. Одновременно не больше двух.</p></section>';
