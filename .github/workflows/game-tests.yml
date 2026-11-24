@@ -1,0 +1,31 @@
+name: Game regression tests
+
+on:
+  push:
+    paths:
+      - "game_v5/**"
+      - "tests/**"
+      - ".github/workflows/game-tests.yml"
+  pull_request:
+    paths:
+      - "game_v5/**"
+      - "tests/**"
+      - ".github/workflows/game-tests.yml"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tests/package.json
+      - name: Install test dependencies
+        working-directory: tests
+        run: npm install --no-audit --no-fund
+      - name: Run regression tests
+        working-directory: tests
+        run: npm test
