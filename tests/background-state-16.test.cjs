@@ -98,6 +98,8 @@ const slot=fs.readFileSync(path.join(root,'slot.html'),'utf8'),tests=fs.readFile
 assert.ok(slot.includes('background-state-16-data.js')&&slot.includes("id==='bg16'"));
 assert.ok(tests.includes("im:{u:'slot.html?id=im',f:'im',mod:'im'"));
 assert.ok(tests.includes("if(k==='im'&&window.GInner){GInner.mount(box);return}"));
+assert.ok(tests.includes("r.tests.bg16={status:'preliminary'"));
+assert.ok(fs.readFileSync(path.join(root,'background-state-16.js'),'utf8').includes('GTests.reactorIn'));
 assert.ok(mirror.includes('background.version===2'));
 // Exercise the actual 16-scene screen in a browser-like DOM.
 const dom=new JSDOM('<!doctype html><html><head></head><body><main id="box"></main></body></html>',{url:'https://game.test/slot.html?id=bg16',runScripts:'dangerously'});
