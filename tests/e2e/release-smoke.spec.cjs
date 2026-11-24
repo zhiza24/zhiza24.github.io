@@ -1,0 +1,58 @@
+const {test,expect}=require('@playwright/test');
+function seedProfile(page){
+ return page.addInitScript(()=>{
+  const file=location.pathname.split('/').pop()||'index.html';
+  const params=new URLSearchParams(location.search);
+  const current=file==='reactor.html'?'reactor.html':file==='slot.html'?'slot.html?id='+(params.get('id')||'mechanism'):'slot.html?id=mechanism';
+  const profile={
+   name:'Проверка',
+   birth:'10.02.2000',
+   gender:'f',
+   points:{personality:10,intuition:2,challenge:15,key:5},
+   flow:{version:2,current,visited:{},completed:{},snapshots:{}},
+   tracker:{start:Date.now(),day:1,space:'day',view:'day',days:{},events24:{},checkpoints24:{},directions:[],focus:[]},
+   diary:{entries:[]}
+  };
+  localStorage.setItem('alch_v5_profile',JSON.stringify(profile));
+ });
+}
+test('main screens render without page errors or missing local responses',async({page})=>{
+ const errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ page.on('response',r=>{if(r.url().startsWith('http://127.0.0.1:8000/')&&r.status()>=400)errors.push('HTTP '+r.status()+' '+r.url())});
+ await seedProfile(page);
+ await page.route('**/*.mp4',route=>route.abort());
+ const cases=[
+  {url:'/map.html?u=T',text:'Приветствую вас, господа пробужденные'},
+  {url:'/slot.html?id=mechanism&u=T',text:'Внутренний механизм'},
+  {url:'/reactor.html?u=T',text:'Мой день'},
+  {url:'/diary.html?u=T',text:'Дневник'},
+  {url:'/hero.html?u=T',text:'Герой'},
+  {url:'/elder.html?review=1&u=T',text:'Весь мир принадлежит тебе'},
+  {url:'/cutscene.html?review=1&u=T',text:null}
+ ];
+ for(const item of cases){
+  errors.length=0;
+  await page.goto(item.url,{waitUntil:'domcontentloaded'});
+  await expect(page.locator('body')).toBeVisible();
+  if(item.text)await expect(page.locator('body')).toContainText(item.text);
+  if(item.url.startsWith('/slot.html'))expect(page.url()).toContain('slot.html?id=mechanism');
+  if(item.url.startsWith('/elder.html'))await expect(page.locator('#au')).toHaveAttribute('src','media/voice.mp3');
+  if(item.url.startsWith('/cutscene.html'))expect(await page.locator('video').first().getAttribute('poster')).toBeTruthy();
+  expect(errors,'errors while loading '+item.url).toEqual([]);
+ }
+});
+test('main task runner remains available offline after service-worker install',async({page,context})=>{
+ await seedProfile(page);
+ await page.route('**/*.mp4',route=>route.abort());
+ await page.goto('/map.html?u=T',{waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>!!navigator.serviceWorker&&!!navigator.serviceWorker.controller,{timeout:60000});
+ await page.goto('/slot.html?id=mechanism&u=T',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('body')).toContainText('Внутренний механизм');
+ const cacheNames=await page.evaluate(()=>caches.keys());
+ expect(cacheNames.some(x=>x.includes('2026-11-24-v32'))).toBeTruthy();
+ await context.setOffline(true);
+ await page.reload({waitUntil:'domcontentloaded'});
+ await expect(page.locator('body')).toContainText('Внутренний механизм',{timeout:30000});
+ await context.setOffline(false);
+});
