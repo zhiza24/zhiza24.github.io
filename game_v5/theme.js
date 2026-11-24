@@ -55,7 +55,7 @@ var RDEF='c';
 (function(){var r=q.get('read'),RK='alch_v5_read';try{if(r==='off'){sessionStorage.setItem(RK,'off');r=''}else if(/^[abc]$/.test(r||''))sessionStorage.setItem(RK,r);else{r=sessionStorage.getItem(RK)||RDEF;if(r==='off')r=''}}catch(e){r=/^[abc]$/.test(r||'')?r:(r==='off'?'':RDEF)}
  if(!r)return;H.setAttribute('data-read',r);
  var SANS='-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
- var X=':not(.gtop *):not(.gnav *):not(.gbk *):not(.cap):not(.cap *)';
+ var X=':not(.gtop *):not(.gnav *):not(.gbk *):not(.bg16):not(.bg16 *):not(.cap):not(.cap *)';
  function S(pre,list){return list.split(',').map(function(x){return pre+x+X}).join(',')}
  var BODY='p,small,li,.ar-ph,.ar-ph small,.ar-draft,.ar-ctx,.ar-blk p,.al,.l,.muted,.pt,.ao,.e,.dt,label,.gq-t,blockquote,textarea';
  var HEAD='h1,h2,h3,h4,.q,.aq,.ar-title,.ar-ph b,[style*="Cormorant"]';
