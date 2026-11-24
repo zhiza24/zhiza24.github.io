@@ -10,16 +10,29 @@ const localStorage={
  get length(){return Object.keys(store).length}
 };
 class FakeFileReader{readAsText(file){this.result=file.content;this.onload()}}
+let clock=1764000000000;
+class FakeDate extends Date{constructor(...args){super(...(args.length?args:[clock]))}static now(){return clock}}
+store.alch_v5_profile=JSON.stringify({name:'До импорта'});
 const window={};
-const context={window,localStorage,FileReader:FakeFileReader,Date,Math,JSON,isFinite};
+const context={window,localStorage,FileReader:FakeFileReader,Date:FakeDate,Math,JSON,isFinite};
 vm.createContext(context);
 vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../game_v5/engine.js'),'utf8'),context);
+context.window.GPro.save({name:'Автокопия день 1'});
+let autoBackups=JSON.parse(store.alch_v5_profile_backups||'[]');
+assert.equal(autoBackups.length,1,'first profile save should create a local backup');
+assert.equal(JSON.parse(autoBackups[0].raw).profile.name,'Автокопия день 1');
+context.window.GPro.save({name:'Повторное сохранение в тот же день'});
+assert.equal(JSON.parse(store.alch_v5_profile_backups).length,1,'repeated saves in one day must not create backup spam');
+clock+=24*60*60*1000+1;
+context.window.GPro.save({name:'Автокопия день 2'});
+autoBackups=JSON.parse(store.alch_v5_profile_backups);
+assert.equal(autoBackups.length,2,'a new backup should be created after 24 hours');
+assert.equal(JSON.parse(autoBackups[1].raw).profile.name,'Автокопия день 2');
 const importFile=(payload)=>{
  let result=null;
  context.window.GPro.importFile({size:Buffer.byteLength(JSON.stringify(payload)),content:JSON.stringify(payload)},ok=>{result=ok});
  return result;
 };
-store.alch_v5_profile=JSON.stringify({name:'До импорта'});
 store.alch_v5_hold='old-hold';
 store.alch_v5_sound='off';
 store.alch_v5_theme='dark';
