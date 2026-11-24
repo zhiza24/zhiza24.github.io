@@ -992,6 +992,7 @@ function viewSettings(P,T){
     '<button type="button" class="quiet-btn" data-act="profile-import-open">Импортировать файл</button>'+
     '<input type="file" accept="application/json,.json" data-act="profile-import" style="display:none">'+
     '<button type="button" class="quiet-btn" data-act="profile-restore">Восстановить последнюю резервную копию</button></section>'+
+    '<section class="row-line"><b>Удаление данных</b><p class="mute">Удалит профиль, ответы, дневник, архивы циклов, лаборатории, локальные настройки и резервные копии этой игры в текущем браузере. Отдельно сохраненный файл экспорта не затрагивается. Действие необратимо — при необходимости сначала экспортируй данные.</p><button type="button" class="quiet-btn" data-act="profile-delete">Удалить все данные игры на этом устройстве</button></section>'+
     '<button type="button" class="quiet-btn" data-act="monthg">К итогам</button>'+
     '<button type="button" class="quiet-btn" data-act="back">К календарю</button></div>';
 }
@@ -1045,6 +1046,11 @@ function bind(){
       T.view=({map:'month',path:'monthg',results:'monthg',lab:'practs',practs:'practs',labs:'labs',diary:'diary',directions:'directions',mirror:'mirror',hero:'hero',day:'day'})[sp]||'day';
       if(sp==='day'&&!T.openDay)T.openDay=todayNum(T);
       save(P); render(); try{window.scrollTo(0,0)}catch(e){} return;
+    }
+    if(act==='profile-delete'){
+      if(!confirm('Удалить все данные игры на этом устройстве? Это действие нельзя отменить. Если данные нужны, сначала экспортируй резервную копию.'))return;
+      if(!window.GPro||!GPro.deleteAll||!GPro.deleteAll()){alert('Не удалось полностью удалить локальные данные. Проверь настройки хранения браузера.');return}
+      location.href='index.html?reset=1';return;
     }
     if(act==='profile-export'){if(window.GPro)GPro.exportFile();else alert('Экспорт сейчас недоступен.');return}
     if(act==='profile-import-open'){var file=host.querySelector('[data-act="profile-import"]');if(file)file.click();return}
