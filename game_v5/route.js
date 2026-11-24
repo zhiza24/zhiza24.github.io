@@ -119,7 +119,7 @@ function snapshot(u,p){
   'slot.html?id=pb_end':['lab'], 'slot.html?id=fractal':['fractal'], 'slot.html?id=leverage':['fractal'],
   'slot.html?id=guard':['guard'], 'reactor.html':['reactor','tracker'], 'slot.html?id=retest':['retest'],
   'slot.html?id=compare':['wheel','retest'], 'slot.html?id=end':['reactor','retest','arts'],
-  'slot.html?id=km':['kmTest'], 'slot.html?id=fs':['firstSet'], 'slot.html?id=bg16':['backgroundProfile'], 'slot.html?id=im':['im'], 'slot.html?id=lab_d':['desireLab'], 'wish.html':['tracker','wishMod'], 'slot.html?id=pi':['interact'],
+  'slot.html?id=km':['kmTest'], 'slot.html?id=fs':['firstSet'], 'slot.html?id=bg16':['backgroundProfile'], 'slot.html?id=mechanism':['innerMechanism'], 'slot.html?id=im':['im'], 'slot.html?id=lab_d':['desireLab'], 'wish.html':['tracker','wishMod'], 'slot.html?id=pi':['interact'],
   'slot.html?id=rs':['respTest'], 'slot.html?id=ct':['ctTest'], 'slot.html?id=sv':['selfWorth'], 'slot.html?id=vsort':['valuesCore','reactorIn']};
  const arch={'ego.html':'ego','slot.html?id=arch_b':'archB','slot.html?id=arch_v':'archV','slot.html?id=arch_p':'archP','slot.html?id=arch_d':'archD'}[u],ar=arch&&p[arch];
  if(ar&&ar.v&&(arch!=='ego'||ar.v===2)){const t={archResult:ar.top||''};if(ar.map)t.archMap=ar.map;return JSON.parse(JSON.stringify({data:t,logs:(p.log||[]).slice(-3)}));}
