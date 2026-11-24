@@ -1,1 +1,1 @@
-{"private":true,"scripts":{"test":"node passport.test.cjs"},"devDependencies":{"jsdom":"26.1.0"}}
+{"private":true,"scripts":{"test":"node passport.test.cjs && node inner-mirror.test.cjs && node background-state-16.test.cjs"},"devDependencies":{"jsdom":"26.1.0"}}
