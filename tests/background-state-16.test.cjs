@@ -84,4 +84,18 @@ assert.equal(saved.backgroundProfile.backgroundState.version,2);
 assert.equal(saved.backgroundProfile.stateModel.version,1);
 assert.equal(saved.im.v,3);
 assert.equal(saved.modules.backgroundProfile.result.backgroundState.version,2);
+// Route insertion must not pull an existing player backward, while a fresh player sees the new step.
+const freshRoute=unit(['flow.js','route.js'],{flow:{version:2,current:'slot.html?id=bg16',last:'slot.html?id=bg16',completed:{'form.html':1,'elder.html':1,'hero.html':1,'choose.html':1,'bridge.html':1,'breath.html?at=p0':1,'cutscene.html':1,'slot.html?id=dialog':1}}});
+assert.equal(freshRoute.w.GRoute.resume(),'slot.html?id=bg16');
+const legacyRoute=unit(['flow.js','route.js'],{flow:{version:2,current:'slot.html?id=km',last:'slot.html?id=km',completed:{'form.html':1,'elder.html':1,'hero.html':1,'choose.html':1,'bridge.html':1,'breath.html?at=p0':1,'cutscene.html':1,'slot.html?id=dialog':1}}});
+assert.equal(legacyRoute.w.GRoute.resume(),'slot.html?id=km');
+assert.ok(legacyRoute.w.GRoute.load().flow.archSkipped['slot.html?id=bg16']);
+const routeProfile={backgroundProfile:{backgroundState:{version:2,completedAt:123}},im:{v:3}};
+assert.equal(freshRoute.w.GRoute.ready('slot.html?id=bg16',routeProfile),true);
+assert.equal(freshRoute.w.GRoute.ready('slot.html?id=im',routeProfile),true);
+const slot=fs.readFileSync(path.join(root,'slot.html'),'utf8'),tests=fs.readFileSync(path.join(root,'tests.js'),'utf8'),mirror=fs.readFileSync(path.join(root,'inner-mirror.js'),'utf8');
+assert.ok(slot.includes('background-state-16-data.js')&&slot.includes("id==='bg16'"));
+assert.ok(tests.includes("im:{u:'slot.html?id=im',f:'im',mod:'im'"));
+assert.ok(tests.includes("if(k==='im'&&window.GInner){GInner.mount(box);return}"));
+assert.ok(mirror.includes('background.version===2'));
 console.log('PASS: 16 scenes, eight spheres, balanced family/pair distribution, separate resource/protective leaders, secondary weighting, context answers, three-sphere threshold and profile preservation.');
