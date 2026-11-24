@@ -1,5 +1,5 @@
 /* Семь тестов комплекта 12.11.2026 и шаг «Три ориентира». Данные: tests-data.js (window.GTESTS).
-   В «Идеальном Кривом Мире» ответ «Не знаю» учитывается как 0; в остальных тестах правила подсчета не меняются. */
+   Ответ «Не знаю» и пропуски не участвуют в расчете шкал; при недостатке ответов результат остается предварительным или не формируется. */
 (function(){
 'use strict';
 var T=window.GTESTS;if(!T)return;
@@ -103,9 +103,9 @@ Runner.prototype.draw=function(){var it=this.items[this.i],self=this,b=this.box;
 
 /* ---------- подсчет шкал 0–4 ---------- */
 function num(v){return typeof v==='number'?v:null}
-function scoreScales(sc,ans,unknownAsZero){return sc.map(function(s){var vals=[];s.items.forEach(function(it){var raw=ans[it.id],a=num(raw);if(a!=null)vals.push(it.rev?4-a:a);else if(unknownAsZero&&raw==='dk')vals.push(0)});var n=vals.length,sum=vals.reduce(function(a,b){return a+b},0);
+function scoreScales(sc,ans){return sc.map(function(s){var vals=[];s.items.forEach(function(it){var a=num(ans[it.id]);if(a!=null)vals.push(it.rev?4-a:a)});var n=vals.length,sum=vals.reduce(function(a,b){return a+b},0);
  var score=n===4?sum:n===3?Math.round(sum/3*4*10)/10:null;return {id:s.id,name:s.name,answered:n,possible:4,score:score,status:n===4?'full':n===3?'preliminary':'insufficient',level:score==null?null:score<4?0:score<8?1:score<12?2:3}})}
-function answered(sc,ans,unknownAsZero){var n=0;sc.forEach(function(s){s.items.forEach(function(it){if(num(ans[it.id])!=null||(unknownAsZero&&ans[it.id]==='dk'))n++})});return n}
+function answered(sc,ans){var n=0;sc.forEach(function(s){s.items.forEach(function(it){if(num(ans[it.id])!=null)n++})});return n}
 function lvText(sc,r){var s=sc.filter(function(x){return x.id===r.id})[0];return r.level==null?'':g(s.lv[r.level])}
 function lvName(r,labels){return r.level==null?'Недостаточно данных':labels[r.level]+(r.status==='preliminary'?', '+W.prelim:'')}
 function detailsScales(sc,res,labels,title){return '<details class="ar-det"><summary>'+esc(title||'Подробнее по всем шкалам')+'</summary>'+res.map(function(r){return '<div class="gt-lv">'+esc(r.name)+' · '+esc(lvName(r,labels))+'</div>'+(r.level==null?'<p>'+esc(W.few)+'</p>':'<p>'+esc(lvText(sc,r))+'</p>')}).join('')+'</details>'}
@@ -143,7 +143,7 @@ BUILD.rs=function(ans){var sc=T.rs.scales,res=scoreScales(sc,ans),n=answered(sc,
  var skh=['over','away'].filter(function(k){return sk[k].show}).map(function(k){return '<div class="gt-lv">'+esc(T.rs.skew[k].name)+(sk[k].status==='preliminary'?', '+W.prelim:'')+'</div>'+P_(esc(g(T.rs.skew[k].t)))}).join('');
  out.top=out.status==='insufficient'?'Недостаточно данных':(out.leadingScales||[]).length?'Заметнее всего: '+res.filter(function(r){return out.leadingScales.indexOf(r.id)>=0}).map(function(r){return r.name}).join(', '):'Граница ответственности в основном держится';
  return {res:out,html:'<span class="tag">Точка Б</span><span class="tag">Ответственность</span>'+main+(skh?'<details class="ar-det" open><summary>Дополнительный перекос</summary>'+skh+'</details>':'')+detailsScales(sc,res,LVD),log:'Ответственность: '+out.top}};
-BUILD.km=function(ans){var sc=T.km.scales,res=scoreScales(sc,ans,true),n=answered(sc,ans,true),out={v:VER,answers:ans,scales:res,answeredCount:n,possibleCount:24,at:Date.now(),framework:'ideal_distorted_world',interpretationNote:'Исследуются текущие фильтры восприятия. Их происхождение проверяется сопоставлением с блоком «Первые настройки»; этот тест сам по себе не доказывает детскую причину.'},main;
+BUILD.km=function(ans){var sc=T.km.scales,res=scoreScales(sc,ans),n=answered(sc,ans),out={v:VER,scoringVersion:2,answers:ans,scales:res,answeredCount:n,possibleCount:24,at:Date.now(),framework:'ideal_distorted_world',interpretationNote:'Исследуются текущие фильтры восприятия. Их происхождение проверяется сопоставлением с блоком «Первые настройки»; этот тест сам по себе не доказывает детскую причину.'},main;
  if(n<18){out.status='insufficient';main=P_(esc(W.few))}else{var L=leaders(res,1),mx=L.length?L[0].score:0;out.status=statusOf(res);
   if(!L.length||Math.max.apply(null,L.map(function(r){return r.score}))<4){out.leadingScales=[];main='<div class="aq">Фильтры не выделились</div>'+P_(esc(W.clearKM))}
   else{L=L.filter(function(r){return r.score>=4});L.sort(function(a,b){return b.score-a.score});out.leadingScales=L.map(function(r){return r.id});out.status=L.length>1?'mixed':out.status;
@@ -302,7 +302,7 @@ try{built.bind(box)}catch(e){}
  var re=box.querySelector('#gtRe');if(re)re.onclick=function(){retake()};scrollTo(0,0)}
 function mountTest(k,box){css();var P=load(),S=STEP[k],have=P[S.f];
  function run(){new Runner(box,ITEMS[k](),function(ans){var b=BUILD[k](ans);store(k,b.res,b.log);result(box,k,b,run)},S.mod).draw()}
- if(have&&have.v&&have.answers&&!preview){result(box,k,BUILD[k](have.answers),run);return}
+ if(have&&have.v&&have.answers&&!preview){var saved=BUILD[k](have.answers);if(k==='km'&&have.scoringVersion!==2&&!preview){saved.res.scoringVersion=2;store(k,saved.res,saved.log)}result(box,k,saved,run);return}
  run()}
 
 /* ---------- три ориентира: важно / отложить / вычеркнуть, затем ровно три ---------- */
