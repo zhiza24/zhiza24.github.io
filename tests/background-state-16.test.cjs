@@ -4,7 +4,7 @@ const root=path.join(__dirname,'../game_v5');
 function unit(files,seed={}){
  let raw=JSON.stringify(seed),store={alch_v5_profile:raw};
  const w={window:null,Date,Math,URLSearchParams,location:{search:'',pathname:'/slot.html',href:'https://game.test/slot.html'},localStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>delete store[k]},sessionStorage:{getItem:()=>null,setItem:()=>{}},console};
- w.window=w;const ctx={window:w,Date,Math,URLSearchParams,localStorage:w.localStorage,sessionStorage:w.sessionStorage,console};
+ w.window=w;const ctx={window:w,Date,Math,URLSearchParams,location:w.location,localStorage:w.localStorage,sessionStorage:w.sessionStorage,console};
  vm.createContext(ctx);files.forEach(f=>vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),ctx));
  return {w,ctx,store};
 }
