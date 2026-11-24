@@ -332,5 +332,5 @@ function mountValues(box){
  if(have&&have.top3&&!preview){show(have);return}
  if(draft&&i>0)card();else intro()
 }
-window.GTests={STEP:STEP,BUILD:BUILD,ITEMS:ITEMS,reactorIn:reactorIn,mount:function(k,box){if(k==='im'&&window.GBackgroundTest){GBackgroundTest.mount(box);return}if(k==='im'&&window.GInner){GInner.mount(box);return}if(k==='vsort')mountValues(box);else if(k==='lab_d'&&window.GLabD)GLabD.mount(box);else mountTest(k,box)},keys:Object.keys(STEP),W:W,css:css,store:store,result:result,load:load,persist:persist,g:g,h:h,esc:esc,P_:P_,fem:fem,preview:preview,retakeMode:retakeMode,VER:VER};
+window.GTests={STEP:STEP,BUILD:BUILD,ITEMS:ITEMS,reactorIn:reactorIn,mount:function(k,box){if(k==='im'&&window.GInner){GInner.mount(box);return}if(k==='vsort')mountValues(box);else if(k==='lab_d'&&window.GLabD)GLabD.mount(box);else mountTest(k,box)},keys:Object.keys(STEP),W:W,css:css,store:store,result:result,load:load,persist:persist,g:g,h:h,esc:esc,P_:P_,fem:fem,preview:preview,retakeMode:retakeMode,VER:VER};
 })();
