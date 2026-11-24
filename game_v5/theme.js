@@ -10,8 +10,8 @@
    return null;
   });
  };
- if(document.readyState==='complete')register();
- else window.addEventListener('load',register,{once:true});
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',register,{once:true});
+ else register();
 })();
 /* Светлая и темная тема (localStorage alch_v5_theme = 'light' | 'dark', по умолчанию светлая).
    Загружается первым в <head>: ставит data-theme на <html> до отрисовки.
