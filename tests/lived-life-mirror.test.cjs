@@ -3,6 +3,9 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {JSDOM}=require('jsdom');
 const source=fs.readFileSync(path.join(__dirname,'../game_v5/track28.js'),'utf8');
+const slotSource=fs.readFileSync(path.join(__dirname,'../game_v5/slot.html'),'utf8');
+assert.ok(slotSource.includes("P.retest&&P.retest.fromMirror"),'route retest should recognize a completed mirror retake');
+assert.ok(slotSource.includes('Повторное исследование уже пройдено'),'mirror retake must not ask the same questions twice');
 const now=Date.now();
 const T={
  start:now-28*86400000,cycle:1,space:'mirror',view:'mirror',strategySeen:true,
