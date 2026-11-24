@@ -218,7 +218,7 @@ function practRec(P){
  var bp=P.backgroundProfile,out=[],seen={};
  function add(id,why){if(seen[id]||out.length>=2)return;seen[id]=1;out.push({id:id,why:why})}
  var L=bp&&bp.levels||{};
- if(bp&&bp.positive){
+ if(bp&&bp.positive&&!(bp.backgroundState&&bp.backgroundState.version===2)){
   if(bp.unstableJoy)add('keepgood','Радость есть, но после хорошего быстро возвращается нехватка. Закрепим хорошее.');
   if(L.S2>=2)add('create','Интерес и движение — твоя сильная сторона. Стоит давать им время.');
   add('keepgood','Твой фон устойчивый. Практика помогает сохранять то, что уже работает.');
