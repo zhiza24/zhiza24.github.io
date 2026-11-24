@@ -4,7 +4,7 @@ const path=require('node:path');
 const vm=require('node:vm');
 const root=path.join(__dirname,'../game_v5');
 const flow=fs.readFileSync(path.join(root,'flow.js'),'utf8');
-const entries=[...flow.matchAll(/\\{u:'([^']+)',pt:'([^']+)'/g)].map(m=>({url:m[1],point:m[2]}));
+const entries=[...flow.matchAll(/\{u:'([^']+)',pt:'([^']+)'/g)].map(m=>({url:m[1],point:m[2]}));
 assert.equal(entries.length,57,'approved route should contain 57 steps');
 assert.equal(new Set(entries.map(x=>x.url)).size,entries.length,'route URLs must be unique');
 entries.forEach(({url})=>{
@@ -22,7 +22,7 @@ ordered.forEach(name=>{const i=slot.indexOf('src="'+name);assert.ok(i>last,'slot
 const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
 const cache=(sw.match(/const CACHE='([^']+)'/)||[])[1];
 assert.ok(cache&&cache!=='alch-v5-static-2026-11-23-v30','PWA cache version must be bumped after asset changes');
-const assets=[...sw.matchAll(/"\\.\\/([^"]+)"/g)].map(m=>m[1]);
+const assets=[...sw.matchAll(/"\.\/([^"]+)"/g)].map(m=>m[1]);
 assert.equal(new Set(assets).size,assets.length,'precache list must not contain duplicates');
 assets.forEach(a=>assert.ok(fs.existsSync(path.join(root,a)),'precache asset must exist: '+a));
 ordered.forEach(name=>assert.ok(assets.includes(name),'new core module must be cached offline: '+name));
