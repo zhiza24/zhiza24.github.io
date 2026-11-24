@@ -55,7 +55,7 @@ test('both cinematic videos decode and can play online',async({page})=>{
  await seedProfile(page);
  for(const item of [
   {url:'/elder.html?review=1&u=T',src:'media/elder.mp4'},
-  {url:'/cutscene.html?review=1&u=T',src:'media/iam.mp4'}
+  {url:'/cutscene.html?review=1&u=T',src:'media/iam.mp4?v=cs2'}
  ]){
   await page.goto(item.url,{waitUntil:'domcontentloaded'});
   const video=page.locator('video').first();
