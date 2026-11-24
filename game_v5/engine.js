@@ -7,7 +7,12 @@ function load(){var P={};try{P=JSON.parse(localStorage.getItem(K))||{}}catch(e){
  var od=localStorage.getItem('alch_v5_day');if(od!==null){P.reactor=P.reactor||{};if(!P.reactor.day)P.reactor.day=+od||0;localStorage.removeItem('alch_v5_day');save(P)}
  if(window.GProfile)P=GProfile.migrate(P);
  return P}
-function save(P){if(window.GProfile)P=GProfile.migrate(P);localStorage.setItem(K,JSON.stringify(P))}
+function save(P){
+ try{if(window.GProfile)P=GProfile.migrate(P);localStorage.setItem(K,JSON.stringify(P))}
+ catch(e){return false}
+ try{autoBackup()}catch(e){}
+ return true;
+}
 function objectLike(v){return !!v&&typeof v==='object'&&!Array.isArray(v)}
 var EXTRA_KEYS=['alch_samost','alch_v5_hold','alch_v5_belief_lab_v1','alch_v5_belief_lab_backup_v1','alch_v5_sound','alch_v5_theme','alch_v5_book_seen','alch_v5_birth_preview_v1'];
 var EXTRA_PREFIXES=['alch_v5_scroll_'];
@@ -69,6 +74,14 @@ function backupCurrent(){
  backups=backups.slice(-3);
  localStorage.setItem('alch_v5_profile_backups',JSON.stringify(backups));
  return raw;
+}
+var AUTO_BACKUP_KEY='alch_v5_profile_backup_at',AUTO_BACKUP_INTERVAL=24*60*60*1000;
+function autoBackup(){
+ var last=0;try{last=+localStorage.getItem(AUTO_BACKUP_KEY)||0}catch(e){}
+ var now=Date.now();if(last&&now-last<AUTO_BACKUP_INTERVAL)return false;
+ backupCurrent();
+ localStorage.setItem(AUTO_BACKUP_KEY,String(now));
+ return true;
 }
 window.GPro={
  load:load,save:save,
