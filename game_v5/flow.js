@@ -10,6 +10,7 @@ window.GFLOW=[
 {u:'cutscene.html',pt:'0',t:'Заставка: Я есмь'},
 {u:'slot.html?id=dialog',pt:'0',t:'Кто сейчас выбирает'},
 {u:'slot.html?id=bg16',pt:'0',t:'Тест: Ведущее фоновое состояние'},
+{u:'slot.html?id=mechanism',pt:'0',t:'Лаборатория: внутренний механизм'},
 {u:'slot.html?id=km',pt:'0',t:'Тест: Идеальный Кривой Мир'},
 {u:'scene.html?k=ego',pt:'0',t:'Маг: вход в тест'},
 {u:'ego.html',pt:'0',t:'Маг: повторяющийся эмоциональный итог'},
