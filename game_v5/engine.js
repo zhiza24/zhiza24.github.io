@@ -8,10 +8,10 @@ function load(){var P={};try{P=JSON.parse(localStorage.getItem(K))||{}}catch(e){
  if(window.GProfile)P=GProfile.migrate(P);
  return P}
 function save(P){
- try{if(window.GProfile)P=GProfile.migrate(P);localStorage.setItem(K,JSON.stringify(P))}
- catch(e){return false}
+ if(window.GProfile)P=GProfile.migrate(P);
+ localStorage.setItem(K,JSON.stringify(P));
+ /* The primary profile save must not depend on optional backup capacity. */
  try{autoBackup()}catch(e){}
- return true;
 }
 function objectLike(v){return !!v&&typeof v==='object'&&!Array.isArray(v)}
 var EXTRA_KEYS=['alch_samost','alch_v5_hold','alch_v5_belief_lab_v1','alch_v5_belief_lab_backup_v1','alch_v5_sound','alch_v5_theme','alch_v5_book_seen','alch_v5_birth_preview_v1'];
