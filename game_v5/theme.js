@@ -5,9 +5,31 @@
  var secure=location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1';
  if(!secure)return;
  var register=function(){
-  window.GSWRegistration=navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(function(error){
+  navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(function(reg){
+   window.GSWRegistration=reg;
+   // Check for updates immediately and on focus
+   reg.update().catch(function(){});
+   window.addEventListener('focus',function(){reg.update().catch(function(){});});
+   // When a new SW activates, reload so the user gets the fresh version
+   if(reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'});
+   reg.addEventListener('updatefound',function(){
+    var nw=reg.installing;
+    if(!nw)return;
+    nw.addEventListener('statechange',function(){
+     if(nw.state==='installed'&&navigator.serviceWorker.controller){
+      nw.postMessage({type:'SKIP_WAITING'});
+     }
+    });
+   });
+  }).catch(function(error){
    if(window.console&&console.warn)console.warn('Service worker registration failed',error);
-   return null;
+  });
+  // Reload once when the new worker takes control
+  var refreshing=false;
+  navigator.serviceWorker.addEventListener('controllerchange',function(){
+   if(refreshing)return;
+   refreshing=true;
+   location.reload();
   });
  };
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',register,{once:true});
