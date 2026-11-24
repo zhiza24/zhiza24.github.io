@@ -11,4 +11,8 @@ assert.ok(recipe.includes('не доказательство причины'),'s
 assert.ok(source.includes('Сама запись не доказывает причинную связь и не предсказывает исход.'),'daily sign notes need a clear interpretation boundary');
 assert.ok(source.includes('Это не оценка качества недели.'),'weekly completion percentage must not be framed as life quality');
 assert.ok(!source.includes('Неделя уже удалась.'),'remove blanket success verdict from completion percentage');
+assert.ok(source.includes('Качество проживаемого опыта'),'daily tracker should name lived-experience quality explicitly');
+assert.ok(source.includes('data-act="quality"')&&source.includes("if(act==='quality'){d.quality=el.value;save(P);return}"),'quality note should be saved locally');
+assert.ok(source.includes('qualityMoments')&&source.includes('stats.qualityMoments'),'quality notes should appear in the cycle mirror');
+assert.ok(!/qualityScore|lifeQualityScore/.test(source),'lived-experience notes must not be converted into a score');
 console.log('PASS: tracker separates attention notes from causal claims and task completion from quality of life.');
