@@ -46,6 +46,16 @@ for(const file of files.filter(x=>path.extname(x).toLowerCase()==='.html')){
   assert.ok(precache.has(path.relative(root,target).split(path.sep).join('/')),'video poster must be cached offline: '+fallback);
  }
 }
+for(const file of files.filter(x=>path.extname(x).toLowerCase()==='.html')){
+ const html=fs.readFileSync(file,'utf8');
+ for(const m of html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)){
+  const attrs=m[1],code=m[2].trim();
+  if(!code||/\\bsrc=/i.test(attrs))continue;
+  const type=(attrs.match(/\\btype=["']([^"']+)["']/i)||[])[1]||'text/javascript';
+  if(!/^(text|application)\\/(javascript|ecmascript)$/i.test(type))continue;
+  try{new Function(code)}catch(e){throw new Error('Inline script syntax error in '+path.relative(repoRoot,file)+': '+e.message)}
+ }
+}
 const missing=refs.filter(x=>!fs.existsSync(x.target));
 if(missing.length){
  console.error('Missing local assets:',missing.map(x=>x.owner+' -> '+x.ref+' ['+x.kind+']').join('\n'));
