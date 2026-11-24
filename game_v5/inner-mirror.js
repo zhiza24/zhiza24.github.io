@@ -18,6 +18,29 @@ function collect(P){
  var out={sources:[],fragments:[],links:[],tensions:[],unknown:[]};
  if(window.GTests&&GTests.preview&&window.GBackgroundPreviewResult){P.backgroundProfile=P.backgroundProfile||{};P.backgroundProfile.backgroundState=window.GBackgroundPreviewResult}
  var background=P.backgroundProfile&&P.backgroundProfile.backgroundState;
+ if(background&&background.version===2){
+  source('backgroundState','Ведущее фоновое состояние','16 сцен в 8 сферах; ресурсные и защитные сигналы рассматриваются отдельно');
+  arr(background.families).forEach(function(f){
+   if(!f.situationCount)return;
+   var ev=arr(f.evidence).map(function(x){return x.sphere+' · '+x.prompt+' → '+x.optionText+(x.role==='secondary'?' (дополнительный сигнал)':'')});
+   var detail=(f.description||'Наблюдения в ситуациях.')+' '+(f.repeatLabel||'');
+   if(f.group==='resource'&&background.followup){
+    if(background.followup.resourceDuration)detail+=' Сохранение состояния: '+background.followup.resourceDuration+'.';
+    if(background.followup.resourceTransfer)detail+=' Перенос в другие сферы: '+background.followup.resourceTransfer+'.';
+   }
+   if(f.group==='protective'&&background.followup&&background.followup.protectiveRecovery)detail+=' Возврат к обычному состоянию: '+background.followup.protectiveRecovery+'.';
+   out.fragments.push({domain:f.group==='resource'?'Ресурсы':'Фоновое состояние',title:f.title,detail:detail,status:'preliminary',source:'backgroundState',evidence:ev,score:f.share});
+  });
+  var g=background.groups||{};
+  if(!arr(g.resource&&g.resource.leaders).length&&!arr(g.protective&&g.protective.leaders).length)
+   out.unknown.push('В 16 сценах пока не выделился ведущий сигнал. Отдельные ответы сохранены и могут быть сопоставлены с другими исследованиями.');
+  var special=background.special||{};
+  if((special.depends||0)+(special.none||0)>0)
+   out.unknown.push('В части ситуаций ответ зависел от обстоятельств или ни один вариант не подошел. Эти ответы сохранены отдельно и не распределены по семействам.');
+  if(background.coverage&&background.coverage.answered<12)
+   out.unknown.push('В исследовании фонового состояния пока мало отвеченных сцен для уверенного сравнения разных сфер.');
+  out.unknown.push('Восемь семейств фонового состояния и каталог 19 внутренних настроек — разные уровни модели. Они сопоставляются в общей карте, но не приравниваются друг к другу.');
+ }
  if(background&&background.version===1){
   source('backgroundState','Фоновое состояние','24 ситуации и 8 эмоциональных итогов');
   var BD=window.GIMD||{};
