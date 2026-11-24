@@ -8,7 +8,7 @@ This document reconciles the independent static audit with the current source an
 - All 57 route entries resolve to existing HTML files. They use 20 distinct route pages.
 - The main task runner loads 44 local scripts; all are present in the service-worker precache.
 - All route HTML pages are present in the precache. The precache list contains 235 existing local assets.
-- The service-worker cache is version v32. `ver.txt` remains unchanged by design, per the updater contract in `README_AI.md`; `upd.js` continues to manage the `?u` URL parameter.
+- The service-worker cache is version v33. The worker is registered from the shared theme entry on supported secure origins. `ver.txt` remains unchanged by design, per the updater contract in `README_AI.md`; `upd.js` continues to manage the `?u` URL parameter.
 - BG16 is followed by the 10-section / 60-item inner-mechanism lab, then the Ideal Crooked World step.
 - Referenced local images, stylesheets, audio, video sources, and posters are checked by `tests/asset-integrity.test.cjs`. Used audio is precached. Video files are intentionally not precached because of their size; each video screen has a local cached poster fallback.
 - The Elder screen uses the existing `media/voice.mp3` from its explicit sound button. The former map-page reference to the nonexistent `snd/author.mp3` was removed. The first-visit author scroll now contains finished text instead of a placeholder; author narration is not included because no matching audio file is present.
@@ -57,14 +57,14 @@ The GitHub Actions suite now checks:
 
 ## Still not verified / deliberately deferred
 
-- Full end-to-end browser walkthrough of all 57 steps and all branches has not been run. The current suite uses Node and jsdom plus static integrity checks; it is not a substitute for a real Chromium/Safari session.
+- A focused desktop Chromium smoke suite now opens the map, inner-mechanism lab, new-player Reactor strategy, diary, hero, Elder, and cutscene screens without page errors or missing local responses. It also installs the service worker and verifies that the mechanism lab reloads while offline. A full end-to-end walkthrough of all 57 steps and every branch has not been run.
 - The user's own iPhone/Safari test is deliberately deferred until the source and media are frozen.
 - Payment integration is deliberately deferred.
-- Public GitHub Pages deployment and the live production URL have not been verified from this audit.
+- GitHub Pages build/deployment completed successfully for main commit `9ca83400d9f45cebe4b3c897d0b625ec4ad482c9`. The web viewer in this session could not independently fetch the live URL, so the final visual check should still be made in a normal browser.
 - Google Fonts are external; if unavailable offline, local/system font fallbacks are used.
 - MP4 files are not precached offline; their poster images are cached and remain visible as fallbacks.
 - Author narration for the map-page scroll is not included until an actual author audio file is supplied.
 
 ## Release statement
 
-The code hardening was merged into main in commit `ac1ef374afde38e2d9f367ef2903a7155af04d13`. GitHub Actions passed on the merged main commit; the automated suite reports 704 local references resolving to existing assets. Do not describe the app as fully device-tested, fully offline-tested, or deployed until the deferred browser/device/deployment checks are completed.
+The code hardening was merged into main in commit `ac1ef374afde38e2d9f367ef2903a7155af04d13`; subsequent main commits added shared service-worker registration, preliminary-strategy safeguards, and desktop browser smoke coverage. GitHub Pages deployment succeeded on `9ca83400d9f45cebe4b3c897d0b625ec4ad482c9`. The automated suite reports 704 local references resolving to existing assets. Do not describe the app as fully device-tested, fully offline-tested, or deployed until the deferred browser/device/deployment checks are completed.
