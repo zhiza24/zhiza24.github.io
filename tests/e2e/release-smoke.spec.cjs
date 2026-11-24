@@ -24,7 +24,7 @@ test('main screens render without page errors or missing local responses',async(
  await page.route('**/*.mp4',route=>route.abort());
  const cases=[
   {url:'/map.html?u=T',text:'Приветствую вас, господа пробужденные'},
-  {url:'/slot.html?id=mechanism&u=T',text:'Внутренний механизм'},
+  {url:'/slot.html?id=mechanism&u=T',text:'Лаборатория внутреннего механизма'},
   {url:'/reactor.html?u=T',text:'Мой день'},
   {url:'/diary.html?u=T',text:'Дневник'},
   {url:'/hero.html?u=T',text:'Герой'},
