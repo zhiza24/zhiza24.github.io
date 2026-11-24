@@ -3,6 +3,7 @@
 (function(){
 'use strict';
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function genderText(s){return String(s==null?'':s).replace(/\\{([^|]*)\\|([^}]*)\\}/g,function(_,m,f){return window.GG?GG(m,f):m})}
 function arr(x){return Array.isArray(x)?x:[]}
 function first(obj,keys){for(var i=0;i<keys.length;i++)if(obj&&obj[keys[i]]!=null)return obj[keys[i]];return null}
 function labelEcho(code){
@@ -22,7 +23,7 @@ function collect(P){
   source('backgroundState','Ведущее фоновое состояние','16 сцен в 8 сферах; ресурсные и защитные сигналы рассматриваются отдельно');
   arr(background.families).forEach(function(f){
    if(!f.situationCount)return;
-   var ev=arr(f.evidence).map(function(x){return x.sphere+' · '+x.prompt+' → '+x.optionText+(x.role==='secondary'?' (дополнительный сигнал)':'')});
+   var ev=arr(f.evidence).map(function(x){return x.sphere+' · '+genderText(x.prompt)+' → '+genderText(x.optionText)+(x.role==='secondary'?' (дополнительный сигнал)':'')});
    var detail=(f.description||'Наблюдения в ситуациях.')+' '+(f.repeatLabel||'');
    if(f.group==='resource'&&background.followup){
     if(background.followup.resourceDuration)detail+=' Сохранение состояния: '+background.followup.resourceDuration+'.';
