@@ -119,6 +119,15 @@ assert.equal(snapshot.backgroundState.coverage.answered,16);
 assert.ok(reactorDom.window.GTests.keys.includes('bg16'));
 reactorDom.window.close();
 
+// Existing practice gates recognize only an actual leading family, not a single isolated selection.
+const practiceDom=new JSDOM('<!doctype html><html><head></head><body></body></html>',{url:'https://game.test/practice.html',runScripts:'dangerously'});
+practiceDom.window.eval(fs.readFileSync(path.join(root,'practice-engine.js'),'utf8'));
+const practiceProfile={backgroundProfile:{backgroundState:{version:2,groups:{resource:{leaders:['S2']},protective:{leaders:['S5']}},families:[{id:'S2',group:'resource'},{id:'S5',group:'protective'}]}}};
+assert.equal(practiceDom.window.GPract.byId('create').need(practiceProfile),true);
+assert.equal(practiceDom.window.GPract.byId('risk').need(practiceProfile),true);
+assert.equal(practiceDom.window.GPract.byId('mine').need(practiceProfile),false);
+practiceDom.window.close();
+
 // Exercise the actual 16-scene screen in a browser-like DOM.
 const dom=new JSDOM('<!doctype html><html><head></head><body><main id="box"></main></body></html>',{url:'https://game.test/slot.html?id=bg16',runScripts:'dangerously'});
 const w=dom.window,box=w.document.getElementById('box');
