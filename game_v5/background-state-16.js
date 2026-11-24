@@ -116,7 +116,7 @@ function mount(box){
   var html='<section class="bg16-card"><h2>'+title+'</h2><p>'+groupLabel(group.status)+'.</p>';
   if(group.leaders.length){
    group.leaders.forEach(function(id){var f=all.filter(function(x){return x.id===id})[0];if(!f)return;
-    html+='<div class="bg16-result"><b>'+esc(f.title)+'</b><p>'+esc(f.description)+'</p><span class="bg16-tag">'+f.sphereCount+' из 8 сфер</span><span class="bg16-tag">Сигнал '+Math.round(f.share*100)+'%</span></div>';
+    html+='<div class="bg16-result"><b>'+esc(f.title)+'</b><p>'+esc(f.description)+'</p><span class="bg16-tag">'+f.sphereCount+' из 8 сфер</span><span class="bg16-tag">Баллы: '+f.points+'/8</span></div>';
    });
   }else{
    var candidates=group.families.filter(function(x){return x.points>0}).slice(0,2);
@@ -132,7 +132,7 @@ function mount(box){
    groupHtml(r.groups.resource,'Ресурсные состояния',r.families)+groupHtml(r.groups.protective,'Защитные ожидания',r.families)+
    '<h2>Другие замеченные сигналы</h2>';
   var others=r.families.filter(function(f){return f.points>0&&r.groups.resource.leaders.indexOf(f.id)<0&&r.groups.protective.leaders.indexOf(f.id)<0}).sort(function(a,b){return b.points-a.points});
-  if(others.length)others.forEach(function(f){html+='<article class="bg16-card"><b>'+esc(f.title)+'</b><div class="bg16-bar"><i style="width:'+Math.max(0,Math.min(100,f.share*100))+'%"></i></div><p class="bg16-muted">'+esc(f.repeatLabel)+'. Основных выборов: '+f.primaryCount+', дополнительных: '+f.secondaryCount+'.</p></article>'});
+  if(others.length)others.forEach(function(f){html+='<article class="bg16-card"><b>'+esc(f.title)+'</b><div class="bg16-bar"><i style="width:'+Math.max(0,Math.min(100,f.share*100))+'%"></i></div><p class="bg16-muted">'+esc(f.repeatLabel)+'. Баллы: '+f.points+'/8. Основных выборов: '+f.primaryCount+', дополнительных: '+f.secondaryCount+'.</p></article>'});
   else html+='<p class="bg16-muted">Других повторяющихся сигналов пока нет.</p>';
   if(r.followup&&Object.keys(r.followup).length){
    html+='<div class="bg16-card"><h2>Временная характеристика</h2>';
