@@ -91,7 +91,7 @@ var RDEF='c';
   '[data-rdc=d]{color:#2a2118!important}'+'[data-rdc=h]{color:#3a1f08!important}';
  var st=document.createElement('style');st.id='gread';st.textContent=c;(document.head||H).appendChild(st);
  if(r!=='c'||/^(index|cover_v1|birth-preview)\.html$/.test(f))return;/* обложка — логотип, не трогаем */
- var SKIP='#scr.sh,.gtop,.gnav,.gbk,.cap,.tag,.gq-b,button,select,input,svg,canvas,script,style,[class*=pyth],[class*=arcan],[class*=passport],[class*=psq],[data-rdskip]';
+ var SKIP='#scr.sh,.gtop,.gnav,.gbk,.bg16,.cap,.tag,.gq-b,button,select,input,svg,canvas,script,style,[class*=pyth],[class*=arcan],[class*=passport],[class*=psq],[data-rdskip]';
  var HT=/^(H1|H2|H3|H4)$/;
  function lum(cs){var m=/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(cs);if(!m)return 1;if(m[4]!=null&&+m[4]<.35)return 1;
   function f(v){v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)}return .2126*f(+m[1])+.7152*f(+m[2])+.0722*f(+m[3])}
