@@ -46,11 +46,15 @@ test('main task runner remains available offline after service-worker install',a
  await seedProfile(page);
  await page.route('**/*.mp4',route=>route.abort());
  await page.goto('/map.html?u=T',{waitUntil:'domcontentloaded'});
- await page.waitForFunction(()=>!!navigator.serviceWorker&&!!navigator.serviceWorker.controller,{timeout:60000});
+ await page.setDefaultTimeout(60000);
+ await page.waitForFunction(()=>!!window.GSWRegistration,null,{timeout:60000});
+ await page.evaluate(async()=>{await window.GSWRegistration;await navigator.serviceWorker.ready});
+ await page.reload({waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>!!navigator.serviceWorker&&!!navigator.serviceWorker.controller,null,{timeout:60000});
  await page.goto('/slot.html?id=mechanism&u=T',{waitUntil:'domcontentloaded'});
- await expect(page.locator('body')).toContainText('Внутренний механизм');
+ await expect(page.locator('body')).toContainText('Лаборатория внутреннего механизма');
  const cacheNames=await page.evaluate(()=>caches.keys());
- expect(cacheNames.some(x=>x.includes('2026-11-24-v32'))).toBeTruthy();
+ expect(cacheNames.some(x=>x.includes('2026-11-24-v33'))).toBeTruthy();
  await context.setOffline(true);
  await page.reload({waitUntil:'domcontentloaded'});
  await expect(page.locator('body')).toContainText('Внутренний механизм',{timeout:30000});
