@@ -41,5 +41,31 @@ assert.ok(html.includes('Пять разных взглядов на одну ж
 assert.ok(html.includes('Пересекающееся время'),'report should disclose overlap');
 assert.ok(html.includes('не означает ошибку или самообман'),'report should avoid judgmental interpretation');
 assert.ok(html.includes('Что я хочу изменить или исследовать дальше?'),'report should include user reflection');
-console.log('PASS: lived-life mirror handles overnight events, overlap, unique-time analytics, checkpoints and report rendering.');
+let cursor='reactor';
+const routeCalls=[];
+dom.window.GRoute={
+ status(url){
+  if(url==='reactor.html')return cursor==='reactor'?'current':'done';
+  if(url==='slot.html?id=retest')return cursor==='reactor'?'locked':cursor==='retest'?'current':'done';
+  if(url==='slot.html?id=compare')return cursor==='compare'?'current':cursor==='end'?'done':'locked';
+  return 'resource';
+ },
+ complete(url){
+  routeCalls.push(url);
+  if(url==='reactor.html'&&cursor==='reactor'){cursor='retest';return true}
+  if(url==='slot.html?id=retest'&&cursor==='retest'){cursor='compare';return true}
+  return false;
+ }
+};
+const blocked=api.continueMirror(profile,T);
+assert.equal(blocked.ok,false,'mirror must not skip the Reactor final checkpoint');
+assert.equal(blocked.reason,'cycle-finale');
+assert.equal(cursor,'reactor');
+T.finale={done:true};
+const handoff=api.continueMirror(profile,T);
+assert.equal(handoff.ok,true,'completed cycle may proceed to comparison');
+assert.equal(handoff.url,'slot.html?id=compare');
+assert.equal(cursor,'compare');
+assert.deepEqual(routeCalls,['reactor.html','slot.html?id=retest'],'route handoff completes Reactor and prefilled retest in order');
+console.log('PASS: lived-life mirror handles overnight events, overlap, unique-time analytics, checkpoints and report rendering and route-gated final handoff.');
 dom.window.close();
