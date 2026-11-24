@@ -97,6 +97,7 @@ assert.equal(freshRoute.w.GRoute.ready('slot.html?id=im',routeProfile),true);
 const slot=fs.readFileSync(path.join(root,'slot.html'),'utf8'),tests=fs.readFileSync(path.join(root,'tests.js'),'utf8'),mirror=fs.readFileSync(path.join(root,'inner-mirror.js'),'utf8');
 assert.ok(slot.includes('background-state-16-data.js')&&slot.includes("id==='bg16'"));
 assert.ok(tests.includes("im:{u:'slot.html?id=im',f:'im',mod:'im'"));
+assert.ok(tests.includes("if(k==='bg16'&&window.GBackgroundState16Test){GBackgroundState16Test.mount(box);return}"));
 assert.ok(tests.includes("if(k==='im'&&window.GInner){GInner.mount(box);return}"));
 assert.ok(tests.includes("r.tests.bg16={status:'preliminary'"));
 assert.ok(fs.readFileSync(path.join(root,'background-state-16.js'),'utf8').includes('GTests.reactorIn'));
