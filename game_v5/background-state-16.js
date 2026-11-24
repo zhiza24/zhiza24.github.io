@@ -88,6 +88,7 @@ function mount(box){
  }
  var FOLLOW={
   protectiveRecovery:['Несколько минут','До нескольких часов','До конца дня','Несколько дней','По-разному','Пока не могу сказать'],
+  protectiveContext:['Чаще есть конкретные факты или ограничения, которые это объясняют.','Иногда есть факты, но моя реакция бывает сильнее самой ситуации.','Часто ощущение возникает раньше, чем я проверю факты и доступные варианты.','По-разному; зависит от ситуации и сферы.','Пока не могу оценить.'],
   resourceDuration:['Только пока длится ситуация','Еще несколько минут или часов','Большую часть дня','Несколько дней','По-разному','Пока не могу сказать'],
   resourceTransfer:['Да, легко переходит в другие сферы','Иногда переносится','Обычно остается в одной сфере','Зависит от обстоятельств','Пока не могу сказать']
  };
@@ -95,7 +96,7 @@ function mount(box){
   stage='followup';
   var r=preliminary(),need=E.needsFollowup(r),html='<span class="tag">Предварительная карта</span><div class="bg16-kicker">Короткая сверка</div><h1>Как долго это состояние остается с тобой?</h1><p>Уточним не только частоту выбора, но и то, как состояние проявляется во времени. Ресурс и напряженная реакция измеряются по-разному.</p>';
   if(need.protective){
-   html+='<div class="bg16-card"><b>Если включается защитная реакция</b><p>Сколько обычно проходит времени, прежде чем ты возвращаешься к обычному состоянию и снова можешь спокойно выбирать, что делать?</p>'+radios('protectiveRecovery',FOLLOW.protectiveRecovery,draft.followup.protectiveRecovery)+'</div>';
+   html+='<div class="bg16-card"><b>Если включается защитная реакция</b><p>Сколько обычно проходит времени, прежде чем ты возвращаешься к обычному состоянию и снова можешь спокойно выбирать, что делать?</p>'+radios('protectiveRecovery',FOLLOW.protectiveRecovery,draft.followup.protectiveRecovery)+'<div class="bg16-secondary"><b>Контекстная сверка</b><p>Насколько это ощущение связано с реальными обстоятельствами — конкретными действиями других людей, объективной нехваткой ресурсов или настоящими ограничениями?</p>'+radios('protectiveContext',FOLLOW.protectiveContext,draft.followup.protectiveContext)+'</div></div>';
   }
   if(need.resource){
    html+='<div class="bg16-card"><b>Если доступно ресурсное состояние</b><p>Как долго оно обычно сохраняется после ситуации?</p>'+radios('resourceDuration',FOLLOW.resourceDuration,draft.followup.resourceDuration)+
@@ -136,6 +137,7 @@ function mount(box){
   if(r.followup&&Object.keys(r.followup).length){
    html+='<div class="bg16-card"><h2>Временная характеристика</h2>';
    if(r.followup.protectiveRecovery)html+='<p><b>Возврат к обычному состоянию:</b> '+esc(r.followup.protectiveRecovery)+'</p>';
+   if(r.followup.protectiveContext)html+='<p><b>Связь с внешними обстоятельствами:</b> '+esc(r.followup.protectiveContext)+'</p>';
    if(r.followup.resourceDuration)html+='<p><b>Сохранение ресурса:</b> '+esc(r.followup.resourceDuration)+'</p>';
    if(r.followup.resourceTransfer)html+='<p><b>Перенос в другие сферы:</b> '+esc(r.followup.resourceTransfer)+'</p>';
    html+='</div>';
