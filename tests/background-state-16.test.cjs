@@ -128,6 +128,18 @@ assert.equal(practiceDom.window.GPract.byId('risk').need(practiceProfile),true);
 assert.equal(practiceDom.window.GPract.byId('mine').need(practiceProfile),false);
 practiceDom.window.close();
 
+// Strategy consumes resource and protective leaders separately and proposes only optional practices.
+const strategyDom=new JSDOM('<!doctype html><html><head></head><body></body></html>',{url:'https://game.test/strategy.html',runScripts:'dangerously'});
+strategyDom.window.GIMD={FAM:{}};
+strategyDom.window.eval(fs.readFileSync(path.join(root,'strategy.js'),'utf8'));
+const strategyProfile={backgroundProfile:{backgroundState:{version:2,groups:{resource:{status:'leading',leaders:['S2']},protective:{status:'leading',leaders:['S5']}},families:[{id:'S2',title:'Интерес и движение',description:'Ресурс интереса.',group:'resource',sphereCount:8},{id:'S5',title:'Готовность заранее видеть сложности',description:'Повторяющееся ожидание возможных сложностей.',group:'protective',sphereCount:8}]}}};
+const recs=strategyDom.window.GStrategy.practRec(strategyProfile);
+assert.deepEqual(Array.from(recs.map(x=>x.id)),['create','risk']);
+const layer=strategyDom.window.GStrategy.testsLayer(strategyProfile,false);
+assert.equal(layer.res[0].t,'Интерес и движение');
+assert.equal(layer.obst[0].t,'Готовность заранее видеть сложности');
+strategyDom.window.close();
+
 // Exercise the actual 16-scene screen in a browser-like DOM.
 const dom=new JSDOM('<!doctype html><html><head></head><body><main id="box"></main></body></html>',{url:'https://game.test/slot.html?id=bg16',runScripts:'dangerously'});
 const w=dom.window,box=w.document.getElementById('box');
