@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const source=fs.readFileSync(path.join(__dirname,'../game_v5/track28.js'),'utf8');
+const start=source.indexOf('function recipeOf(T){');
+const end=source.indexOf('\nfunction viewResults',start);
+assert.ok(start>=0&&end>start,'recipe summary should exist');
+const recipe=source.slice(start,end);
+assert.ok(!recipe.includes('signs'),'coincidence/sign notes must not be treated as a success factor');
+assert.ok(recipe.includes('не доказательство причины'),'summary must distinguish observation from causality');
+assert.ok(source.includes('Сама запись не доказывает причинную связь и не предсказывает исход.'),'daily sign notes need a clear interpretation boundary');
+assert.ok(source.includes('Это не оценка качества недели.'),'weekly completion percentage must not be framed as life quality');
+assert.ok(!source.includes('Неделя уже удалась.'),'remove blanket success verdict from completion percentage');
+console.log('PASS: tracker separates attention notes from causal claims and task completion from quality of life.');

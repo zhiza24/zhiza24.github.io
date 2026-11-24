@@ -497,6 +497,21 @@ function mirrorInitialResearch(P){
  if(P.cycleBaseline&&Array.isArray(P.cycleBaseline.research))return P.cycleBaseline.research.slice();var w=P.wheelTest||{};if(Array.isArray(w.averages)&&w.averages.length===8)return w.averages;
  return (w.spheres||[]).map(function(s){var a=(s.ratings||[]).filter(function(v){return typeof v==='number'&&isFinite(v)});return a.length?a.reduce(function(p,c){return p+c},0)/a.length:null});
 }
+function continueMirror(P,T){
+ if(!window.GRoute)return {ok:true,url:'slot.html?id=compare'};
+ /* The 28-day report may be opened before the cycle's final checkpoint.
+    Never jump over the route gate: the Reactor must be completed, then the
+    prefilled retest step is completed before the comparison page is opened. */
+ if(GRoute.status('reactor.html',P)==='current'){
+  if(!(T.finale&&T.finale.done))return {ok:false,reason:'cycle-finale'};
+  if(!GRoute.complete('reactor.html',P))return {ok:false,reason:'reactor'};
+ }
+ var rs=GRoute.status('slot.html?id=retest',P);
+ if(rs==='locked')return {ok:false,reason:'route'};
+ if(rs==='current'&&!GRoute.complete('slot.html?id=retest',P))return {ok:false,reason:'retest'};
+ if(GRoute.status('slot.html?id=compare',P)==='locked')return {ok:false,reason:'route'};
+ return {ok:true,url:'slot.html?id=compare'};
+}
 function mirrorActivityStats(T){
  var all=T.events24||{},bySphere={},byMotive={},byEmotion={},byFocus={},byPlanned={},after={},completion={},eventIds={},days=0,checkpoints=0,overlap=0,total=0,unknown=0,alternatives=[];
  MIRROR_SPHERES.forEach(function(x){bySphere[x.k]=0});
@@ -644,7 +659,7 @@ function dayPanel(P,T,n){
   var evCount=((T.events24||{})[n]||[]).length+(((T.events24||{})[n-1]||[]).filter(function(x){return +x.endMin>1440}).length);html+=acc('events24','24 часа · события и занятия',evCount?'записей: '+evCount:'добавить запись',events24Body(T,n));
 
   if(actOn(T,'signs',n)){
-  html+='<div class="row-line"><b>Знаки дня</b><div class="signs">';
+  html+='<div class="row-line"><b>Знаки дня</b><p class="mute">Здесь можно сохранить совпадения и детали, которые привлекли внимание. Сама запись не доказывает причинную связь и не предсказывает исход.</p><div class="signs">';
   (d.signs||[]).forEach(function(s){
     html+='<div class="sign-item">'+esc(s.tag?s.tag+' · ':'')+esc(s.text)+'</div>';
   });
@@ -820,7 +835,7 @@ function viewWeek(P,T){
   var w=T.weekN||0, a=w*7+1, b=a+6, week=w+1, N=weekNums(T,week), plan=weekPlan(T,week), sc=N.score;
   var scoreLine='';
   if(sc!=null){
-    scoreLine='<p class="score'+(sc>=85?' ok':'')+'">Выполнение '+sc+'%'+(sc>=85?'. Неделя уже удалась.':'')+'</p>';
+    scoreLine='<p class="score">Отмечено '+sc+'% выбранных пунктов плана. <small>Это не оценка качества недели.</small></p>';
   }
   var rewDay=week*7;
   T.rewards=T.rewards||{};
@@ -843,25 +858,22 @@ function viewWeek(P,T){
 }
 
 function recipeOf(T){
-  var signs=0, better=0, steps=0, filled=0, hiEnergy=0, withSigns=0;
+  var better=0,steps=0,filled=0,hiEnergy=0;
   for(var n=1;n<=28;n++){
     var d=dayRec(T,n);
     if(!dayFilled(T,n))continue;
     filled++;
-    var sg=(d.signs||[]).length; signs+=sg;
-    if(sg)withSigns++;
     if(d.wishMark==='better'||(d.dirMarks||[]).indexOf('better')>=0)better++;
     if((d.dirState||[]).indexOf('done')>=0)steps++;
     if(+d.sliders.energy>=7)hiEnergy++;
   }
   if(!filled)return '';
   var bits=[];
-  if(withSigns && withSigns>=Math.ceil(filled/3))bits.push('в дни, когда {появлялись|появлялись} знаки');
-  if(steps)bits.push('когда {был|была} сделан маленький шаг');
-  if(hiEnergy && hiEnergy>=2)bits.push('когда энергия была выше');
-  if(better)bits.push('когда {ставил|ставила} отметку «стало лучше»');
+  if(steps)bits.push('когда был сделан небольшой выбранный шаг');
+  if(hiEnergy && hiEnergy>=2)bits.push('в дни с более высокой отмеченной энергией');
+  if(better)bits.push('когда ты отмечал(а), что стало лучше');
   if(!bits.length)return '';
-  return '<div class="res"><b>Рецепт успеха</b><p>Чаще сдвигалось '+bits.map(function(s){return gx(s)}).join(', ')+'. Это не правило, а только то, что видно по твоим отметкам.</p></div>';
+  return '<div class="res"><b>Что сопровождало движение</b><p>В твоих записях чаще встречались такие обстоятельства: '+bits.join(', ')+'. Это наблюдение по неполным отметкам, а не доказательство причины и не универсальное правило.</p></div>';
 }
 
 function viewResults(P,T){
@@ -975,11 +987,12 @@ function viewSettings(P,T){
     '<div class="row-line"><b>Мягкое напоминание</b>'+
     '<input type="time" data-act="notify-time" value="'+(T.notifyTime||'')+'">'+
     '<button type="button" class="quiet-btn" data-act="notify-on">'+(T.notifyOn?'Напоминание включено':'Включить, если браузер позволит')+'</button></div>'+
-    '<section class="row-line"><b>Резервная копия</b><p class="mute">Экспорт сохраняет профиль, основной маршрут, записи Реактора и архив циклов в один файл. Храни его в безопасном месте. При импорте текущие данные сначала сохраняются в резервную копию на этом устройстве.</p>'+
+    '<section class="row-line"><b>Резервная копия</b><p class="mute">Экспорт сохраняет профиль, маршрут, записи Реактора, архивы циклов, отдельные лаборатории, настройки и прогресс чтения в один файл. Храни его в безопасном месте. При импорте текущие данные сначала сохраняются в резервную копию на этом устройстве.</p>'+
     '<button type="button" class="quiet-btn" data-act="profile-export">Экспортировать все данные</button>'+
     '<button type="button" class="quiet-btn" data-act="profile-import-open">Импортировать файл</button>'+
     '<input type="file" accept="application/json,.json" data-act="profile-import" style="display:none">'+
     '<button type="button" class="quiet-btn" data-act="profile-restore">Восстановить последнюю резервную копию</button></section>'+
+    '<section class="row-line"><b>Удаление данных</b><p class="mute">Удалит профиль, ответы, дневник, архивы циклов, лаборатории, локальные настройки и резервные копии этой игры в текущем браузере. Отдельно сохраненный файл экспорта не затрагивается. Действие необратимо — при необходимости сначала экспортируй данные.</p><button type="button" class="quiet-btn" data-act="profile-delete">Удалить все данные игры на этом устройстве</button></section>'+
     '<button type="button" class="quiet-btn" data-act="monthg">К итогам</button>'+
     '<button type="button" class="quiet-btn" data-act="back">К календарю</button></div>';
 }
@@ -1033,6 +1046,11 @@ function bind(){
       T.view=({map:'month',path:'monthg',results:'monthg',lab:'practs',practs:'practs',labs:'labs',diary:'diary',directions:'directions',mirror:'mirror',hero:'hero',day:'day'})[sp]||'day';
       if(sp==='day'&&!T.openDay)T.openDay=todayNum(T);
       save(P); render(); try{window.scrollTo(0,0)}catch(e){} return;
+    }
+    if(act==='profile-delete'){
+      if(!confirm('Удалить все данные игры на этом устройстве? Это действие нельзя отменить. Если данные нужны, сначала экспортируй резервную копию.'))return;
+      if(!window.GPro||!GPro.deleteAll||!GPro.deleteAll()){alert('Не удалось полностью удалить локальные данные. Проверь настройки хранения браузера.');return}
+      location.href='index.html?reset=1';return;
     }
     if(act==='profile-export'){if(window.GPro)GPro.exportFile();else alert('Экспорт сейчас недоступен.');return}
     if(act==='profile-import-open'){var file=host.querySelector('[data-act="profile-import"]');if(file)file.click();return}
@@ -1180,7 +1198,10 @@ function bind(){
       var M=T.mirror||{};
       if(M.phase!=='report'||!Array.isArray(M.endWheel)||M.endWheel.length!==8||M.endWheel.some(function(v){return typeof v!=='number'||!isFinite(v)})||!Array.isArray(M.endResearch)||M.endResearch.length!==24||M.endResearch.some(function(v){return v!=='na'&&(typeof v!=='number'||!isFinite(v))})){alert('Проверь повторное исследование: заполни все оценки колеса и ответы. Для исследовательского вопроса можно выбрать «не знаю».');return}
       P.retest={wheel:M.endWheel.slice(),beh:null,fromMirror:true,d:new Date().toLocaleDateString('ru'),mirror:{initialResearch:(M.initialResearch||mirrorInitialResearch(P)||[]).slice(),endResearch:M.endResearch.slice(),initialWheel:(M.initialWheel||P.wheel||[]).slice(),completedAt:M.completedAt||Date.now()}};
-      save(P);location.href='slot.html?id=compare';return;
+      save(P);
+      var handoff=continueMirror(P,T);
+      if(!handoff.ok){T.space='results';T.view='finale';save(P);render();return}
+      location.href=handoff.url;return;
     }
     if(act==='mirror-start'||act==='mirror-restart'){
       var hist=(T.mirror&&T.mirror.history)||[];
@@ -1355,5 +1376,5 @@ if(!root){
 }
 mount(root);
 var P0=ensure(); if(P0.tracker&&P0.tracker.notifyOn)scheduleNote(P0.tracker);
-window.GTrack28={mount:mount,render:render,ensure:ensure};
+window.GTrack28={mount:mount,render:render,ensure:ensure,mirrorActivityStats:mirrorActivityStats,viewMirror:viewMirror,continueMirror:continueMirror};
 })();
