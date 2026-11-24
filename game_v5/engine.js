@@ -14,7 +14,7 @@ function save(P){
  try{autoBackup()}catch(e){}
 }
 function objectLike(v){return !!v&&typeof v==='object'&&!Array.isArray(v)}
-var EXTRA_KEYS=['alch_samost','alch_v5_hold','alch_v5_belief_lab_v1','alch_v5_belief_lab_backup_v1','alch_v5_sound','alch_v5_theme','alch_v5_book_seen','alch_v5_birth_preview_v1'];
+var EXTRA_KEYS=['alch_samost','alch_v5_hold','alch_v5_belief_lab_v1','alch_v5_belief_lab_backup_v1','alch_v5_sound','alch_v5_theme','alch_v5_book_seen','alch_v5_birth_preview_v1','alch_v5_cutscene_iam'];
 var EXTRA_PREFIXES=['alch_v5_scroll_'];
 function isExtraKey(k){return EXTRA_KEYS.indexOf(k)>=0||EXTRA_PREFIXES.some(function(prefix){return k.indexOf(prefix)===0})}
 function collectExtraLocal(){
@@ -85,6 +85,21 @@ function autoBackup(){
 }
 window.GPro={
  load:load,save:save,
+ deleteAll:function(){
+  try{
+   function clearStore(store){
+    var keys=[];
+    for(var i=0;i<store.length;i++){
+     var k=store.key(i);
+     if(k&&(k.indexOf('alch_v5_')===0||k==='alch_samost'||k==='heroRef'))keys.push(k);
+    }
+    keys.forEach(function(k){store.removeItem(k)});
+   }
+   clearStore(localStorage);
+   try{clearStore(sessionStorage)}catch(e){}
+   return true;
+  }catch(e){return false}
+ },
  exportFile:function(){var b=new Blob([JSON.stringify(snapshotAll(),null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='put-alhimika-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},1000)},
  importFile:function(f,cb){
   if(!f||f.size>20*1024*1024){cb&&cb(false);return}
