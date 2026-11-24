@@ -122,17 +122,20 @@ reactorDom.window.close();
 // Existing practice gates recognize only an actual leading family, not a single isolated selection.
 const practiceDom=new JSDOM('<!doctype html><html><head></head><body></body></html>',{url:'https://game.test/practice.html',runScripts:'dangerously'});
 practiceDom.window.eval(fs.readFileSync(path.join(root,'practice-engine.js'),'utf8'));
-const practiceProfile={backgroundProfile:{backgroundState:{version:2,groups:{resource:{leaders:['S2']},protective:{leaders:['S5']}},families:[{id:'S2',group:'resource'},{id:'S5',group:'protective'}]}}};
+const practiceProfile={backgroundProfile:{backgroundState:{version:2,groups:{resource:{leaders:['S2']},protective:{leaders:['S5']}},families:[{id:'S2',group:'resource'},{id:'S5',group:'protective'}],followup:{protectiveContext:'Часто ощущение возникает раньше, чем я проверю факты и доступные варианты.'}}}};
 assert.equal(practiceDom.window.GPract.byId('create').need(practiceProfile),true);
 assert.equal(practiceDom.window.GPract.byId('risk').need(practiceProfile),true);
 assert.equal(practiceDom.window.GPract.byId('mine').need(practiceProfile),false);
+const externalContext=JSON.parse(JSON.stringify(practiceProfile));externalContext.backgroundProfile.backgroundState.followup.protectiveContext='Чаще есть конкретные факты или ограничения, которые это объясняют.';
+assert.equal(practiceDom.window.GPract.byId('risk').need(externalContext),false);
+assert.equal(practiceDom.window.GPract.byId('create').need(externalContext),true);
 practiceDom.window.close();
 
 // Strategy consumes resource and protective leaders separately and proposes only optional practices.
 const strategyDom=new JSDOM('<!doctype html><html><head></head><body></body></html>',{url:'https://game.test/strategy.html',runScripts:'dangerously'});
 strategyDom.window.GIMD={FAM:{}};
 strategyDom.window.eval(fs.readFileSync(path.join(root,'strategy.js'),'utf8'));
-const strategyProfile={backgroundProfile:{backgroundState:{version:2,groups:{resource:{status:'leading',leaders:['S2']},protective:{status:'leading',leaders:['S5']}},families:[{id:'S2',title:'Интерес и движение',description:'Ресурс интереса.',group:'resource',sphereCount:8},{id:'S5',title:'Готовность заранее видеть сложности',description:'Повторяющееся ожидание возможных сложностей.',group:'protective',sphereCount:8}]}}};
+const strategyProfile={backgroundProfile:{backgroundState:{version:2,groups:{resource:{status:'leading',leaders:['S2']},protective:{status:'leading',leaders:['S5']}},families:[{id:'S2',title:'Интерес и движение',description:'Ресурс интереса.',group:'resource',sphereCount:8},{id:'S5',title:'Готовность заранее видеть сложности',description:'Повторяющееся ожидание возможных сложностей.',group:'protective',sphereCount:8}],followup:{protectiveContext:'Часто ощущение возникает раньше, чем я проверю факты и доступные варианты.'}}}};
 const recs=strategyDom.window.GStrategy.practRec(strategyProfile);
 assert.deepEqual(Array.from(recs.map(x=>x.id)),['create','risk']);
 const layer=strategyDom.window.GStrategy.testsLayer(strategyProfile,false);
