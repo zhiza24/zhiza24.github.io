@@ -987,7 +987,7 @@ function viewSettings(P,T){
     '<div class="row-line"><b>Мягкое напоминание</b>'+
     '<input type="time" data-act="notify-time" value="'+(T.notifyTime||'')+'">'+
     '<button type="button" class="quiet-btn" data-act="notify-on">'+(T.notifyOn?'Напоминание включено':'Включить, если браузер позволит')+'</button></div>'+
-    '<section class="row-line"><b>Резервная копия</b><p class="mute">Экспорт сохраняет профиль, основной маршрут, записи Реактора и архив циклов в один файл. Храни его в безопасном месте. При импорте текущие данные сначала сохраняются в резервную копию на этом устройстве.</p>'+
+    '<section class="row-line"><b>Резервная копия</b><p class="mute">Экспорт сохраняет профиль, маршрут, записи Реактора, архивы циклов, отдельные лаборатории, настройки и прогресс чтения в один файл. Храни его в безопасном месте. При импорте текущие данные сначала сохраняются в резервную копию на этом устройстве.</p>'+
     '<button type="button" class="quiet-btn" data-act="profile-export">Экспортировать все данные</button>'+
     '<button type="button" class="quiet-btn" data-act="profile-import-open">Импортировать файл</button>'+
     '<input type="file" accept="application/json,.json" data-act="profile-import" style="display:none">'+
