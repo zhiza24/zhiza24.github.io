@@ -28,7 +28,7 @@ test('main screens render without page errors or missing local responses',async(
   {url:'/reactor.html?u=T',text:'Мой день'},
   {url:'/diary.html?u=T',text:'Дневник'},
   {url:'/hero.html?u=T',text:'Герой'},
-  {url:'/elder.html?review=1&u=T',text:'Весь мир принадлежит тебе'},
+  {url:'/elder.html?review=1&u=T',text:'Вот твой мир'},
   {url:'/cutscene.html?review=1&u=T',text:null}
  ];
  for(const item of cases){
