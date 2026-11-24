@@ -69,11 +69,11 @@ The GitHub Actions suite now checks:
 - A full end-to-end walkthrough of all 57 steps and every branch has not been run.
 - The user's own iPhone/Safari test is deliberately deferred until the source and media are frozen.
 - Payment integration is deliberately deferred.
-- GitHub Pages build/deployment completed successfully for main commit `9ca83400d9f45cebe4b3c897d0b625ec4ad482c9`. The web viewer in this session could not independently fetch the live URL, so the final visual check should still be made in a normal browser.
+- GitHub Pages deployment succeeded for the earlier main commit `9ca83400d9f45cebe4b3c897d0b625ec4ad482c9`. Deployment of the final hardening commit `2cb51825ddf01bf52acde7aff964a6c71889b468` was not independently confirmed in this session: the web viewer could not fetch the live URL. Check the deployed page in a normal browser after the Pages build completes.
 - Google Fonts are external; if unavailable offline, local/system font fallbacks are used.
 - MP4 files are not precached offline; their poster images are cached and remain visible as fallbacks.
 - Author narration for the map-page scroll is not included until an actual author audio file is supplied.
 
 ## Release statement
 
-The code hardening was merged into main in commit `ac1ef374afde38e2d9f367ef2903a7155af04d13`; subsequent main commits added shared service-worker registration, preliminary-strategy safeguards, and desktop browser smoke coverage. GitHub Pages deployment succeeded on `9ca83400d9f45cebe4b3c897d0b625ec4ad482c9`. The automated suite reports 704 local references resolving to existing assets. The app is deployed and passes focused desktop Chromium checks; do not describe it as fully device-tested or fully offline-tested until the real iPhone/Safari check and full 57-step walkthrough are completed.
+The final release hardening was merged into `main` in commit `2cb51825ddf01bf52acde7aff964a6c71889b468` (PR #19). The Node/jsdom regression suite and Chromium browser suite both passed on the PR head and again after the merge. Browser checks cover all 57 route destinations, the main screens at 375px, Elder audio, both cinematic videos, and an offline reload of the inner-mechanism lab. The automated asset audit reports 704 local references resolving to existing files; the service-worker cache is v36 with 235 precache entries. The source is integrated into `main`; the deployment of this exact merge commit is not yet independently verified. Do not describe the app as physically device-tested or as having every interaction branch fully walked through until the iPhone/Safari test and full interaction walkthrough are completed.
