@@ -30,6 +30,21 @@ for(const file of files){
   for(const m of text.matchAll(/["']((?:img|media|snd)\/[^"']+\.(?:mp3|wav|ogg|mp4|webm|png|jpe?g|webp|svg))["']/gi))add(file,m[1],'js');
  }
 }
+const swText=fs.readFileSync(path.join(root,'sw.js'),'utf8');
+const precache=new Set([...swText.matchAll(/"\\.\\/([^"]+)"/g)].map(m=>m[1]));
+const mediaRefs=refs.filter(x=>/\\.(?:mp3|wav|ogg|m4a)$/i.test(x.ref));
+mediaRefs.forEach(x=>assert.ok(precache.has(path.relative(root,x.target).split(path.sep).join('/')),'used audio must be available offline: '+x.owner+' -> '+x.ref));
+for(const file of files.filter(x=>path.extname(x).toLowerCase()==='.html')){
+ const html=fs.readFileSync(file,'utf8');
+ for(const m of html.matchAll(/<video\\b([^>]*)>/gi)){
+  const attrs=m[1],poster=(attrs.match(/\\bposter=["']([^"']+)["']/i)||[])[1];
+  assert.ok(poster,'video must have a still-image fallback: '+path.relative(root,file));
+  const fallback=poster.split('?')[0].split('#')[0];
+  const target=path.resolve(path.dirname(file),fallback);
+  assert.ok(fs.existsSync(target),'video poster must exist: '+fallback);
+  assert.ok(precache.has(path.relative(root,target).split(path.sep).join('/')),'video poster must be cached offline: '+fallback);
+ }
+}
 const missing=refs.filter(x=>!fs.existsSync(x.target));
 if(missing.length){
  console.error('Missing local assets:',missing.map(x=>x.owner+' -> '+x.ref+' ['+x.kind+']').join('\n'));
