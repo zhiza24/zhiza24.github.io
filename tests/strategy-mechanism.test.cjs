@@ -6,7 +6,25 @@ const context={window};
 vm.createContext(context);
 vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../game_v5/strategy.js'),'utf8'),context);
 const S=window.GStrategy;
-assert.ok(S&&typeof S.testsLayer==='function'&&typeof S.practRec==='function');
+assert.ok(S&&typeof S.testsLayer==='function'&&typeof S.practRec==='function'&&typeof S.build==='function'&&typeof S.html==='function');
+const noEvidence=S.build({gender:'f'});
+assert.equal(noEvidence.weak,true,'missing lead evidence must remain weak');
+const noEvidenceHtml=S.html(noEvidence);
+assert.ok(noEvidenceHtml.includes('Возможные ориентиры'));
+assert.ok(noEvidenceHtml.includes('Пока недостаточно ответов'));
+assert.ok(!noEvidenceHtml.includes('Скрытое правило'),'default pattern must not be presented as a discovered hidden rule');
+
+window.GPAT={
+ avoid:{parts:[[],['Подстраиваюсь и жду одобрения'],['Меня любят, только если я это заслужу'],['Чувство принадлежности и безопасности'],[],['Моя ценность не зависит от одобрения']],pr:[]},
+ deval:{parts:[[],['Обесцениваю свой результат'],['Мой результат никогда не будет достаточно хорош'],['Избегание стыда'],[],['Можно учиться на ошибках']],pr:[]}
+};
+const evidence=S.build({gender:'f',lab:{lead:'avoid',queue:['deval'],weak:false}});
+const evidenceHtml=S.html(evidence);
+assert.equal(evidence.weak,false);
+assert.ok(evidenceHtml.includes('Предварительная гипотеза для проверки'));
+assert.ok(evidenceHtml.includes('Возможная защитная функция'));
+assert.ok(evidenceHtml.includes('не установленный факт'));
+assert.ok(!evidenceHtml.includes('Скрытое правило'),'even supported lead signals remain hypotheses');
 const result={
  total:60,answered:48,
  families:[
