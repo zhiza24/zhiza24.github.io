@@ -8,7 +8,7 @@ This document reconciles the independent static audit with the current source an
 - All 57 route entries resolve to existing HTML files. They use 20 distinct route pages.
 - The main task runner loads 44 local scripts; all are present in the service-worker precache.
 - All route HTML pages are present in the precache. The precache list contains 235 existing local assets.
-- The service-worker cache is version v34 (235 unique precache entries). The worker is registered from the shared theme entry on supported secure origins. `ver.txt` remains unchanged by design, per the updater contract in `README_AI.md`; `upd.js` continues to manage the `?u` URL parameter.
+- The service-worker cache is version v35 (235 unique precache entries). The worker is registered from the shared theme entry on supported secure origins. `ver.txt` remains unchanged by design, per the updater contract in `README_AI.md`; `upd.js` continues to manage the `?u` URL parameter.
 - BG16 is followed by the 10-section / 60-item inner-mechanism lab, then the Ideal Crooked World step.
 - Referenced local images, stylesheets, audio, video sources, and posters are checked by `tests/asset-integrity.test.cjs`. Used audio is precached. Chromium smoke confirms that the Elder voice plays after a user tap and both cinematic videos decode and play online. Video files are intentionally not precached because of their size; each video screen has a local cached poster fallback.
 - The Elder screen uses the existing `media/voice.mp3` from its explicit sound button. The former map-page reference to the nonexistent `snd/author.mp3` was removed. The first-visit author scroll now contains finished text instead of a placeholder; author narration is not included because no matching audio file is present.
@@ -57,12 +57,14 @@ The GitHub Actions suite now checks:
 - local asset resolution, offline audio, cached video posters, and inline-script syntax;
 - non-causal wording for signs and weekly progress;
 - inline validation and scoring behavior when a player answers «Не знаю»;
-- 375px mobile viewport layout smoke coverage.
+- 375px mobile viewport layout smoke coverage;
+- eraser text wrapping, non-negative score adjustments, and removal of identical test-result branches.
 
 ## Still not verified / deliberately deferred
 
 - A focused desktop Chromium smoke suite passes: the map, inner-mechanism lab, new-player Reactor strategy, diary, hero, Elder, and cutscene screens open without page errors or missing local responses; the Elder voice and both cinematic videos play; the service worker installs and the mechanism lab reloads while offline.
 - A 375px Chromium mobile-viewport smoke test checks the map, mechanism lab, Reactor, diary, hero, Elder, and cutscene for horizontal page overflow. This is not physical iPhone/Safari testing.
+- A Chromium route smoke test opens all 57 route destinations with the corresponding step marked current and checks for uncaught page errors, missing local responses, blank screens, and unexpected redirects. It verifies page rendering, not completion of every interaction or branch.
 - A full end-to-end walkthrough of all 57 steps and every branch has not been run.
 - The user's own iPhone/Safari test is deliberately deferred until the source and media are frozen.
 - Payment integration is deliberately deferred.
