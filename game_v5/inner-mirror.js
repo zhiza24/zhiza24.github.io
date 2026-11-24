@@ -61,6 +61,25 @@ function collect(P){
   if(background.coverage&&background.coverage.answered<12)out.unknown.push('Чтобы картина стала полнее, ответь на оставшиеся вопросы о своих состояниях.');
  }
  function source(id,name,detail){out.sources.push({id:id,name:name,detail:detail||''})}
+ if(P.innerMechanism&&P.innerMechanism.completedAt&&P.innerMechanism.result){
+  var imx=P.innerMechanism,ir=imx.result,md=window.GIM_DATA;
+  source('innerMechanism','Лаборатория внутреннего механизма','Десять коротких блоков: триггеры, интерпретации, реакции, адаптация, цикл, потребности, функция, цена, ресурсы и контрпримеры');
+  var secNames={triggers:'Триггеры и условия',meaning:'Автоматические интерпретации',emotion:'Эмоции и телесные сигналы',response:'Действия и адаптация',cycle:'Поддержание повторяющегося цикла',needs:'Потребности',function:'Защитная функция привычной реакции',cost:'Цена повторения',resources:'Действующие ресурсы',exceptions:'Исключения и границы гипотезы'};
+  (md&&md.sections||[]).forEach(function(sec){
+   var ev=sec.items.map(function(q){var v=imx.answers&&imx.answers[q[0]];if(v===undefined)return null;var label=imx.answerLabels&&imx.answerLabels[q[0]]||'';return q[1]+' — '+(label||'ответ сохранен')}).filter(Boolean);
+   if(ev.length)out.fragments.push({domain:'Внутренний механизм',title:secNames[sec.id]||sec.title,detail:ev.length+' ответов в блоке. Это самоотчетные сигналы; они не доказывают причинность.',status:'preliminary',source:'innerMechanism',evidence:ev});
+  });
+  if(ir.families&&ir.families.length){
+   var tops=ir.families.slice(0,4).map(function(x){return x.name+' ('+Math.round(x.score/x.max*100)+'%)'});
+   out.fragments.push({domain:'Предварительные повторяющиеся темы',title:'Частотные сигналы лаборатории',detail:tops.join('; ')+'. Ресурсные и защитные ответы хранятся отдельно.',status:'preliminary',source:'innerMechanism'});
+  }
+  var ep=imx.episodes||{};
+  if(Object.keys(ep).some(function(k){return String(ep[k]||'').trim().length>0})){
+   var ee=[];['event','cue','meaning','feeling','action','result','conclusion','external'].forEach(function(k){if(ep[k])ee.push(k+': '+ep[k])});
+   out.fragments.push({domain:'Нарративный эпизод',title:'Один восстановленный эпизод',detail:'Текст добавлен самим игроком; он не анализируется автоматически.',status:'user-authored',source:'innerMechanism',evidence:ee});
+  }
+  out.unknown.push('Лаборатория внутреннего механизма показывает самоотчетные связи. Чтобы подтвердить последовательность и понять, что из чего следует, сопоставь ответы с конкретными эпизодами и внешними обстоятельствами; автоматический причинный вывод не делается.');
+ }
  if(mag&&mag.v===2){source('mag','Маг','Повторяющийся эмоциональный итог в разных жизненных ситуациях');}
  if(fs&&fs.v){source('firstSet','Первые настройки','Детские и нынешние стратегии адаптации');}
  if(km&&km.v){source('km','Идеальный Кривой Мир','Текущие фильтры восприятия');}
@@ -332,6 +351,7 @@ function mount(box){
  function finish(){
   var all=data.links.concat(data.tensions),rec={v:3,version:3,algoVersion:3,type:'synthesis',sources:data.sources,fragments:data.fragments,links:data.links,tensions:data.tensions,unknown:data.unknown,stateModel:data.stateModel||null,feedback:feedback,at:Date.now(),legacy:existing&&existing.answers?{answers:existing.answers,at:existing.at||null}:null};
   var lines=['Карта внутренней архитектуры','Источники: '+data.sources.map(function(x){return x.name}).join(', ')];
+  var imFrag=data.fragments.filter(function(x){return x.source==='innerMechanism'});if(imFrag.length)lines.push('Лаборатория внутреннего механизма:\\n'+imFrag.map(function(x){return x.title+': '+x.detail+(x.evidence&&x.evidence.length?'\\n'+x.evidence.join('\\n'):'')}).join('\\n'));
   var magFragment=data.fragments.filter(function(x){return x.source==='mag'})[0];if(magFragment)lines.push('Маг: '+magFragment.title+' — '+magFragment.detail+(magFragment.evidence&&magFragment.evidence.length?'\\n'+magFragment.evidence.join('\\n'):''));
   if(data.links.length)lines.push('Межмодульные связи: '+data.links.map(function(x){return x.title+' — '+x.detail}).join('\n'));
   if(data.tensions.length)lines.push('Расхождения и контекст: '+data.tensions.map(function(x){return x.title+' — '+x.detail}).join('\n'));
