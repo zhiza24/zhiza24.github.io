@@ -9,12 +9,20 @@ const localStorage={
  key:i=>Object.keys(store)[i]||null,
  get length(){return Object.keys(store).length}
 };
+const sessionStore=Object.create(null);
+const sessionStorage={
+ getItem:k=>Object.prototype.hasOwnProperty.call(sessionStore,k)?sessionStore[k]:null,
+ setItem:(k,v)=>{sessionStore[k]=String(v)},
+ removeItem:k=>{delete sessionStore[k]},
+ key:i=>Object.keys(sessionStore)[i]||null,
+ get length(){return Object.keys(sessionStore).length}
+};
 class FakeFileReader{readAsText(file){this.result=file.content;this.onload()}}
 let clock=1764000000000;
 class FakeDate extends Date{constructor(...args){super(...(args.length?args:[clock]))}static now(){return clock}}
 store.alch_v5_profile=JSON.stringify({name:'До импорта'});
 const window={};
-const context={window,localStorage,FileReader:FakeFileReader,Date:FakeDate,Math,JSON,isFinite};
+const context={window,localStorage,sessionStorage,FileReader:FakeFileReader,Date:FakeDate,Math,JSON,isFinite};
 vm.createContext(context);
 vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../game_v5/engine.js'),'utf8'),context);
 context.window.GPro.save({name:'Автокопия день 1'});
@@ -78,4 +86,16 @@ const before=store.alch_v5_profile;
 const bad={format:'put-alhimika-backup',version:2,profile:{name:'bad'},local:{session_token:'must-not-write'}};
 assert.equal(importFile(bad),false,'unknown localStorage keys must be rejected');
 assert.equal(store.alch_v5_profile,before,'invalid import must not replace the profile');
-console.log('PASS: backup v2 restores profile, standalone modules, settings and dynamic reading progress; v1 remains compatible.');
+store.alch_v5_cutscene_iam='seen';
+store.alch_v5_scroll_chapter='17';
+store.alch_samost='standalone';
+store.unrelated_app_key='keep-me';
+sessionStore.alch_v5_read='1';
+sessionStore.heroRef='hero.html';
+sessionStore.unrelated_session='keep-session';
+assert.equal(context.window.GPro.deleteAll(),true,'delete-all should complete');
+assert.ok(!Object.keys(store).some(k=>k.indexOf('alch_v5_')===0||k==='alch_samost'),'all game-owned localStorage keys should be removed');
+assert.equal(store.unrelated_app_key,'keep-me','unrelated localStorage keys must remain untouched');
+assert.ok(!Object.keys(sessionStore).some(k=>k.indexOf('alch_v5_')===0||k==='heroRef'),'game-owned sessionStorage keys should be removed');
+assert.equal(sessionStore.unrelated_session,'keep-session','unrelated sessionStorage keys must remain untouched');
+console.log('PASS: backup v2 restores profile, standalone modules, settings and dynamic reading progress; v1 remains compatible and delete-all is scoped.');
