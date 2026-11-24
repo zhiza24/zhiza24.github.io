@@ -52,6 +52,8 @@ assert.equal(ids.length,60);
 assert.equal(new Set(ids).size,60,'all 60 mechanism item IDs must be unique');
 assert.deepEqual([...usedFamilies].sort(),Object.keys(D.families).sort(),'family dictionary must contain exactly the families used by the question bank');
 assert.ok(slot.includes('inner-mechanism.js'),'mechanism must be loaded by the main task runner');
+const themeSource=fs.readFileSync(path.join(root,'theme.js'),'utf8');
+assert.ok(themeSource.includes("navigator.serviceWorker.register('./sw.js'"),'shared entry must register the service worker');
 const mapPage=fs.readFileSync(path.join(root,'map.html'),'utf8');
 assert.ok(!mapPage.includes('Скоро здесь появится авторский текст'),'first-visit author scroll must not contain a placeholder');
 assert.ok(!mapPage.includes('snd/author.mp3'),'missing optional author audio must not be requested');
