@@ -218,6 +218,15 @@ function practRec(P){
  var bp=P.backgroundProfile,out=[],seen={};
  function add(id,why){if(seen[id]||out.length>=2)return;seen[id]=1;out.push({id:id,why:why})}
  var L=bp&&bp.levels||{};
+ /* Лаборатория внутреннего механизма: используем только как отдельные самоотчетные
+    сигналы. Ресурсные темы могут подсказать опору; защитные не запускают практику
+    автоматически без проверки конкретного контекста. */
+ var im=P.innerMechanism&&P.innerMechanism.result,imRows=im&&im.total===60&&Array.isArray(im.families)?im.families:[];
+ var imResource=imRows.filter(function(x){return x.kind==='resource'&&x.answered>=3&&x.score>0}).sort(function(a,b){return b.score/b.max-a.score/a.max});
+ if(imResource.length){
+  var ir=imResource[0],mapPractice={autonomy:'myzone',connection:'contact',curiosity:'create',support:'keepgood',boundaries:'mydecision'},practice=mapPractice[ir.id];
+  if(practice)add(practice,'В лаборатории внутреннего механизма ресурс «'+ir.name+'» отмечен в '+ir.answered+' ответах. Можно использовать его как опору и проверить, подходит ли эта практика.');
+ }
  if(bp&&bp.positive&&!(bp.backgroundState&&bp.backgroundState.version===2)){
   if(bp.unstableJoy)add('keepgood','Радость есть, но после хорошего быстро возвращается нехватка. Закрепим хорошее.');
   if(L.S2>=2)add('create','Интерес и движение — твоя сильная сторона. Стоит давать им время.');
@@ -258,6 +267,13 @@ function practRec(P){
  return out}
 function testsLayer(P,f){
  var res=[],obst=[],actions=[],bp=P.backgroundProfile,F=window.GIMD&&GIMD.FAM;
+ /* Результат лаборатории внутреннего механизма остается самостоятельным слоем:
+    минимум три ответа по теме, раздельно ресурс и защита, без перевода в 19 состояний. */
+ var im=P.innerMechanism&&P.innerMechanism.result,imRows=im&&im.total===60&&Array.isArray(im.families)?im.families:[];
+ var imResources=imRows.filter(function(x){return x.kind==='resource'&&x.answered>=3&&x.score>0}).sort(function(a,b){return b.score/b.max-a.score/a.max});
+ var imProtective=imRows.filter(function(x){return x.kind==='protective'&&x.answered>=3&&x.score>0}).sort(function(a,b){return b.score/b.max-a.score/a.max});
+ if(imResources.length){var ir=imResources[0];res.push({t:'Ресурс внутреннего механизма · '+ir.name,x:'Тема отмечена в '+ir.answered+' ответах лаборатории. Это предварительный сигнал самоотчета, который можно использовать как опору; он не является оценкой или типом личности.'})}
+ if(imProtective.length){var ip=imProtective[0],note='Тема «'+ip.name+'» отмечена в '+ip.answered+' ответах лаборатории. Это предварительный сигнал самоотчета, а не объяснение причин. Сверь его с конкретными эпизодами и тем, что происходило вокруг.';if(im.episodes&&String(im.episodes.external||'').trim())note+=' В описанном эпизоде отмечены внешние обстоятельства: учитывай их отдельно и не своди ситуацию только к внутренней реакции.';obst.push({t:'Что стоит проверить · '+ip.name,x:note})}
  if(bp&&bp.status!=='insufficient'&&F){
   (bp.resources||[]).slice(0,2).forEach(function(s){if(F[s])res.push({t:F[s].t,x:gx(F[s].x,f)})});
   if(!bp.positive)(bp.vulnerabilities||[]).slice(0,2).forEach(function(s){if(F[s])obst.push({t:F[s].t,x:gx(F[s].g,f)})});
@@ -289,7 +305,7 @@ function testsLayer(P,f){
  function scl(fld,good){var x=P[fld];if(!x||!x.scales||x.status==='insufficient')return;x.scales.forEach(function(q){if(q.level==null)return;if(good(q.level))res.push({t:q.name,x:'Здесь у тебя устойчивая опора.'})})}
  scl('ctTest',function(l){return l===3});
  ['selfWorth','respTest'].forEach(function(fl){var x=P[fl];if(!x||!x.scales||x.status==='insufficient')return;var lead=x.leadingScales||[];x.scales.forEach(function(q){if(lead.indexOf(q.id)>=0&&q.level>=2)obst.push({t:q.name,x:'Здесь чаще всего тормозит. Практики цикла помогут мягко это сдвинуть.'})})});
- return {res:res.slice(0,4),obst:obst.slice(0,4),actions:actions.slice(0,1)}}
+ return {res:res.slice(0,5),obst:obst.slice(0,5),actions:actions.slice(0,1)}}
 
 /* Адаптация шага по отметкам прошлых дней */
 function adapt(T,n){var S=T.strategy;if(!S)return null;var base=S.days[n-1];if(!base)return null;var o={m:base.m,n:base.n,a:base.a,o:base.o,dir:base.dir,note:''};
