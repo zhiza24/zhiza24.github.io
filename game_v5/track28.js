@@ -1355,5 +1355,5 @@ if(!root){
 }
 mount(root);
 var P0=ensure(); if(P0.tracker&&P0.tracker.notifyOn)scheduleNote(P0.tracker);
-window.GTrack28={mount:mount,render:render,ensure:ensure};
+window.GTrack28={mount:mount,render:render,ensure:ensure,mirrorActivityStats:mirrorActivityStats,viewMirror:viewMirror};
 })();
