@@ -22,6 +22,7 @@ function freshDraft(){
  return {version:1,seed:seed,order:order,optionOrder:optionOrder,answers:{},followup:{},startedAt:Date.now(),updatedAt:Date.now()};
 }
 function mount(box){
+ css();
  var G=root.GTests||{},preview=!!G.preview,retake=!!G.retakeMode;
  var P=G.load?G.load():(root.GProfile?GProfile.load():{}),bp=P.backgroundProfile||{},saved=bp.backgroundState&&bp.backgroundState.version===2?bp.backgroundState:null;
  var draft=bp.backgroundStateDraft16&&bp.backgroundStateDraft16.version===1?bp.backgroundStateDraft16:null,step=0,stage='intro';
