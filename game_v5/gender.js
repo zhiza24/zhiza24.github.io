@@ -14,14 +14,26 @@ window.GHeroSrc=function(kind){
 window.GHeroApply=function(){
   document.querySelectorAll('[data-hero-img]').forEach(function(el){
     var url=window.GHeroSrc(el.getAttribute('data-hero-img')==='full'?'full':'portrait');
-    /* Не показываем HTML-портрет по умолчанию: сначала определяем пол героя,
-       затем показываем только полностью загруженный выбранный образ. */
     el.style.visibility='hidden';
-    el.onload=function(){
-      if(el.getAttribute('src')===url)el.style.visibility='visible';
+    var show=function(){
+      if(el.getAttribute('src')===url&&el.naturalWidth>0)el.style.visibility='visible';
     };
-    el.onerror=function(){el.style.visibility='hidden'};
-    if(el.getAttribute('src')!==url)el.src=url;
-    else if(el.complete&&el.naturalWidth>0)el.style.visibility='visible';
+    el.onload=show;
+    el.onerror=function(){
+      // Fallback: if female failed, try male; otherwise stay hidden but log.
+      if(url.indexOf('hero_f_')!==-1){
+        var fallback=url.replace('hero_f_','hero_m_');
+        el.src=fallback;
+      }else{
+        el.style.visibility='hidden';
+      }
+    };
+    if(el.getAttribute('src')!==url){
+      el.src=url;
+    }else if(el.complete){
+      show();
+    }
+    // Extra safety for cached images that may not fire onload reliably.
+    setTimeout(show,50);
   });
 };
