@@ -71,7 +71,7 @@ function finalize(P){var e=P.ego&&P.ego.v===2?P.ego:null,b0=P.archB||null,b=b0?s
  if(V.V03==='accepted'&&a==='supported')a='tentative';
  out.a=a;out.a1=a1;out.a2=a2;out.aIndex=aIndex;out.recalled=!!(V['V01_'+aIndex]&&V['V01_'+aIndex]!=='none'&&V['V01_'+aIndex]!=='skip');out.confirmation={primary:v02(V['V02_'+aIndex]),secondary:v02(V.V02_1)};out.counterEvidence=V.V03==='accepted';
  var bs=b?JSON.parse(JSON.stringify(b.scores)):{},bc=b?(b.cand||[]).slice():[],v6=V.V06;
- if(bc[0]&&bc[1]){if(v6==='b1')bs[bc[0]]+=2;if(v6==='b2')bs[bc[1]]+=2;if(v6==='both'){bs[bc[0]]++;bs[bc[1]]++}if(v6==='neither'){bs[bc[0]]-=2;bs[bc[1]]-=2}}
+ if(bc[0]&&bc[1]){if(v6==='b1')bs[bc[0]]+=2;if(v6==='b2')bs[bc[1]]+=2;if(v6==='both'){bs[bc[0]]++;bs[bc[1]]++}if(v6==='neither'){bs[bc[0]]=Math.max(0,bs[bc[0]]-2);bs[bc[1]]=Math.max(0,bs[bc[1]]-2)}}
  var askedB=bc[0],bo=bc.slice().sort(function(x,y){return bs[y]-bs[x]||bc.indexOf(x)-bc.indexOf(y)}),b1=bo[0],b2=bo[1],cnt=b?b.hits||b.count||b.scores:{};
  var bst='unclear';if(b1){var t=bs[b1],disconfirmed=V.V05==='disconfirm'&&b1===askedB;
   if(!disconfirmed&&bo[1]&&Math.abs(t-bs[b2])<=1&&t>=3&&bs[b2]>=3&&v6==='both')bst='mixed';
