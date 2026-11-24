@@ -141,8 +141,7 @@ window.GTheme={get:get,set:set,button:button,themed:on};
   if(!document.querySelector('meta[name="apple-mobile-web-app-capable"]')){
    var cap=document.createElement('meta');cap.name='apple-mobile-web-app-capable';cap.content='yes';document.head.appendChild(cap);
   }
-  if('serviceWorker' in navigator&&location.protocol==='https:'){
-   window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});
-  }
+  /* Service Worker is registered once from the top of this file with updateViaCache:none.
+     A second registration here is removed to avoid conflicts. */
  }catch(e){}
 })();

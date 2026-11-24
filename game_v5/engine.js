@@ -9,7 +9,15 @@ function load(){var P={};try{P=JSON.parse(localStorage.getItem(K))||{}}catch(e){
  return P}
 function save(P){
  if(window.GProfile)P=GProfile.migrate(P);
- localStorage.setItem(K,JSON.stringify(P));
+ try{
+  localStorage.setItem(K,JSON.stringify(P));
+ }catch(e){
+  if(e&&(e.name==='QuotaExceededError'||e.code===22||e.code===1014)){
+   try{if(window.alert)alert('Не удалось сохранить данные: память браузера переполнена. Экспортируйте профиль в настройках и освободите место.');}catch(ignore){}
+   if(window.console&&console.warn)console.warn('QuotaExceededError on profile save',e);
+  }
+  throw e;
+ }
  /* The primary profile save must not depend on optional backup capacity. */
  try{autoBackup()}catch(e){}
 }
