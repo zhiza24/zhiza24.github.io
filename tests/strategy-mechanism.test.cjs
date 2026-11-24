@@ -19,6 +19,9 @@ window.GPAT={
  avoid:{parts:[[],['Подстраиваюсь и жду одобрения'],['Меня любят, только если я это заслужу'],['Чувство принадлежности и безопасности'],[],['Моя ценность не зависит от одобрения']],pr:[]},
  deval:{parts:[[],['Обесцениваю свой результат'],['Мой результат никогда не будет достаточно хорош'],['Избегание стыда'],[],['Можно учиться на ошибках']],pr:[]}
 };
+const legacyWeak=S.build({gender:'f',lab:{lead:'avoid',queue:['deval']}});
+assert.equal(legacyWeak.weak,true,'missing evidence-quality flag must be treated conservatively');
+assert.ok(!S.html(legacyWeak).includes('Скрытое правило'));
 const evidence=S.build({gender:'f',lab:{lead:'avoid',queue:['deval'],weak:false}});
 const evidenceHtml=S.html(evidence);
 assert.equal(evidence.weak,false);
