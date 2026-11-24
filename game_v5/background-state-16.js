@@ -23,9 +23,9 @@ function freshDraft(){
 function mount(box){
  var G=root.GTests||{},preview=!!G.preview,retake=!!G.retakeMode;
  var P=G.load?G.load():(root.GProfile?GProfile.load():{}),bp=P.backgroundProfile||{},saved=bp.backgroundState&&bp.backgroundState.version===2?bp.backgroundState:null;
- var draft=bp.backgroundStateDraft16||null,step=0,stage='intro';
+ var draft=bp.backgroundStateDraft16&&bp.backgroundStateDraft16.version===1?bp.backgroundStateDraft16:null,step=0,stage='intro';
  if(preview){try{draft=JSON.parse(sessionStorage.getItem('alch_v5_bg16_preview')||'null')||draft}catch(e){}}
- if(!draft||draft.version!==1||!Array.isArray(draft.order)||draft.order.length!==D.Q.length)draft=freshDraft();
+ if(draft&&(!Array.isArray(draft.order)||draft.order.length!==D.Q.length))draft=null;
  function saveDraft(){
   draft.updatedAt=Date.now();
   if(preview){try{sessionStorage.setItem('alch_v5_bg16_preview',JSON.stringify(draft))}catch(e){}return true}
@@ -48,9 +48,9 @@ function mount(box){
  }
  function shell(html){box.innerHTML='<div class="bg16">'+html+'</div>';bind()}
  function qById(id){return D.Q.filter(function(q){return q[0]===id})[0]}
- function firstMissing(){for(var i=0;i<draft.order.length;i++){var a=draft.answers[draft.order[i]];if(!a||a.primary==null&&!a.skipped)return i}return draft.order.length}
+ function firstMissing(){if(!draft)return 0;for(var i=0;i<draft.order.length;i++){var a=draft.answers[draft.order[i]];if(!a||a.primary==null&&!a.skipped)return i}return draft.order.length}
  function intro(){
-  var count=Object.keys(draft.answers||{}).filter(function(k){var a=draft.answers[k];return a&&(a.primary!=null||a.skipped)}).length;
+  var count=Object.keys(draft&&draft.answers||{}).filter(function(k){var a=draft.answers[k];return a&&(a.primary!=null||a.skipped)}).length;
   shell('<span class="tag">Точка 0 · Начало исследования</span><div class="bg16-kicker">Ведущее фоновое состояние</div><h1>Что обычно остается внутри?</h1>'+
    '<p>16 жизненных сцен охватывают восемь сфер: здоровье, финансы, карьеру, отношения, семью, друзей, рост и отдых. Мы посмотрим, какие внутренние реакции повторяются в разных обстоятельствах.</p>'+
    '<p>В каждой сцене выбери то, что чаще появляется первым. Если бывает и другой вариант, его можно отметить дополнительно. Здесь нет правильных ответов: важнее обычная реакция, а не образ себя, каким хотелось бы быть.</p>'+
@@ -143,7 +143,7 @@ function mount(box){
   shell(html);
  }
  function bind(){
-  var start=box.querySelector('#bg16Start');if(start)start.onclick=function(){if(!draft||firstMissing()===draft.order.length&&Object.keys(draft.answers||{}).length===0)draft=freshDraft();step=firstMissing();if(step>=16)followup();else question()};
+  var start=box.querySelector('#bg16Start');if(start)start.onclick=function(){if(!draft)draft=freshDraft();step=firstMissing();if(step>=16)followup();else question()};
   var show=box.querySelector('#bg16Show');if(show)show.onclick=function(){result()};
   box.querySelectorAll('[data-bg16-primary]').forEach(function(b){b.onclick=function(){
    var qid=draft.order[step],a=draft.answers[qid]||{};a.primary=b.dataset.bg16Primary;a.secondary=null;delete a.skipped;draft.answers[qid]=a;saveDraft();question();
