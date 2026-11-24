@@ -48,11 +48,11 @@ for(const file of files.filter(x=>path.extname(x).toLowerCase()==='.html')){
 }
 for(const file of files.filter(x=>path.extname(x).toLowerCase()==='.html')){
  const html=fs.readFileSync(file,'utf8');
- for(const m of html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/gi)){
+ for(const m of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)){
   const attrs=m[1],code=m[2].trim();
-  if(!code||/\\bsrc=/i.test(attrs))continue;
-  const type=(attrs.match(/\\btype=["']([^"']+)["']/i)||[])[1]||'text/javascript';
-  if(!/^(text|application)\\/(javascript|ecmascript)$/i.test(type))continue;
+  if(!code||/\bsrc=/i.test(attrs))continue;
+  const type=(attrs.match(/\btype=["']([^"']+)["']/i)||[])[1]||'text/javascript';
+  if(!/^(text|application)\/(javascript|ecmascript)$/i.test(type))continue;
   try{new Function(code)}catch(e){throw new Error('Inline script syntax error in '+path.relative(repoRoot,file)+': '+e.message)}
  }
 }
