@@ -31,12 +31,19 @@ vm.runInContext(fs.readFileSync(path.join(root,'inner-mechanism-data.js'),'utf8'
 const D=ctx.window.GIM_DATA;
 assert.ok(D&&Array.isArray(D.sections));
 assert.equal(D.sections.length,10,'inner mechanism must have ten sections');
-const ids=[];
+const ids=[],familyCounts={},familyKinds={};
 D.sections.forEach((section,i)=>{
  assert.equal(section.items.length,6,'section '+(i+1)+' must have six items');
- section.items.forEach(item=>ids.push(item[0]));
+ section.items.forEach(item=>{
+  ids.push(item[0]);
+  familyCounts[item[2]]=(familyCounts[item[2]]||0)+1;
+  if(familyKinds[item[2]])assert.equal(familyKinds[item[2]],item[3],'family must remain in one signal group');
+  familyKinds[item[2]]=item[3];
+ });
 });
 assert.equal(ids.length,60);
 assert.equal(new Set(ids).size,60,'all 60 mechanism item IDs must be unique');
+assert.equal(Object.keys(familyCounts).length,12,'the mechanism bank should cover twelve families');
+Object.keys(familyCounts).forEach(id=>assert.equal(familyCounts[id],5,'each family should be represented by five items: '+id));
 assert.ok(slot.includes('inner-mechanism.js'),'mechanism must be loaded by the main task runner');
 console.log('PASS: 57 route targets, route order, 10x6 mechanism bank, slot dependencies and offline precache.');
