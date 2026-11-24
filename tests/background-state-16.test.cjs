@@ -1,4 +1,5 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const {JSDOM}=require('jsdom');
 const root=path.join(__dirname,'../game_v5');
 function unit(files,seed={}){
  let raw=JSON.stringify(seed),store={alch_v5_profile:raw};
@@ -98,4 +99,28 @@ assert.ok(slot.includes('background-state-16-data.js')&&slot.includes("id==='bg1
 assert.ok(tests.includes("im:{u:'slot.html?id=im',f:'im',mod:'im'"));
 assert.ok(tests.includes("if(k==='im'&&window.GInner){GInner.mount(box);return}"));
 assert.ok(mirror.includes('background.version===2'));
+// Exercise the actual 16-scene screen in a browser-like DOM.
+const dom=new JSDOM('<!doctype html><html><head></head><body><main id="box"></main></body></html>',{url:'https://game.test/slot.html?id=bg16',runScripts:'dangerously'});
+const w=dom.window,box=w.document.getElementById('box');
+w.GTests={preview:true,retakeMode:false,load:()=>({})};
+w.GRoute={advance:()=>'slot.html?id=km'};
+w.GG=(male)=>male;
+['background-state-16-data.js','background-state-16-engine.js','background-state-16.js'].forEach(f=>w.eval(fs.readFileSync(path.join(root,f),'utf8')));
+w.GBackgroundState16Test.mount(box);
+box.querySelector('#bg16Start').click();
+for(let i=0;i<16;i++){
+ const primary=box.querySelector('[data-bg16-primary]');
+ assert.ok(primary,'scene '+(i+1)+' should offer a primary answer');
+ primary.click();
+ const next=box.querySelector('#bg16Next');
+ assert.ok(next&&!next.disabled,'scene '+(i+1)+' should allow continuing after a primary answer');
+ next.click();
+}
+const finish=box.querySelector('#bg16Finish');
+assert.ok(finish,'the follow-up screen should offer result calculation');
+finish.click();
+assert.equal(w.GBackgroundState16PreviewResult.coverage.answered,16);
+assert.match(box.textContent,/Предварительная карта/);
+assert.match(box.textContent,/16 из 16 сцен отвечено/);
+dom.window.close();
 console.log('PASS: 16 scenes, eight spheres, balanced family/pair distribution, separate resource/protective leaders, secondary weighting, context answers, three-sphere threshold and profile preservation.');
