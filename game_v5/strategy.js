@@ -179,7 +179,7 @@ function build(P){
   focus=focus.map(function(x,i){return {k:x.k,t:stars[i].text,g:x.g,src:x.t,wish:stars[i].text}});
  }
  /* препятствия */
- var PT=window.GPAT||{},hasLeadEvidence=!!(P.lab&&P.lab.lead&&!L.weak),p1=hasLeadEvidence?PT[k1]:null,p2=hasLeadEvidence?PT[k2]:null,obst=[];
+ var PT=window.GPAT||{},hasLeadEvidence=!!(P.lab&&P.lab.lead&&L.weak===false),p1=hasLeadEvidence?PT[k1]:null,p2=hasLeadEvidence?PT[k2]:null,obst=[];
  if(p1){
   obst.push({t:'Привычная реакция',x:p1.parts[1][1]+'.'});
   if(P.lab&&P.lab.ownCorrection){
@@ -219,7 +219,7 @@ function build(P){
   else if(wk===2){var a2=acts[ai++%acts.length];x=(i===3)?mk(pr2[(i+2)%pr2.length]||a2.m,fa(k2).min,fa(k2).alt,fa(k2).obs,1):mk(a2.m,a2.n,fa(k1).alt,'Заметь, как на это реагирует жизнь вокруг: люди, события, возможности.',i%2?2:0)}
   else{x=(i===6)?mk('Сравни, что было в начале цикла и что сейчас: что ты сделал(а), что изменилось, что понял(а) о себе.','Запиши одно отличие.','Перечитай свои отметки за 28 дней.','Заметь, что из нового стало естественным.',2):(i%2?mk(pr1[(i+5)%pr1.length]||acts[3].m,fa(k1).min,fa(k1).alt,'Заметь, что уже получается без усилия.',0):(function(){var a=acts[ai++%acts.length];return mk(a.m,a.n,fa(k2).alt,'Заметь, что из этого ты хочешь оставить.',2)})())}
   x.w=wk;days.push(x)}
- return {v:1,at:Date.now(),wish:wish,cat:ck,need:need,focus:focus,stars:stars,obst:obst,res:res,result:C.result,signs:C.signs.slice(),first:gx(C.first,f),weeks:WEEKS,days:days,lead:k1,second:k2,low:low,weak:!!L.weak,practRec:precs,modelActions:modelActions,positive:!!(P.backgroundProfile&&P.backgroundProfile.positive)}}
+ return {v:1,at:Date.now(),wish:wish,cat:ck,need:need,focus:focus,stars:stars,obst:obst,res:res,result:C.result,signs:C.signs.slice(),first:gx(C.first,f),weeks:WEEKS,days:days,lead:k1,second:k2,low:low,weak:L.weak!==false,practRec:precs,modelActions:modelActions,positive:!!(P.backgroundProfile&&P.backgroundProfile.positive)}}
 
 /* Персонализация по результатам всех исследований: опоры, трудности и практики (не больше двух).
    Положительный фон: только опорные практики, без исправления ради исправления. */
