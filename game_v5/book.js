@@ -38,16 +38,16 @@ var MAP={
 /* названия глав (как в BOOK), чтобы подпись в панели была без загрузки текста */
 var TT=['Приветствие','Возвращение к себе','Карта исследования','Уровень I. Создание внутреннего узора','Уровень II. Фокус внимания','Уровень III. Новая позиция','Уровень IV. Пересборка внутреннего узора','Инструмент самодиагностики','Новая точка сборки','Практика «Я есмь»','Новая настройка системы','Карта пройденного пути'];
 /* разделы уровней — как SUBS в приложении */
-var SUBS={3:[[5,'Принцип 4. Формирование узора'],[8,'Самость и адаптация'],[17,'Принцип 5. Первая модель — эталон'],[30,'Принцип 6. Адаптация — автоматизм'],[36,'Смещение центра внимания']],
-4:[[6,'Принцип 8. Внимание формирует реальность'],[19,'Принцип 9. Состояние задает направление'],[53,'Мозг не противник'],[76,'Настоящий момент — точка выбора']],
-5:[[6,'Принцип 10. Позиция и реальность'],[16,'Принцип 11. Момент — точка выбора'],[25,'Центр — Я'],[61,'Карта путешествия']],
-6:[[4,'Перестаньте «чинить» себя'],[21,'Принцип 7. Самоценность прежде оценки']]};
+var SUBS={3:[[5,'Принцип 1. Формирование узора'],[8,'Самость и адаптация'],[17,'Принцип 2. Первая модель — эталон'],[30,'Принцип 3. Адаптация — автоматизм'],[36,'Смещение центра внимания']],
+4:[[6,'Принцип 1. Внимание формирует реальность'],[19,'Принцип 2. Состояние задает направление'],[53,'Мозг не противник'],[76,'Настоящий момент — точка выбора']],
+5:[[6,'Принцип 1. Позиция и реальность'],[16,'Принцип 2. Момент — точка выбора'],[25,'Центр — Я'],[61,'Карта путешествия']],
+6:[[4,'Перестаньте «чинить» себя'],[22,'Принцип 1. Самоценность прежде оценки']]};
 var LVN={0:['ПРАКТИКУМ','ВМЕСТО ПРЕДИСЛОВИЯ'],1:['ПРАКТИКУМ','ВВЕДЕНИЕ'],2:['ПРАКТИКУМ','ВВЕДЕНИЕ'],3:['УРОВЕНЬ 1','СОЗДАНИЕ УЗОРА'],4:['УРОВЕНЬ 2','ФОКУС ВНИМАНИЯ'],5:['УРОВЕНЬ 3','НОВАЯ ПОЗИЦИЯ'],6:['УРОВЕНЬ 4','ПЕРЕСБОРКА УЗОРА'],7:['ИССЛЕДОВАНИЕ','ВЕДУЩИЙ УЗОР'],8:['ПОСЛЕ ТЕСТА','НОВАЯ ТОЧКА СБОРКИ'],9:['ЕЖЕДНЕВНО','ПРАКТИКИ'],10:['ПОСЛЕ ТЕСТА','НОВАЯ ТОЧКА СБОРКИ'],11:['ЗАВЕРШЕНИЕ','КАРТА ПРОЙДЕННОГО ПУТИ']};
 var CHIMG=['cover','stage1','stage2','stage1','stage3','stage5','stage4','stage2','stage4','stage5','stage6','stage6'];
 var SK='alch_v5_book_seen';
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function SL(t){if(/^Вступление/.test(t))return'Вступление';var m=/^Принцип \d+\.\s*(.+)$/.exec(t);if(m){var w=m[1].replace(/[«»✦]/g,'').trim();if(w.length<=24)return w;return w.split(' ').slice(0,3).join(' ')}var w=t.replace(/[«»✦]/g,'').split(' ').filter(function(x){return/[А-Яа-я]/.test(x)});if(!w.length)return t;if(w[0].length<5||(w[1]&&(w[0]+' '+w[1]).length<=13))return w.slice(0,2).join(' ');return w[0]}
-function tabLabs(L){var n=0;return L.map(function(x){if(/^Вступление/.test(x.t))return'Вступление';if(/^Принцип \d+/.test(x.t)){n++;return'Принцип '+n}return SL(x.t)})}
+function tabLabs(L,lv){var n=0;return L.map(function(x){if(/^Вступление/.test(x.t))return'Вступление';if(lv&&/^Принцип \d+/.test(x.t)){n++;return'Принцип '+n}return SL(x.t)})}
 function localHead(t,lab){var m=/^Принцип \d+\.\s*(.+)$/.exec(t);if(m&&/^Принцип \d+$/.test(lab))return lab+'. '+m[1];return t}
 function chTitles(ch){var t=ch.t||'',short=t.replace(/^Уровень\s+[IVXCLC]+[\.\s]*/,'');return [t,short,ch.s,'Уровень I.','Уровень II.','Уровень III.','Уровень IV.','Уровень 1','Уровень 2','Уровень 3','Уровень 4'].filter(function(x){return x})}
 function bareTitle(p,titles){var s=String(p||'');if(!s||s.charAt(0)==='#')return s;for(var i=0;i<titles.length;i++){var k=titles[i];if(!k)continue;if(s===k||s===k+'.')return '';if(s.indexOf(k)===0){var rest=s.slice(k.length).replace(/^[.\s]+/,'');if(rest&&/[А-ЯA-Z«]/.test(rest.charAt(0)))return rest}}return s}
@@ -76,7 +76,7 @@ function open(){var c=cur();if(!c)return;openAt(c,'path')}
 function openChapter(n,s,src){if(!unlocked(n))return false;openAt({n:n,s:s==null?-1:s},src||'path');return true}
 function openAt(c,src){openSrc=src||'path';try{localStorage.setItem(SK,String(c.n))}catch(e){}if(btn)btn.classList.remove('gbk-glow');ensureFont();load(function(){render(c)})}
 function close(){if(ov){ov.classList.remove('on');document.documentElement.classList.remove('gbk-lock')}}
-function render(c){var B=window.TBOOK,n=c.n,ch=B[n],L=SEC(n,B),labs=tabLabs(L),titles=chTitles(ch);
+function render(c){var B=window.TBOOK,n=c.n,ch=B[n],L=SEC(n,B),labs=tabLabs(L,!!SUBS[n]),titles=chTitles(ch);
  var raw=ch.p.map(function(p,i){return i<6?bareTitle(p,titles):p});
  var H=raw.map(function(p,i){return p?para(p,i,raw):''});
  var tabs=L.length>1?'<nav class="gbk-bar" aria-label="Разделы">'+L.map(function(x,j){return'<button class="gbk-sp" data-s="'+j+'" aria-label="'+(j+1)+'. '+esc(labs[j])+'"><b>'+(j+1)+'</b> '+esc(labs[j])+'</button>'}).join('')+'</nav>':'';

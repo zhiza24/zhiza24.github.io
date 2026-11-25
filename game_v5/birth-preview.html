@@ -53,11 +53,11 @@ input:focus{border-color:var(--accent-gold);background:#fff;box-shadow:0 0 0 3px
   <section class="game-container" id="birth-screen" aria-labelledby="title">
     <div id="birth-form">
       <h1 id="title">Рождение героя</h1>
-      <p class="intro">У каждого путешествия есть своя точка начала. Укажите исходные данные — и мы подготовим Вашего героя.</p>
+      <p class="intro">У каждого путешествия есть своя точка начала. Укажи исходные данные — и мы подготовим твоего героя.</p>
       <form id="hero-form" novalidate>
         <div class="form-group">
-          <label for="hero-name">Как к Вам обращаться</label>
-          <input type="text" id="hero-name" name="name" placeholder="Ваше имя или выбранное обращение" maxlength="40" autocomplete="given-name" required>
+          <label for="hero-name">Как к тебе обращаться</label>
+          <input type="text" id="hero-name" name="name" placeholder="Твое имя или выбранное обращение" maxlength="40" autocomplete="given-name" required>
         </div>
         <div class="form-group">
           <label for="hero-birthdate">Дата рождения</label>
@@ -76,13 +76,13 @@ input:focus{border-color:var(--accent-gold);background:#fff;box-shadow:0 0 0 3px
         </div>
         <button class="btn-primary" type="submit">Родить героя</button>
         <p class="error" id="form-error" role="alert"></p>
-        <p class="privacy">Данные этой демонстрационной страницы сохраняются только в Вашем браузере. Они пока не изменяют основной профиль игры.</p>
+        <p class="privacy">Данные этой демонстрационной страницы сохраняются только в твоем браузере. Они пока не изменяют основной профиль игры.</p>
       </form>
     </div>
     <div class="result" id="birth-result" aria-live="polite">
       <div class="result-mark" aria-hidden="true">✧</div>
       <h2>Герой рожден</h2>
-      <p>Точка начала Вашего путешествия зафиксирована.</p>
+      <p>Точка начала твоего путешествия зафиксирована.</p>
       <div class="summary" id="hero-summary"></div>
       <button class="btn-primary" type="button" id="edit-hero">Изменить данные</button>
       <button class="btn-primary secondary" type="button" id="open-game">Открыть действующую игру</button>
@@ -106,12 +106,12 @@ input:focus{border-color:var(--accent-gold);background:#fff;box-shadow:0 0 0 3px
     e.preventDefault();
     var name=document.getElementById('hero-name').value.trim();
     var birth=birthInput.value;
-    if(!name){error.textContent='Укажите, как к Вам обращаться.';return;}
-    if(!birth){error.textContent='Укажите дату рождения.';return;}
+    if(!name){error.textContent='Укажи, как к тебе обращаться.';return;}
+    if(!birth){error.textContent='Укажи дату рождения.';return;}
     var d=new Date(birth+'T00:00:00');
-    if(Number.isNaN(d.getTime())||d>today){error.textContent='Проверьте дату рождения.';return;}
+    if(Number.isNaN(d.getTime())||d>today){error.textContent='Проверь дату рождения.';return;}
     var profile={name:name,birthdate:birth,gender:gender,createdAt:new Date().toISOString(),previewVersion:1};
-    try{localStorage.setItem('alch_v5_birth_preview_v1',JSON.stringify(profile));}catch(err){error.textContent='Браузер не разрешил сохранить данные. Проверьте настройки хранения.';return;}
+    try{localStorage.setItem('alch_v5_birth_preview_v1',JSON.stringify(profile));}catch(err){error.textContent='Браузер не разрешил сохранить данные. Проверь настройки хранения.';return;}
     document.getElementById('hero-summary').innerHTML='<div><b>Обращение:</b> '+escapeHtml(name)+'</div><div><b>Дата рождения:</b> '+birth.split('-').reverse().join('.')+'</div><div><b>Образ:</b> '+(gender==='female'?'Путница':'Путник')+'</div>';
     document.getElementById('birth-form').style.display='none';
     document.getElementById('birth-result').classList.add('show');

@@ -13,7 +13,7 @@ function save(P){
   localStorage.setItem(K,JSON.stringify(P));
  }catch(e){
   if(e&&(e.name==='QuotaExceededError'||e.code===22||e.code===1014)){
-   try{if(window.alert)alert('Не удалось сохранить данные: память браузера переполнена. Экспортируйте профиль в настройках и освободите место.');}catch(ignore){}
+   try{if(window.alert)alert('Не удалось сохранить данные: память браузера переполнена. Экспортируй профиль в настройках и освободи место.');}catch(ignore){}
    if(window.console&&console.warn)console.warn('QuotaExceededError on profile save',e);
   }
   throw e;

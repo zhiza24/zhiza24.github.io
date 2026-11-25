@@ -25,7 +25,7 @@ function render(box,pts,opts,cb){opts=opts||{};css();
   h+=L.length?L.map(block).join(''):'<p>Результаты появятся, когда ты пройдешь шаги этой части пути.</p>';
   if(opts.arts){var A=arts(P);if(A.length)h+='<div class="gm-h">Артефакты героя</div><div class="gm-arts">'+A.map(function(a){return '<span class="gm-art">'+(a.h||esc(a.i))+' '+esc(a.n)+'</span>'}).join('')+'</div>'}
   box.innerHTML='<div class="gm">'+h+'</div>';if(cb)cb(P,L)};
- if(window.GHM)GHM.ready(go);else{var s=document.createElement('script');s.src='heromap.js?v=map1';s.onload=function(){GHM.ready(go)};s.onerror=go;document.head.appendChild(s)}}
+ if(window.GHM)GHM.ready(go);else{var s=document.createElement('script');s.src='heromap.js?v=map2';s.onload=function(){GHM.ready(go)};s.onerror=go;document.head.appendChild(s)}}
 /* выбор до трех зон для дальнейшего исследования из полученных результатов */
 function zones(box,list,key,max,onChange){max=max||3;var P=load();P.maps=P.maps||{};var sel=(P.maps[key]||[]).slice();
  box.innerHTML=list.map(function(n){return '<button type="button" class="gm-ch'+(sel.indexOf(n)>=0?' on':'')+'">'+esc(n)+'</button>'}).join('');

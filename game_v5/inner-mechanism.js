@@ -88,6 +88,16 @@ function mount(box){
   top.forEach(function(r){html+='<div class="gim-result"><b>'+esc(r.name)+'</b><p class="gim-small">'+r.answered+' ответов · частотный сигнал '+Math.round(r.score/r.max*100)+'%</p><div class="gim-meter"><i style="width:'+Math.round(r.score/r.max*100)+'%"></i></div></div>'});
   html+='<h2>Ресурсные сигналы</h2>';if(resourceTop.length){resourceTop.forEach(function(r){html+='<div class="gim-result"><b>'+esc(r.name)+'</b><p class="gim-small">'+r.answered+' ответов · частотный сигнал '+Math.round(r.score/r.max*100)+'%</p><div class="gim-meter"><i style="width:'+Math.round(r.score/r.max*100)+'%"></i></div></div>'})}else{html+='<p>Пока недостаточно ответов, чтобы показать ресурсные сигналы.</p>'}html+='<h2>Что мы пока не утверждаем</h2><p>Мы не считаем, что высокий показатель автоматически объясняет твое поведение. Чтобы понять, что запускает реакцию и как она поддерживается, результаты нужно сопоставить с фоновым состоянием BG16, другими тестами и конкретными эпизодами.</p><p>Проверь, насколько эта предварительная карта совпадает с твоим опытом.</p><div class="gim-nav"><button id="gim-retake">Пересмотреть ответы</button><button id="gim-done" class="primary">Продолжить путь</button></div>';
   box.innerHTML=html;
+  if(window.GResultCard){
+   var resT=resourceRows.slice(0,3).map(function(r){return r.name+' ('+Math.round(r.score/r.max*100)+'%)'});
+   var proT=protectiveRows.slice(0,3).map(function(r){return r.name+' ('+Math.round(r.score/r.max*100)+'%)'});
+   GResultCard.attachDiaryBar(box,{
+    id:'mechanism',step:'slot.html?id=mechanism',title:'Внутренний механизм',passed:'Точка 0',
+    lead:'Отвечено '+answered+' из 60 утверждений. Ресурсные и защитные сигналы учитываются раздельно.',
+    strong:resT.join(' · '),insight:proT.join(' · '),insightLabel:'Ведущие защитные сигналы',
+    at:S.completedAt||Date.now()
+   });
+  }
   box.querySelector('#gim-retake').onclick=function(){idx=0;draw()};
   box.querySelector('#gim-done').onclick=function(){if(window.GRoute){GRoute.complete('slot.html?id=mechanism');var n=GRoute.advance();if(n)location.href=n}else location.href='slot.html?id=km'};
  }

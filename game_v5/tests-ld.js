@@ -27,7 +27,7 @@ function cssLab(){
   '.ld-ends span{flex:1}.ld-ends span:last-child{text-align:right}'+
   '.ld-fade{transition:opacity .2s ease}'+
   '.ld-hyp{font-size:14px;letter-spacing:.04em;text-transform:uppercase;opacity:.8;margin:8px 0 0}'+
-  '.ld-k{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#c9a24a;margin:10px 0 4px}'+
+  '.ld-k{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#c9a24a;margin:10px 0 4px}'+'.gt-ph{margin:12px 0 14px;border:1px solid #b8893f;background:radial-gradient(circle at 50% 20%,rgba(240,200,112,.16),transparent 70%);border-radius:16px;padding:14px;text-align:center}.gt-ph b{display:block;font:800 19px Manrope,sans-serif;color:#f0c870;margin:8px 0 4px}.gt-scene-frame{width:100%;max-width:480px;aspect-ratio:16/9;max-height:230px;overflow:hidden;margin:0 auto 10px;border:1px solid rgba(201,162,74,.55);border-radius:14px;background:#120e08}.gt-scene{display:block;width:100%;height:100%;object-fit:cover;object-position:center 40%}'+
   '.ld-own{margin:16px 0}';
  document.head.appendChild(s);
 }
@@ -474,7 +474,7 @@ function mountLab(box){
 
   function paintIntro(){
    var I=D.intro;
-   fade('<div class="gt-ph"><b>'+esc(I.who)+'</b><small>'+esc(I.zdesc)+'</small></div><div class="aq">'+h(I.title)+'</div>'+I.text.split('\n').filter(Boolean).map(function(p){return P_(h(p))}).join('')+'<button class="next" id="gtGo">'+esc(I.btn)+'</button>',
+   fade('<div class="gt-ph"><div class="gt-scene-frame"><img class="gt-scene" src="'+esc(I.img||'img/scene_road.jpg')+'?v=2" alt="'+esc(I.who)+'"></div><b>'+esc(I.who)+'</b></div><div class="aq">'+h(I.title)+'</div>'+I.text.split('\n').filter(Boolean).map(function(p){return P_(h(p))}).join('')+'<button class="next" id="gtGo">'+esc(I.btn)+'</button>',
     function(){box.querySelector('#gtGo').onclick=function(){fwd()}});
   }
   function paintGate(st){

@@ -19,7 +19,7 @@ function mount(host){
  store=store||{version:1,draft:null,history:[]};
  let draft=store.draft,view=review?store.history.find(x=>x.id===review):!draft?store.history[store.history.length-1]:null;
  let saveError='';
- function persist(){try{store.draft=draft;if(preview)sessionStorage.setItem('alch_v5_mirror_preview',JSON.stringify(store));else{const latest=load();latest.mirrors=store;localStorage.setItem('alch_v5_profile',JSON.stringify(latest));}saveError='';status();return true;}catch(e){saveError='Не удалось сохранить. Проверьте доступность хранилища браузера. Не закрывайте страницу.';status();return false;}}
+ function persist(){try{store.draft=draft;if(preview)sessionStorage.setItem('alch_v5_mirror_preview',JSON.stringify(store));else{const latest=load();latest.mirrors=store;localStorage.setItem('alch_v5_profile',JSON.stringify(latest));}saveError='';status();return true;}catch(e){saveError='Не удалось сохранить. Проверь доступность хранилища браузера. Не закрывай страницу.';status();return false;}}
  function status(){const e=host.querySelector('.mirror-save-status');if(e)e.textContent=saveError||'Сохраняется только в этом браузере. Никуда не отправляется.';}
  function start(){draft=D.create(load().gender);view=null;if(persist())render();}
  function go(phase,index=0){const old={phase:draft.phase,index:draft.index};draft.phase=phase;draft.index=index;if(persist()){render();window.scrollTo(0,0);}else Object.assign(draft,old);}
@@ -124,7 +124,7 @@ function mount(host){
     if(!GRoute.complete(URL_SCENE,latest))throw Error('Result not saved');
    }
    saveError='';view=result;render();
-  }catch(e){store=old;draft=old.draft;saveError='Не удалось сохранить результат. Не закрывайте страницу и попробуйте снова.';render();}
+  }catch(e){store=old;draft=old.draft;saveError='Не удалось сохранить результат. Не закрывай страницу и попробуй снова.';render();}
  }
  function showResult(record){
   host.append(el('h2','Отражение собрано'));

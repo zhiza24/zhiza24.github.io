@@ -49,7 +49,7 @@ function bind(el){
  });
 }
 function paint(el){
- if(!window.GBook||!window.TBOOK){el.innerHTML='<p class="dbk-err">Не удалось открыть книгу. Обновите страницу.</p>';return}
+ if(!window.GBook||!window.TBOOK){el.innerHTML='<p class="dbk-err">Не удалось открыть книгу. Обнови страницу.</p>';return}
  el.innerHTML=html();
  bind(el);
 }
@@ -57,7 +57,7 @@ function render(el){
  if(!el)return;
  if(!window.GBook){el.innerHTML='<p class="dbk-err">Книга загружается...</p>';return}
  GBook.ensureFont();
- GBook.load(function(err){if(err){el.innerHTML='<p class="dbk-err">Не удалось открыть книгу. Обновите страницу.</p>';return}paint(el)});
+ GBook.load(function(err){if(err){el.innerHTML='<p class="dbk-err">Не удалось открыть книгу. Обнови страницу.</p>';return}paint(el)});
 }
 window.GDiaryBook={render:render,GROUPS:GROUPS};
 })();

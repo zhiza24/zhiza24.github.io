@@ -209,7 +209,7 @@ function mount(box){
     html+='<section class="im-group"><h2>Твои внутренние настройки</h2><p>Здесь собраны внутренние привычки и способы реагирования, которые уже проявились в твоих ответах. Посмотри, какие из них помогают тебе, а какие хочется перенастроить.</p>';
     if(active.length)html+=active.map(function(x){
       var count=x.layersConfirmed.length,goal=data.stateModel.stateGoals&&data.stateModel.stateGoals[x.id],selector=x.signals.CH.length>=2&&!x.needsDiscriminator.length?
-       '<p>Как Вы хотите обращаться с этой стратегией?</p><div class="im-actions">'+[['Ослабить','Ослабить'],['Усилить','Усилить'],['Оставить','Оставить как есть'],['Не знаю','Пока не определился']].map(function(o){return '<button class="'+(goal===o[0]?'selected':'')+'" data-state-goal="'+esc(x.id)+'" data-goal="'+esc(o[0])+'">'+esc(o[1])+'</button>'}).join('')+'</div>':'';
+       '<p>Как ты хочешь обращаться с этой стратегией?</p><div class="im-actions">'+[['Ослабить','Ослабить'],['Усилить','Усилить'],['Оставить','Оставить как есть'],['Не знаю',genderText('Пока не {определился|определилась}')]].map(function(o){return '<button class="'+(goal===o[0]?'selected':'')+'" data-state-goal="'+esc(x.id)+'" data-goal="'+esc(o[0])+'">'+esc(o[1])+'</button>'}).join('')+'</div>':'';
       return '<article class="im-card"><div class="im-card-k">'+esc(x.valence)+'</div><h3>'+esc(x.name)+'</h3><p>'+esc(x.stance)+'</p>'+selector+'</article>';
      }).join('');
     else html+='<p>Пока нет прямых совпадений. Каталог сохранен, но выводы не подменяются догадками.</p>';

@@ -71,7 +71,7 @@ function mount(box){
   var specialHtml=D.SPECIAL.map(function(o){return '<button type="button" class="bg16-special '+(primary===o[1]?'selected':'')+'" data-bg16-primary="'+o[1]+'">'+esc(o[0])+'</button>'}).join('');
   var secondaryHtml='';
   if(primary&&isFamily(primary)){
-   secondaryHtml='<div class="bg16-secondary"><h3>Дополнительное наблюдение</h3><p class="bg16-note">Необязательно. А какой вариант тоже иногда бывает? Отметь его, если узнаешь в нём свою реакцию.</p>'+
+   secondaryHtml='<div class="bg16-secondary"><h3>Дополнительное наблюдение</h3><p class="bg16-note">Необязательно. А какой вариант тоже иногда бывает? Отметь его, если узнаешь в нем свою реакцию.</p>'+
     opts.filter(function(o){return o.key!==primary}).map(function(o){return '<button type="button" class="bg16-choice '+(a.secondary===o.key?'selected':'')+'" data-bg16-secondary="'+o.key+'">'+esc(tx(o.text))+'</button>'}).join('')+
     '<button type="button" class="bg16-special '+(!a.secondary?'selected':'')+'" data-bg16-secondary="">Не добавлять</button></div>';
   }else if(primary==='v'||primary==='x'){
@@ -146,6 +146,17 @@ function mount(box){
   html+='<p class="bg16-muted">Это гипотеза по ответам в 16 предложенных сценах, а не ярлык и не диагноз. Реальная нехватка ресурсов, опасность, неравное отношение и объективные ограничения не объясняются внутренним состоянием автоматически. Позже мы сопоставим эту карту с другими исследованиями и конкретными эпизодами.</p>'+
    '<div class="bg16-actions"><button type="button" id="bg16Continue">'+(preview||retake?'Вернуться к заданиям':'Продолжить путь')+'</button><button type="button" id="bg16Retake">Пройти заново</button></div>';
   shell(html);
+  if(root.GResultCard&&!preview){
+   var resL=(r.groups.resource.leaders||[]).map(function(id){var f=r.families.filter(function(x){return x.id===id})[0];return f?f.title:id});
+   var proL=(r.groups.protective.leaders||[]).map(function(id){var f=r.families.filter(function(x){return x.id===id})[0];return f?f.title:id});
+   var cardHost=box.querySelector('.bg16')||box;
+   root.GResultCard.attachDiaryBar(cardHost,{
+    id:'bg16',step:'slot.html?id=bg16',title:'Ведущее фоновое состояние',passed:'Точка 0',
+    lead:r.coverage.answered+' из 16 сцен, охвачено сфер: '+r.coverage.spheres+'. Это рабочая карта повторений в разных сферах, а не диагноз.',
+    strong:resL.join(' · '),insight:proL.join(' · '),insightLabel:'Защитные ожидания',
+    at:r.completedAt||Date.now()
+   });
+  }
  }
  function bind(){
   var start=box.querySelector('#bg16Start');if(start)start.onclick=function(){if(!draft)draft=freshDraft();step=firstMissing();if(step>=16)followup();else question()};
