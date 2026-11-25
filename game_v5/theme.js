@@ -130,7 +130,7 @@ L+'.e{background:#fffaf0!important;border-color:#d9bf8c!important;color:#3a2410}
 L+'.dbk{color:#3a2410!important}'+L+'.dbk-note{color:#7a4512!important;background:rgba(232,193,108,.22)!important;border-color:#c9a46a!important}'+L+'.dbk-err{color:#7a4512!important}'+
 /* ----- темная: спокойный темный фон ----- */
 DK+'body{background:#120d08!important;color:#efe3cf!important}'+
-DK+'.sc{background:#21180f!important;color:#efe3cf!important;border:1px solid #5a4325}'+DK+'.sc .q,'+DK+'.sc .ar-title{color:#f0c870!important}'+DK+'.sc .l,'+DK+'.sc .ar-ctx,'+DK+'.sc .ar-blk h3{color:#c4a878!important}'+
+DK+'.sc{background:#21180f!important;color:#efe3cf!important;border:1px solid #5a4325}'+DK+'.sc .q,'+DK+'.sc .aq,'+DK+'.sc .ar-title{color:#f0c870!important;-webkit-text-fill-color:#f0c870!important}'+DK+'.sc .l,'+DK+'.sc .ar-ctx,'+DK+'.sc .ar-blk h3{color:#c4a878!important}'+
 DK+'.sc .a{background:#2b2013!important;color:#efe3cf!important;border-color:#9e783a!important}'+DK+'.sc .a.ar-on{background:linear-gradient(#ffe9a8,#e0a940)!important;color:#2a1606!important}'+DK+'.sc p{color:#e6d8bf}'+
 DK+'.sc .ar-ph{background:rgba(32,23,14,.6)!important;color:#e8d3ac!important;border-color:#b8893f!important}'+DK+'.sc .ar-ph b{color:#f0c870!important}'+DK+'.sc .ar-ph small{color:#cdb68c!important}'+DK+'.sc .ar-draft{color:#e6d8bf}'+DK+'.sc .ar-skip{color:#e6d8bf}'+
 /* ----- читалка Книги Алхимика (где бы ни открылась) ----- */
