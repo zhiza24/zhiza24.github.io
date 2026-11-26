@@ -96,7 +96,7 @@ document.addEventListener('play',function(e){var t=e.target;if(t&&t.tagName&&/^(
 document.addEventListener('click',function(e){
  var t=e.target&&e.target.closest&&e.target.closest('button,input[type=button],input[type=submit],[role=button],.sun-btn');
  if(!t||t.disabled||t.getAttribute('aria-disabled')==='true')return;
- if(t.classList.contains('gsc-icon')||t.id==='gsc-icon'||t.classList.contains('gsnd')||t.id==='snd')return;
+ if(t.classList.contains('sun-btn')||t.id==='core')return;if(t.classList.contains('gsc-icon')||t.id==='gsc-icon'||t.classList.contains('gsnd')||t.id==='snd')return;
  if(!isMain(t))return;
  clickSnd();
 },true);

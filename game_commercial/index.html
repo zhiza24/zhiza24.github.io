@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru"><head><script src="theme.js?v=11"></script><script src="sound.js?v=3"></script><script src="flow.js?v=commercial1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=im2"></script><script src="profile-layer.js?v=art1"></script><script src="route-gate.js?v=im1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794512684"></script><meta http-equiv="Cache-Control" content="no-cache">
+<html lang="ru"><head><script src="theme.js?v=11"></script><script src="sound.js?v=4"></script><script src="flow.js?v=commercial1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=im2"></script><script src="profile-layer.js?v=art1"></script><script src="route-gate.js?v=im1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794512684"></script><meta http-equiv="Cache-Control" content="no-cache">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Путь современного Алхимика · Майя Явь</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#211710">
@@ -9,7 +9,7 @@
 <link rel="preload" as="image" href="img/start_bg.webp?v=s3" type="image/webp">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="t/style.css?v=f19">
-<link rel="stylesheet" href="sun-btn.css?v=g10">
+<link rel="stylesheet" href="sun-btn.css?v=g11">
 <style>
 .entry{background:url(img/start_bg.jpg?v=s3) 18% center/cover no-repeat;background-color:#0c0804;background-image:linear-gradient(180deg,rgba(38,20,8,.62),rgba(30,16,6,.45) 45%,rgba(18,9,3,.8)),image-set(url(img/start_bg.webp?v=s3) type("image/webp"),url(img/start_bg.jpg?v=s3) type("image/jpeg"))}
 .scr{animation:none}
@@ -41,5 +41,5 @@ section.scr.entry .edisc{position:absolute;left:16px;right:16px;bottom:calc(10px
 <script>
 const c=document.getElementById('core');let AC;
 const ES=new Audio('snd/entry.mp3?v=8');ES.preload='none';addEventListener('load',()=>setTimeout(()=>{try{ES.preload='auto';ES.load()}catch(e){}},2500),{once:true});
-c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}let gone=0;const go=()=>{if(!gone){gone=1;location.href='map.html?v=8'}};ES.currentTime=0;ES.onended=go;const pr=ES.play();if(pr&&pr.catch)pr.catch(()=>setTimeout(go,1500));c.classList.add('go');setTimeout(go,6000)};
+c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}let gone=0;const go=()=>{if(!gone){gone=1;location.href='map.html?v=8'}};ES.currentTime=0;ES.onended=go;ES.onpause=()=>{if(ES.currentTime>0.3)go()};const pr=ES.play();if(pr&&pr.catch)pr.catch(()=>setTimeout(go,1500));c.classList.add('go');setTimeout(go,6000)};
 </script></body></html>
