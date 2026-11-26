@@ -169,3 +169,4 @@ button.core.sun-btn:active{
 .sun-btn__core{animation:sun-ballspin 9s linear infinite!important}
 @keyframes sun-ballspin{to{background-position:0 0}}
 .sun-btn__plasma{filter:blur(calc(var(--sun-size)*.07));opacity:.7}
+.sun-btn__core{clip-path:circle(50% at 50% 50%);-webkit-clip-path:circle(50% at 50% 50%);-webkit-mask-image:-webkit-radial-gradient(white,black)}.sun-btn__plasma{mix-blend-mode:normal!important;filter:none!important;opacity:.32!important;border-radius:50%}
