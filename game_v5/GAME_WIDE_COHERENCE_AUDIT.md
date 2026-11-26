@@ -281,3 +281,18 @@ Important distinction: BG16 may provide context for a strategy but is not its de
 Pre-Reactor placement is after relevant research and goal selection, before explicit Reactor Start. The Reactor tab is a repeatable trainer combining critical-thinking prompts, balanced belief revision, flexible alternative responses, small experiments, and review against actual feedback. It must not scan free-text diary automatically, add guilt/streak penalties, or reset the 28-day calendar.
 
 The feature remains specification-only on this review branch until source audit, data contract, route, migration, UI, and tests are verified. Do not describe it as implemented in production.
+
+
+## 2.13 Interpersonal behavior patterns — add as a sub-layer, not a role taxonomy
+
+The goal-execution synthesis must also consider how the player interacts with other people where that materially affects a chosen goal. This is a second lens within the existing strategy map, not a separate role system or new standalone test.
+
+**Prohibited framing:** do not classify the player as a "victim", "aggressor/persecutor", or "rescuer"; do not use a drama-triangle model to assign identities, scores, or UI labels. Describe only specific, contextual behaviors and allow mixed patterns.
+
+Candidate observations include over-accommodation, approval-seeking, over-responsibility, difficulty making direct requests, over-control, pressure/insistence, defensive confrontation, conflict avoidance, withdrawal, self-silencing, reluctance to delegate, and constructive alternatives such as clear self-advocacy, boundaries, negotiation, reciprocity, cooperation, help-seeking, delegation, repair, and context-sensitive firmness.
+
+Existing Echo, First Settings, Inner Mechanism, self-betrayal, and values results may provide contextual prompts only. They do not currently amount to a validated comprehensive interpersonal-style assessment. Verify actual producers/fields and mark each signal implemented, partial, documented-only, or missing. If a meaningful evidence gap remains, use a small optional situational follow-up inside the current synthesis rather than creating another full test.
+
+The report must separate observed behavior from interpretation, possible protective function, cost, and alternative response; preserve relationship/sphere context, counterexamples, uncertainty, and player disagreement. Never infer that the player caused or deserved harmful treatment. Distinguish habits from coercion, abuse, harassment, discrimination, power imbalance, and unsafe circumstances. Do not recommend confrontation or reconciliation where safety is uncertain.
+
+This lens may connect to a selected goal only when the player confirms relevance (e.g. request, negotiation, workload, boundary, collaboration). The Reactor Workshop can rehearse a safer/more effective request, boundary, negotiation, delegation, or repair and compare the player's prediction with actual response. This remains part of the existing Strategy Workshop, not a new route gate, extra goal, or calendar.
