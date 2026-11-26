@@ -23,7 +23,6 @@ function collect(P){
   source('backgroundState','Ведущее фоновое состояние','16 сцен в 8 сферах; ресурсные и защитные сигналы рассматриваются отдельно');
   arr(background.families).forEach(function(f){
    if(!f.situationCount)return;
-   var ev=arr(f.evidence).map(function(x){return x.sphere+' · '+genderText(x.prompt)+' → '+genderText(x.optionText)+(x.role==='secondary'?' (дополнительный сигнал)':'')});
    var detail=(f.description||'Наблюдения в ситуациях.')+' '+(f.repeatLabel||'');
    if(f.group==='resource'&&background.followup){
     if(background.followup.resourceDuration)detail+=' Сохранение состояния: '+background.followup.resourceDuration+'.';
@@ -31,7 +30,7 @@ function collect(P){
    }
    if(f.group==='protective'&&background.followup&&background.followup.protectiveRecovery)detail+=' Возврат к обычному состоянию: '+background.followup.protectiveRecovery+'.';
    if(f.group==='protective'&&background.followup&&background.followup.protectiveContext)detail+=' Контекстная сверка: '+background.followup.protectiveContext+'.';
-   out.fragments.push({domain:f.group==='resource'?'Ресурсы':'Фоновое состояние',title:f.title,detail:detail,status:'preliminary',source:'backgroundState',evidence:ev,score:f.share});
+   out.fragments.push({domain:f.group==='resource'?'Ресурсы':'Фоновое состояние',title:f.title,detail:detail,status:'preliminary',source:'backgroundState',score:f.share});
   });
   var g=background.groups||{};
   if(!arr(g.resource&&g.resource.leaders).length&&!arr(g.protective&&g.protective.leaders).length)
@@ -66,8 +65,7 @@ function collect(P){
   source('innerMechanism','Лаборатория внутреннего механизма','Десять коротких блоков: триггеры, интерпретации, реакции, адаптация, цикл, потребности, функция, цена, ресурсы и контрпримеры');
   var secNames={triggers:'Триггеры и условия',meaning:'Автоматические интерпретации',emotion:'Эмоции и телесные сигналы',response:'Действия и адаптация',cycle:'Поддержание повторяющегося цикла',needs:'Потребности',function:'Защитная функция привычной реакции',cost:'Цена повторения',resources:'Действующие ресурсы',exceptions:'Исключения и границы гипотезы'};
   (md&&md.sections||[]).forEach(function(sec){
-   var ev=sec.items.map(function(q){var v=imx.answers&&imx.answers[q[0]];if(v===undefined)return null;var label=imx.answerLabels&&imx.answerLabels[q[0]]||'';return q[1]+' — '+(label||'ответ сохранен')}).filter(Boolean);
-   if(ev.length)out.fragments.push({domain:'Внутренний механизм',title:secNames[sec.id]||sec.title,detail:ev.length+' ответов в блоке. Это самоотчетные сигналы; они не доказывают причинность.',status:'preliminary',source:'innerMechanism',evidence:ev});
+   if(ev.length)out.fragments.push({domain:'Внутренний механизм',title:secNames[sec.id]||sec.title,detail:ev.length+' ответов в блоке. Это самоотчетные сигналы; они не доказывают причинность.',status:'preliminary',source:'innerMechanism'});
   });
   if(ir.families&&ir.families.length){
    var tops=ir.families.slice(0,4).map(function(x){return x.name+' ('+Math.round(x.score/x.max*100)+'%)'});
@@ -86,16 +84,13 @@ function collect(P){
  if(echo){source('echo','Эхо','Способы реагирования в ситуациях');}
  if(wheel&&Array.isArray(wheel.sectors)){source('wheel','Колесо самопредательства','Конкретные проявления в 24 ветвях');}
  if(mag&&mag.v===2){
-  var D=window.GARCH||{},lead=mag.lead,phrase=lead&&D.phrase&&D.phrase[lead],ra=lead&&D.resA&&D.resA[lead],answers=mag.answers||{},ev=[];
-  (D.A||[]).forEach(function(q){var code=answers[q.id];if(!code||code==='skip')return;var opt=arr(q.o).filter(function(o){return o[0]===code})[0];ev.push('Маг · '+q.h+': '+(opt?opt[1]:code))});
-  arr(mag.a11).forEach(function(code,i){var opt=arr(D.A11&&D.A11.o).filter(function(o){return o[0]===code})[0];ev.push('Маг · эмоциональный итог '+(i+1)+': '+(opt?opt[1]:code))});
+  var D=window.GARCH||{},lead=mag.lead,phrase=lead&&D.phrase&&D.phrase[lead],ra=lead&&D.resA&&D.resA[lead];
   var freq=['Почти никогда','Редко','Иногда','Часто','Очень часто'];
-  if(mag.R!=null&&freq[mag.R])ev.push('Маг · частота похожего чувства: '+freq[mag.R]);
   var detail=lead?(ra&&ra.title?ra.title:phrase||lead)+'. Это чувство особенно заметно в тех ситуациях, о которых ты рассказал.':'Сейчас на первый план выходят разные чувства в разных обстоятельствах.';
   if(mag.period)detail+=' Период, о котором ты рассказывал: '+({P1:'последние 2–3 месяца',P2:'последний год',P3:'сложный текущий период',P4:'период не определен'})[mag.period]+'.';
   if(mag.R!=null&&freq[mag.R])detail+=' Частота по самооценке: '+freq[mag.R].toLowerCase()+'.';
   if(mag.skips!=null)detail+=' Пропущено вопросов: '+mag.skips+'.';
-  out.fragments.push({domain:'Фоновое состояние',title:lead?(phrase||mag.top||lead):'Один фон пока не выделился',detail:detail,status:lead?'preliminary':'unclear',source:'mag',evidence:ev});
+  out.fragments.push({domain:'Фоновое состояние',title:lead?(phrase||mag.top||lead):'Один фон пока не выделился',detail:detail,status:lead?'preliminary':'unclear',source:'mag'});
  }
  if(fs&&fs.v){
   var fl=arr(fs.leading),names=Object.keys(fs.outcome||{});
@@ -189,7 +184,6 @@ function mapSvg(data){
 }
 function sourceName(id){return ({backgroundState:'Фоновое состояние',mag:'Маг',firstSet:'Первые настройки',km:'Идеальный Кривой Мир',echo:'Эхо',wheel:'Колесо самопредательства'})[id]||id}
 function card(x,idx,interactive){
- var trace=arr(x.sources||[x.source]).filter(Boolean).map(function(s){return '<p>'+esc(sourceName(s))+'</p>'}).join('')+arr(x.evidence).map(function(e){return '<p class="im-evidence">'+esc(e)+'</p>'}).join('');
  return '<article class="im-card"><div class="im-card-k">'+esc(x.domain||'Отражение')+'</div><h3>'+esc(x.title)+'</h3><p>'+esc(x.detail)+'</p>'+
  (interactive?'<div class="im-feedback" data-idx="'+idx+'"><b>Узнаешь это в своем опыте?</b><div class="im-actions"><button data-v="yes">Да, узнаю</button><button data-v="part">Отчасти</button><button data-v="no">Нет, не так</button><button data-v="later">Пока не знаю</button></div></div>':'')+'</article>';
 }
@@ -351,8 +345,8 @@ function mount(box){
  function finish(){
   var all=data.links.concat(data.tensions),rec={v:3,version:3,algoVersion:3,type:'synthesis',sources:data.sources,fragments:data.fragments,links:data.links,tensions:data.tensions,unknown:data.unknown,stateModel:data.stateModel||null,feedback:feedback,at:Date.now(),legacy:existing&&existing.answers?{answers:existing.answers,at:existing.at||null}:null};
   var lines=['Карта внутренней архитектуры','Источники: '+data.sources.map(function(x){return x.name}).join(', ')];
-  var imFrag=data.fragments.filter(function(x){return x.source==='innerMechanism'});if(imFrag.length)lines.push('Лаборатория внутреннего механизма:\\n'+imFrag.map(function(x){return x.title+': '+x.detail+(x.evidence&&x.evidence.length?'\\n'+x.evidence.join('\\n'):'')}).join('\\n'));
-  var magFragment=data.fragments.filter(function(x){return x.source==='mag'})[0];if(magFragment)lines.push('Маг: '+magFragment.title+' — '+magFragment.detail+(magFragment.evidence&&magFragment.evidence.length?'\\n'+magFragment.evidence.join('\\n'):''));
+  var imFrag=data.fragments.filter(function(x){return x.source==='innerMechanism'});if(imFrag.length)lines.push('Лаборатория внутреннего механизма:\\n'+imFrag.map(function(x){return x.title+': '+x.detail}).join('\\n'));
+  var magFragment=data.fragments.filter(function(x){return x.source==='mag'})[0];if(magFragment)lines.push('Маг: '+magFragment.title+' — '+magFragment.detail);
   if(data.links.length)lines.push('Межмодульные связи: '+data.links.map(function(x){return x.title+' — '+x.detail}).join('\n'));
   if(data.tensions.length)lines.push('Расхождения и контекст: '+data.tensions.map(function(x){return x.title+' — '+x.detail}).join('\n'));
   if(data.unknown.length)lines.push('Открытые вопросы: '+data.unknown.join('\n'));
