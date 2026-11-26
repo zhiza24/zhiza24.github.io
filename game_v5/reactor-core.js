@@ -220,6 +220,19 @@ function goalsEditor(P,T){
  });
  return h+'</section>';
 }
+var capOpen=-1;
+function capBlock(P,T,n,i,w,W,step){
+ var GP=window.GGoalPath,GC=window.GCapacity;if(!GP||!GC)return {hint:'',edit:''};
+ var plan=gpPlan(P,T,i),stalled=false;
+ if(n>3){stalled=true;for(var k=n-1;k>=n-3;k--){if(((dayOf(T,k).dirState)||[])[i]==='done'){stalled=false;break}}}
+ var wsE=(P.strategyWorkshop&&P.strategyWorkshop.entries||[]).slice(-1)[0];
+ var hn=step?GC.hint(P,plan,{day:n,stalled:stalled,people:!!(wsE&&wsE.group==='people'),calc:window.GNature&&GNature.calc,name:function(k){try{return GNature.name(k,window.GGender?GGender(P)==='f':P.gender==='f')}catch(e){return ''}}}):null;
+ var hint=hn?'<p class="rx-cap"><b>'+esc(gx('Формат шага: '+hn.tag))+'.</b> '+esc(gx(hn.text))+'</p><p class="mute rx-why">Почему так: '+esc(gx(hn.why))+'</p>':'';
+ var pc=plan.capacity||{},gc=P.capacity||{},cs=pc.start||gc.start,su=pc.support||gc.support,ch=function(act,f,list,cur){return '<div class="chips">'+list.map(function(x){return '<button type="button" class="'+(cur===x.id?'on':'')+'" data-act="'+act+'" data-g="'+i+'"'+(f?' data-f="'+f+'"':'')+' data-w="'+w+'" data-v="'+x.id+'">'+esc(gx(x.t))+'</button>'}).join('')+'</div>'};
+ var edit='<details class="rx-if rx-capd"'+(capOpen===i?' open':'')+'><summary>Как тебе легче идти к этой цели</summary><p class="mute">Мне проще начинать, когда…</p>'+ch('rx-cap','start',GC.start,cs)+'<p class="mute">'+esc(gx('Что лучше не тянуть одн{ому|ой}?'))+'</p>'+ch('rx-cap','support',GC.support,su)+'<p class="mute">Как поймешь, что цель сдвинулась?</p>'+ch('rx-crit','',GP.criteria,plan.criterion)+'</details>';
+ if(W.done){var oc=((plan.outcomes||{})[w]||{}).status;edit+='<p class="mute">Шаг недели сделан. Что с результатом?'+(plan.criterion?' Ориентир: '+esc(gx(GC.label(GP.criteria,plan.criterion)).toLowerCase())+'.':'')+'</p>'+ch('rx-out','',GP.outcomes,oc)}
+ return {hint:hint,edit:edit};
+}
 function goalToday(P,T,n,focus){
  var gs=goals(P,T);if(!gs.length)return '';
  var i=(focus!=null&&focus>=0&&focus<gs.length)?focus:((n-1)%gs.length),w=Math.floor((clamp(n,1,28)-1)/7),g=ladder(T,i,gs[i]),W=g.weeks[w]||{},d=dayOf(T,n);
@@ -231,7 +244,10 @@ function goalToday(P,T,n,focus){
  if(step&&W.t)h+='<p class="mute rx-why">Почему так: это твой шаг на неделю '+(w+1)+(vals.length?'. Тебе важно: '+esc(vals.join(', '))+'.':'.')+'</p>';
  var dpl=(T.directionPlans||{})[i]||{};if(step&&!W.small&&dpl.minimum)h+='<p class="mute">На трудный день: '+esc(dpl.minimum)+'</p>';
  if(step&&window.GWorkshop){try{var wsE=(P.strategyWorkshop&&P.strategyWorkshop.entries||[]).slice(-1)[0];if(wsE&&wsE.experiment&&wsE.experiment!=='none'&&(wsE.cycle||1)===(T.cycle||1)&&n>=wsE.day&&n-wsE.day<7)h+='<p class="mute rx-ws">Эксперимент недели: '+esc(gx(GWorkshop.label(GWorkshop.options(wsE.strategy).experiments,wsE.experiment)).toLowerCase())+'. После шага посмотри, что изменилось.</p>'}catch(e){}}
+ var cap={hint:'',edit:''};try{cap=capBlock(P,T,n,i,w,W,step)}catch(e){}
+ h+=cap.hint;
  if(step)h+=gpIfThen(P,T,i);
+ h+=cap.edit;
  var pr=goalProgress(T,i);h+='<p class="mute">Прогресс цели: шагов недели '+pr.weeks+' из 4 · дней с шагом '+pr.days+'</p>';
  return h+'</div>';
 }
@@ -312,6 +328,11 @@ function click(act,b,P,T,n){
  if(act==='rx-ob'||act==='rx-if'||act==='rx-ready'){var GP=window.GGoalPath;if(!GP)return true;var gi2=+b.getAttribute('data-g'),id2=gpId(P,T,gi2),v3=b.getAttribute('data-v'),cur=gpPlan(P,T,gi2);
   if(act==='rx-ready')GP.setReadiness(T,id2,cur.readiness===v3?null:v3);
   else{var w3=cur.woop||{};if(act==='rx-ob')GP.setIfThen(T,id2,w3.obstacle===v3?'':v3,'');else GP.setIfThen(T,id2,w3.obstacle,w3.response===v3?'':v3);gpOpen=gi2}
+  H.save(P);H.render();return true}
+ if(act==='rx-cap'||act==='rx-crit'||act==='rx-out'){var GP4=window.GGoalPath;if(!GP4)return true;var gi4=+b.getAttribute('data-g'),id4=gpId(P,T,gi4),v4=b.getAttribute('data-v'),pl4=gpPlan(P,T,gi4);
+  if(act==='rx-cap'){var f4=b.getAttribute('data-f'),cur4=(pl4.capacity||{})[f4];var nv=cur4===v4?null:v4;GP4.setCapacity(T,id4,f4,nv);if(nv&&window.GCapacity&&!(P.capacity&&P.capacity[f4]))GCapacity.setGlobal(P,f4,nv);capOpen=gi4}
+  else if(act==='rx-crit'){GP4.setCriterion(T,id4,pl4.criterion===v4?null:v4);capOpen=gi4}
+  else{var w4=+b.getAttribute('data-w'),c4=((pl4.outcomes||{})[w4]||{}).status;GP4.setOutcome(T,id4,w4,c4===v4?null:v4)}
   H.save(P);H.render();return true}
  if(act==='rx-wdone'){var g=ladder(T,+b.getAttribute('data-g'),goals(P,T)[+b.getAttribute('data-g')]),W=g.weeks[+b.getAttribute('data-w')];W.done=!W.done;H.save(P);H.render();return true}
  if(act==='rx-gday'){var gi=+b.getAttribute('data-g');d.dirState=d.dirState||['','',''];d.dirState[gi]=d.dirState[gi]==='done'?'':'done';H.save(P);H.render();return true}

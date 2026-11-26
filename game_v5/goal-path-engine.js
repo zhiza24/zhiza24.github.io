@@ -55,10 +55,18 @@ function setIfThen(T,id,obstacle,response){
  var rs=ob&&arr(RESPONSES[ob]).some(function(x){return x.id===response})?response:'';
  var p=obj(G.plans[gid]),w=obj(p.woop);
  if(w.obstacle!==ob)rs=rs||'';
- p.woop={obstacle:ob,response:rs,plan:rs?ifThenText({obstacle:ob,response:rs}):'',updatedAt:Date.now()};
+ p.woop={obstacle:ob,response:rs,plan:rs?ifThenText({obstacle:ob,response:rs}):'',updatedAt:Date.now()};version(p,'ifThen',{obstacle:ob,response:rs});
  p.goalId=gid;p.updatedAt=Date.now();G.plans[gid]=p;return {ok:true,woop:p.woop};
 }
-function setReadiness(T,id,level){var G=ensureState(T),gid=text(id,100);if(!gid)return false;var p=obj(G.plans[gid]);p.readiness=READINESS[level]?level:null;p.goalId=gid;p.updatedAt=Date.now();G.plans[gid]=p;return true}
+/* PLN: критерий успеха, статус результата отдельно от действия, версии плана, свой способ запуска для цели. Только готовые варианты. */
+var CRITERIA=[{id:'visible',t:'Есть результат, который можно показать'},{id:'feedback',t:'Пришел отклик от человека'},{id:'rhythm',t:'Делаю регулярно, хотя бы 3 раза в неделю'},{id:'number',t:'Изменилась цифра: деньги, время, вес'},{id:'state',t:'Мне стало легче и спокойнее'}];
+var OUTCOMES=[{id:'seen',t:'Результат уже есть'},{id:'pending',t:'Результат ожидается'},{id:'none',t:'Пока без изменений'}];
+function version(p,kind,value,at){p.versions=arr(p.versions);p.versions.push({at:Number(at)||Date.now(),kind:kind,value:value==null?null:value});if(p.versions.length>120)p.versions=p.versions.slice(-120)}
+function setCriterion(T,id,c,at){var G=ensureState(T),gid=text(id,100);if(!gid)return false;var p=obj(G.plans[gid]);var v=CRITERIA.some(function(x){return x.id===c})?c:null;if(p.criterion===v)return true;p.criterion=v;version(p,'criterion',v,at);p.goalId=gid;p.updatedAt=Date.now();G.plans[gid]=p;return true}
+function setOutcome(T,id,week,status,at){var G=ensureState(T),gid=text(id,100),w=Number(week);if(!gid||!(w>=0&&w<=3))return false;var p=obj(G.plans[gid]);p.outcomes=obj(p.outcomes);var v=OUTCOMES.some(function(x){return x.id===status})?status:null;
+ if(v)p.outcomes[w]={status:v,at:Number(at)||Date.now()};else delete p.outcomes[w];version(p,'outcome',{week:w,status:v},at);p.goalId=gid;p.updatedAt=Date.now();G.plans[gid]=p;return true}
+function setCapacity(T,id,field,value,at){var G=ensureState(T),gid=text(id,100);if(!gid||['start','support'].indexOf(field)<0)return false;var p=obj(G.plans[gid]);p.capacity=obj(p.capacity);var v=value?text(value,30):null;if(p.capacity[field]===v)return true;if(v)p.capacity[field]=v;else delete p.capacity[field];p.capacity.updatedAt=Number(at)||Date.now();version(p,'capacity.'+field,v,at);p.goalId=gid;p.updatedAt=Date.now();G.plans[gid]=p;return true}
+function setReadiness(T,id,level){var G=ensureState(T),gid=text(id,100);if(!gid)return false;var p=obj(G.plans[gid]);p.readiness=READINESS[level]?level:null;version(p,'readiness',p.readiness);p.goalId=gid;p.updatedAt=Date.now();G.plans[gid]=p;return true}
 function obj(x){return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}
 function arr(x){return Array.isArray(x)?x:[]}
 function text(x,max){return String(x==null?'':x).trim().slice(0,max||500)}
@@ -244,5 +252,5 @@ function contextFor(P,w){
  var strategy=strategyContext(P);
  return {priority:priorityContext(P,w),style:styleFor(P),strategyAvailable:strategy.available,strategy:strategy,natureAvailable:!!(P&&P.nature&&P.nature.primary),wheelAvailable:!!(P&&(arr(P.wheel).length===8||P.wheelTest))};
 }
-return {version:VERSION,spheres:SPHERES,styles:STYLE,readiness:READINESS,wheelSignals:wheelSignals,priorityContext:priorityContext,styleFor:styleFor,assessReadiness:assessReadiness,scaffold:scaffold,ensureState:ensureState,registerGoals:registerGoals,activateCycle:activateCycle,calendarDay:calendarDay,cycleDay:cycleDay,syncDirections:syncDirections,planFor:planFor,goalId:goalId,snapshotDay:snapshotDay,replaceActiveGoal:replaceActiveGoal,setGoalStatus:setGoalStatus,attachPlan:attachPlan,obstacles:OBSTACLES,ifThenOptions:ifThenOptions,ifThenText:ifThenText,setIfThen:setIfThen,setReadiness:setReadiness,contextFor:contextFor};
+return {version:VERSION,spheres:SPHERES,styles:STYLE,readiness:READINESS,wheelSignals:wheelSignals,priorityContext:priorityContext,styleFor:styleFor,assessReadiness:assessReadiness,scaffold:scaffold,ensureState:ensureState,registerGoals:registerGoals,activateCycle:activateCycle,calendarDay:calendarDay,cycleDay:cycleDay,syncDirections:syncDirections,planFor:planFor,goalId:goalId,snapshotDay:snapshotDay,replaceActiveGoal:replaceActiveGoal,setGoalStatus:setGoalStatus,attachPlan:attachPlan,obstacles:OBSTACLES,ifThenOptions:ifThenOptions,ifThenText:ifThenText,setIfThen:setIfThen,setReadiness:setReadiness,contextFor:contextFor,criteria:CRITERIA,outcomes:OUTCOMES,setCriterion:setCriterion,setOutcome:setOutcome,setCapacity:setCapacity};
 });
