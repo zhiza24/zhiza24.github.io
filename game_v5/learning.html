@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#211710"><title>Открытия — Путь Алхимика</title><link rel="stylesheet" href="learning.css"><script src="learning-data.js"></script><script src="learning-engine.js"></script></head>
+<body class="lo-body"><div class="lo-wrap" id="learning-app"><header class="lo-head"><span class="lo-kicker">ПУТЬ АЛХИМИКА · БИБЛИОТЕКА</span><h1>Открытия</h1><p>Короткие исследования, которые помогают замечать закономерности и применять их в жизни.</p></header><main class="lo-main" id="learning-list"></main></div>
+<script>
+(function(){
+'use strict';
+var root=document.getElementById('learning-list'),data=window.GLearning.data,progress=window.GLearning.getProgress();
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+root.innerHTML='<section class="lo-panel"><div class="lo-label">ТВОЙ ПУТЬ ПОНИМАНИЯ</div><h2>'+progress.completed.length+' из '+data.length+' открытий пройдено</h2><p class="lo-note">Можно возвращаться к любому материалу. Здесь нет оценок и обязательного темпа.</p></section>'+data.map(function(x){var done=progress.completed.indexOf(x.id)>=0;return '<a class="lo-panel lo-item" href="learning.html?opening='+encodeURIComponent(x.id)+'" style="display:block;text-decoration:none;color:inherit"><div class="lo-label">'+(done?'✓ ПРОЙДЕНО':'МИНИ-ОБУЧЕНИЕ')+' · '+x.minutes+' МИН</div><h2>'+esc(x.title)+'</h2><p class="lo-note">'+esc(x.subtitle)+'</p><span class="lo-library">Открыть →</span></a>'}).join('');
+var id=new URLSearchParams(location.search).get('opening');
+if(id){var item=window.GLearning.getLesson(id);if(item){document.title=item.title+' — Открытия';window.GLearning.render(root,id)}}
+})();
+</script></body></html>
