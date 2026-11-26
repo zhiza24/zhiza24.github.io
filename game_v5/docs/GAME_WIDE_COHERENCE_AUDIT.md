@@ -235,7 +235,7 @@ For strategy cards:
 - [ ] Review every test intro, result, synthesis, and transition for clear explanation.
 - [ ] Separate fact, self-report, interpretation, and suggestion visually and verbally.
 - [ ] Check long results, low-data states, no-leading-result states, contradictory signals, and returning-player states.
-- [ ] Verify gender grammar, "ты" voice, no "ё", readable text on mobile/desktop, keyboard access and focus states.
+- [ ] Verify gender grammar, "ты" voice, no letter yo, readable text on mobile/desktop, keyboard access and focus states.
 - [ ] Ensure the player can revisit explanations without repeating the test.
 
 ### P3 — release verification
@@ -266,3 +266,18 @@ Return findings in four groups:
 4. **Risks / regressions** — include severity, reproduction steps, and a proposed fix.
 
 Do not merge, push to main, or silently rewrite production modules. Do not call a feature implemented merely because a specification describes it. For each P0/P1 item, propose a test before proposing a UI patch.
+
+
+## 2.12 Goal execution patterns and feedback loop
+
+A new review-ready contract is defined in [GOAL_EXECUTION_PATTERN_MAP.md](GOAL_EXECUTION_PATTERN_MAP.md). It adds a pre-Reactor synthesis of how the player moves from desire to action and from action to verified outcome, plus a linked Strategy Workshop inside the Reactor.
+
+This is deliberately broader than avoidance. The analysis must examine both under-action (withdrawal, postponement, perfectionistic thresholds, over-preparation, approval dependence, over-control, dispersion, helplessness) and activity without verified progress (rushing, premature conclusions, imagined-feedback substitution, confirmation filtering, ignoring feedback, output–outcome confusion, premature scaling, overcommitment, novelty chasing). It must also identify effective strengths: initiation, persistence with adjustment, focus, realistic pacing, help-seeking, feedback tolerance, experimentation, boundaries, recovery, and learning.
+
+Reuse BG16, Echo B1–B8, First Settings, Inner Mechanism, self-betrayal wheel, critical-thinking research, values, Wheel of Life/factual wheel, Desire Lab/Sky of Wishes, psychotype/nature, strategy/practice engine, and player-entered Reactor observations only to the extent their actual source fields support the inference. The new document requires a source-by-source audit before deciding whether a small targeted follow-up assessment is needed.
+
+Important distinction: BG16 may provide context for a strategy but is not its deterministic cause. Internal rules are hypotheses to check, not facts inferred from a score. The player can correct or reject interpretations. External constraints and skill/resource gaps must not be reframed as psychological resistance.
+
+Pre-Reactor placement is after relevant research and goal selection, before explicit Reactor Start. The Reactor tab is a repeatable trainer combining critical-thinking prompts, balanced belief revision, flexible alternative responses, small experiments, and review against actual feedback. It must not scan free-text diary automatically, add guilt/streak penalties, or reset the 28-day calendar.
+
+The feature remains specification-only on this review branch until source audit, data contract, route, migration, UI, and tests are verified. Do not describe it as implemented in production.

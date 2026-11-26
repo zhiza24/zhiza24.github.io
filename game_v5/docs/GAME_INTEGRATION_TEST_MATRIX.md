@@ -148,3 +148,39 @@ For each failed check, report:
 - regression test to add.
 
 A checklist item is not passed because the intended behavior is described in documentation. It passes only after the relevant code and test demonstrate it.
+
+
+## K. Goal execution patterns and Strategy Workshop
+
+Use [GOAL_EXECUTION_PATTERN_MAP.md](GOAL_EXECUTION_PATTERN_MAP.md) as the feature contract. These scenarios are additional acceptance tests, not claims that production currently passes them.
+
+| ID | Scenario | Expected result |
+|---|---|---|
+| PAT-01 | Existing Echo signal suggests adaptation / withdrawal | Shown as contextual adaptation evidence, not a fixed personality type or direct 19-state score |
+| PAT-02 | BG16 and Echo suggest related themes | Kept as distinct evidence layers; no causal claim or double-counting |
+| PAT-03 | Inner Mechanism has both protective and resource signals | Both remain visible and distinct |
+| PAT-04 | Player has a repeated avoidance / postponement signal | Report names context, source, possible function and cost with qualified wording |
+| PAT-05 | Player over-prepares without real-world testing | Report distinguishes preparation from feedback-producing action |
+| PAT-06 | Player acts rapidly and makes a premature conclusion | Report asks what observable evidence confirms the outcome; does not label the player impulsive |
+| PAT-07 | Player mistakes hope, coincidence, or a promise for verified feedback | Separates expectation, interpretation, and externally observable result |
+| PAT-08 | Player receives feedback but does not incorporate it | Offers a review/adjustment experiment, not a blame label |
+| PAT-09 | Player records many actions but no verified outcome | Separates output/activity from outcome; preserves the value of effort |
+| PAT-10 | Player shows effective persistence and adjusts method using feedback | Identifies this as a strength; does not prescribe unnecessary correction |
+| PAT-11 | Player demonstrates focused initiation, realistic pacing, boundaries, recovery, or help-seeking | Strengths are included as evidence-based resources |
+| PAT-12 | Player is overloaded or lacks time, money, skill, safety, access, or support | Recommends practical planning/resource steps; does not reframe the barrier as an internal block |
+| PAT-13 | Same behavior has multiple plausible explanations | Shows alternatives and asks for context; no forced cause |
+| PAT-14 | Signals differ by life sphere | Preserves sphere-specific patterns rather than assigning one global type |
+| PAT-15 | No clear leading strategy or low evidence coverage | Says so; no invented leader or score |
+| PAT-16 | Player disagrees with a synthesis | Stores correction and respects it in later recommendations |
+| PAT-17 | Pre-Reactor synthesis is opened before Start | Shows evidence, strengths, limits, and a player check; does not start the 28-day calendar |
+| PAT-18 | Player opens Strategy Workshop | Receives the confirmed map context and can choose a short check, full investigation, or experiment review |
+| PAT-19 | Player uses critical-thinking prompts | Separates facts, interpretations, assumptions, alternative explanations, and missing evidence |
+| PAT-20 | Player revises a limiting belief | New working thought is balanced and evidence-aware, not forced positive affirmation |
+| PAT-21 | Player chooses a pause or keeps an old strategy deliberately | Accepted as a valid choice; no streak penalty or guilt language |
+| PAT-22 | Player completes an experiment | Prediction and actual observation are compared; result may remain unverified |
+| PAT-23 | Player edits/replaces a goal while workshop history exists | Goal and workshop records remain correctly linked by stable IDs; calendar and snapshots unchanged |
+| PAT-24 | Export/import/backup/delete-all after workshop use | All new local data round-trips and is removed only within app-owned scope |
+| PAT-25 | Free-text diary contains a relevant phrase | No automatic scanning or inference from diary text |
+| PAT-26 | Mobile Safari and desktop keyboard use | Tab, forms, prompts, save feedback, and navigation remain accessible |
+
+Additional reviewer output: classify each input and requested pattern as implemented, partial, documented-only, or missing; identify the smallest genuine evidence gap; verify that production main was not modified.

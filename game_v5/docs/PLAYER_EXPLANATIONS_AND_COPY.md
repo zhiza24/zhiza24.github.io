@@ -132,7 +132,7 @@ Verify this copy against current implementation before publishing it. If storage
 
 ## Copy QA checklist
 
-- [ ] Russian only; informal "ты" voice; no letter "ё".
+- [ ] Russian only; informal "ты" voice; no letter yo.
 - [ ] Gendered endings use the project's `GG` / `GGender` helpers where needed.
 - [ ] No diagnosis, deterministic labels, or guaranteed outcome claims.
 - [ ] No fabricated evidence counts or unsupported cross-module links.
@@ -141,3 +141,26 @@ Verify this copy against current implementation before publishing it. If storage
 - [ ] Recommendation reason is visible and points to a real source.
 - [ ] The player can skip optional reflection and decline a practice.
 - [ ] Long copy is readable on iPhone and desktop.
+
+
+## Strategy and feedback map: player-facing explanation
+
+Suggested introduction before the pre-Reactor synthesis:
+
+> Ты уже исследовал(а) свои желания, реакции, ценности и опоры. Теперь мы посмотрим, как ты обычно проходишь путь от намерения к действию и от действия к реальному результату. Здесь важно заметить не только то, что может тормозить, но и то, что у тебя уже хорошо получается.
+>
+> Иногда мы откладываем шаг или слишком долго готовимся. Иногда, наоборот, торопимся, делаем много, но не успеваем проверить, что действительно изменилось. Ни один из этих вариантов сам по себе не говорит о твоем характере. Важны обстоятельства, повторяемость и то, что происходит после наших действий.
+
+Suggested transition to the report:
+
+> Это не определение твоего типа. Здесь собраны возможные закономерности, которые проявились в разных исследованиях. Посмотри, что узнается, что подходит лишь отчасти, а что совсем не про тебя. Мы также покажем твои сильные способы действовать и то, что пока нельзя уверенно заключить.
+
+Suggested distinction between activity and result:
+
+> Сделанное действие — уже часть пути, но не всегда подтверждение результата. Иногда следующий важный шаг — не сделать еще больше, а посмотреть, какой отклик пришел от реальности и что стоит скорректировать.
+
+Suggested Strategy Workshop prompt:
+
+> Не нужно заставлять себя думать позитивно или ломать привычную реакцию. Давай проверим, на чем держится эта мысль, что она пытается для тебя сохранить и какие еще варианты у тебя есть. Новая опора должна быть не просто приятной, а более точной и полезной в реальной ситуации.
+
+Avoid statements such as "ты избегающий тип", "ты сама себе мешаешь", "ты притягиваешь неудачу", "если достаточно захотеть, все получится", or "тебе просто нужно действовать". Show evidence, context, strengths, uncertainty, and external constraints.

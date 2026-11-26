@@ -207,7 +207,7 @@ function appTab(T){
   if(s==='day'&&T.view!=='settings')return 'day';
   return 'more';
 }
-var MORE=[['space','directions','Желание и цели','шаги по неделям'],['space','practs','Практики','включить на выбор'],['space','state','Состояние Героя','пять показателей'],['space','wheel','Колесо и Зеркало','начало и финал'],['space','diary','Записи дня','24 часа и заметки'],['space','labs','Лаборатории','глубже, по желанию'],['space','results','Итоги цикла','графики и финал'],['voice','','Голос Самости','перечитать'],['href','learning.html','Открытия','короткие уроки'],['href','samost.html','Самость','работа с собой'],['href','pattern-map-lab.html','Что повторяется','карта твоих ситуаций'],['href','wish.html','Небо желаний','желание и цели'],['settings','','Настройки','напоминание и копия']];
+var MORE=[['space','directions','Желание и цели','шаги по неделям'],['space','practs','Практики','включить на выбор'],['space','state','Состояние Героя','пять показателей'],['space','wheel','Колесо и Зеркало','начало и финал'],['space','diary','Записи дня','24 часа и заметки'],['space','labs','Лаборатории','глубже, по желанию'],['space','results','Итоги цикла','графики и финал'],['voice','','Голос Самости','перечитать'],['href','learning.html','Открытия','короткие уроки'],['href','samost.html','Самость','работа с собой'],['href','pattern-map-lab.html','Что повторяется','карта твоих ситуаций'],['space','workshop','Мастерская стратегий','как ты идешь к результату'],['href','wish.html','Небо желаний','желание и цели'],['settings','','Настройки','напоминание и копия']];
 function moreSheet(){
   return '<div class="tsheet" hidden><div class="tsheet-bg" data-act="sheet-close"></div><div class="tsheet-pn" role="dialog" aria-label="Еще"><div class="tsheet-grab"></div><div class="tsheet-grid">'+MORE.map(function(m){
     var inner='<b>'+esc(m[2])+'</b><span>'+esc(m[3])+'</span>';
@@ -259,6 +259,7 @@ function render0(){
   if(T.view==='week'){host.innerHTML=injectNav(viewWeek(P,T),'map'); bind(); return}
   var space=T.space||'day';
   if(window.GReactor&&(space==='state'||space==='wheel')){host.innerHTML=injectNav(space==='state'?GReactor.viewState(P,T):GReactor.viewWheel(P,T),'day'); bind(); return}
+  if(space==='workshop'){host.innerHTML=injectNav(viewWorkshop(P,T),'workshop'); bind(); return}
   if(space==='labs'||T.view==='labs'){host.innerHTML=injectNav(viewLabs(P,T),'labs'); bind(); return}
   if(space==='practs'||space==='lab'||T.view==='practs'){host.innerHTML=injectNav(viewPracts(P,T),'practs'); bind(); return}
   if(space==='diary'||T.view==='diary'){host.innerHTML=injectNav(viewDiary(P,T),'diary'); bind(); return}
@@ -517,6 +518,38 @@ function viewLabs(P,T){
   h+='<div class="row-line"><b>Разбор привычной схемы</b><p>Этап основного маршрута Точки Б: исследование ситуации, реакции, правила, защитной функции, цены и возможной перенастройки.</p><a class="sky-link" href="map.html">Открыть основной маршрут</a></div>';
   h+='<a class="lab-link" href="labs/razbor.html"><b>Разбор убеждений</b><span>Шесть шагов: исследовать мысль, отделить факты от выводов, увидеть контекст и возможную функцию, учесть реальные ограничения и сформулировать более точный выбор. Независимая лаборатория, не обязательная часть маршрута.</span></a>';
   h+='<a class="lab-link" href="hold.html"><b>Что удерживает меня на месте?</b><span>Шесть уровней: неудовлетворенность, желаемое положение, фактический выбор, скрытая функция, цена и безопасная перенастройка</span></a>';
+  return h+'</div>';
+}
+var wsD={};
+function viewWorkshop(P,T){
+  var W=window.GWorkshop; if(!W)return '<div class="t28"><h1>Мастерская стратегий</h1><p class="cap28">Раздел сейчас недоступен.</p></div>';
+  var n=todayNum(T),L=function(list,id){return gx(W.label(list,id))},o=W.options(wsD.strategy),ch=function(k,list){return '<div class="chips ws-ch">'+list.map(function(x){return '<button type="button" class="'+(wsD[k]===x.id?'on':'')+'" aria-pressed="'+(wsD[k]===x.id)+'" data-act="ws-pick" data-k="'+k+'" data-v="'+x.id+'">'+esc(gx(x.t))+'</button>'}).join('')+'</div>'};
+  var h='<div class="t28 ws"><p class="dk">Мастерская стратегий</p><h1>Как ты идешь к результату</h1><p class="cap28">Пара минут: отметь, как было на самом деле. Правильных ответов нет, любой вариант нормальный.</p>';
+  if(wsD.saved)h+='<p class="score ok" role="status">'+esc(wsD.saved)+'</p>';
+  var ex=W.openExperiment(P,n);
+  if(ex)h+='<div class="row-line ws-rev"><b>Эксперимент недели</b><p>'+esc(L(W.options(ex.strategy).experiments,ex.experiment))+'. Как прошло?</p><div class="chips">'+o.review.map(function(x){return '<button type="button" data-act="ws-review" data-id="'+esc(ex.id)+'" data-v="'+x.id+'">'+esc(x.t)+'</button>'}).join('')+'</div><p class="mute">Любой ответ полезен, даже если попробовать не вышло.</p></div>';
+  var hy=W.hypothesis(P,T);
+  if(hy.ready){
+    h+='<div class="row-line ws-hyp"><b>Предположение</b><p class="ws-txt">'+esc(gx(hy.text))+(hy.plus?' '+esc(hy.plus):'')+'</p><p class="mute">Почему так: '+esc(gx(hy.why))+'</p>';
+    if(hy.noFeedback)h+='<p class="mute">'+esc(gx('В '+hy.noFeedback+' проверках отклика пока не было. Перед шагом можно заранее выбрать, по какому признаку ты поймешь результат.'))+'</p>';
+    if(hy.experiments.done)h+='<p class="mute">Экспериментов: '+hy.experiments.done+', помогли хотя бы отчасти: '+hy.experiments.helped+'.</p>';
+    if(hy.group){
+      var FB=[['yes','Узнаю себя'],['part','Отчасти'],['no','Не про меня']];
+      h+='<p class="mute">Это только предположение. Как тебе?</p><div class="chips">'+FB.map(function(f){return '<button type="button" class="'+(hy.feedback===f[0]?'on':'')+'" data-act="ws-fb" data-g="'+hy.group+'" data-v="'+f[0]+'">'+f[1]+'</button>'}).join('')+'</div>';
+      if(hy.feedback==='no')h+='<p class="mute">Принято. Дальше смотрим только на новые отметки.</p>';
+    }
+    h+='</div>';
+  } else h+='<p class="mute ws-wait">'+esc('Вывод появится после трех коротких проверок. Осталось: '+hy.need+'.')+'</p>';
+  h+='<div class="row-line ws-form"><b>'+esc(gx('1. Как ты {шел|шла} к цели в последние дни?'))+'</b>'+ch('strategy',o.strategies);
+  if(wsD.strategy){
+    h+='<b>'+esc(gx('2. Чего ты ждал{|а}?'))+'</b>'+ch('expect',o.expect)+'<b>Что вышло на деле?</b>'+ch('actual',o.actual);
+    h+='<b>3. Какая мысль была рядом?</b>'+ch('thought',o.thoughts);
+    if(wsD.thought)h+='<p class="mute">Подтвердилась ли она на деле?</p>'+ch('check',o.check);
+    h+='<b>4. Маленький эксперимент на неделю</b>'+ch('experiment',o.experiments);
+  }
+  h+='<button class="go" type="button" data-act="ws-save"'+(wsD.strategy?'':' disabled')+'>Сохранить</button></div>';
+  var E=W.state(P).entries.slice(-3).reverse();
+  if(E.length)h+='<details class="rx-if"><summary>Прошлые проверки</summary>'+E.map(function(e){return '<p class="mute">День '+(e.day||'—')+': '+esc(L(W.strategies,e.strategy).toLowerCase())+(e.actual?'; '+esc(L(o.actual,e.actual).toLowerCase()):'')+'</p>'}).join('')+'</details>';
   return h+'</div>';
 }
 function bwHint(P,n){
@@ -1144,10 +1177,15 @@ function bind(){
     if(act==='sheet-close'){var shc=host.querySelector('.tsheet');if(shc)shc.hidden=true;return}
     if(act==='self-voice'){var shv=host.querySelector('.tsheet');if(shv)shv.hidden=true;if(window.GSelf)GSelf.voice('tracker',{everyTime:true,delay:0});return}
     if(act==='dnav'){var nd=(+T.openDay||todayNum(T))+(+b.getAttribute('data-d'));T.openDay=Math.max(1,Math.min(todayNum(T),nd));T.space='day';T.view='day';save(P);render();try{window.scrollTo(0,0)}catch(e){}return}
+    if(act==='ws-pick'){var wk=b.getAttribute('data-k'),wv=b.getAttribute('data-v');wsD.saved='';if(wk==='strategy'&&wsD.strategy!==wv){wsD={strategy:wv}}else wsD[wk]=wsD[wk]===wv?null:wv;render();return}
+    if(act==='ws-save'&&window.GWorkshop){if(!wsD.strategy)return;var wid=null;try{if(window.GGoalPath&&GGoalPath.goalId&&(T.directions||[])[0])wid=GGoalPath.goalId(T.directions[0],0)}catch(e){}var wr=GWorkshop.addEntry(P,wsD,{day:todayNum(T),cycle:T.cycle||1,goalId:wid});if(!wr.ok)return;save(P);var wexp=wr.entry.experiment&&wr.entry.experiment!=='none'?GWorkshop.label(GWorkshop.options(wr.entry.strategy).experiments,wr.entry.experiment):'';wsD={saved:wexp?gx('Сохранено. Эксперимент на неделю: '+wexp.toLowerCase()+'.'):'Сохранено.'};render();try{window.scrollTo(0,0)}catch(e){}return}
+    if(act==='ws-review'&&window.GWorkshop){if((GWorkshop.reviewExperiment(P,b.getAttribute('data-id'),b.getAttribute('data-v')))){save(P);wsD={saved:'Спасибо, отметка сохранена.'}}render();return}
+    if(act==='ws-fb'&&window.GWorkshop){if(GWorkshop.setFeedback(P,b.getAttribute('data-g'),b.getAttribute('data-v')))save(P);render();return}
     if(act==='space'){
       var sp=b.getAttribute('data-s');
       T.space=sp;
-      T.view=({map:'month',path:'monthg',results:'monthg',lab:'practs',practs:'practs',labs:'labs',diary:'diary',directions:'directions',mirror:'mirror',hero:'hero',day:'day',state:'state',wheel:'wheel'})[sp]||'day';
+      T.view=({map:'month',path:'monthg',results:'monthg',lab:'practs',practs:'practs',labs:'labs',diary:'diary',directions:'directions',mirror:'mirror',hero:'hero',day:'day',state:'state',wheel:'wheel',workshop:'workshop'})[sp]||'day';
+      if(sp==='workshop')wsD={};
       if(sp==='day'&&!T.openDay)T.openDay=todayNum(T);
       save(P); render(); try{window.scrollTo(0,0)}catch(e){} return;
     }

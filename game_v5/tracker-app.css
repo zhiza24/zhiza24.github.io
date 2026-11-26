@@ -119,3 +119,5 @@ body.tapp .lo-pick-q{color:var(--t-tx)!important}
 body.tapp .lo-pick-row button{background:var(--t-sur2);border:1px solid var(--t-bor);color:var(--t-tx)!important}
 body.tapp .lo-pick-row button.is-on{background:var(--t-ac);border-color:var(--t-ac);color:#fff!important}
 body.tapp .rx-if summary,.rx-if summary{font-size:14px;font-weight:600;line-height:1.4;cursor:pointer;color:var(--t-ac,inherit)}body.tapp .rx-if{margin:8px 0}
+body.tapp .ws-form b{display:block;margin:14px 0 6px;font-size:15px;line-height:1.35}body.tapp .ws-form b:first-child{margin-top:0}body.tapp .ws-form .go{margin-top:16px;width:100%}body.tapp .ws-form .go[disabled]{opacity:.45}body.tapp .ws-hyp{border-left:3px solid var(--t-ac,#2F5E50)}body.tapp .ws .chips button{text-align:left}
+body.tapp .ws-hyp .ws-txt{font-size:15px;line-height:1.45;margin:6px 0}
