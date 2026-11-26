@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f8f3eb">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="icon" href="favicon.svg">
+<title>Карта закономерностей</title>
+<script src="theme.js?v=9"></script>
+<script src="gender.js?v=2"></script>
+<link rel="stylesheet" href="pattern-map-lab.css?v=pm1">
+</head>
+<body>
+<main class="pm-shell" id="pmMain">
+<header class="pm-head"><a href="reactor.html" class="pm-back">← В трекер</a>
+<span class="pm-kicker">Карта закономерностей</span>
+<h1>Что у тебя повторяется</h1>
+<p>Записывай только те ситуации, к которым хочется вернуться. Если ты сам{|а} поставишь одинаковую метку на похожие случаи в разных сферах, карта предложит на них посмотреть. Это не вывод и не диагноз. Записи остаются на этом устройстве.</p></header>
+
+<section class="pm-section"><span class="pm-kicker">Что уже есть</span>
+<div class="pm-grid" id="inventory"></div>
+</section>
+
+<section class="pm-section"><span class="pm-kicker">Новая запись</span>
+<form id="episodeForm" class="pm-form">
+<label>Что произошло? <small>Только факт, без объяснений</small><textarea name="fact" rows="2" placeholder="Например: на встрече не предложил{|а} свою идею"></textarea></label>
+<label>Сфера жизни<select name="sphere"><option value="">Не выбирать</option><option value="work">Карьера</option><option value="relationships">Отношения</option><option value="family">Семья</option><option value="money">Финансы</option><option value="health">Здоровье</option><option value="friends">Друзья</option><option value="growth">Рост</option><option value="rest">Отдых</option></select></label>
+<label>Метка <small>Одно и то же короткое слово для похожих случаев. Можно оставить пустой</small><input name="tag" maxlength="80" placeholder="Например: промолчал{|а}"></label>
+<div class="pm-check"><input type="checkbox" name="counterexample" id="counterexample"><label for="counterexample">Это исключение: привычный сценарий здесь не повторился</label></div>
+<details class="pm-more"><summary>Добавить подробности</summary>
+<label>Какая мысль возникла?<textarea name="thought" rows="2" placeholder="Можно написать «не заметил{|а}»"></textarea></label>
+<div class="pm-two"><label>Что ты почувствовал{|а}?<input name="feeling"></label><label>Как поступил{|а}?<input name="action"></label></div>
+<label>Что было важно сохранить или получить?<input name="need"></label>
+<label>Какое правило могло прозвучать?<input name="rule" placeholder="Только если оно узнается"></label>
+<label>Какое небольшое действие могло бы быть другим?<textarea name="alternative" rows="2"></textarea></label>
+<label>Что не укладывается в эту тему?<textarea name="reflection" rows="2"></textarea></label>
+</details>
+<button class="pm-btn" type="submit">Сохранить запись</button>
+<div id="formMessage" class="pm-message" aria-live="polite"></div>
+</form>
+</section>
+
+<section class="pm-section"><span class="pm-kicker">Что повторяется</span>
+<div id="patterns"></div>
+</section>
+
+<section class="pm-section"><span class="pm-kicker">Твои записи</span>
+<div id="episodes"></div>
+</section>
+</main>
+<script src="pattern-map-engine.js?v=pm1"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+function gx(s){var f=window.GGender&&GGender()==='f';return String(s==null?'':s).replace(/\{([^{}|]*)\|([^{}|]*)\}/g,function(_,m,w){return f?w:m})}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+$('pmMain').innerHTML=gx($('pmMain').innerHTML);
+var sphereNames=GPatternMap.sphereNames;
+function card(t,v,sub){return '<article class="pm-card"><span>'+esc(t)+'</span><strong>'+esc(v)+'</strong><small>'+esc(sub)+'</small></article>'}
+function render(){
+ var a=GPatternMap.analyze(),i=a.inventory,t=i.reactor;
+ $('inventory').innerHTML=[
+  card('Трекер',t.eventCount+t.markCount,'записей за '+t.daysWithRecords+' дн.'),
+  card('Самость',i.samost.completedTopics+' из '+i.samost.totalTopics,'тем отмечено'),
+  card('Открытия',i.learning.completed,'уроков пройдено'),
+  card('Записи карты',a.episodes.length,'твои эпизоды')].join('');
+ var st={unreviewed:'Пока не оценил{|а}',recognized:'Узнаю',partial:'Отчасти',uncertain:'Зависит от ситуации',rejected:'Не про меня'};
+ $('patterns').innerHTML=a.patterns.length?a.patterns.map(function(p){
+  var opts=Object.keys(st).map(function(k){return '<option value="'+k+'"'+(p.status===k?' selected':'')+'>'+esc(gx(st[k]))+'</option>'}).join('');
+  return '<article class="pm-pattern"><div class="pm-pattern-top"><b>'+esc(p.title)+'</b><span>'+p.episodes+' запис., сфер: '+p.sphereCount+'</span></div><p>'+esc(gx(p.description))+'</p><div class="pm-evidence">'+p.evidence.map(function(e){return '<div'+(e.counterexample?' class="pm-ex"':'')+'><small>'+esc(sphereNames[e.sphere]||'Без сферы')+(e.counterexample?' · исключение':'')+'</small><p>'+esc(e.fact||e.thought||e.action||'Без описания')+'</p></div>'}).join('')+'</div>'+
+   (p.eligible?'<div class="pm-hint">Это повторяется в разных сферах. Подходит ли тебе такая формулировка?</div><div class="pm-status-form"><label>Твоя оценка<select data-pattern-status="'+esc(p.id)+'">'+opts+'</select></label><label>Уточнение<input data-pattern-note="'+esc(p.id)+'" value="'+esc(p.note)+'" placeholder="Контекст, исключения"></label><button type="button" class="pm-btn pm-secondary" data-save-pattern="'+esc(p.id)+'">Сохранить</button></div>':'<div class="pm-muted">Пока мало случаев, чтобы говорить о повторении.</div>')+'</article>'}).join(''):'<div class="pm-empty">Пока нет записей с одинаковой меткой. Это нормально, специально искать ничего не нужно.</div>';
+ $('episodes').innerHTML=a.episodes.length?a.episodes.slice().reverse().map(function(e){
+  return '<article class="pm-episode"><div><b>'+esc(sphereNames[e.sphere]||'Без сферы')+(e.counterexample?' · исключение':'')+'</b><small>'+new Date(e.createdAt).toLocaleDateString('ru-RU')+'</small></div><p>'+esc(e.fact||e.thought||e.action)+'</p>'+(e.tag?'<small>Метка: '+esc(e.tag)+'</small>':'')+'<button type="button" class="pm-delete" data-delete="'+esc(e.id)+'">Удалить</button></article>'}).join(''):'<div class="pm-empty">Здесь появятся записи, которые ты сам{|а} решишь сохранить.</div>';
+ $('episodes').innerHTML=gx($('episodes').innerHTML);
+}
+$('episodeForm').addEventListener('submit',function(ev){
+ ev.preventDefault();var f=new FormData(ev.currentTarget),x={};
+ ['sphere','fact','thought','feeling','action','need','rule','tag','alternative','reflection'].forEach(function(k){x[k]=f.get(k)||''});
+ x.counterexample=!!f.get('counterexample');
+ var r=GPatternMap.addEpisode(x);
+ $('formMessage').textContent=r.ok?'Сохранено.':r.error;
+ if(r.ok){ev.currentTarget.reset();render()}
+});
+document.addEventListener('click',function(ev){
+ var b=ev.target.closest('[data-save-pattern],[data-delete]');if(!b)return;
+ if(b.hasAttribute('data-delete')){if(confirm('Удалить эту запись?')){GPatternMap.deleteEpisode(b.getAttribute('data-delete'));render()}return}
+ var id=b.getAttribute('data-save-pattern'),sel=document.querySelector('[data-pattern-status="'+id+'"]'),note=document.querySelector('[data-pattern-note="'+id+'"]');
+ GPatternMap.updatePattern(id,sel&&sel.value,note&&note.value);render();
+});
+render();
+})();
+</script>
+</body>
+</html>

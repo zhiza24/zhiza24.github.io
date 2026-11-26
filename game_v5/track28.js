@@ -207,7 +207,7 @@ function appTab(T){
   if(s==='day'&&T.view!=='settings')return 'day';
   return 'more';
 }
-var MORE=[['space','directions','Желание и цели','шаги по неделям'],['space','practs','Практики','включить на выбор'],['space','state','Состояние Героя','пять показателей'],['space','wheel','Колесо и Зеркало','начало и финал'],['space','diary','Записи дня','24 часа и заметки'],['space','labs','Лаборатории','глубже, по желанию'],['space','results','Итоги цикла','графики и финал'],['voice','','Голос Самости','перечитать'],['href','learning.html','Открытия','короткие уроки'],['href','samost.html','Самость','работа с собой'],['href','wish.html','Небо желаний','желание и цели'],['settings','','Настройки','напоминание и копия']];
+var MORE=[['space','directions','Желание и цели','шаги по неделям'],['space','practs','Практики','включить на выбор'],['space','state','Состояние Героя','пять показателей'],['space','wheel','Колесо и Зеркало','начало и финал'],['space','diary','Записи дня','24 часа и заметки'],['space','labs','Лаборатории','глубже, по желанию'],['space','results','Итоги цикла','графики и финал'],['voice','','Голос Самости','перечитать'],['href','learning.html','Открытия','короткие уроки'],['href','samost.html','Самость','работа с собой'],['href','pattern-map-lab.html','Что повторяется','карта твоих ситуаций'],['href','wish.html','Небо желаний','желание и цели'],['settings','','Настройки','напоминание и копия']];
 function moreSheet(){
   return '<div class="tsheet" hidden><div class="tsheet-bg" data-act="sheet-close"></div><div class="tsheet-pn" role="dialog" aria-label="Еще"><div class="tsheet-grab"></div><div class="tsheet-grid">'+MORE.map(function(m){
     var inner='<b>'+esc(m[2])+'</b><span>'+esc(m[3])+'</span>';
