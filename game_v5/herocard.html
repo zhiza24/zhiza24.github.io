@@ -22,7 +22,7 @@
 #heroGate h1{font:700 32px/1.2 'Cormorant Garamond',serif;color:#f0c870;margin:0 0 28px}
 #heroGate .go{display:block;width:100%;max-width:320px;padding:15px 18px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope,sans-serif}
 
-</style></head><body data-page="hero"><main id="hc"><div class="top"><img class="ph" data-hero-img="portrait" alt=""><div><h1 id="nm">Герой</h1><p class="sub" id="sb"></p></div></div>
+</style></head><body data-page="hero"><main id="hc"><div class="top"><img class="ph" data-hero-img="portrait" alt="" decoding="async"><div><h1 id="nm">Герой</h1><p class="sub" id="sb"></p></div></div>
 <nav class="tabs"><a href="#portrait">Мой портрет</a><a href="#map">Мои открытия</a><a href="#now">Мой путь сейчас</a><a href="#arts">Артефакты</a></nav>
 <h2 id="portrait">Мой портрет</h2><div id="pr"></div>
 <h2 id="map">Мои открытия · Карта героя</h2><div id="hm"></div>
@@ -67,7 +67,7 @@ GHM.ready(function(){
  document.getElementById('nw').innerHTML='<div class="now">'+(s.finished?'<p>Путь этого круга пройден.</p><a class="go" href="tasks.html">Дальше: Задания</a>':'<p class="muted">'+E(PT[st.pt]||'')+'</p><p><b>'+E(st.t||'')+'</b></p><a class="go" href="'+E(s.url)+'">Дальше: '+E(st.t||'Продолжить')+'</a>')+'</div>';
  /* артефакты */
  var A=window.GArts?GArts.list(P):[];
- document.getElementById('ar').innerHTML=A.length?'<div class="arts">'+A.map(function(a){var ic=(window.GArts&&GArts.img&&GArts.img(a.id))||a.icon||'';return '<div class="art">'+(/\.(png|jpe?g|webp|svg)/.test(ic)?'<img src="'+E(ic)+'" alt="">':'<span class="ic">'+E(ic)+'</span>')+E(a.name)+'</div>'}).join('')+'</div>':'<p class="muted">Артефакты появятся по мере пути.</p>';
+ document.getElementById('ar').innerHTML=A.length?'<div class="arts">'+A.map(function(a){var ic=(window.GArts&&GArts.img&&GArts.img(a.id))||a.icon||'';return '<div class="art">'+(/\.(png|jpe?g|webp|svg)/.test(ic)?'<img loading="lazy" decoding="async" src="'+E(ic)+'" alt="" decoding="async">':'<span class="ic">'+E(ic)+'</span>')+E(a.name)+'</div>'}).join('')+'</div>':'<p class="muted">Артефакты появятся по мере пути.</p>';
  if(location.hash){var t=document.querySelector(location.hash);if(t)setTimeout(function(){t.scrollIntoView()},50)}
 });
 })();

@@ -1,3 +1,5 @@
+/* Ранний preconnect к шрифтам, чтобы не ждать CSS. */
+(function(){try{var h=document.head||document.documentElement;if(!h||document.querySelector('link[data-gpre=fonts]'))return;[['preconnect','https://fonts.googleapis.com'],['preconnect','https://fonts.gstatic.com']].forEach(function(x,i){var l=document.createElement('link');l.rel=x[0];l.href=x[1];l.setAttribute('data-gpre','fonts');if(i)l.crossOrigin='anonymous';h.insertBefore(l,h.firstChild)})}catch(e){}})();
 /* PWA: the worker is registered from the shared theme entry, which is loaded
    by the entry page, map, task screens, diary, hero and Reactor. */
 (function(){
