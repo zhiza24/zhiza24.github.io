@@ -124,6 +124,17 @@
     return write(s.P);
   }
 
+  var OPT_KEYS = ['a', 'b', 'c', 'd', 'e', 'f'];
+  /* Ответы практики для учета: id варианта, текст и признак прежней свободной записи */
+  function practiceAnswers(id) {
+    var x = lesson(id), saved = getPractice(id), P = state().P, t = function (v) { return gx(v, P); };
+    if (!x || !x.practice) return [];
+    return x.practice.fields.map(function (f, i) {
+      var v = saved[i] || '', opts = (x.practice.choices && x.practice.choices[i]) || [], j = OPT_KEYS.indexOf(v);
+      return { field: i, value: v || null, choice: j >= 0 && j < opts.length ? v : (v === 'other' ? 'other' : null), text: j >= 0 && j < opts.length ? t(opts[j]) : (v === 'other' ? 'Другое' : v), legacy: !!v && j < 0 && v !== 'other' };
+    });
+  }
+
   function getPractice(id) {
     var s = state();
     return (s.L.practice && obj(s.L.practice[id])) || {};
@@ -221,8 +232,13 @@
       html += '<section class="lo-panel"><div class="lo-label">ПРИМЕНЕНИЕ К СЕБЕ · ПО ЖЕЛАНИЮ</div><h2>' + esc(t(x.practice.title)) + '</h2>' +
         '<p class="lo-note">' + esc(t(x.practice.hint)) + '</p><div class="lo-fields">' +
         x.practice.fields.map(function (f, i) {
-          return '<label>' + esc(t(f)) + '<textarea rows="2" data-practice="' + i + '" placeholder="Можно оставить пустым">' + esc(savedPractice[i] || '') + '</textarea></label>';
-        }).join('') + '</div><p class="lo-private">Твои записи остаются на этом устройстве и не отправляются наружу.</p></section>';
+          var opts = (x.practice.choices && x.practice.choices[i]) || [], cur = savedPractice[i] || '', keys = OPT_KEYS.slice(0, opts.length).concat(['other']);
+          var legacy = cur && keys.indexOf(cur) < 0;
+          return '<div class="lo-pick" data-field="' + i + '"><div class="lo-pick-q">' + esc(t(f)) + '</div><div class="lo-pick-row">' +
+            opts.map(function (o, j) { return '<button type="button" class="' + (cur === OPT_KEYS[j] ? 'is-on' : '') + '" data-practice="' + i + '" data-v="' + OPT_KEYS[j] + '">' + esc(t(o)) + '</button>'; }).join('') +
+            '<button type="button" class="lo-pick-other' + (cur === 'other' ? ' is-on' : '') + '" data-practice="' + i + '" data-v="other">Другое</button></div>' +
+            (legacy ? '<p class="lo-pick-old">Прежний ответ: ' + esc(cur) + '</p>' : '') + '</div>';
+        }).join('') + '</div><p class="lo-private">Ответы остаются на этом устройстве.</p></section>';
     }
 
     var done = isComplete(id);
@@ -234,9 +250,11 @@
 
     root.innerHTML = html;
 
-    root.querySelectorAll('[data-practice]').forEach(function (ta) {
-      ta.addEventListener('input', function () {
-        savePractice(id, +ta.dataset.practice, ta.value);
+    root.querySelectorAll('[data-practice]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var i = +btn.dataset.practice, on = btn.classList.contains('is-on'), v = on ? '' : btn.dataset.v;
+        savePractice(id, i, v);
+        btn.parentNode.querySelectorAll('button').forEach(function (b) { b.classList.toggle('is-on', !on && b === btn); });
       });
     });
 
@@ -382,6 +400,7 @@
     submitAnswer: answer,
     rateFlashcard: rateCard,
     savePractice: savePractice,
+    practiceAnswers: practiceAnswers,
     getPractice: getPractice,
     complete: complete,
     dismiss: dismiss,

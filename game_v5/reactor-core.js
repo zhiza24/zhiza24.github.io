@@ -189,15 +189,30 @@ function ladder(T,i,text){
  return g;
 }
 function goalProgress(T,i){var g=(T.goalSteps||{})[i],wd=0,dd=0;if(g)g.weeks.forEach(function(w){if(w.done)wd++});for(var n=1;n<=28;n++){var d=dayOf(T,n);if((d.dirState||[])[i]==='done')dd++}return {weeks:wd,days:dd}}
+/* ---------- движок целей: готовность, минимум, план на помеху (только выбор из вариантов) ---------- */
+var gpOpen=-1;
+function gpId(P,T,i){var GP=window.GGoalPath;if(!GP)return '';var ds=T.directions||[];if(ds[i])return GP.goalId(ds[i],i);var gs=goals(P,T);return gs[i]?GP.goalId({text:gs[i]},i):''}
+function gpPlan(P,T,i){var GP=window.GGoalPath;if(!GP)return {};try{GP.syncDirections(T)}catch(e){}return GP.planFor(T,gpId(P,T,i))||{}}
+function gpIfThen(P,T,i){
+ var GP=window.GGoalPath;if(!GP)return '';
+ var pl=gpPlan(P,T,i),w=pl.woop||{},o=GP.ifThenOptions(w.obstacle),line=GP.ifThenText(w);
+ var h='<details class="rx-if"'+(gpOpen===i?' open':'')+'><summary>'+(line?esc(line):'Если что-то помешает')+'</summary><p class="mute">Что может помешать?</p><div class="chips">'+o.obstacles.map(function(x){return '<button type="button" class="'+(w.obstacle===x.id?'on':'')+'" data-act="rx-ob" data-g="'+i+'" data-v="'+x.id+'">'+esc(x.t)+'</button>'}).join('')+'</div>';
+ if(w.obstacle)h+='<p class="mute">Тогда я…</p><div class="chips">'+o.responses.map(function(x){return '<button type="button" class="'+(w.response===x.id?'on':'')+'" data-act="rx-if" data-g="'+i+'" data-v="'+x.id+'">'+esc(x.t)+'</button>'}).join('')+'</div>';
+ return h+'</details>';
+}
+var READY_CHIPS=[['ready','Можно начинать'],['time','Нужно найти время'],['gaps','Чего-то не хватает'],['foundation','Сначала подготовиться']];
 var STEP_HINT=['Первый маленький шаг: прояснить и начать','Повторять и замечать, что мешает','Попробовать новое решение','Закрепить и подвести итог'];
 function goalsEditor(P,T){
  var gs=goals(P,T);if(!gs.length)return '';
  var h='<section class="rx-goals"><h2>Шаги по неделям</h2><p class="mute">Разбей каждую цель на четыре небольших шага, по одному на период. В «Моем дне» появится шаг текущей недели. Шаг можно уменьшить, если он не идет.</p>';
  gs.forEach(function(text,i){
   var g=ladder(T,i,text),pr=goalProgress(T,i);
+  var pl=gpPlan(P,T,i),hints=STEP_HINT.slice();
+  if(window.GGoalPath&&pl.readiness){try{var sc=GGoalPath.scaffold({id:gpId(P,T,i),text:text},{level:pl.readiness},GGoalPath.styleFor(P));hints=sc.weeks.map(function(x){return x.title})}catch(e){}}
   h+='<div class="rx-goal"><p class="dk">Цель '+(i+1)+'</p><b>'+esc(text)+'</b><div class="rx-track sm"><i style="width:'+Math.round(pr.weeks/4*100)+'%"></i></div><p class="mute">Шагов недели сделано: '+pr.weeks+' из 4 · дней с шагом: '+pr.days+'</p>';
+  if(window.GGoalPath)h+='<p class="mute">С чего начать</p><div class="chips">'+READY_CHIPS.map(function(r){return '<button type="button" class="'+(pl.readiness===r[0]?'on':'')+'" data-act="rx-ready" data-g="'+i+'" data-v="'+r[0]+'">'+esc(r[1])+'</button>'}).join('')+'</div>';
   PERIODS.forEach(function(p,w){var W=g.weeks[w]||{};
-   h+='<div class="rx-step"><label>Дни '+p.a+'–'+p.b+' · '+esc(p.t)+'<input type="text" maxlength="160" data-act="rx-step" data-g="'+i+'" data-w="'+w+'" value="'+esc(W.t||'')+'" placeholder="'+esc(STEP_HINT[w])+'"></label>';
+   h+='<div class="rx-step"><label>Дни '+p.a+'–'+p.b+' · '+esc(p.t)+'<input type="text" maxlength="160" data-act="rx-step" data-g="'+i+'" data-w="'+w+'" value="'+esc(W.t||'')+'" placeholder="'+esc(hints[w])+'"></label>';
    if(W.small!=null)h+='<label class="rx-small">Версия поменьше<input type="text" maxlength="160" data-act="rx-small" data-g="'+i+'" data-w="'+w+'" value="'+esc(W.small||'')+'" placeholder="Что точно получится даже в трудный день"></label>';
    h+='<div class="chips"><button type="button" class="'+(W.done?'on':'')+'" data-act="rx-wdone" data-g="'+i+'" data-w="'+w+'">'+(W.done?'Шаг недели сделан':'Отметить шаг недели')+'</button>'+(W.small==null&&W.t?'<button type="button" data-act="rx-shrink" data-g="'+i+'" data-w="'+w+'">Шаг не идет, уменьшить</button>':'')+'</div></div>';
   });
@@ -212,6 +227,8 @@ function goalToday(P,T,n,focus){
  var h='<div class="rx-today"><p class="dk">Шаг по цели · неделя '+(w+1)+'</p><span class="ftag">'+esc(gs[i])+'</span>';
  if(step)h+='<p class="main">'+esc(step)+'</p><div class="chips"><button type="button" class="'+(doneToday?'on':'')+'" data-act="rx-gday" data-g="'+i+'">'+(doneToday?'Сегодня сделано':'Сделано сегодня')+'</button><button type="button" class="'+(W.done?'on':'')+'" data-act="rx-wdone" data-g="'+i+'" data-w="'+w+'">'+(W.done?'Шаг недели закрыт':'Закрыть шаг недели')+'</button>'+(W.small==null?'<button type="button" data-act="rx-shrink" data-g="'+i+'" data-w="'+w+'" data-go="1">Уменьшить</button>':'')+'</div>';
  else h+='<p class="mute">Для этой недели шаг еще не задан.</p><button type="button" class="quiet-btn" data-act="space" data-s="directions">Разбить цель на шаги</button>';
+ var dpl=(T.directionPlans||{})[i]||{};if(step&&!W.small&&dpl.minimum)h+='<p class="mute">На трудный день: '+esc(dpl.minimum)+'</p>';
+ if(step)h+=gpIfThen(P,T,i);
  var pr=goalProgress(T,i);h+='<p class="mute">Прогресс цели: шагов недели '+pr.weeks+' из 4 · дней с шагом '+pr.days+'</p>';
  return h+'</div>';
 }
@@ -289,6 +306,10 @@ function click(act,b,P,T,n){
  if(act==='rx-md'){var dr=(T.markDraft&&T.markDraft.n===n)?T.markDraft:{n:n,kind:'act'},f=b.getAttribute('data-f'),v2=b.getAttribute('data-v');if(f==='dur')v2=+v2;dr[f]=(dr[f]===v2&&f!=='sph'&&f!=='kind')?'':v2;T.markDraft=dr;H.save(P);H.render();H.openAcc('quick');return true}
  if(act==='rx-madd'){var dr2=T.markDraft;if(!dr2||dr2.n!==n||!dr2.sph)return true;T.marks24=T.marks24||{};T.marks24[n]=T.marks24[n]||[];var m={id:'m'+Date.now().toString(36),t:Date.now(),sph:dr2.sph,kind:dr2.kind||'act'};['init','emo','after'].forEach(function(k){if(dr2[k]&&m.kind!=='wish')m[k]=dr2[k]});if(dr2.dur&&m.kind==='act')m.dur=+dr2.dur;if(dr2.text)m.text=String(dr2.text).trim().slice(0,120);T.marks24[n].push(m);T.markDraft={n:n,kind:m.kind};H.save(P);H.render();H.openAcc('quick');return true}
  if(act==='rx-mdel'){var id=b.getAttribute('data-id');T.marks24[n]=marksOf(T,n).filter(function(x){return x.id!==id});H.save(P);H.render();H.openAcc('quick');return true}
+ if(act==='rx-ob'||act==='rx-if'||act==='rx-ready'){var GP=window.GGoalPath;if(!GP)return true;var gi2=+b.getAttribute('data-g'),id2=gpId(P,T,gi2),v3=b.getAttribute('data-v'),cur=gpPlan(P,T,gi2);
+  if(act==='rx-ready')GP.setReadiness(T,id2,cur.readiness===v3?null:v3);
+  else{var w3=cur.woop||{};if(act==='rx-ob')GP.setIfThen(T,id2,w3.obstacle===v3?'':v3,'');else GP.setIfThen(T,id2,w3.obstacle,w3.response===v3?'':v3);gpOpen=gi2}
+  H.save(P);H.render();return true}
  if(act==='rx-wdone'){var g=ladder(T,+b.getAttribute('data-g'),goals(P,T)[+b.getAttribute('data-g')]),W=g.weeks[+b.getAttribute('data-w')];W.done=!W.done;H.save(P);H.render();return true}
  if(act==='rx-gday'){var gi=+b.getAttribute('data-g');d.dirState=d.dirState||['','',''];d.dirState[gi]=d.dirState[gi]==='done'?'':'done';H.save(P);H.render();return true}
  if(act==='rx-shrink'){var g2=ladder(T,+b.getAttribute('data-g'),goals(P,T)[+b.getAttribute('data-g')]),W2=g2.weeks[+b.getAttribute('data-w')];if(W2.small==null)W2.small='';var pl=(T.directionPlans||{})[+b.getAttribute('data-g')];if(!W2.small&&pl&&pl.minimum)W2.small=pl.minimum;if(b.getAttribute('data-go')){T.space='directions';T.view='directions'}H.save(P);H.render();return true}

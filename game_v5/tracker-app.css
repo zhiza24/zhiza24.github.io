@@ -115,3 +115,7 @@ body.tapp .gsc-close{outline:none!important;appearance:none;-webkit-appearance:n
 body.tapp .gsc-close:before{display:none!important;content:none!important}
 body.tapp .gsc-x{top:14px;right:14px;color:var(--t-mu);opacity:1!important;order:0}
 body.tapp .gsc-au{display:none}
+body.tapp .lo-pick-q{color:var(--t-tx)!important}
+body.tapp .lo-pick-row button{background:var(--t-sur2);border:1px solid var(--t-bor);color:var(--t-tx)!important}
+body.tapp .lo-pick-row button.is-on{background:var(--t-ac);border-color:var(--t-ac);color:#fff!important}
+body.tapp .rx-if summary,.rx-if summary{font-size:14px;font-weight:600;line-height:1.4;cursor:pointer;color:var(--t-ac,inherit)}body.tapp .rx-if{margin:8px 0}

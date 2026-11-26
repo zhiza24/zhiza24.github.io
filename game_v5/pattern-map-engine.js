@@ -6,6 +6,12 @@
 'use strict';
 var PROFILE_KEY='alch_v5_profile',SAMOST_KEY='alch_samost',OWN_KEY='alch_pattern_map_v1',VERSION=1;
 var TOPIC_NAMES={being:'Я есть',liking:'Что мне нравится',self_cancel:'Где я отменяю себя',inner_voice:'Чей голос звучит внутри',ally:'Внутренний союзник',desires:'Мои желания',past:'Мой опыт — часть моей истории',aliveness:'Качество проживаемого опыта',integration:'Моя собственная позиция'};
+var OPTIONS={
+ situation:{ask:'Не попросил{|а} о том, что нужно',idea:'Не предложил{|а} свое',no:'Не смог{|ла} отказать',delay:'Отложил{|а} важное дело',conflict:'Сдержал{|а} несогласие',over:'Взял{|а} на себя лишнее'},
+ reaction:{silent:'Промолчал{|а}',yield:'Уступил{|а}',postpone:'Отложил{|а}',instead:'Сделал{|а} за другого',hold:'Сдержал{|а} чувства'},
+ feeling:{anx:'Тревога',anger:'Раздражение',shame:'Неловкость',tired:'Усталость',calm:'Спокойствие'},
+ thought:{bother:'Не хочу мешать',wrong:'Вдруг я ошибаюсь',later:'Потом будет лучше момент',must:'Так надо',none:'Не заметил{|а} мысли'}
+};
 var SPHERES={health:'Здоровье',money:'Финансы',work:'Карьера',relationships:'Отношения',family:'Семья',friends:'Друзья',growth:'Рост',rest:'Отдых'};
 function obj(x){return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}
 function arr(x){return Array.isArray(x)?x:[]}
@@ -58,5 +64,5 @@ function analyze(){
  patterns=patterns.map(function(p){var old=known[p.id]||{};p.status=old.status||'unreviewed';p.note=old.note||'';p.updatedAt=old.updatedAt||null;return p});
  return {inventory:snap.inventory,episodes:snap.own.episodes,patterns:patterns,capturedAt:snap.capturedAt,readOnlySources:true,ownStorageKey:OWN_KEY};
 }
-g.GPatternMap={version:VERSION,readSnapshot:readSnapshot,analyze:analyze,addEpisode:addEpisode,deleteEpisode:deleteEpisode,updatePattern:updatePattern,storageKey:OWN_KEY,topicNames:TOPIC_NAMES,sphereNames:SPHERES};
+g.GPatternMap={version:VERSION,readSnapshot:readSnapshot,analyze:analyze,addEpisode:addEpisode,deleteEpisode:deleteEpisode,updatePattern:updatePattern,storageKey:OWN_KEY,topicNames:TOPIC_NAMES,options:OPTIONS,sphereNames:SPHERES};
 })(typeof window!=='undefined'?window:globalThis);

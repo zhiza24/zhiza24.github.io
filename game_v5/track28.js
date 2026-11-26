@@ -1379,6 +1379,7 @@ function bind(){
         weekPlans:{},rewards:{},proofs:[],openDay:1,view:'month',space:'map',
         directions:JSON.parse(JSON.stringify(T.directions||[])),
         directionPlans:JSON.parse(JSON.stringify(T.directionPlans||{})),
+        goalPath:T.goalPath?JSON.parse(JSON.stringify(T.goalPath)):undefined,
         strategy:JSON.parse(JSON.stringify(T.strategy||null)),
         strategySeen:!!T.strategySeen,
         declared:!!T.declared,
