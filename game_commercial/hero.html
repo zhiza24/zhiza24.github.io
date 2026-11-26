@@ -1,0 +1,69 @@
+<!doctype html><html lang="ru"><head><script src="theme.js?v=9"></script><script src="sound.js?v=1"></script><script src="flow.js?v=im1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=im2"></script><script src="profile-layer.js?v=art1"></script><script src="route-gate.js?v=im1"></script><script src="gender.js?v=4"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794512684"></script><meta http-equiv="Cache-Control" content="no-cache">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<title>Герой</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nav.css?v=map1"><link rel="stylesheet" href="passport.css?v=1f19">
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#2a1606;font-family:Manrope,sans-serif;color:#3a220a}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 50% 30%,#f6e6bf 0%,#e8cf98 55%,#b98a48 100%);box-shadow:inset 0 0 0 4px #8a5a20,inset 0 0 0 6px #e8c47a,inset 0 0 40px rgba(110,60,10,.5)}
+.wr{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 50px);bottom:calc(140px + env(safe-area-inset-bottom));overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 14px 18px;box-sizing:border-box}
+.in{max-width:560px;margin:0 auto}
+.pt{position:relative;border-radius:18px;overflow:hidden;border:2px solid #a97932;box-shadow:0 6px 22px rgba(60,30,5,.45);background:#2a1606}
+.pt img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 18%;max-height:52dvh;visibility:hidden}
+.pt .ov2{position:absolute;left:0;right:0;bottom:0;padding:40px 16px 14px;background:linear-gradient(transparent,rgba(30,14,3,.92));color:#f8e7c2}
+.lbl{font:700 11px Manrope;letter-spacing:.18em;text-transform:uppercase;color:#d9b26a}
+.pt h1{margin:2px 0 0;font:700 38px/1.05 'Cormorant Garamond',Georgia,serif;color:#fff3d6}
+.pt .rl{font:600 15px Manrope;color:#f0d9a8}
+.chips{display:grid;grid-template-columns:1fr;gap:10px;margin:12px 0}.chip{text-align:left;font:inherit;color:inherit;cursor:pointer;width:100%}.chip .cx{display:block;font-size:14px;line-height:1.4;margin-top:4px}.chip .ch2{display:block;font-size:12px;color:#8a6a40;line-height:1.35;margin-top:6px;border-top:1px dashed #d9bf8f;padding-top:6px}
+.chip{background:#fbf0d7;border:1px solid #b18a55;border-radius:12px;padding:10px 12px}
+.chip .lbl{color:#8a5a20}.chip b{display:block;font:700 19px 'Cormorant Garamond',Georgia,serif;margin-top:2px}
+.nat{display:block;width:100%;text-align:left;border:1.5px solid #a97932;border-radius:14px;padding:14px 16px;background:linear-gradient(#fff6df,#efd9a6);color:#3a220a;cursor:pointer;box-shadow:0 2px 10px rgba(110,60,10,.25)}
+.nat b{font:700 22px 'Cormorant Garamond',Georgia,serif}.nat small{display:block;font-size:13px;color:#6d4a1d;margin-top:3px}.nat .go2{float:right;font-size:20px;color:#8a5a20}
+.hh{display:flex;justify-content:space-between;align-items:baseline;margin:22px 2px 8px}.hh b{font:700 13px Manrope;letter-spacing:.16em;color:#6d4012}.hh small{color:#7a5a30;font-size:13px}
+.ch{display:flex;gap:12px;width:100%;text-align:left;border:1px solid #b18a55;border-radius:14px;padding:12px;margin:0 0 10px;background:#fbf0d7;color:#3a220a;cursor:pointer;font-family:Manrope}
+.ch .big{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#7a4a18;color:#fff3d6;font:700 22px 'Cormorant Garamond',Georgia,serif}
+.ch .cb{display:flex;flex-direction:column;gap:2px;min-width:0}.ch b{font:700 19px 'Cormorant Garamond',Georgia,serif}.ch small{color:#76552d;font-size:12.5px}
+.ch .st{font-style:normal;font-size:11.5px;font-weight:700;align-self:flex-start;padding:2px 8px;border-radius:10px;background:#e4d3a8;color:#5e3a10;margin:3px 0}
+.ch .ds{font-size:13.5px;line-height:1.4;color:#4b2f10}
+.ch .ai{display:flex;gap:6px;margin-top:6px;font-size:20px}.ch .ai i{font-style:normal}
+.ch.done .st{background:#2e7d32;color:#fff}.ch.now{border:2px solid #b8862b;background:#fff5d8;box-shadow:0 0 0 3px rgba(232,196,122,.45)}.ch.now .st{background:#b8862b;color:#fff}
+.ch.lock,.ch.ahead{opacity:.55}.ch.lock .big,.ch.ahead .big{background:#9a8a72}
+.bt{position:fixed;left:0;right:0;bottom:calc(78px + env(safe-area-inset-bottom));display:flex;gap:10px;padding:10px 14px;box-sizing:border-box;max-width:588px;margin:0 auto;z-index:5}
+.bt button{border:1.5px solid #8a5a20;border-radius:26px;min-height:50px;font:700 16px Manrope;cursor:pointer}
+#hBack{flex:0 0 34%;background:#fff6df;color:#5e3610}#hGo{flex:1;background:linear-gradient(#f4d58d,#c9953f);color:#3a220a;box-shadow:0 3px 12px rgba(90,50,10,.4)}
+.ptl{padding-left:18px;font-size:15px;line-height:1.35}.ptl li{margin:3px 0}
+.pbtns{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.pbtns button{border:1px solid #a67530;border-radius:20px;padding:8px 14px;background:#fff6df;color:#4b2a0c;font:600 15px system-ui;cursor:pointer}
+.artgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.art{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border:1px solid #b18a55;border-radius:12px;background:#fbf0d7;text-align:center;cursor:pointer;font:inherit;color:inherit}.art span{font-size:34px;line-height:1}.art small{font-size:13px;line-height:1.2}
+.artbig{font-size:72px;text-align:center;margin:6px 0}
+#chD textarea{box-sizing:border-box;width:100%;border:1px solid #ad864f;border-radius:8px;padding:10px;background:#fffaf0;color:#39240e;font:17px/1.5 system-ui}
+#chD blockquote{margin:8px 0;padding:8px 12px;border-left:3px solid #a7752f;background:#eddeb9;border-radius:6px}
+.art .art-img{width:64px;height:64px;border-radius:12px;object-fit:cover;display:block;box-shadow:0 2px 8px rgba(60,35,10,.35)}.artbig .art-img{width:180px;height:180px;border-radius:20px;object-fit:cover;box-shadow:0 6px 24px rgba(60,35,10,.45)}.gm-art .art-img{width:22px;height:22px;border-radius:5px;vertical-align:middle}.ch .ai{flex-wrap:wrap}.ch .ai .art-img{width:34px;height:34px;border-radius:8px;object-fit:cover;box-shadow:0 1px 4px rgba(60,35,10,.35)}
+.prt{border:1px solid #b18a55;border-radius:14px;background:#fbf0d7;padding:4px 14px}.prt .r{display:flex;gap:12px;padding:9px 0;border-top:1px solid #e2cd9f}.prt .r:first-child{border-top:0}.prt .r span{flex:0 0 42%;font-size:13px;color:#76552d}.prt .r b{flex:1;font:700 17px/1.25 'Cormorant Garamond',Georgia,serif;color:#3a220a}
+#hArts .artgrid{margin-bottom:6px}
+#heroGate{position:fixed;inset:0;z-index:50;background:#0c0804;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 22px;text-align:center}#heroGate h1{font:700 32px/1.2 'Cormorant Garamond',serif;color:#f0c870;margin:0 0 28px}#heroGate .go{display:block;width:100%;max-width:320px;padding:15px 18px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope,sans-serif}
+/* читабельные шрифты как в свитках */
+.wr{font:17px/1.5 Manrope,system-ui,sans-serif;color:#2e1a06}
+.pt h1{font:700 34px/1.1 Georgia,serif}.pt .rl{font-size:16px}
+.chip b,.ch b,.nat b,.prt .r b{font-family:Georgia,serif!important;font-weight:700}
+.chip b{font-size:20px}.chip .cx{font-size:16px;line-height:1.45;color:#2e1a06}.chip .ch2{font-size:14px;color:#5e4120}
+.nat b{font-size:22px}.nat small{font-size:15px;color:#4b2f10}
+.ch b{font-size:20px}.ch small{font-size:14px;color:#5e4120}.ch .st{font-size:13px}.ch .ds{font-size:16px;line-height:1.45;color:#2e1a06}
+.hh b{font-size:14px;color:#4b2a0c}.hh small{font-size:14px;color:#5e4120}
+.prt .r span{font-size:15px;color:#5e4120}.prt .r b{font-size:18px}
+.art small{font-size:14px;color:#2e1a06}.lbl{font-size:12px}
+#chD .pcontent{color:#2e1a06}#chD p,#chD li{font-size:18px;line-height:1.55}.ptl{font-size:17px}
+</style></head><body data-page="hero">
+<div class="wr"><div class="in">
+<section class="pt" id="heroFace"><img data-hero-img="portrait" src="img/hero_m_portrait.jpg?v=h3" alt="Портрет героя" decoding="async"><div class="ov2"><div class="lbl">Твой персонаж · профиль открыт</div><h1 id="hName"></h1><div class="rl" id="hRole"></div></div></section>
+<div class="chips"><button type="button" class="chip" id="cArc"><span class="lbl" id="hArcL">Твой аркан</span><b id="hArc"></b><span class="cx" id="hArcT"></span><small class="ch2">Твоя дата рождения хранит главный образ героя: роль, в которой тебе легче всего раскрываться.</small></button><button type="button" class="chip" id="cMech"><span class="lbl">Твоя ведущая механика</span><b id="hMech"></b><span class="cx" id="hMechT"></span><small class="ch2">Механика — то, как ты естественно действуешь: начинаешь дела, тратишь силы и выбираешь.</small></button></div>
+<button type="button" class="nat" id="hNat"><span class="go2">→</span><b>Твоя природа</b><small>Ведущая механика, аркан, сильные стороны, особенности выбора и личные подсказки</small></button>
+<div id="hPort"></div><section id="hSum"></section><div class="hh"><b>ТВОЯ ИСТОРИЯ</b><small>5 этапов пути</small></div>
+<div id="hist"></div><div id="hArts"></div>
+</div></div>
+<div class="bt"><button type="button" id="hBack">← Назад</button><button type="button" id="hGo">Продолжить путь →</button></div>
+<dialog class="passport-dialog" id="chD" aria-labelledby="chT"><header><h2 id="chT"></h2><button type="button" class="pclose" id="chX" aria-label="Закрыть">×</button></header><div class="pcontent" id="chB"></div></dialog>
+<script src="engine.js?v=ty1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=map1"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=r75"></script><script src="nature.js?v=1"></script><script src="passport-ui.js?v=fx1"></script><script src="pocherk-data.js?v=fix1"></script><script src="inner-mirror-data.js?v=im1"></script><script src="betraywheel.js?v=bw5"></script><script src="hero-sum.js?v=hs1"></script><script src="hero.js?v=hs1"></script><script>(function(){try{if(window.GHeroApply)GHeroApply();else{var P=window.GPro&&GPro.load?GPro.load():(JSON.parse(localStorage.getItem("alch_v5_profile"))||{});var g=String(P.gender||"").toLowerCase();var female=["f","ж","female","жен","женский","woman"].includes(g);var img=document.querySelector("#heroFace img");if(img)img.src=female?"img/hero_f_portrait.jpg?v=h3":"img/hero_m_portrait.jpg?v=h3";}}catch(e){console.warn("Не удалось определить образ героя",e)}})();</script>
+</body></html>

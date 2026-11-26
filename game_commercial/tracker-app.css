@@ -1,0 +1,124 @@
+/* Трекер 28 дней как отдельное приложение: светлая палитра, свое нижнее меню. */
+:root{--t-bg:#F8F7F4;--t-sur:#FFFFFF;--t-sur2:#F2F0EB;--t-bor:#E5E2DA;--t-tx:#1E1E1B;--t-mu:#6C6A63;--t-ac:#2F5E50;--t-acs:#EAF2EF;--t-go:#A97E2E;--t-gos:#FAF4E5;--t-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;--t-serif:Georgia,"Times New Roman",serif;--t-nav:64px}
+html,body.tapp{background:var(--t-bg);color:var(--t-tx)}
+body.tapp{font-family:var(--t-sans);-webkit-font-smoothing:antialiased}
+.tapp .t28{max-width:560px;padding:calc(10px + env(safe-area-inset-top)) 16px calc(var(--t-nav) + 40px + env(safe-area-inset-bottom));color:var(--t-tx);font:400 16px/1.5 var(--t-sans)}
+.tapp .t28 h1{font:600 24px/1.2 var(--t-serif);color:var(--t-tx)}
+.tapp .t28 .dk{font:600 12px/1.3 var(--t-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--t-mu);margin:0 0 4px}
+.tapp .t28 .mute,.tapp .t28 .cap28{color:var(--t-mu)}
+.tapp .t28 .go{border-radius:14px;font:600 16px var(--t-sans);background:var(--t-ac);color:#fff;box-shadow:0 2px 8px rgba(47,94,80,.18)}
+.tapp .t28 .quiet,.tapp .t28 .quiet-btn{color:var(--t-ac);font:500 14px var(--t-sans)}
+.tapp .row-line b{font:600 16px var(--t-sans);color:var(--t-tx)}
+.tapp .row-line{border-top-color:var(--t-bor)}
+.tapp .t28 input[type=text],.tapp .t28 textarea,.tapp .t28 select,.tapp .t28 input[type=time]{background:var(--t-sur);border:1px solid var(--t-bor);color:var(--t-tx);font:400 15px/1.4 var(--t-sans)}
+.tapp .t28 input::placeholder,.tapp .t28 textarea::placeholder{color:#9b988f}
+.tapp input[type=range]{accent-color:var(--t-ac)}
+.tapp .chips button,.tapp .step-row button{border-color:var(--t-bor);color:var(--t-tx);background:var(--t-sur)}
+.tapp .chips button.on,.tapp .step-row button.on{background:var(--t-acs);border-color:var(--t-ac);color:var(--t-ac)}
+/* верхняя строка */
+.tapp-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;min-height:36px}
+.tapp-back{color:var(--t-mu);font:500 14px var(--t-sans);text-decoration:none;padding:6px 0}
+.tapp-day{font:500 13px var(--t-sans);color:var(--t-mu);background:var(--t-sur2);border-radius:999px;padding:4px 10px}
+/* нижнее меню трекера */
+.tapp-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);height:calc(var(--t-nav) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.96);border-top:1px solid var(--t-bor);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.tapp-nav button{border:0;background:none;color:var(--t-mu);font:500 12px var(--t-sans);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;padding:0}
+.tapp-nav button.on{color:var(--t-ac);font-weight:600}
+/* лист «Еще» */
+.tsheet{position:fixed;inset:0;z-index:40}
+.tsheet[hidden]{display:none}
+.tsheet-bg{position:absolute;inset:0;background:rgba(30,30,27,.32)}
+.tsheet-pn{position:absolute;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;max-height:80vh;overflow:auto;background:var(--t-bg);border-radius:20px 20px 0 0;padding:10px 16px calc(var(--t-nav) + 16px + env(safe-area-inset-bottom));box-sizing:border-box}
+.tsheet-grab{width:40px;height:4px;border-radius:4px;background:var(--t-bor);margin:0 auto 12px}
+.tsheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tsheet-grid a,.tsheet-grid button{display:block;text-align:left;background:var(--t-sur);border:1px solid var(--t-bor);border-radius:14px;padding:12px;color:var(--t-tx);text-decoration:none;font:inherit;cursor:pointer;min-width:0}
+.tsheet-grid b{display:block;font:600 14px var(--t-sans)}
+.tsheet-grid span{display:block;font:400 12px/1.3 var(--t-sans);color:var(--t-mu);margin-top:2px}
+.tsheet-back{display:block;text-align:center;margin:16px 0 0;color:var(--t-mu);font:500 14px var(--t-sans)}
+/* день */
+.tday-head{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;gap:6px;margin:0 0 14px}
+.tday-mid{text-align:center;min-width:0}
+.tday-mid h1{font-size:20px!important;margin:0!important}
+.tday-arr{width:40px;height:40px;border-radius:50%;border:1px solid var(--t-bor);background:var(--t-sur);color:var(--t-tx);font:400 22px/1 var(--t-sans);cursor:pointer;padding:0}
+.tday-arr[disabled]{opacity:.3;cursor:default}
+.tcard{background:var(--t-sur);border:1px solid var(--t-bor);border-radius:16px;padding:14px 16px;margin:0 0 12px}
+.tcard .tk{display:block;font:600 12px var(--t-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--t-mu);margin:0 0 6px}
+.tcard p{margin:0}
+.twish{background:var(--t-gos);border-color:#EEDFBF}
+.twish .tk{color:var(--t-go)}
+.twish-t{font:500 19px/1.35 var(--t-serif);color:var(--t-tx)}
+.tgoals{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+.tgoals span{font:500 13px/1.3 var(--t-sans);padding:5px 10px;border-radius:999px;background:var(--t-sur);border:1px solid #EEDFBF;color:var(--t-tx)}
+.tgoals span.on{background:var(--t-acs);border-color:var(--t-ac);color:var(--t-ac)}
+.tatt p{font-size:15px;color:var(--t-tx)}
+.tmile{border-color:var(--t-ac);background:var(--t-acs)}
+.tmile b{display:block;font:600 16px var(--t-sans);margin:0 0 4px}
+.tbtn{display:block;width:100%;box-sizing:border-box;margin:12px 0 0;padding:12px 16px;border-radius:14px;border:1.5px solid var(--t-ac);background:var(--t-sur);color:var(--t-ac);font:600 15px var(--t-sans);cursor:pointer;text-align:center}
+.tapp .day-card{margin:0;padding:0;border:0;background:none;border-radius:0}
+.tapp .step-card{background:var(--t-sur);border:1px solid var(--t-bor);border-radius:16px;padding:14px 16px;margin:0 0 12px}
+.tapp .step-card .main{font:500 18px/1.4 var(--t-sans);color:var(--t-tx)}
+.tapp .step-card .wk{color:var(--t-mu);font-size:13px}
+.tapp .rx-today{background:var(--t-sur);border:1px solid var(--t-bor);border-radius:16px;padding:14px 16px;margin:0 0 12px}
+.tapp details.alts summary,.tapp details.own summary{color:var(--t-ac);font:500 14px var(--t-sans);cursor:pointer}
+.tapp .acc{background:var(--t-sur);border:1px solid var(--t-bor);border-radius:14px;margin:0 0 8px;overflow:hidden}
+.tapp .acc>button.head{background:none;color:var(--t-tx)}
+.tapp .ftag{background:var(--t-acs);color:var(--t-ac)}
+/* сетка цикла: седьмой день не обрезается */
+.tapp .cal{grid-template-columns:24px repeat(7,minmax(0,1fr));gap:6px 4px}
+.tapp .cal .wn{width:24px;color:var(--t-ac)}
+.tapp .cell{min-width:0;width:100%;font-size:16px;border-radius:12px;background:var(--t-sur);border:1px solid var(--t-bor);color:var(--t-tx)}
+.tapp .cell.today{background:var(--t-acs);box-shadow:inset 0 0 0 1.5px var(--t-ac);color:var(--t-ac)}
+.tapp .cell.open{background:var(--t-gos)}
+.tapp .cell.future{opacity:.45}
+.tstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 12px}
+.tstats div{background:var(--t-sur);border:1px solid var(--t-bor);border-radius:14px;padding:10px 8px;text-align:center}
+.tstats b{display:block;font:600 18px var(--t-sans);color:var(--t-ac)}
+.tstats span{font:400 12px/1.2 var(--t-sans);color:var(--t-mu)}
+/* svg-графики под светлый фон */
+.tapp svg [fill="#c9a46a"],.tapp svg [fill="#e4c58d"],.tapp svg [fill="#d7c6a7"]{fill:var(--t-mu)}
+.tapp svg [stroke="#352719"]{stroke:var(--t-bor)}
+.tapp .tlock{text-align:center;padding-top:calc(60px + env(safe-area-inset-top))}
+.tapp .tlock .go{margin-top:28px}
+@media(min-width:860px){.tapp .t28{max-width:640px}}
+.tapp .tcycle h1{margin:2px 0 8px;line-height:1.25}
+.tapp .tcycle .cap28{margin:0 0 12px;font-size:14px}
+/* Вводный экран стратегии: без нижнего меню трекера */
+.tapp .t28.tintro{padding-bottom:40px}
+/* Урок «Открытий» внутри трекера — светлая палитра */
+body.tapp .lo-modal{font-family:var(--t-sans)}
+body.tapp .lo-backdrop{background:rgba(30,30,27,.32);backdrop-filter:blur(6px)}
+body.tapp .lo-sheet{background:var(--t-bg);border:1px solid var(--t-bor);box-shadow:0 -8px 30px rgba(30,30,27,.12);color:var(--t-tx)}
+body.tapp .lo-wrap,body.tapp .lo-wrap *{color:inherit}
+body.tapp .lo-kicker,body.tapp .lo-label,body.tapp .lo-time,body.tapp .lo-note,body.tapp .lo-library,body.tapp .lo-back,body.tapp .lo-private,body.tapp .lo-card-actions span{color:var(--t-mu)!important}
+body.tapp .lo-head h1,body.tapp .lo-panel h2,body.tapp .lo-finish h2,body.tapp .lo-intro,body.tapp .lo-card summary,body.tapp .lo-question,body.tapp .lo-question legend,body.tapp .lo-question label,body.tapp .lo-fields label,body.tapp .lo-head p,body.tapp .lo-card p,body.tapp .lo-list,body.tapp .lo-node{color:var(--t-tx)!important}
+body.tapp .lo-close{background:var(--t-sur);border:1px solid var(--t-bor);color:var(--t-tx)}
+body.tapp .lo-panel,body.tapp .lo-finish,body.tapp .lo-card,body.tapp .lo-question,body.tapp .lo-node{background:var(--t-sur);border:1px solid var(--t-bor)}
+body.tapp .lo-card{background:var(--t-sur2)}
+body.tapp .lo-feedback{background:var(--t-sur2);color:var(--t-tx);border:1px solid var(--t-bor)}
+body.tapp .lo-feedback.is-correct{background:var(--t-acs);color:var(--t-ac);border-color:var(--t-ac)}
+body.tapp .lo-card-actions button,body.tapp .lo-check{background:var(--t-sur);border:1px solid var(--t-bor);color:var(--t-tx)}
+body.tapp .lo-card-actions button.is-on{background:var(--t-acs);border-color:var(--t-ac);color:var(--t-ac)}
+body.tapp .lo-fields textarea,body.tapp .lo-fields input,body.tapp .lo-note textarea{background:var(--t-sur);border:1px solid var(--t-bor);color:var(--t-tx)}
+body.tapp .lo-primary{background:var(--t-ac);color:#fff;border-radius:14px}
+body.tapp .lo-question input{accent-color:var(--t-ac)}
+/* Свиток Голоса Самости внутри трекера — светлый лист */
+body.tapp .gsc-ov{top:0;bottom:0;align-items:flex-end;--gsc-top:0;--gsc-nav-h:0;--gsc-h:min(88vh,720px)}
+body.tapp .gsc-ov:before{background:rgba(30,30,27,.32)}
+body.tapp .gsc-art,body.tapp .gsc-mid,body.tapp .gsc-top,body.tapp .gsc-bot{display:none!important;visibility:hidden!important;height:0!important;width:0!important;opacity:0!important}
+body.tapp .gsc-spp{width:100%;max-width:560px;height:auto;max-height:88vh;background:var(--t-bg);border-radius:20px 20px 0 0;box-shadow:0 -8px 30px rgba(30,30,27,.12);align-self:flex-end;opacity:1;display:flex;flex-direction:column;box-sizing:border-box;overflow:hidden;padding:0}
+body.tapp .gsc-clip,body.tapp .gsc-inner{position:relative;inset:auto;transform:none!important;overflow:visible;height:0;flex:none;order:0}
+body.tapp .gsc-body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:44px 20px 16px;flex:1 1 auto;min-height:0;max-height:none;color:var(--t-tx);font:400 16px/1.5 var(--t-sans);-webkit-mask-image:none;mask-image:none;opacity:1;order:1}
+body.tapp .gsc-body h3{color:var(--t-tx);font:600 22px/1.25 var(--t-serif);padding-right:28px}
+body.tapp .gsc-body .ft{color:var(--t-mu)}
+body.tapp .gsc-body a{color:var(--t-ac)}
+body.tapp .gsc-foot{display:block!important;position:relative!important;left:auto;right:auto;bottom:auto;height:auto!important;transform:none!important;pointer-events:auto;background:transparent;z-index:5;order:2;padding:8px 16px calc(16px + env(safe-area-inset-bottom));flex:none}
+body.tapp .gsc-close{outline:none!important;appearance:none;-webkit-appearance:none;background-image:none!important;filter:none!important;position:relative!important;left:auto!important;bottom:auto!important;transform:none!important;display:block;margin:0 auto;background:var(--t-ac)!important;color:#fff!important;border:0!important;border-radius:14px;font:600 16px var(--t-sans)!important;box-shadow:0 2px 8px rgba(47,94,80,.18)!important;opacity:1!important;pointer-events:auto!important;z-index:5;min-width:160px}
+body.tapp .gsc-close:before{display:none!important;content:none!important}
+body.tapp .gsc-x{top:14px;right:14px;color:var(--t-mu);opacity:1!important;order:0}
+body.tapp .gsc-au{display:none}
+body.tapp .lo-pick-q{color:var(--t-tx)!important}
+body.tapp .lo-pick-row button{background:var(--t-sur2);border:1px solid var(--t-bor);color:var(--t-tx)!important}
+body.tapp .lo-pick-row button.is-on{background:var(--t-ac);border-color:var(--t-ac);color:#fff!important}
+body.tapp .rx-if summary,.rx-if summary{font-size:14px;font-weight:600;line-height:1.4;cursor:pointer;color:var(--t-ac,inherit)}body.tapp .rx-if{margin:8px 0}
+body.tapp .ws-form b{display:block;margin:14px 0 6px;font-size:15px;line-height:1.35}body.tapp .ws-form b:first-child{margin-top:0}body.tapp .ws-form .go{margin-top:16px;width:100%}body.tapp .ws-form .go[disabled]{opacity:.45}body.tapp .ws-hyp{border-left:3px solid var(--t-ac,#2F5E50)}body.tapp .ws .chips button{text-align:left}
+body.tapp .ws-hyp .ws-txt{font-size:15px;line-height:1.45;margin:6px 0}
+body.tapp .rx-cap{margin:8px 0 2px;font-size:14px;line-height:1.45}body.tapp .rx-cap b{color:var(--t-ac,#2F5E50);font-weight:600}

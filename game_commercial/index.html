@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru"><head><script src="theme.js?v=9"></script><script src="sound.js?v=1"></script><script src="flow.js?v=commercial1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=im2"></script><script src="profile-layer.js?v=art1"></script><script src="route-gate.js?v=im1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794512684"></script><meta http-equiv="Cache-Control" content="no-cache">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Путь Алхимика · Коммерческая редакция · Майя Явь</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#211710">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.svg">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="t/style.css?v=f19">
+<link rel="stylesheet" href="sun-btn.css?v=v78">
+<style>
+.entry{background:url(img/start_bg.jpg?v=s1) center/cover no-repeat fixed;background-color:#0c0804}
+.entry .eh{font-size:28px;line-height:1.18;bottom:auto;top:calc(44% + 66px + 110px)}
+.entry .es{top:calc(44% + 66px + 30px)}
+/* Luxurious core button */
+.core{position:relative;width:120px;height:120px;border-radius:50%;border:none;background:radial-gradient(circle at 35% 30%,#fff5d0 0%,#f0c870 25%,#c98a40 50%,#8a5420 80%,#5a3410 100%);box-shadow:0 0 0 4px #7a4a16,0 0 0 8px rgba(201,138,64,.4),0 12px 30px rgba(0,0,0,.5),inset 0 4px 12px rgba(255,240,180,.6),inset 0 -6px 12px rgba(0,0,0,.4);cursor:pointer;transition:transform .2s,box-shadow .3s}
+.core:before{content:"";position:absolute;inset:8px;border-radius:50%;border:1.5px dashed rgba(255,230,170,.7);pointer-events:none}
+.core:after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,transparent 40%,rgba(255,255,220,.25) 50%,transparent 60%);pointer-events:none}
+.core:hover,.core:active{transform:scale(1.05);box-shadow:0 0 0 4px #a86a28,0 0 0 10px rgba(240,200,100,.6),0 0 40px rgba(255,200,80,.8),0 16px 36px rgba(0,0,0,.6)}
+.core .halo{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle,rgba(255,210,100,.4) 0%,transparent 70%);animation:pulse 2.4s ease-in-out infinite;pointer-events:none}
+@keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+section.scr.entry .edisc{position:absolute;left:16px;right:16px;bottom:calc(10px + env(safe-area-inset-bottom));margin:0;text-align:center;font:400 11px/1.4 Manrope,sans-serif;color:rgba(244,236,223,.62);letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.5);z-index:3;pointer-events:none}
+</style>
+</head><body>
+<div class="backdrop" aria-hidden="true"></div>
+<main class="phone" id="app"><section class="scr entry dark"><div class="ent">
+<p class="ea">Автор: Майя Явь</p>
+<p class="eh">ПУТЬ<br>СОВРЕМЕННОГО<br>АЛХИМИКА</p>
+<button class="core sun-btn" id="core" aria-label="Войти"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__rays" aria-hidden="true"></span><span class="sun-btn__rays sun-btn__rays--fine" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span><span class="sun-btn__hot"></span></span><span class="sun-btn__sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="sun-btn__burst" aria-hidden="true"></span><span class="halo"></span><span class="ring"></span><span class="ring r2"></span><span class="wave"></span></button>
+<p class="es">коснись</p></div><p class="edisc">18+ · Это игра для самоисследования, не терапия и не диагноз.</p></section></main>
+<script>
+const c=document.getElementById('core');let AC;
+const ES=new Audio('snd/entry.mp3?v=8');ES.preload='auto';
+c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}let gone=0;const go=()=>{if(!gone){gone=1;location.href='map.html?v=8'}};ES.currentTime=0;ES.onended=go;const pr=ES.play();if(pr&&pr.catch)pr.catch(()=>setTimeout(go,1500));c.classList.add('go');setTimeout(go,6000)};
+</script></body></html>
