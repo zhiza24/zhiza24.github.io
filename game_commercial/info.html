@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<script src="theme.js?v=9"></script>
+<script src="sound.js?v=1"></script>
+<script src="flow.js?v=im1"></script>
+<script src="opening.js?v=opening2"></script>
+<script src="route.js?v=im2"></script>
+<script src="profile-layer.js?v=art1"></script>
+<script src="route-gate.js?v=im1"></script>
+<script src="gender.js?v=2"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#211710">
+<script src="upd.js?v=1794512684"></script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.svg">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<title>Информация · Путь Алхимика</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="nav.css?v=map1">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#1c120a;color:#f4ecdf;font:400 17px/1.55 Manrope,sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:calc(64px + env(safe-area-inset-top)) 18px calc(120px + env(safe-area-inset-bottom))}
+h1{font:700 32px/1.15 'Cormorant Garamond',Georgia,serif;color:#f0c870;margin:0 0 22px;text-align:center}
+h2{font:700 22px/1.2 'Cormorant Garamond',Georgia,serif;color:#f0c870;margin:0 0 8px}
+.card{background:radial-gradient(ellipse at 50% 0,#2c2119,#15100c 80%);border:1.5px solid #8a6438;border-radius:18px;padding:16px 16px 14px;margin:0 0 14px}
+.card p{margin:0 0 8px}.card p:last-child{margin:0}
+.mute{color:#c9a46a;font-size:15px}
+details.offer{border-top:1px solid rgba(201,154,69,.28);margin-top:10px;padding-top:8px}
+details.offer summary{cursor:pointer;color:#e8c16c;font:600 16px Manrope,sans-serif;list-style:none}
+details.offer summary::-webkit-details-marker{display:none}
+details.offer summary:after{content:" ▾";font-size:12px;opacity:.7}
+.offer-body{margin-top:10px;font-size:15px;line-height:1.5;color:#e8d6b0}
+.offer-body h3{font:700 16px Manrope,sans-serif;color:#f0c870;margin:14px 0 4px}
+.offer-body p{margin:0 0 8px}
+.donate{display:block;width:100%;box-sizing:border-box;margin:8px 0 0;padding:14px 18px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope,sans-serif;text-align:center;text-decoration:none;cursor:pointer}
+.donate-note{margin:10px 0 0;text-align:center;color:#c9a46a;font-size:15px}
+</style>
+</head>
+<body data-page="info">
+<main class="wrap">
+  <h1>Информация</h1>
+
+  <section class="card">
+    <h2>Об авторе</h2>
+    <!-- Черновик текста «Об авторе»: владелица поправит. -->
+    <p>Меня зовут Майя Явь. Я написала и собрала игру «Путь Алхимика», чтобы у тебя было тихое место, где можно остановиться и честно посмотреть на свою жизнь.</p>
+    <p>Здесь нет готовых ответов за тебя: только твои слова, твои наблюдения и твой темп.</p>
+  </section>
+
+  <section class="card">
+    <h2>Контакты</h2>
+    <p id="info-contacts" class="mute"></p>
+  </section>
+
+  <section class="card">
+    <h2>Оферта</h2>
+    <p class="mute">Краткие условия доступа к игре.</p>
+    <details class="offer">
+      <summary>Открыть текст оферты</summary>
+      <div class="offer-body">
+        <h3>1. Продавец</h3>
+        <p>Настоящее предложение адресовано любому дееспособному лицу старше 18 лет и является публичной офертой самозанятой Майи Явь (плательщика налога на профессиональный доход) заключить договор на условиях ниже.</p>
+        <p>ИНН: будет указан.</p>
+        <h3>2. Предмет</h3>
+        <p>Продавец предоставляет покупателю доступ к интерактивной игре-приложению «Путь Алхимика» (цифровой контент). Доступ считается предоставленным с момента открытия игры по ссылке или коду доступа.</p>
+        <h3>3. Характер игры</h3>
+        <p>Игра предназначена для самоисследования. Это не медицинская и не психотерапевтическая услуга, не консультация и не диагноз. Решения о своей жизни ты принимаешь самостоятельно.</p>
+        <h3>4. Возраст</h3>
+        <p>Доступ предоставляется лицам 18 лет и старше.</p>
+        <h3>5. Цена и оплата</h3>
+        <p>Цена и способ оплаты указываются на странице покупки в момент оформления.</p>
+        <h3>6. Возвраты</h3>
+        <p>Поскольку предмет договора — цифровой контент, после предоставления доступа денежные средства не возвращаются, за исключением случаев, прямо предусмотренных законодательством о защите прав потребителей.</p>
+        <h3>7. Персональные данные</h3>
+        <p>Ответы и записи хранятся только на устройстве игрока в памяти браузера (localStorage) и не передаются продавцу и третьим лицам. Их можно удалить в настройках игры или средствами браузера.</p>
+        <h3>8. Акцепт</h3>
+        <p>Оплата или начало использования доступа означает принятие этой оферты.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="card">
+    <button type="button" class="donate" id="info-donate">Поддержать автора</button>
+    <p class="donate-note" id="info-donate-note" hidden></p>
+  </section>
+</main>
+<script src="engine.js?v=arch2"></script>
+<script src="texts.js?v=map1"></script>
+<script src="texts_fr.js?v=mf2"></script>
+<script src="nav.js?v=r75"></script>
+<script>
+/* Константы для быстрой замены, когда появятся контакты и ссылка поддержки. */
+var INFO_CONTACTS='Контакты скоро появятся';
+var INFO_DONATE_URL='#';
+document.getElementById('info-contacts').textContent=INFO_CONTACTS;
+document.getElementById('info-donate').addEventListener('click',function(){
+  if(!INFO_DONATE_URL||INFO_DONATE_URL==='#'){
+    var n=document.getElementById('info-donate-note');
+    n.hidden=false;n.textContent='Скоро здесь появится ссылка.';
+    return;
+  }
+  location.href=INFO_DONATE_URL;
+});
+</script>
+</body>
+</html>

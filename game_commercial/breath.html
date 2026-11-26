@@ -1,0 +1,111 @@
+<!doctype html><html lang="ru"><head><script src="theme.js?v=8"></script><script src="sound.js?v=1"></script>
+<script src="flow.js?v=im1"></script>
+<script src="opening.js?v=opening2"></script>
+<script src="route.js?v=im1"></script>
+<script src="profile-layer.js?v=art1"></script>
+<script src="route-gate.js?v=im1"></script>
+<script src="gender.js?v=2"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script src="upd.js?v=1794512684"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
+<title>Дыхание</title>
+<style>
+html,body,a,button,.c{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;outline:none}
+a:focus,button:focus,.c:focus,a:focus-visible,button:focus-visible,.c:focus-visible{outline:none}
+html,body{margin:0;min-height:100%;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;font-size:17px;line-height:1.45;text-align:center}
+body{display:flex;align-items:center;justify-content:center;flex-direction:column;box-sizing:border-box;padding:calc(52px + env(safe-area-inset-top)) 16px calc(96px + env(safe-area-inset-bottom))}
+h2{font:700 26px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;margin:8px 0 8px}
+.t{margin:0 0 8px;font:800 22px/30px Manrope;color:#ffd877;min-height:30px;transition:opacity .25s ease}
+.stage{width:248px;height:248px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin:0 auto}
+.c{width:120px;height:120px;border-radius:50%;background:radial-gradient(#ffe9a8,#e0a940 60%,#a8692a);box-shadow:0 0 22px 4px rgba(255,207,90,.85),0 0 48px 12px rgba(255,207,90,.45);overflow:visible;transition:transform 3s ease-in-out;transform-origin:center center;cursor:pointer;touch-action:none}
+.c.hold{box-shadow:0 0 30px 8px rgba(255,214,102,.95),0 0 64px 18px rgba(255,207,90,.55)}
+.s{margin-top:8px;color:#c9a46a;font-size:16px;min-height:24px;transition:opacity .25s ease}
+.go{margin-top:18px;min-height:50px;padding:12px 32px;border:0;border-radius:999px;background:linear-gradient(180deg,#f5d68a,#cfa046);color:#261606;font:800 17px Manrope,sans-serif;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.45);opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .35s ease,transform .35s ease}
+.go.show{opacity:1;transform:none;pointer-events:auto}
+.bottom-next{position:fixed;right:16px;bottom:calc(116px + env(safe-area-inset-bottom));z-index:60;min-height:40px;min-width:104px;padding:8px 18px;border:0;border-radius:999px;background:linear-gradient(180deg,#f5d68a,#cfa046);color:#261606;font:800 15px Manrope,sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.42)}
+</style>
+<link rel="stylesheet" href="nav.css?v=map1">
+</head>
+<body data-page="task">
+<div class="t" id="t"></div>
+<div class="stage"><div class="c" id="c" role="button" aria-label="Зажми сферу, чтобы подышать"></div></div>
+<h2>Часть пути пройдена.<br>Переведи дыхание</h2>
+<div class="s" id="s">Зажми сферу и дыши в своем ритме</div>
+<button class="go" id="go" type="button">Идти дальше</button>
+<button class="bottom-next" id="bottomNext" type="button">Далее</button>
+<script>
+/* Зажал сферу — сфера плавно дышит (вдох 3с / выдох 4с) пока держишь. Отпустил — появляется кнопка «Идти дальше». */
+var c=document.getElementById('c'),t=document.getElementById('t'),s=document.getElementById('s'),go=document.getElementById('go');
+var holding=false,touched=false,timer=null,phase=0;
+var PH=[['Вдох',3000,1.68],['Выдох',4000,1.0]];
+function vib(n){try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}}
+function step(){
+  if(!holding)return;
+  var p=PH[phase];
+  t.textContent=p[0];
+  c.style.transitionTimingFunction='ease-in-out';
+  c.style.transitionDuration=(p[1]/1000)+'s';
+  c.style.transform='scale('+p[2]+')';
+  vib(18);
+  timer=setTimeout(function(){
+    if(!holding)return;
+    phase=1-phase;
+    step();
+  },p[1]);
+}
+function onDown(e){
+  if(e)e.preventDefault();
+  if(holding)return;
+  holding=true;touched=true;phase=0;
+  clearTimeout(timer);
+  c.classList.add('hold');
+  s.textContent='Отпусти, когда будешь '+(window.GG?GG('готов','готова'):'готов');
+  go.classList.remove('show');
+  try{if(e&&e.pointerId!=null&&e.pointerType!=='mouse'&&c.setPointerCapture)c.setPointerCapture(e.pointerId)}catch(err){}
+  step();
+}
+function onUp(){
+  if(!holding)return;
+  holding=false;
+  clearTimeout(timer);
+  c.classList.remove('hold');
+  c.style.transitionTimingFunction='ease-out';
+  c.style.transitionDuration='0.9s';
+  c.style.transform='scale(1)';
+  t.textContent='Я есмь';
+  s.textContent='';
+  go.classList.add('show');
+  vib(35);
+}
+/* Сенсорные устройства используют Pointer Events, мышь — отдельную пару mouse events. */
+c.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse')onDown(e)},{passive:false});
+c.addEventListener('pointerup',function(e){if(e.pointerType!=='mouse')onUp()});
+c.addEventListener('pointercancel',function(e){if(e.pointerType!=='mouse')onUp()});
+c.addEventListener('lostpointercapture',function(e){if(e.pointerType!=='mouse')onUp()});
+c.addEventListener('mousedown',function(e){onDown(e)});
+document.addEventListener('mouseup',function(){onUp()});
+/* Резерв для браузеров ноутбука, где отпускание мыши теряется: обычный клик по сфере завершает вдох. */
+c.addEventListener('click',function(){if(!go.classList.contains('show')){if(holding)onUp();else{onDown();onUp()}}});
+/* Потеря фокуса завершает упражнение, чтобы сфера не зависала в состоянии удержания. */
+document.addEventListener('pointercancel',onUp,true);
+window.addEventListener('pointerup',function(e){if(e.pointerType!=='mouse')onUp()},true);
+window.addEventListener('blur',onUp);
+document.addEventListener('visibilitychange',function(){if(document.hidden)onUp()});
+go.addEventListener('click',function(){
+  vib(20);
+  location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance();
+});
+document.getElementById('bottomNext').addEventListener('click',function(){
+  vib(20);
+  location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance();
+});
+</script>
+<script src="engine.js?v=arch1"></script>
+<script src="passport-data.js?v=1"></script>
+<script src="passport.js?v=opening2"></script>
+<script src="texts.js?v=map1"></script>
+<script src="texts_fr.js?v=mf2"></script>
+<script src="nav.js?v=r75"></script>
+<script>document.documentElement.style.filter='none';</script>
+</body></html>

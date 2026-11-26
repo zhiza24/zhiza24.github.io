@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f8f3eb">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="icon" href="favicon.svg">
+<title>Карта закономерностей</title>
+<script src="theme.js?v=9"></script>
+<script src="gender.js?v=2"></script>
+<link rel="stylesheet" href="pattern-map-lab.css?v=pm2">
+</head>
+<body>
+<main class="pm-shell" id="pmMain">
+<header class="pm-head"><a href="reactor.html" class="pm-back">← В трекер</a>
+<span class="pm-kicker">Карта закономерностей</span>
+<h1>Что у тебя повторяется</h1>
+<p>Отмечай ситуации, к которым хочется вернуться. Если похожее повторится в разных сферах, карта предложит на это посмотреть. Это не вывод и не диагноз. Записи остаются на этом устройстве.</p></header>
+
+<section class="pm-section"><span class="pm-kicker">Что уже есть</span>
+<div class="pm-grid" id="inventory"></div>
+</section>
+
+<section class="pm-section"><span class="pm-kicker">Новая запись</span>
+<form id="episodeForm" class="pm-form">
+<div class="pm-q">Что произошло?<div class="pm-chips" data-group="fact"></div></div>
+<div class="pm-q">В какой сфере?<div class="pm-chips" data-group="sphere"></div></div>
+<div class="pm-q">Как ты поступил{|а}?<div class="pm-chips" data-group="tag"></div></div>
+<div class="pm-check"><input type="checkbox" name="counterexample" id="counterexample"><label for="counterexample">Это исключение: в этот раз было по-другому</label></div>
+<details class="pm-more"><summary>Добавить подробности</summary>
+<div class="pm-q">Что ты чувствовал{|а}?<div class="pm-chips" data-group="feeling"></div></div>
+<div class="pm-q">Какая мысль была?<div class="pm-chips" data-group="thought"></div></div>
+</details>
+<button class="pm-btn" type="submit">Сохранить запись</button>
+<div id="formMessage" class="pm-message" aria-live="polite"></div>
+</form>
+</section>
+
+<section class="pm-section"><span class="pm-kicker">Что повторяется</span>
+<div id="patterns"></div>
+</section>
+
+<section class="pm-section"><span class="pm-kicker">Твои записи</span>
+<div id="episodes"></div>
+</section>
+</main>
+<script src="pattern-map-engine.js?v=pm2"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+function gx(s){var f=window.GGender&&GGender()==='f';return String(s==null?'':s).replace(/\{([^{}|]*)\|([^{}|]*)\}/g,function(_,m,w){return f?w:m})}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+$('pmMain').innerHTML=gx($('pmMain').innerHTML);
+var sphereNames=GPatternMap.sphereNames,OPT=GPatternMap.options,sel={};
+var GROUPS={fact:OPT.situation,sphere:sphereNames,tag:OPT.reaction,feeling:OPT.feeling,thought:OPT.thought};
+function lab(map,v){return map&&map[v]?gx(map[v]):v}
+function drawChips(){document.querySelectorAll('[data-group]').forEach(function(box){var g=box.getAttribute('data-group'),m=GROUPS[g];
+ box.innerHTML=Object.keys(m).map(function(k){return '<button type="button" class="'+(sel[g]===k?'on':'')+'" data-g="'+g+'" data-v="'+k+'">'+esc(gx(m[k]))+'</button>'}).join('')+(g==='sphere'?'':'<button type="button" class="'+(sel[g]==='other'?'on':'')+'" data-g="'+g+'" data-v="other">Другое</button>')})}
+drawChips();
+function card(t,v,sub){return '<article class="pm-card"><span>'+esc(t)+'</span><strong>'+esc(v)+'</strong><small>'+esc(sub)+'</small></article>'}
+function render(){
+ var a=GPatternMap.analyze(),i=a.inventory,t=i.reactor;
+ $('inventory').innerHTML=[
+  card('Трекер',t.eventCount+t.markCount,'записей за '+t.daysWithRecords+' дн.'),
+  card('Самость',i.samost.completedTopics+' из '+i.samost.totalTopics,'тем отмечено'),
+  card('Открытия',i.learning.completed,'уроков пройдено'),
+  card('Записи карты',a.episodes.length,'твои эпизоды')].join('');
+ var st={unreviewed:'Пока не оценил{|а}',recognized:'Узнаю',partial:'Отчасти',uncertain:'Зависит от ситуации',rejected:'Не про меня'};
+ $('patterns').innerHTML=a.patterns.length?a.patterns.map(function(p){
+  var opts=Object.keys(st).map(function(k){return '<option value="'+k+'"'+(p.status===k?' selected':'')+'>'+esc(gx(st[k]))+'</option>'}).join('');
+  return '<article class="pm-pattern"><div class="pm-pattern-top"><b>'+esc(lab(OPT.reaction,p.title))+'</b><span>'+p.episodes+' запис., сфер: '+p.sphereCount+'</span></div><p>'+esc(gx(p.description))+'</p><div class="pm-evidence">'+p.evidence.map(function(e){return '<div'+(e.counterexample?' class="pm-ex"':'')+'><small>'+esc(sphereNames[e.sphere]||'Без сферы')+(e.counterexample?' · исключение':'')+'</small><p>'+esc(lab(OPT.situation,e.fact)||lab(OPT.thought,e.thought)||'Без описания')+'</p></div>'}).join('')+'</div>'+
+   (p.eligible?'<div class="pm-hint">Это повторяется в разных сферах. Подходит ли тебе такая формулировка?</div><div class="pm-status-form"><label>Твоя оценка<select data-pattern-status="'+esc(p.id)+'">'+opts+'</select></label><button type="button" class="pm-btn pm-secondary" data-save-pattern="'+esc(p.id)+'">Сохранить</button></div>':'<div class="pm-muted">Пока мало случаев, чтобы говорить о повторении.</div>')+'</article>'}).join(''):'<div class="pm-empty">Пока ничего не повторилось. Это нормально, специально искать ничего не нужно.</div>';
+ $('episodes').innerHTML=a.episodes.length?a.episodes.slice().reverse().map(function(e){
+  return '<article class="pm-episode"><div><b>'+esc(sphereNames[e.sphere]||'Без сферы')+(e.counterexample?' · исключение':'')+'</b><small>'+new Date(e.createdAt).toLocaleDateString('ru-RU')+'</small></div><p>'+esc(lab(OPT.situation,e.fact)||lab(OPT.thought,e.thought)||e.action)+'</p>'+(e.tag?'<small>'+esc(lab(OPT.reaction,e.tag))+'</small>':'')+'<button type="button" class="pm-delete" data-delete="'+esc(e.id)+'">Удалить</button></article>'}).join(''):'<div class="pm-empty">Здесь появятся записи, которые ты сам{|а} решишь сохранить.</div>';
+ $('episodes').innerHTML=gx($('episodes').innerHTML);
+}
+$('episodeForm').addEventListener('submit',function(ev){
+ ev.preventDefault();
+ if(!sel.fact){$('formMessage').textContent='Выбери, что произошло.';return}
+ var x={fact:sel.fact,sphere:sel.sphere||'',tag:sel.tag&&sel.tag!=='other'?sel.tag:'',action:sel.tag||'',feeling:sel.feeling||'',thought:sel.thought||'',counterexample:$('counterexample').checked};
+ var r=GPatternMap.addEpisode(x);
+ $('formMessage').textContent=r.ok?'Сохранено.':r.error;
+ if(r.ok){ev.currentTarget.reset();sel={};drawChips();render()}
+});
+document.addEventListener('click',function(ev){
+ var c=ev.target.closest('[data-g]');if(c){var g=c.getAttribute('data-g'),v=c.getAttribute('data-v');sel[g]=sel[g]===v?'':v;drawChips();return}
+ var b=ev.target.closest('[data-save-pattern],[data-delete]');if(!b)return;
+ if(b.hasAttribute('data-delete')){if(confirm('Удалить эту запись?')){GPatternMap.deleteEpisode(b.getAttribute('data-delete'));render()}return}
+ var id=b.getAttribute('data-save-pattern'),st=document.querySelector('[data-pattern-status="'+id+'"]'),old=(GPatternMap.analyze().patterns.filter(function(p){return p.id===id})[0]||{}).note||'';
+ GPatternMap.updatePattern(id,st&&st.value,old);render();
+});
+render();
+})();
+</script>
+</body>
+</html>

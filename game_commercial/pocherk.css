@@ -1,0 +1,93 @@
+/* Тест «Твоя стратегия выбора»: Туман, Мост, Костер, Заставка Старца, Итог */
+html,body{margin:0;height:100%;background:#0c0804;color:#f4ecdf;font-family:Manrope,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box}
+.stg{position:fixed;inset:0;overflow:hidden;background:#0c0804}
+.bgi{position:absolute;left:0;top:0;background-size:100% 100%;background-repeat:no-repeat;transition:opacity .45s ease,transform .7s ease;will-change:transform}
+.shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(rgba(12,8,4,.55),rgba(12,8,4,0) 16%,rgba(12,8,4,0) 40%,rgba(12,8,4,.75) 70%,#0c0804 92%)}
+.veil{position:fixed;inset:0;z-index:30;background:#0c0804;opacity:1;pointer-events:none;transition:opacity .32s ease}
+.veil.off{opacity:0}
+/* fog */
+.fogl{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .7s ease}
+body.st-fog .fogl{opacity:var(--fog,.82)}
+.fogl i{position:absolute;width:160%;height:60%;left:-30%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(240,234,222,.85),rgba(232,224,208,.45) 45%,rgba(232,224,208,0) 70%);filter:blur(8px);animation:fogd 14s ease-in-out infinite alternate}
+.fogl i:nth-child(1){top:-8%;animation-duration:17s}
+.fogl i:nth-child(2){top:18%;left:-50%;animation-duration:13s;animation-delay:-4s;opacity:.9}
+.fogl i:nth-child(3){top:40%;animation-duration:19s;animation-delay:-8s;opacity:.75}
+.fogl i:nth-child(4){top:-20%;left:-10%;height:90%;opacity:.5;animation-duration:23s;animation-direction:alternate-reverse}
+@keyframes fogd{from{transform:translateX(-12%) scale(1)}to{transform:translateX(12%) scale(1.12)}}
+/* bridge */
+.brg{position:absolute;inset:0;pointer-events:none;display:none}
+body.st-bridge .brg{display:block}
+.deck{position:absolute;height:var(--dh,38px);display:flex}
+.sec{position:relative;flex:1;height:100%}
+.sec .gh{position:absolute;inset:3px 1px;border:1.5px dashed rgba(255,230,180,.38);border-radius:3px}
+.sec .bd{position:absolute;inset:0;display:flex;justify-content:space-around;align-items:stretch;opacity:0;transform:translateY(-28px) scale(1.35) rotate(-3deg);transition:opacity .25s ease,transform .4s cubic-bezier(.3,1.4,.5,1)}
+.sec.on .bd{opacity:1;transform:none}
+.sec.on .gh{opacity:0;transition:opacity .22s}
+.pk{width:19%;margin:3px 0;border-radius:2px;background:linear-gradient(90deg,#5b3618,#b07a3e 30%,#d29a55 55%,#7a4a1e);box-shadow:0 2px 3px rgba(0,0,0,.6),inset 0 0 0 1px rgba(40,20,5,.45)}
+.pk:nth-child(2){transform:translateY(1px) rotate(1.2deg)}.pk:nth-child(3){transform:rotate(-1deg)}.pk:nth-child(4){transform:translateY(-1px)}
+.rope{position:absolute;left:-2px;right:-2px;height:3px;border-radius:2px;background:linear-gradient(#e9c98a,#7a5320);box-shadow:0 1px 2px rgba(0,0,0,.7);opacity:0;transform:scaleX(0);transform-origin:left;transition:opacity .18s ease .15s,transform .32s ease .15s}
+.rope.t{top:-1px}.rope.b{bottom:-1px}
+.sec.on .rope{opacity:1;transform:none}
+.sec.on .bd{filter:drop-shadow(0 0 6px rgba(255,207,90,.0));animation:pkglow .8s ease .25s 1}
+@keyframes pkglow{30%{filter:drop-shadow(0 0 10px rgba(255,207,90,.9))}}
+.post{position:absolute;width:12px;height:12px;margin:-6px;border-radius:50%;background:radial-gradient(#d9a75c,#5a3410);box-shadow:0 2px 4px #000}
+.tok{position:absolute;width:40px;height:40px;margin:-20px;border-radius:50%;transition:left .55s ease-in-out,top .55s ease-in-out;z-index:3}
+.tok.hero{border:2px solid #ffd877;box-shadow:0 0 0 2px #5a3410,0 0 16px rgba(255,207,90,.8);overflow:hidden;background:#2a1a0c}
+.tok.hero img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block}
+.tok.walk{animation:bob .36s ease-in-out 2}
+@keyframes bob{50%{margin-top:-24px}}
+.crack{animation:crk .38s ease 1}
+@keyframes crk{25%{transform:translateY(3px) rotate(2deg)}50%{transform:translateY(-1px) rotate(-1deg)}}
+/* fire */
+.glow{position:absolute;pointer-events:none;display:none;width:180px;height:180px;margin:-90px}
+body.st-fire .glow{display:block}
+.glow b{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(255,190,80,.55),rgba(255,120,30,.22) 40%,transparent 70%);mix-blend-mode:screen;animation:flk 1.7s ease-in-out infinite alternate}
+@keyframes flk{0%{opacity:.65;transform:scale(1)}40%{opacity:.95;transform:scale(1.06)}70%{opacity:.75}100%{opacity:1;transform:scale(1.1)}}
+.glow span{position:absolute;left:50%;top:50%}
+.glow i{position:absolute;width:3px;height:3px;border-radius:50%;background:#ffd27a;box-shadow:0 0 6px #ff9a2a;opacity:0;animation:spk 2.4s linear infinite}
+@keyframes spk{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}100%{opacity:0;transform:translate(var(--x),-110px)}}
+body.st-fire.flare .glow b{animation-duration:.45s}
+/* stage caption */
+.cap{position:fixed;z-index:20;left:50%;top:calc(58px + env(safe-area-inset-top));transform:translateX(-50%);padding:6px 16px;border-radius:999px;background:linear-gradient(#f0c870,#a8692a);color:#2a1606;font:800 15px Manrope;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 2px 10px rgba(0,0,0,.5);white-space:nowrap;opacity:0;transition:opacity .28s}
+.cap.on{opacity:1}
+.cap small{font-weight:700;letter-spacing:.04em;opacity:.75;margin-left:6px}
+/* question zone */
+.qz{position:fixed;z-index:20;left:0;right:0;bottom:calc(80px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;padding:10px 14px 8px;background:radial-gradient(120% 90% at 50% 70%,rgba(12,8,4,.72),rgba(12,8,4,.45) 60%,rgba(12,8,4,0) 100%);opacity:0;transform:translateY(10px);transition:opacity .24s ease,transform .24s ease;pointer-events:none}
+.qz.on{opacity:1;transform:none;pointer-events:auto}
+.qz.swap .qt,.qz.swap .opts{opacity:0;transition:opacity .12s}
+.qt{font:700 24px/1.22 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;margin:0 4px 8px;text-shadow:0 1px 6px #000;transition:opacity .18s}
+.opts{display:flex;flex-direction:column;gap:6px;transition:opacity .18s}
+.op{display:block;width:100%;margin:0;padding:9px 12px;border:1.5px solid #c9a46a;border-radius:13px;background:linear-gradient(rgba(46,28,14,.94),rgba(30,18,8,.94));color:#f4ecdf;font:600 17px/1.32 Manrope,sans-serif;text-align:left;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.45);transition:background .16s,border-color .16s,transform .12s,opacity .18s}
+.op:active{transform:scale(.985)}
+.op.sel{background:linear-gradient(#ffe9a8,#e0a940 60%,#b97a32);color:#2a1606;border-color:#ffe9a8;box-shadow:0 0 16px rgba(255,207,90,.7)}
+.qz.lock .op:not(.sel){opacity:.45}
+.qz.lock{pointer-events:none}
+@media (max-height:700px){.qt{font-size:21px;margin-bottom:6px}.op{padding:7px 11px;font-size:16.5px;line-height:1.26}.opts{gap:5px}.qz{padding-top:6px}}
+/* scroll subtitle */
+.gsc-html .pc-sub{margin:-4px 0 12px;text-align:center;font:700 16px/1.35 Manrope;letter-spacing:.04em;color:#7a4a1a}
+.gsc-html p{margin:0 0 10px}
+@media (max-height:700px){.gsc-body{font-size:17px;line-height:1.42}.gsc-html p{margin:0 0 7px}}
+
+/* Заставка Старца (Экран А после 10-го вопроса) */
+.cut{position:fixed;inset:0;z-index:38;background:#0c0804;opacity:0;transition:opacity .35s ease;overflow:hidden}
+.cut.on{opacity:1}
+.cut[hidden]{display:none}
+.cut-bg{position:absolute;inset:0;background:url(img/scene_fire.jpg) center 22%/cover no-repeat}
+.cut-fg{position:absolute;inset:0;background:linear-gradient(rgba(12,8,4,.35),rgba(12,8,4,.15) 35%,rgba(12,8,4,.84) 68%,#0c0804 94%)}
+.cut-card{position:fixed;left:14px;right:14px;bottom:calc(92px + env(safe-area-inset-bottom));max-width:480px;margin:0 auto;padding:18px 18px 16px;border-radius:20px;background:linear-gradient(#f6e6bf,#e2c78e);color:#3a2410;box-shadow:0 14px 36px rgba(0,0,0,.5)}
+.cut-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.cut-role{font:800 12px Manrope,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#7a4e1c}
+.cut-au{border:1.5px solid #9c6b26;background:rgba(255,250,236,.75);color:#5c350c;border-radius:999px;padding:5px 12px;font:700 13px Manrope,sans-serif;cursor:pointer}
+.cut-au.on{background:#6e4314;color:#fff7e4;border-color:#6e4314}
+.cut-txt{margin:0 0 14px;font:500 17px/1.48 Manrope,sans-serif;color:#2c1808}
+.cut-go{display:block;width:100%;min-height:50px;padding:12px 20px;border:0;border-radius:999px;background:linear-gradient(180deg,#f5d68a,#cfa046);color:#261606;font:800 17px Manrope,sans-serif;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+
+/* Экран Б: единая карточка расшифровки (в стиле sum.html) */
+.fin{position:fixed;inset:0;z-index:40;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#0c0804;padding:calc(62px + env(safe-area-inset-top)) 14px calc(110px + env(safe-area-inset-bottom));opacity:0;transition:opacity .35s ease}
+.fin.on{opacity:1}
+.fin[hidden]{display:none}
+.fin-wrap{max-width:480px;margin:0 auto}
+body.fin-on .gsc-icon{display:none!important}
+.nxs.pc-next[hidden]{display:none}
+@media (prefers-reduced-motion:reduce){.fogl i,.glow b,.glow i{animation:none!important}}
