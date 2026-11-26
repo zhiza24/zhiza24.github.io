@@ -31,6 +31,16 @@ assert.ok(strategy.includes("f==='kmTest'&&x.scoringVersion!==3"),'strategy must
 ['KM01','KM02','KM03','KM04','KM05','KM06'].forEach(id=>assert.ok(strategy.includes("lvl(P,'kmTest','"+id+"')"),'revised worldview scale '+id+' should inform a relevant optional practice'));
 const state=fs.readFileSync(path.join(root,'state-engine.js'),'utf8');
 assert.ok(state.includes('if(kmResult&&kmResult.scoringVersion!==3)kmResult=null'),'outdated worldview results must not enter the 19-state synthesis');
+const strategyContext={window:{}};
+vm.createContext(strategyContext);
+vm.runInContext(strategy,strategyContext);
+const practiceMap={KM01:'risk',KM02:'mydecision',KM03:'risk',KM04:'contact',KM05:'myzone',KM06:'mine'};
+Object.keys(practiceMap).forEach(id=>{
+ const result=strategyContext.window.GStrategy.practRec({kmTest:{scoringVersion:3,scales:[{id,level:3,status:'full'}]}});
+ assert.ok(Array.from(result).some(x=>x.id===practiceMap[id]),id+' should inform the matching optional practice');
+});
+const legacyPractices=strategyContext.window.GStrategy.practRec({kmTest:{scoringVersion:2,scales:[{id:'KM02',level:3,status:'full'},{id:'KM05',level:3,status:'full'}]}});
+assert.equal(legacyPractices.length,0,'legacy worldview scores must not drive new strategy recommendations');
 const bg=fs.readFileSync(path.join(root,'background-state-16.js'),'utf8');
 assert.ok(bg.includes('data-bg16-option'),'background test must use one shared choice list');
 assert.ok(!bg.includes('data-bg16-secondary'),'background test must not render a duplicate secondary list');
