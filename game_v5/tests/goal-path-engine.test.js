@@ -57,3 +57,12 @@ test('status changes preserve history and do not reset the cycle', () => {
   assert.equal(T.goalPath.activeIds.length,0);
   assert.equal(T.start,start);
 });
+
+test('existing Reactor strategy is exposed as reusable context', () => {
+  const P={tracker:{strategy:{focus:[{t:'Собственная инициатива',g:'Начать с малого'}],days:[{m:'Сделать первый шаг',n:'Открыть заметку'}],weeks:[{t:'Начать',d:'Проверить'}],practRec:[{id:'chooseme',why:'Поддержать свой выбор'}]}}};
+  const c=GP.contextFor(P,{id:'w1',text:'Мое желание'});
+  assert.equal(c.strategyAvailable,true);
+  assert.equal(c.strategy.focus[0].title,'Собственная инициатива');
+  assert.equal(c.strategy.first.action,'Сделать первый шаг');
+  assert.equal(c.strategy.practices[0].id,'chooseme');
+});
