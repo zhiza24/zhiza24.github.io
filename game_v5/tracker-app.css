@@ -81,3 +81,37 @@ body.tapp{font-family:var(--t-sans);-webkit-font-smoothing:antialiased}
 @media(min-width:860px){.tapp .t28{max-width:640px}}
 .tapp .tcycle h1{margin:2px 0 8px;line-height:1.25}
 .tapp .tcycle .cap28{margin:0 0 12px;font-size:14px}
+/* Вводный экран стратегии: без нижнего меню трекера */
+.tapp .t28.tintro{padding-bottom:40px}
+/* Урок «Открытий» внутри трекера — светлая палитра */
+body.tapp .lo-modal{font-family:var(--t-sans)}
+body.tapp .lo-backdrop{background:rgba(30,30,27,.32);backdrop-filter:blur(6px)}
+body.tapp .lo-sheet{background:var(--t-bg);border:1px solid var(--t-bor);box-shadow:0 -8px 30px rgba(30,30,27,.12);color:var(--t-tx)}
+body.tapp .lo-wrap,body.tapp .lo-wrap *{color:inherit}
+body.tapp .lo-kicker,body.tapp .lo-label,body.tapp .lo-time,body.tapp .lo-note,body.tapp .lo-library,body.tapp .lo-back,body.tapp .lo-private,body.tapp .lo-card-actions span{color:var(--t-mu)!important}
+body.tapp .lo-head h1,body.tapp .lo-panel h2,body.tapp .lo-finish h2,body.tapp .lo-intro,body.tapp .lo-card summary,body.tapp .lo-question,body.tapp .lo-question legend,body.tapp .lo-question label,body.tapp .lo-fields label,body.tapp .lo-head p,body.tapp .lo-card p,body.tapp .lo-list,body.tapp .lo-node{color:var(--t-tx)!important}
+body.tapp .lo-close{background:var(--t-sur);border:1px solid var(--t-bor);color:var(--t-tx)}
+body.tapp .lo-panel,body.tapp .lo-finish,body.tapp .lo-card,body.tapp .lo-question,body.tapp .lo-node{background:var(--t-sur);border:1px solid var(--t-bor)}
+body.tapp .lo-card{background:var(--t-sur2)}
+body.tapp .lo-feedback{background:var(--t-sur2);color:var(--t-tx);border:1px solid var(--t-bor)}
+body.tapp .lo-feedback.is-correct{background:var(--t-acs);color:var(--t-ac);border-color:var(--t-ac)}
+body.tapp .lo-card-actions button,body.tapp .lo-check{background:var(--t-sur);border:1px solid var(--t-bor);color:var(--t-tx)}
+body.tapp .lo-card-actions button.is-on{background:var(--t-acs);border-color:var(--t-ac);color:var(--t-ac)}
+body.tapp .lo-fields textarea,body.tapp .lo-fields input,body.tapp .lo-note textarea{background:var(--t-sur);border:1px solid var(--t-bor);color:var(--t-tx)}
+body.tapp .lo-primary{background:var(--t-ac);color:#fff;border-radius:14px}
+body.tapp .lo-question input{accent-color:var(--t-ac)}
+/* Свиток Голоса Самости внутри трекера — светлый лист */
+body.tapp .gsc-ov{top:0;bottom:0;align-items:flex-end;--gsc-top:0;--gsc-nav-h:0;--gsc-h:min(88vh,720px)}
+body.tapp .gsc-ov:before{background:rgba(30,30,27,.32)}
+body.tapp .gsc-art,body.tapp .gsc-mid,body.tapp .gsc-top,body.tapp .gsc-bot{display:none!important;visibility:hidden!important;height:0!important;width:0!important;opacity:0!important}
+body.tapp .gsc-spp{width:100%;max-width:560px;height:auto;max-height:88vh;background:var(--t-bg);border-radius:20px 20px 0 0;box-shadow:0 -8px 30px rgba(30,30,27,.12);align-self:flex-end;opacity:1;display:flex;flex-direction:column;box-sizing:border-box;overflow:hidden;padding:0}
+body.tapp .gsc-clip,body.tapp .gsc-inner{position:relative;inset:auto;transform:none!important;overflow:visible;height:0;flex:none;order:0}
+body.tapp .gsc-body{position:relative;left:auto;right:auto;top:auto;bottom:auto;padding:44px 20px 16px;flex:1 1 auto;min-height:0;max-height:none;color:var(--t-tx);font:400 16px/1.5 var(--t-sans);-webkit-mask-image:none;mask-image:none;opacity:1;order:1}
+body.tapp .gsc-body h3{color:var(--t-tx);font:600 22px/1.25 var(--t-serif);padding-right:28px}
+body.tapp .gsc-body .ft{color:var(--t-mu)}
+body.tapp .gsc-body a{color:var(--t-ac)}
+body.tapp .gsc-foot{display:block!important;position:relative!important;left:auto;right:auto;bottom:auto;height:auto!important;transform:none!important;pointer-events:auto;background:transparent;z-index:5;order:2;padding:8px 16px calc(16px + env(safe-area-inset-bottom));flex:none}
+body.tapp .gsc-close{outline:none!important;appearance:none;-webkit-appearance:none;background-image:none!important;filter:none!important;position:relative!important;left:auto!important;bottom:auto!important;transform:none!important;display:block;margin:0 auto;background:var(--t-ac)!important;color:#fff!important;border:0!important;border-radius:14px;font:600 16px var(--t-sans)!important;box-shadow:0 2px 8px rgba(47,94,80,.18)!important;opacity:1!important;pointer-events:auto!important;z-index:5;min-width:160px}
+body.tapp .gsc-close:before{display:none!important;content:none!important}
+body.tapp .gsc-x{top:14px;right:14px;color:var(--t-mu);opacity:1!important;order:0}
+body.tapp .gsc-au{display:none}

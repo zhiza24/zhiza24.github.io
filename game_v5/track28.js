@@ -220,7 +220,9 @@ var TABI={day:'<path d="M12 3v2M12 19v2M5 12H3M21 12h-2M6.3 6.3l1.4 1.4M16.3 16.
 function chrome(){
   if(!host)return;
   var P=load(), T=P.tracker||{}, tab=appTab(T), n=todayNum(T);
+  var intro=!T.strategySeen&&T.strategy&&T.view!=='mirror'&&T.space!=='mirror';
   var root=host.querySelector('.t28');
+  if(root){root.classList.toggle('tintro',!!intro)}
   if(root&&!root.querySelector('.tapp-top')){
     var top=document.createElement('div');
     top.className='tapp-top';
@@ -232,6 +234,7 @@ function chrome(){
   nav.innerHTML=[['day','День'],['week','Неделя'],['cycle','Цикл'],['more','Еще']].map(function(t){
     return '<button type="button" class="'+(tab===t[0]?'on':'')+'" data-act="tab" data-t="'+t[0]+'"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+TABI[t[0]]+'</svg><span>'+t[1]+'</span></button>';
   }).join('');
+  if(intro)return;
   host.appendChild(nav);
   var sh=document.createElement('div');sh.innerHTML=moreSheet();host.appendChild(sh.firstChild);
 }

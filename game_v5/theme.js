@@ -1,5 +1,7 @@
 /* Ранний preconnect к шрифтам, чтобы не ждать CSS. */
 (function(){try{var h=document.head||document.documentElement;if(!h||document.querySelector('link[data-gpre=fonts]'))return;[['preconnect','https://fonts.googleapis.com'],['preconnect','https://fonts.gstatic.com']].forEach(function(x,i){var l=document.createElement('link');l.rel=x[0];l.href=x[1];l.setAttribute('data-gpre','fonts');if(i)l.crossOrigin='anonymous';h.insertBefore(l,h.firstChild)})}catch(e){}})();
+/* Если у страницы нет своей иконки, подставляем favicon.svg — иначе браузер запрашивает /favicon.ico и получает 404. */
+(function(){try{var h=document.head||document.documentElement;if(!h||document.querySelector('link[rel="icon"],link[rel="shortcut icon"]'))return;var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';l.href=(document.currentScript&&document.currentScript.src||'').replace(/[^/]+(?:\?.*)?$/,'')+'favicon.svg';if(!l.href||l.href.slice(-1)==='/')l.href='favicon.svg';h.appendChild(l)}catch(e){}})();
 /* PWA: the worker is registered from the shared theme entry, which is loaded
    by the entry page, map, task screens, diary, hero and Reactor. */
 (function(){

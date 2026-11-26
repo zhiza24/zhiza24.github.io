@@ -4,6 +4,7 @@
 <title>Путь Современного Алхимика · Майя Явь</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#211710">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.svg">
 <link rel="apple-touch-icon" href="img/icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="t/style.css?v=f19">
@@ -19,6 +20,7 @@
 .core:hover,.core:active{transform:scale(1.05);box-shadow:0 0 0 4px #a86a28,0 0 0 10px rgba(240,200,100,.6),0 0 40px rgba(255,200,80,.8),0 16px 36px rgba(0,0,0,.6)}
 .core .halo{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle,rgba(255,210,100,.4) 0%,transparent 70%);animation:pulse 2.4s ease-in-out infinite;pointer-events:none}
 @keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+section.scr.entry .edisc{position:absolute;left:16px;right:16px;bottom:calc(10px + env(safe-area-inset-bottom));margin:0;text-align:center;font:400 11px/1.4 Manrope,sans-serif;color:rgba(244,236,223,.62);letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.5);z-index:3;pointer-events:none}
 </style>
 </head><body>
 <div class="backdrop" aria-hidden="true"></div>
@@ -26,7 +28,7 @@
 <p class="ea">Автор: Майя Явь</p>
 <p class="eh">ПУТЬ<br>СОВРЕМЕННОГО<br>АЛХИМИКА</p>
 <button class="core sun-btn" id="core" aria-label="Войти"><span class="sun-btn__halo" aria-hidden="true"></span><span class="sun-btn__corona" aria-hidden="true"></span><span class="sun-btn__core" aria-hidden="true"><span class="sun-btn__tex"></span><span class="sun-btn__plasma"></span></span><span class="halo"></span><span class="ring"></span><span class="ring r2"></span><span class="wave"></span></button>
-<p class="es">коснись</p></div></section></main>
+<p class="es">коснись</p></div><p class="edisc">18+ · Это игра для самоисследования, не терапия и не диагноз.</p></section></main>
 <script>
 const c=document.getElementById('core');let AC;
 const ES=new Audio('snd/entry.mp3?v=8');ES.preload='auto';

@@ -309,6 +309,7 @@
     wrap.className = 'lo-modal';
     wrap.setAttribute('role', 'dialog');
     wrap.setAttribute('aria-modal', 'true');
+    wrap.setAttribute('data-rdskip', '1');
     wrap.innerHTML = '<div class="lo-backdrop"></div><div class="lo-sheet"><div class="lo-wrap"></div></div>';
     document.body.appendChild(wrap);
     activeModal = wrap;
