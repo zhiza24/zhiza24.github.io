@@ -99,7 +99,7 @@ function mount(box){
    });
   }
   box.querySelector('#gim-retake').onclick=function(){idx=0;draw()};
-  box.querySelector('#gim-done').onclick=function(){if(window.GRoute){GRoute.complete('slot.html?id=mechanism');var n=GRoute.advance();if(n)location.href=n}else location.href='slot.html?id=km'};
+  box.querySelector('#gim-done').onclick=function(){if(window.GRoute){var n=GRoute.advance();if(n)location.href=n}else location.href='slot.html?id=km'};
  }
  idx=Math.max(0,Math.min(9,prior));draw();
 }

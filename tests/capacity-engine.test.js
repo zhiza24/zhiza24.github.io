@@ -41,3 +41,13 @@ test('CAP-28: экспорт/импорт сохраняет способ зап
 test('Стратегия выбора: запасной источник без даты рождения',()=>{const h=H({pocherk:{lead:'cre'}},{},1);assert.equal(h.type,'show');assert.equal(h.source,'pocherk');assert.match(h.why,/стратегия выбора — Созидание/)});
 test('Стратегия выбора: совпадение с механикой отмечается, смешанный итог не учитывается',()=>{assert.match(H({nature:{primary:'initiator'},pocherk:{lead:'act'}},{},1).why,/совпадает твоя стратегия выбора \(Действие\)/);assert.equal(H({pocherk:{lead:'act',mixed:true}},{},1),null)});
 test('Опора на других: чаще подсказка передать часть',()=>{const P={nature:{primary:'initiator'},pocherk:{lead:'sup'},capacity:{support:'admin'}};assert.equal(H(P,{},2).type,'delegate')});
+
+test('passport direction marked yes adds a soft support line only for its sphere',()=>{
+ global.GPassportData={directions:[{id:3,name:'Достижение'}]};
+ const P={birth:'10.02.1990',capacity:{start:'self'},passport:{birth:'10.02.1990',answers:{'direction:3':{choice:'yes'}}}};
+ assert.match(C.hint(P,{},{day:1,sphere:'career'}).why,/Достижение/);
+ assert.doesNotMatch(C.hint(P,{},{day:1,sphere:'love'}).why,/Опора/);
+ P.passport.answers['direction:3'].choice='partly';
+ assert.doesNotMatch(C.hint(P,{},{day:1,sphere:'career'}).why,/Опора/);
+ delete global.GPassportData;
+});

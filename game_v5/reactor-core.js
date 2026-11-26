@@ -226,7 +226,8 @@ function capBlock(P,T,n,i,w,W,step){
  var plan=gpPlan(P,T,i),stalled=false;
  if(n>3){stalled=true;for(var k=n-1;k>=n-3;k--){if(((dayOf(T,k).dirState)||[])[i]==='done'){stalled=false;break}}}
  var wsE=(P.strategyWorkshop&&P.strategyWorkshop.entries||[]).slice(-1)[0];
- var hn=step?GC.hint(P,plan,{day:n,stalled:stalled,people:!!(wsE&&wsE.group==='people'),calc:window.GNature&&GNature.calc,name:function(k){try{return GNature.name(k,window.GGender?GGender(P)==='f':P.gender==='f')}catch(e){return ''}}}):null;
+ var gsph=null;try{var gid=gpId(P,T,i),gg=((T.goalPath||{}).goals||{})[gid];gsph=gg&&gg.sphere}catch(e){}
+ var hn=step?GC.hint(P,plan,{day:n,sphere:gsph,stalled:stalled,people:!!(wsE&&wsE.group==='people'),calc:window.GNature&&GNature.calc,name:function(k){try{return GNature.name(k,window.GGender?GGender(P)==='f':P.gender==='f')}catch(e){return ''}}}):null;
  var hint=hn?'<p class="rx-cap"><b>'+esc(gx('Формат шага: '+hn.tag))+'.</b> '+esc(gx(hn.text))+'</p>':'';
  var pc=plan.capacity||{},gc=P.capacity||{},cs=pc.start||gc.start,su=pc.support||gc.support,ch=function(act,f,list,cur){return '<div class="chips">'+list.map(function(x){return '<button type="button" class="'+(cur===x.id?'on':'')+'" data-act="'+act+'" data-g="'+i+'"'+(f?' data-f="'+f+'"':'')+' data-w="'+w+'" data-v="'+x.id+'">'+esc(gx(x.t))+'</button>'}).join('')+'</div>'};
  var edit='<details class="rx-if rx-capd"'+(capOpen===i?' open':'')+'><summary>Как тебе легче идти к этой цели</summary><p class="mute">Мне проще начинать, когда…</p>'+ch('rx-cap','start',GC.start,cs)+'<p class="mute">'+esc(gx('Что лучше не тянуть одн{ому|ой}?'))+'</p>'+ch('rx-cap','support',GC.support,su)+'<p class="mute">Как поймешь, что цель сдвинулась?</p>'+ch('rx-crit','',GP.criteria,plan.criterion)+'</details>';

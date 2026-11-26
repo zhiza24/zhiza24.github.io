@@ -620,7 +620,6 @@ function acceptedView(){
     P=ensure();P.wishMod.scene='map';save(P);
     if(window.GReview){location.href='tasks.html';return}
     if(window.GRoute){
-      if(!GRoute.complete('wish.html'))GRoute.complete();
       location.href=GRoute.advance();
       return;
     }

@@ -32,6 +32,10 @@ var TEXT={
  nowait:'Если запроса пока нет, не жди: покажи пример своей работы или предложи понятный формат одному человеку.',
  delegate:'Не тяни все одн{ому|ой}: можно передать {s}. Кого попросить, с кем обменяться помощью или какой инструмент взять?'
 };
+/* «Твои направления» паспорта (13): только те, что игрок сам отметил «да», и только близкие сфере цели. Мягкая опора, без вывода. */
+var SPHERE_DIR={health:[5,13],money:[1,8,6],career:[3,6,12],love:[4,1],family:[2,4],friends:[4,11],growth:[9,10,7],rest:[13,5]};
+function dirLean(P,sphere){var b=obj(P&&P.passport),a=obj(b.answers),ids=SPHERE_DIR[sphere]||[];if(b.birth&&P.birth&&b.birth!==P.birth)return null;
+ for(var i=0;i<ids.length;i++){var r=a['direction:'+ids[i]];if(r&&r.choice==='yes'){var D=(typeof GPassportData!=='undefined'&&GPassportData.directions)||[],d=null;for(var j=0;j<D.length;j++)if(D[j].id===ids[i])d=D[j];if(d)return d.name}}return null}
 function obj(x){return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}
 function find(list,id){for(var i=0;i<list.length;i++)if(list[i].id===id)return list[i];return null}
 function valid(list,id){return !!find(list,id)}
@@ -65,7 +69,8 @@ function hint(P,plan,ctx){
  if(src==='goal'||src==='player'){why=type==='delegate'?'ты отметил{|а}, что лучше не тянуть одн{ому|ой} '+find(SUPPORT,pr.support).t:'ты выбрал{|а}: мне проще начинать, когда '+find(START,pr.route).t;if(src==='goal')why+=' (для этой цели)'}
  else if(src==='pocherk')why='твоя стратегия выбора — '+POCHERK_NAME[pr.pocherk]+'. Это только предположение, его можно поправить ниже';
  else{var nm=ctx.name&&pr.natureKey?ctx.name(pr.natureKey):'';why='механика природы по дате рождения'+(nm?' — '+nm:'')+(pr.agree&&type!=='delegate'?', с ней совпадает твоя стратегия выбора ('+POCHERK_NAME[pr.pocherk]+')':'')+'. Это только предположение, его можно поправить ниже'}
- return {type:type,tag:TYPE_TAG[type],text:txt,why:why+'.',source:src,route:pr.route};
+ var dn=ctx.sphere?dirLean(P,ctx.sphere):null;if(dn)why+='. Опора: в паспорте ты узнал{|а} в себе направление «'+dn+'»';
+ return {type:type,tag:TYPE_TAG[type],text:txt,why:why+'.',source:src,route:pr.route,direction:dn};
 }
 return {start:START,support:SUPPORT,natureRoute:NATURE_ROUTE,profile:profile,hint:hint,setGlobal:setGlobal,label:function(list,id){var x=find(list,id);return x?x.t:''},you:function(id){var x=find(START,id);return x?(x.y||x.t):''}};
 });
