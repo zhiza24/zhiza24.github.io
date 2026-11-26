@@ -191,7 +191,7 @@
       : '<a class="lo-back" href="learning.html">← Все открытия</a>';
 
     var html = '<header class="lo-head">' + topAction +
-      '<span class="lo-kicker">ПУТЬ АЛХИМИКА · ОТКРЫТИЕ</span>' +
+      '<span class="lo-kicker">ПУТЬ СОВРЕМЕННОГО АЛХИМИКА · ОТКРЫТИЕ</span>' +
       '<h1>' + esc(t(x.title)) + '</h1>' +
       '<p>' + esc(t(x.subtitle)) + '</p>' +
       '<span class="lo-time">◷ ' + x.minutes + ' мин</span></header>' +
