@@ -28,13 +28,11 @@
   }).catch(function(error){
    if(window.console&&console.warn)console.warn('Service worker registration failed',error);
   });
-  // Reload once when the new worker takes control
-  var refreshing=false;
-  navigator.serviceWorker.addEventListener('controllerchange',function(){
-   if(refreshing)return;
-   refreshing=true;
-   location.reload();
-  });
+  // Новая версия применяется тихо: без перезагрузки, со следующего открытия или перехода между экранами.
+  // Лишние файлы докачиваем в фоне, когда первый экран уже показан.
+  var warm=function(){try{navigator.serviceWorker.ready.then(function(r){r.active&&r.active.postMessage({type:'WARM'})})}catch(e){}};
+  var late=function(){setTimeout(warm,4000)};
+  if(document.readyState==='complete')late();else window.addEventListener('load',late,{once:true});
  };
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',register,{once:true});
  else register();
