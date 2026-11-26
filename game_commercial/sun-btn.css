@@ -168,3 +168,4 @@ button.core.sun-btn:active{
   animation:sun-spin 9s linear infinite!important}
 .sun-btn__core{animation:sun-ballspin 9s linear infinite!important}
 @keyframes sun-ballspin{to{background-position:0 0}}
+.sun-btn__plasma{filter:blur(calc(var(--sun-size)*.07));opacity:.7}
