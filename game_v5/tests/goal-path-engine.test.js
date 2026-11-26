@@ -31,7 +31,7 @@ test('scaffold turns one wish into four editable weekly stages and a WOOP plan',
 test('cycle day is anchored to calendar dates, including daylight-saving transitions', () => {
   const T={start:new Date(2026,2,28,15).getTime(),goalPath:{cycleStartAt:new Date(2026,2,28,15).getTime()}};
   assert.equal(GP.calendarDay(T,new Date(2026,2,29,8).getTime()),2);
-  assert.equal(GP.calendarDay(T,new Date(2026,3,1,8).getTime()),4);
+  assert.equal(GP.calendarDay(T,new Date(2026,3,1,8).getTime()),5);
 });
 test('snapshots are immutable after a goal replacement', () => {
   const T={start:Date.UTC(2026,11,1),goalPath:{cycleStartAt:Date.UTC(2026,11,1),goals:{a:{id:'a',text:'A',status:'active'},b:{id:'b',text:'B',status:'paused'}},activeIds:['a'],days:{},history:[]}};
