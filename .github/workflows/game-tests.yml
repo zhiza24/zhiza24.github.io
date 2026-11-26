@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "game_v5/**"
+      - "game_commercial/**"
+      - "game_commercial/**"
       - "tests/**"
       - ".github/workflows/game-tests.yml"
   pull_request:
@@ -46,3 +48,20 @@ jobs:
       - name: Run desktop browser smoke tests
         working-directory: tests
         run: npx playwright test --config=playwright.config.cjs
+
+  commercial-browser-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright
+        working-directory: tests
+        run: npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test
+      - name: Install Chromium
+        working-directory: tests
+        run: npx playwright install --with-deps chromium
+      - name: Run commercial edition smoke tests
+        working-directory: tests
+        run: npx playwright test --config=playwright.commercial.config.cjs
