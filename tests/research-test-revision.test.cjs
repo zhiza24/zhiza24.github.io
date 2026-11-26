@@ -24,7 +24,13 @@ assert.ok(tests.includes('scoringVersion:3'),'new wording must have its own scor
 assert.ok(tests.includes("have.scoringVersion!==3"),'older results must not be recalculated with revised wording');
 assert.ok(tests.includes('Сохраненный результат прежней редакции остается в профиле'),'the old result must be preserved and explained');
 assert.ok(tests.includes('Предыдущее исследование описывало повторяющиеся состояния'),'the test intro must distinguish state mapping from interpretation filters');
+assert.ok(tests.includes("status:'outdated'"),'old worldview results must be marked outdated in the Reactor snapshot');
 assert.ok(!tests.includes('answers:_d.answers||(built.res&&built.res.answers)||[]'),'raw answers must not be copied automatically into diary result cards');
+const strategy=fs.readFileSync(path.join(root,'strategy.js'),'utf8');
+assert.ok(strategy.includes("f==='kmTest'&&x.scoringVersion!==3"),'strategy must ignore outdated worldview scores');
+assert.ok(!strategy.includes("lvl(P,'kmTest','KM05')"),'the revised attribution scale must not trigger the old limited-agency practice');
+const state=fs.readFileSync(path.join(root,'state-engine.js'),'utf8');
+assert.ok(state.includes('if(kmResult&&kmResult.scoringVersion!==3)kmResult=null'),'outdated worldview results must not enter the 19-state synthesis');
 const bg=fs.readFileSync(path.join(root,'background-state-16.js'),'utf8');
 assert.ok(bg.includes('data-bg16-option'),'background test must use one shared choice list');
 assert.ok(!bg.includes('data-bg16-secondary'),'background test must not render a duplicate secondary list');
