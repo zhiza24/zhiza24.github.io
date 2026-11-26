@@ -103,7 +103,7 @@ function mount(box){
    'Если еще одна реакция действительно бывает, но возникает реже, отметь ее в этом же списке.';
   var clear=box.querySelector('#bg16ClearSecondary');if(clear)clear.hidden=!a.secondary;
   var edit=box.querySelector('#bg16EditPrimary');if(edit)edit.hidden=primary==null||editing;
-  var next=box.querySelector('#bg16Next');if(next)next.disabled=primary==null;
+  var next=box.querySelector('#bg16Next');if(next)next.disabled=primary==null||editing;
  }
  function preliminary(){
   return E.calculate(draft.answers,{}, {startedAt:draft.startedAt,seed:draft.seed});
