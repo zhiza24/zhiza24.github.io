@@ -68,7 +68,6 @@ function mount(box){
   var qid=draft.order[step],q=qById(qid),a=draft.answers[qid]||{},indices=draft.optionOrder[qid]||[0,1,2,3];
   var opts=indices.map(function(i){return {text:q[3][i][0],key:q[3][i][1]}}),primary=a.primary,editing=!!a.editPrimary;
   var hasFamily=isFamily(primary),hasSpecial=primary==='v'||primary==='x';
-  function optionText(key){var found=opts.filter(function(o){return o.key===key})[0];return found?tx(found.text):''}
   var prompt=!primary?'Сначала выбери реакцию, которая чаще всего появляется первой.':
    editing?'Выбери, какая реакция обычно возникает первой.':
    hasSpecial?'Этот ответ сохранится отдельно и не будет распределяться по группам.':
@@ -80,9 +79,9 @@ function mount(box){
    return '<button type="button" class="bg16-choice '+(role?'selected':'')+'" data-bg16-option="'+o.key+'" '+(disabled?'disabled':'')+'>'+esc(tx(o.text))+ (label?'<span class="bg16-choice-role">'+label+'</span>':'')+'</button>';
   }).join('');
   var specialHtml=!primary||editing?D.SPECIAL.map(function(o){return '<button type="button" class="bg16-special '+(primary===o[1]?'selected':'')+'" data-bg16-special="'+o[1]+'">'+esc(o[0])+'</button>'}).join(''):'';
-  var selectionHtml=primary&&!editing?'<div class="bg16-selection"><b>Основной выбор:</b> '+esc(primary==='v'?'По-разному, зависит от обстоятельств':primary==='x'?'Ни один вариант не подходит':optionText(primary))+
-   (a.secondary?'<br><b>Дополнительный:</b> '+esc(optionText(a.secondary)):'')+
-   (hasFamily?'<p class="bg16-note">Дополнительный выбор необязателен. Он нужен только если такая реакция действительно тоже бывает, но возникает реже.</p>':'')+
+  var selectionHtml=primary&&!editing?'<div class="bg16-selection"><b>Основной выбор отмечен.</b>'+
+   (hasFamily?'<p>Если другая реакция тоже иногда бывает, но возникает реже, отметь ее в этом же списке. Это необязательно.</p>':'<p>Этот ответ сохранится отдельно, без дополнительного выбора.</p>')+
+   (a.secondary?'<button type="button" class="bg16-link" id="bg16ClearSecondary">Убрать дополнительный выбор</button>':'')+
    '<button type="button" class="bg16-link" id="bg16EditPrimary">Изменить основной выбор</button></div>':'';
   shell('<span class="tag">Фоновое состояние · '+(step+1)+' из 16</span><div class="bg16-kicker">'+esc(D.SPHERES[q[1]])+'</div>'+
    '<progress max="16" value="'+(step+1)+'"></progress><h2>'+esc(tx(q[2]))+'</h2>'+
@@ -186,6 +185,9 @@ function mount(box){
   }});
   var editPrimary=box.querySelector('#bg16EditPrimary');if(editPrimary)editPrimary.onclick=function(){
    var qid=draft.order[step],a=draft.answers[qid]||{};a.editPrimary=true;a.secondary=null;draft.answers[qid]=a;saveDraft();question();
+  };
+  var clearSecondary=box.querySelector('#bg16ClearSecondary');if(clearSecondary)clearSecondary.onclick=function(){
+   var qid=draft.order[step],a=draft.answers[qid]||{};a.secondary=null;draft.answers[qid]=a;saveDraft();question();
   };
   var back=box.querySelector('#bg16Back');if(back)back.onclick=function(){if(step>0){step--;question()}};
   var skip=box.querySelector('#bg16Skip');if(skip)skip.onclick=function(){var qid=draft.order[step];draft.answers[qid]={primary:null,secondary:null,skipped:true};saveDraft();step++;if(step>=16)followup();else question()};
