@@ -46,7 +46,7 @@
 (function(){
 'use strict';
 if(window.GTheme)return;
-var KEY='alch_v5_theme',H=document.documentElement;
+var KEY='alch_commercial_theme',H=document.documentElement;
 /* Переключатель темы снят по решению владельца: всегда светлая, сохраненный выбор игнорируется. Код темной темы оставлен спящим (ALLOW_DARK). */
 var ALLOW_DARK=false;
 function get(){if(!ALLOW_DARK)return 'light';try{return localStorage.getItem(KEY)==='dark'?'dark':'light'}catch(e){return 'light'}}
