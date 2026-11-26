@@ -223,7 +223,7 @@ function build(P){
 
 /* Персонализация по результатам всех исследований: опоры, трудности и практики (не больше двух).
    Положительный фон: только опорные практики, без исправления ради исправления. */
-function lvl(P,f,id){var x=P[f];if(!x||!x.scales)return null;var q=x.scales.filter(function(z){return z.id===id})[0];return q&&q.level!=null&&q.status!=='insufficient'?q.level:null}
+function lvl(P,f,id){var x=P[f];if(!x||!x.scales)return null;if(f==='kmTest'&&x.scoringVersion!==3)return null;var q=x.scales.filter(function(z){return z.id===id})[0];return q&&q.level!=null&&q.status!=='insufficient'?q.level:null}
 function bwr(P){var B=P.betray||{};return B.end||B.start||null}
 function practRec(P){
  var bp=P.backgroundProfile,out=[],seen={};
@@ -268,7 +268,7 @@ function practRec(P){
  if(L.S5>=2)add('risk','Часто заранее видишь сложности. Учимся отличать риск от предположения.');
  if(L.S7>=2||(bp&&(bp.adaptHyp||[]).indexOf('A4')>=0))add('contact','Когда трудно, ты можешь отдаляться. Учимся говорить о своих потребностях.');
  if(lvl(P,'selfWorth','SV06')>=2||lvl(P,'kmTest','KM02')>=2)add('mydecision','Много значит внешняя оценка. Фиксируем свое решение.');
- if(L.S8>=2||lvl(P,'kmTest','KM05')>=2)add('myzone','Бывает ощущение ограниченного выбора. Маленькие шаги в зоне влияния.');
+ if(L.S8>=2)add('myzone','Бывает ощущение ограниченного выбора. Маленькие шаги в зоне влияния.');
  if(bp&&bp.adaptations&&bp.adaptations.A6>=5&&(bp.adaptations.A3||0)<=2)add('acceptsup','Ты многое держишь сам{|а}. Учимся принимать поддержку.');
  var r=bwr(P);if(r&&r.sh){var top=Object.keys(r.sh).filter(function(k){return r.sh[k]>=3})[0];var M={ctrl:'letgo',perf:'enough',please:'chooseme',over:'chooseme',detach:'contact',numb:'myzone'};if(top&&M[top])add(M[top],'В колесе тени и опоры этот сектор отмечен как частый.')}
  if(lvl(P,'respTest','RS05')>=2||lvl(P,'selfWorth','SV02')>=2)add('enough','Строгость к себе и перфекционизм заметны в результатах.');
