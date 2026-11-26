@@ -45,6 +45,8 @@ async function swr(req,cacheName,ignoreSearch){
  const net=await fetching;
  return net||Response.error();
 }
+/* 27.11: Safari не принимает от SW ответ с перенаправлением — пересобираем его в чистый ответ */
+async function clean(r){if(!r||!r.redirected)return r;const b=await r.blob();return new Response(b,{status:r.status,statusText:r.statusText,headers:r.headers})}
 self.addEventListener('fetch',event=>{
  const req=event.request;
  if(req.method!=='GET'||req.headers.has('range'))return;
@@ -54,11 +56,11 @@ self.addEventListener('fetch',event=>{
   event.respondWith((async()=>{
    const cache=await caches.open(CACHE);
    const cached=await cache.match(req,{ignoreSearch:true});
-   const netP=fetch(req).then(async net=>{if(net&&net.ok)await cache.put(req,net.clone());return net}).catch(()=>null);
-   if(cached){netP.catch(()=>{});return cached}
+   const netP=fetch(req).then(async n=>{const net=await clean(n);if(net&&net.ok)await cache.put(req,net.clone());return net}).catch(()=>null);
+   if(cached){netP.catch(()=>{});return clean(cached)}
    const net=await netP;
-   if(net)return net;
-   return (await cache.match(new URL('./offline.html',self.registration.scope).href))||Response.error();
+   if(net&&net.ok)return net;
+   return (await cache.match(new URL('./offline.html',self.registration.scope).href))||net||fetch(req);
   })());
   return;
  }
