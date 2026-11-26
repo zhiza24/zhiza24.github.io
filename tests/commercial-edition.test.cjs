@@ -39,6 +39,9 @@ storage.clear();
 assert.equal(nativeGet.call(storage,'alch_v5_profile'),'MAIN_PROFILE','commercial clear must not erase main-game data');
 assert.equal(nativeGet.call(storage,'alch_commercial_profile'),null);
 
+const gate=read('route-gate.js'),tracker=read('track28.js');
+for(const id of ['mechanism','km','arch_b','fs','ct','pi','rs','sv'])assert.ok(gate.includes("'"+id+"'")&&tracker.includes('slot.html?id='+id+'&lab=1'),'optional lab link missing: '+id);
+assert.match(gate,/q.get\('lab'\)==='1'/);
 const sw=read('sw.js');
 assert.match(sw,/alch-commercial-shell-/);
 assert.match(sw,/alch-commercial-runtime/);
