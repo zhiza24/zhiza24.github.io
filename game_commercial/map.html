@@ -363,8 +363,8 @@
     2:{roman:"II",point:"Точка А",name:"Земля отражений",status:"done",description:"Исследование внутренних сфер, ценностей, желаний и того, как привычная картина мира отражается в ежедневных решениях.",progress:7,total:7,step:"Территория пройдена"},
     3:{roman:"III",point:"Точка Б",name:"Долина проявлений",status:"available",description:"Наблюдение за реальными ситуациями в разных сферах жизни. Здесь становится заметно, как внутренние правила проявляются в действиях и результатах.",progress:0,total:3,step:"Начать исследование"},
     4:{roman:"IV",point:"Точка Б",name:"Лабиринт повторений",status:"locked",description:"Исследование повторяющихся сценариев, скрытых правил и причин, по которым знакомые ситуации воспроизводятся снова.",progress:0,total:5,step:"Откроется после предыдущей территории"},
-    5:{roman:"V",point:"Точка Б",name:"Зеркальная цитадель",status:"locked",description:"Сборка фрактальной карты: увидеть взаимосвязи, опоры и способы защиты, которые влияют на выбор.",progress:0,total:2,step:"Откроется после предыдущей территории"},
-    6:{roman:"VI",point:"Точка Б",name:"Кузница выбора",status:"locked",description:"Выбор одной точки влияния и подготовка к практическому эксперименту. Здесь намерение превращается в конкретное действие.",progress:0,total:2,step:"Откроется после предыдущей территории"},
+    5:{roman:"V",point:"Точка Б",name:"Небо желаний",status:"locked",description:"Собрать важные желания, выбрать направления и увидеть, чему ты хочешь дать место в своей жизни.",progress:0,total:2,step:"Откроется после предыдущей территории"},
+    6:{roman:"VI",point:"Точка Б",name:"Кузница выбора",status:"locked",description:"Выбор точки влияния и подготовка к переходу от намерения к конкретным действиям.",progress:0,total:2,step:"Откроется после предыдущей территории"},
     7:{roman:"VII",point:"Точка С",name:"Реактор преображения",status:"locked",description:"Одна территория и 28 последовательных дней наблюдений. Четыре недели помогают увидеть динамику, не превращая пропуск в обнуление пути.",progress:0,total:28,step:"28 дней практики",reactor:true},
     8:{roman:"VIII",point:"Финал",name:"Земля мастерства",status:"locked",description:"Возвращение к исходным ориентирам, сравнение результатов и фиксация того, что изменилось в восприятии, решениях и действиях.",progress:0,total:3,step:"Откроется после завершения Реактора"}
   };
@@ -376,8 +376,9 @@
   function territory(step){
     if(step.pt==='0')return 1;if(step.pt==='А')return 2;
     if(step.u==='slot.html?id=pb_intro'||step.u==='slot.html?id=evidence')return 3;
-    if(step.u==='slot.html?id=fractal')return 5;
-    if(['leverage','guard','rs','ct','sv','vsort'].some(k=>step.u==='slot.html?id='+k))return 6;
+    if(step.u==='slot.html?id=sort'||step.u==='slot.html?id=eraser')return 4;
+    if(step.u==='slot.html?id=lab_d'||step.u==='wish.html')return 5;
+    if(step.u==='slot.html?id=leverage'||step.u==='slot.html?id=pb_end')return 6;
     if(step.pt==='Б')return 4;if(step.pt==='С')return 7;return 8;
   }
   const currentId=flow[position]?territory(flow[position]):1;
