@@ -158,8 +158,13 @@ function attachPlan(T,id,plan){
  if(!g)return false;
  plan=obj(plan);plan.goalId=id;plan.updatedAt=Date.now();G.plans[id]=clone(plan);return true;
 }
+function strategyContext(P){
+ var T=obj(P&&P.tracker),S=obj(T.strategy);
+ return {available:Object.keys(S).length>0,focus:arr(S.focus).slice(0,3).map(function(x){x=obj(x);return {title:text(x.t||x.wish,180),guidance:text(x.g,300),source:text(x.src,120)}}),first:arr(S.days).length?{action:text(obj(S.days[0]).m,240),minimum:text(obj(S.days[0]).n,160),observation:text(obj(S.days[0]).o,200)}:null,weeks:arr(S.weeks).slice(0,4).map(function(x){x=obj(x);return {title:text(x.t,120),description:text(x.d,240),question:text(x.q,200)}}),practices:arr(S.practRec).slice(0,5).map(function(x){x=obj(x);return {id:text(x.id,80),why:text(x.why,240)}}),modelActions:arr(S.modelActions).slice(0,5).map(function(x){x=obj(x);return {title:text(x.t||x.title,140),description:text(x.x||x.description,240)}})};
+}
 function contextFor(P,w){
- return {priority:priorityContext(P,w),style:styleFor(P),strategyAvailable:!!(P&&P.tracker&&P.tracker.strategy),natureAvailable:!!(P&&P.nature&&P.nature.primary),wheelAvailable:!!(P&&(arr(P.wheel).length===8||P.wheelTest))};
+ var strategy=strategyContext(P);
+ return {priority:priorityContext(P,w),style:styleFor(P),strategyAvailable:strategy.available,strategy:strategy,natureAvailable:!!(P&&P.nature&&P.nature.primary),wheelAvailable:!!(P&&(arr(P.wheel).length===8||P.wheelTest))};
 }
 return {version:VERSION,spheres:SPHERES,styles:STYLE,readiness:READINESS,wheelSignals:wheelSignals,priorityContext:priorityContext,styleFor:styleFor,assessReadiness:assessReadiness,scaffold:scaffold,ensureState:ensureState,registerGoals:registerGoals,activateCycle:activateCycle,calendarDay:calendarDay,snapshotDay:snapshotDay,replaceActiveGoal:replaceActiveGoal,setGoalStatus:setGoalStatus,attachPlan:attachPlan,contextFor:contextFor};
 });
