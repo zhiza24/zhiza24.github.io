@@ -169,12 +169,33 @@ function syncDirections(T,at){
   if(!G.goals[id])G.goals[id]={id:id,text:text(src.text||src.t||src.name,300),sphere:text(src.cid||src.sphere,40)||null,status:'active',createdAt:stamp,updatedAt:stamp};
   else if(G.goals[id].status!=='active'){G.goals[id].status='active';G.goals[id].updatedAt=stamp}
  });
+ if(!G.migrated){
+  /* разовая миграция: копия данных по слотам (goalSteps/directionPlans/ifthens) к id цели, исходники не трогаем */
+  ids.forEach(function(id,slot){var p=obj(G.plans[id]);if(!p.legacySlot)p.legacySlot=slotData(T,slot);p.goalId=id;G.plans[id]=p});
+  G.migrated=stamp;
+ }
  var changed=ids.join('|')!==G.activeIds.join('|');
+ if(changed&&G.activeIds.length){
+  /* слот получил другую цель: данные слота уходят к прежней цели, новой цели возвращаются ее прежние данные */
+  var prev=G.activeIds.slice();
+  ids.forEach(function(id,slot){var old=prev[slot];if(old===id)return;
+   if(old){var po=obj(G.plans[old]);po.legacySlot=slotData(T,slot);po.goalId=old;G.plans[old]=po}
+   var pn=obj(G.plans[id]),back=obj(pn.legacySlot);restoreSlot(T,slot,back,ids,id);
+  });
+  for(var s2=ids.length;s2<prev.length;s2++){var old2=prev[s2];if(old2){var p2=obj(G.plans[old2]);p2.legacySlot=slotData(T,s2);p2.goalId=old2;G.plans[old2]=p2}restoreSlot(T,s2,{},ids,null)}
+ }
  if(changed){
   G.activeIds.forEach(function(old,slot){if(ids.indexOf(old)<0&&G.goals[old]){G.goals[old].status='paused';G.goals[old].endedAt=stamp;G.goals[old].updatedAt=stamp;addHistory(G,{type:'replace',slot:slot,from:old,to:ids[slot]||null,at:stamp,day:cycleDay(T,stamp),reason:'directions'})}});
   G.activeIds=ids;
  }
  return {changed:changed,activeIds:ids.slice()};
+}
+function slotData(T,slot){T=obj(T);return {slot:slot,goalSteps:T.goalSteps&&T.goalSteps[slot]?clone(T.goalSteps[slot]):null,directionPlan:T.directionPlans&&T.directionPlans[slot]?clone(T.directionPlans[slot]):null,ifthen:arr(T.ifthens)[slot]||'',at:Date.now()}}
+function restoreSlot(T,slot,back,ids,id){
+ T.goalSteps=obj(T.goalSteps);T.directionPlans=obj(T.directionPlans);if(!Array.isArray(T.ifthens))T.ifthens=['','',''];
+ if(back.goalSteps)T.goalSteps[slot]=clone(back.goalSteps);else delete T.goalSteps[slot];
+ if(back.directionPlan)T.directionPlans[slot]=clone(back.directionPlan);else delete T.directionPlans[slot];
+ T.ifthens[slot]=back.ifthen||'';
 }
 function snapshotDay(T,day,at){
  var G=ensureState(T),n=Number(day)||cycleDay(T,at),key=String(n);

@@ -227,6 +227,8 @@ function goalToday(P,T,n,focus){
  var h='<div class="rx-today"><p class="dk">Шаг по цели · неделя '+(w+1)+'</p><span class="ftag">'+esc(gs[i])+'</span>';
  if(step)h+='<p class="main">'+esc(step)+'</p><div class="chips"><button type="button" class="'+(doneToday?'on':'')+'" data-act="rx-gday" data-g="'+i+'">'+(doneToday?'Сегодня сделано':'Сделано сегодня')+'</button><button type="button" class="'+(W.done?'on':'')+'" data-act="rx-wdone" data-g="'+i+'" data-w="'+w+'">'+(W.done?'Шаг недели закрыт':'Закрыть шаг недели')+'</button>'+(W.small==null?'<button type="button" data-act="rx-shrink" data-g="'+i+'" data-w="'+w+'" data-go="1">Уменьшить</button>':'')+'</div>';
  else h+='<p class="mute">Для этой недели шаг еще не задан.</p><button type="button" class="quiet-btn" data-act="space" data-s="directions">Разбить цель на шаги</button>';
+ var vals=((P.valuesCore&&P.valuesCore.top3)||(P.values&&P.values.order)||[]).slice(0,3).filter(function(v){return typeof v==='string'&&v});
+ if(step&&W.t)h+='<p class="mute rx-why">Почему так: это твой шаг на неделю '+(w+1)+(vals.length?'. Тебе важно: '+esc(vals.join(', '))+'.':'.')+'</p>';
  var dpl=(T.directionPlans||{})[i]||{};if(step&&!W.small&&dpl.minimum)h+='<p class="mute">На трудный день: '+esc(dpl.minimum)+'</p>';
  if(step)h+=gpIfThen(P,T,i);
  var pr=goalProgress(T,i);h+='<p class="mute">Прогресс цели: шагов недели '+pr.weeks+' из 4 · дней с шагом '+pr.days+'</p>';

@@ -73,8 +73,8 @@ function ensure(P){
   if(!Array.isArray(W.pick))W.pick=[];
   var ok=['invite','sky','compare','pick3','center','accepted','map'];
   if(ok.indexOf(W.scene)<0){
-    if(P.tracker&&P.tracker.declared&&Array.isArray(P.tracker.directions)&&P.tracker.directions.length===3)W.scene='map';
-    else if(W.confirmed&&W.confirmed.length===3)W.scene='center';
+    if(P.tracker&&P.tracker.declared&&Array.isArray(P.tracker.directions)&&P.tracker.directions.length>=1)W.scene='map';
+    else if(W.confirmed&&W.confirmed.length>=1)W.scene='center';
     else W.scene='invite';
   }
   if(!W.scene)W.scene='invite';
@@ -143,7 +143,7 @@ function writeDirections(P){
   P.tracker.directionsAt=now();
   if(!P.tracker.start)P.tracker.start=now();
   P.log=P.log||[];
-  P.log.push({t:now(),x:'Три звезды ближайшего пути: '+list.map(function(x){return x.text}).join('; ')});
+  P.log.push({t:now(),x:'Звезды ближайшего пути: '+list.map(function(x){return x.text}).join('; ')});
   save(P);
 }
 
@@ -391,7 +391,7 @@ function inviteView(){
   shell(
     '<div class="kicker">Точка Б</div>'+
     '<h2>Небо моих желаний</h2>'+
-    '<p class="line mute">'+gx('Сначала зажги звезды в восьми созвездиях — областях жизни, которые ты уже {видел|видела} на колесе. Потом выберешь три звезды на 28 дней. В самом конце загадаешь самое заветное желание — оно зажжется в центре неба.')+'</p>'+
+    '<p class="line mute">'+gx('Сначала зажги звезды в восьми созвездиях — областях жизни, которые ты уже {видел|видела} на колесе. Потом выберешь до трех звезд на 28 дней. В самом конце загадаешь самое заветное желание — оно зажжется в центре неба.')+'</p>'+
     '<button class="go" id="goSky">Открыть небо</button>'
   );
   document.getElementById('goSky').onclick=function(){setScene('sky')};
@@ -476,7 +476,7 @@ function compareView(){
     '<div class="glass">'+
       '<div class="sky-table-wrap"><table class="sky-table">'+rows+'</table></div>'+
       (obs?'<div class="obs-box">'+obs+'</div>':'')+
-      '<button class="go" id="go3">Выбрать три звезды</button>'+
+      '<button class="go" id="go3">Выбрать звезды на 28 дней</button>'+
       '<button type="button" class="quiet" id="backSky">К небу</button>'+
     '</div>'
   );
@@ -488,17 +488,17 @@ function compareView(){
 function pick3View(){
   var P=ensure();
   var list=ranked(P);
-  if(list.length<3){
+  if(list.length<1){
     drawStars({onStar:function(w){openWishCard(w.id)}});
     shell(
-      '<p class="hint">Чтобы выбрать три желания, зажги еще звезды. Сейчас их '+list.length+'.</p>'+
+      '<p class="hint">Чтобы выбрать желания на 28 дней, зажги хотя бы одну звезду.</p>'+
       '<button class="go" id="goSky">К небу</button>'
     );
     document.getElementById('goSky').onclick=function(){setScene('sky')};
     window.gBack=function(){setScene('compare');return true};
     return;
   }
-  var pick=P.wishMod.pick&&P.wishMod.pick.length===3?P.wishMod.pick.slice():list.slice(0,3).map(function(w){return w.id});
+  var pick=P.wishMod.pick&&P.wishMod.pick.length>=1&&P.wishMod.pick.length<=3?P.wishMod.pick.slice():list.slice(0,3).map(function(w){return w.id});
   P.wishMod.pick=pick; save(P);
   function paint(){
     drawStars({
@@ -524,20 +524,20 @@ function pick3View(){
       '<small>'+esc((consOf(w.cid)||{}).short||'')+(hint.length?' · '+hint.join(' · '):'')+'</small></span></button>';
   }).join('');
   shell(
-    '<p class="kicker">Три звезды моего ближайшего пути</p>'+
-    '<p class="hint">Выбери три желания на 28 дней</p>'+
+    '<p class="kicker">Звезды моего ближайшего пути</p>'+
+    '<p class="hint">Выбери до трех желаний на 28 дней</p>'+
     '<div class="glass">'+
-      '<p class="mute">Верхние три отмечены как подсказка: совпадение с неудовлетворенными сферами, важность и горизонт «Сейчас». Можно нажать на звезду в небе или на строку. Главное желание в эти три само не входит.</p>'+
+      '<p class="mute">Можно выбрать одно, два или три. Верхние три отмечены как подсказка: совпадение с неудовлетворенными сферами, важность и горизонт «Сейчас». Можно нажать на звезду в небе или на строку. Главное желание в эти три само не входит.</p>'+
       '<div class="plist">'+rows+'</div>'+
       '<p class="mute" id="pcnt">Выбрано: '+pick.length+' из 3</p>'+
-      '<button class="go" id="goYes"'+(pick.length===3?'':' disabled')+'>Да, работаю над этим</button>'+
+      '<button class="go" id="goYes"'+(pick.length>=1?'':' disabled')+'>Да, работаю над этим</button>'+
       '<button type="button" class="quiet" id="backCmp">К таблице</button>'+
     '</div>'
   );
   function sync(){
     document.querySelectorAll('.pick-row').forEach(function(b){b.classList.toggle('on',pick.indexOf(b.getAttribute('data-id'))>=0)});
     var c=document.getElementById('pcnt'); if(c)c.textContent='Выбрано: '+pick.length+' из 3';
-    var y=document.getElementById('goYes'); if(y)y.disabled=pick.length!==3;
+    var y=document.getElementById('goYes'); if(y)y.disabled=pick.length<1;
   }
   paint();
   document.querySelectorAll('.pick-row').forEach(function(b){
@@ -550,7 +550,7 @@ function pick3View(){
   });
   document.getElementById('backCmp').onclick=function(){setScene('compare')};
   document.getElementById('goYes').onclick=function(){
-    if(pick.length!==3)return;
+    if(pick.length<1||pick.length>3)return;
     P=ensure();
     P.wishMod.pick=pick.slice();
     P.wishMod.confirmed=pick.slice();
@@ -650,7 +650,7 @@ function mapView(){
   shell(
     (big&&(big.text||big.raw)?'<p class="wish-echo">«'+esc(big.text||big.raw)+'»</p>':'')+
     '<div class="composer">'+
-      (dirs.length?'<p class="mute">Три звезды: '+dirs.map(function(d){return esc(d.text||d)}).join(' · ')+'</p>':'')+
+      (dirs.length?'<p class="mute">Звезды пути: '+dirs.map(function(d){return esc(d.text||d)}).join(' · ')+'</p>':'')+
       '<button class="go" id="go3">Выбрать следующие три</button>'+
       '<button type="button" class="quiet" id="goC">Заветное желание</button>'+
     '</div>',

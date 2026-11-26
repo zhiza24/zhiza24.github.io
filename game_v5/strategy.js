@@ -175,8 +175,8 @@ function build(P){
   return {id:(x&&x.id)||'',text:(x&&(x.text||x.t||x.name))||''};
  }).filter(function(x){return x.text});
  var stars=dirs.slice(0,3);
- if(stars.length===3){
-  focus=focus.map(function(x,i){return {k:x.k,t:stars[i].text,g:x.g,src:x.t,wish:stars[i].text}});
+ if(stars.length){
+  focus=focus.map(function(x,i){if(!stars[i])return x;return {k:x.k,t:stars[i].text,g:x.g,src:x.t,wish:stars[i].text}});
  }
  /* препятствия */
  var PT=window.GPAT||{},hasLeadEvidence=!!(P.lab&&P.lab.lead&&L.weak===false),p1=hasLeadEvidence?PT[k1]:null,p2=hasLeadEvidence?PT[k2]:null,obst=[];

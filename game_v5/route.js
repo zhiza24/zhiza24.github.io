@@ -34,7 +34,7 @@ function ready(u,p){
  if(u==='wheel-test.html')return !!(p.wheelTest&&p.wheelTest.completed);
  if(u==='values.html')return p.valuesStage==='done';
  if(u==='reactor.html')return !!(p.tracker&&p.tracker.finale&&p.tracker.finale.done)||(+(p.reactor||{}).day>=21&&!(p.tracker&&p.tracker.start));
- if(u==='wish.html')return !!(p.tracker&&p.tracker.declared&&Array.isArray(p.tracker.directions)&&p.tracker.directions.length===3);
+ if(u==='wish.html')return !!(p.tracker&&p.tracker.declared&&Array.isArray(p.tracker.directions)&&p.tracker.directions.length>=1&&p.tracker.directions.length<=3);
  if(u==='slot.html?id=dialog')return !!p.dialog;
  if(u==='slot.html?id=sort')return !!(p.lab&&p.lab.sort&&p.lab.sort.length===6);
  if(u==='slot.html?id=evidence')return !!(p.fractal&&p.fractal.evidence&&p.fractal.evidence.length>=1);

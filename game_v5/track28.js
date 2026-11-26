@@ -49,7 +49,7 @@ var BONUS_HINT='Эта строка — подсказка для внимани
 var WD=['пн','вт','ср','чт','пт','сб','вс'];
 
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
-function save(P){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+function save(P){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){if(!window._t28warn){window._t28warn=1;try{alert('Не получилось сохранить: в браузере закончилось место. Сохрани копию данных в настройках трекера.')}catch(x){}}}}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function gx(s){return String(s).replace(/\{([^|]*)\|([^}]*)\}/g,function(_,m,f){return window.GG?GG(m,f):m})}
 function tick(){if(window.GSound&&!GSound.isOn())return;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=660;g.gain.value=0.04;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+0.05)}catch(e){}}
@@ -66,12 +66,12 @@ function ensure(){
   if(!T.hiddenMet)T.hiddenMet={};
   if(!T.openDay)T.openDay=0;
   if(!T.view)T.view='month';
-  if(T.declared&&T.directions&&T.directions.length===3&&!T.start)T.start=Date.now();
+  if(T.declared&&T.directions&&T.directions.length>=1&&!T.start)T.start=Date.now();
   if(window.GStrategy){try{
     if(!T.strategy){T.strategy=GStrategy.build(P);if(!T.start)T.start=Date.now()}
     else{
       var ds=((T.directions)||[]).map(function(x){return typeof x==='string'?{id:x,text:x}:{id:(x&&x.id)||'',text:(x&&(x.text||x.t||x.name))||''}}).filter(function(x){return x.text});
-      if(ds.length===3){
+      if(ds.length>=1){
         T.strategy.stars=ds.map(function(d){return {id:d.id,text:d.text}});
         if(T.strategy.focus&&T.strategy.focus.length){
           T.strategy.focus=T.strategy.focus.map(function(x,i){if(!ds[i])return x;return {k:x.k,t:ds[i].text,g:x.g,src:x.src||x.t,wish:ds[i].text}});
@@ -397,6 +397,7 @@ function stepCard(P,T,n){
   var h='<div class="row-line step-card"><p class="wk">Шаг дня · неделя '+(w+1)+(W.t?' · '+esc(W.t):'')+'</p>';
   if(md)h+='<p class="mode-mini">Режим: '+esc(md.t)+'</p>';
   h+='<span class="ftag">'+esc(F.t)+'</span>';
+  var LB=P.lab||{};if(F.src&&F.k&&LB.lead&&LB.weak===false&&(F.k===LB.lead||(LB.queue||[]).indexOf(F.k)>=0))h+='<p class="mute rx-why">Почему так: тема «'+esc(F.src)+'» чаще других звучала в твоих ответах.</p>';
   if(st.note)h+='<p class="soft-tip">'+esc(st.note)+'</p>';
   h+='<p class="main">'+esc(st.m)+'</p>';
   h+='<details class="own alts"><summary>Если сегодня трудно</summary><p class="alt"><small>Минимум</small>'+esc(st.n)+'</p><p class="alt"><small>Можно иначе</small>'+esc(st.a)+'</p><p class="alt"><small>Наблюдение</small>'+esc(st.o)+'</p></details>';
@@ -494,8 +495,8 @@ function viewDiary(P,T){
   html+='</div>';return html;
 }
 function viewDirections(P,T){
-  var ds=dirs(T),plans=T.directionPlans||{},html='<div class="t28"><p class="dk">Три выбранных направления</p><h1>Мои направления</h1><p class="cap28">Не нужно превращать жизнь в жесткий план. Для каждого направления зафиксируй желаемое изменение, минимальный шаг и ближайшее действие.</p>';
-  if(!ds.length)return html+'<div class="row-line"><p>Сначала выбери и подтверди три направления на «Небе желаний».</p><a class="go" href="wish.html">Открыть Небо желаний</a></div></div>';
+  var ds=dirs(T),plans=T.directionPlans||{},html='<div class="t28"><p class="dk">Выбранные направления</p><h1>Мои направления</h1><p class="cap28">Не нужно превращать жизнь в жесткий план. Для каждого направления зафиксируй желаемое изменение, минимальный шаг и ближайшее действие.</p>';
+  if(!ds.length)return html+'<div class="row-line"><p>Сначала выбери до трех направлений на «Небе желаний».</p><a class="go" href="wish.html">Открыть Небо желаний</a></div></div>';
   ds.forEach(function(d,i){
     var p=plans[i]||{},done=0,marks=0;
     for(var n=1;n<=28;n++){var day=dayRec(T,n);if(day.dirState[i]==='done')done++;if(day.dirMarks[i])marks++}
@@ -724,7 +725,7 @@ function dayPanel(P,T,n){
     html+=markBtns(d.dirMarks[i]||'','data-who="dir" data-i="'+i+'"');
     html+='</div>';
   });
-  if(!dirs(T).length)html+='<div class="row-line"><p class="mute">Три направления появятся после подтверждения выбора на Небе желаний.</p></div>';
+  if(!dirs(T).length)html+='<div class="row-line"><p class="mute">Направления появятся после подтверждения выбора на Небе желаний.</p></div>';
 
   }
   var stateBody='<div class="row-line sliders">';
@@ -1481,7 +1482,18 @@ if(!root){
   var pg=document.querySelector('.pg')||document.body;
   pg.insertBefore(root, pg.firstChild);
 }
+/* движок целей: перенос данных слотов к id целей и снимок дня, до первой отрисовки */
+(function gpBoot(){if(!window.GGoalPath)return;try{var P=load(),T=P.tracker;if(!T||!T.directions||!T.directions.length)return;var before=JSON.stringify(T.goalPath||null)+JSON.stringify(T.goalSteps||null)+JSON.stringify(T.directionPlans||null);
+  GGoalPath.syncDirections(T);if(T.start)GGoalPath.snapshotDay(T);
+  if(before!==JSON.stringify(T.goalPath||null)+JSON.stringify(T.goalSteps||null)+JSON.stringify(T.directionPlans||null))save(P)}catch(e){}})();
 mount(root);
+/* голос Самости: один раз в день при входе в трекер, если поверх ничего не открыто */
+setTimeout(function(){try{
+  if(window.GReview||!window.GSelf||!GSelf.voice)return;var P=load();if(!trackOpen(P)||!(P.tracker&&P.tracker.start))return;
+  if(document.querySelector('.lo-modal,.gwow')||document.body.classList.contains('gsc-open'))return;
+  var d=new Date(),day=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();P.self=P.self||{};if(P.self.trackerVoiceDay===day)return;
+  P.self.trackerVoiceDay=day;save(P);GSelf.voice('tracker',{everyTime:true,delay:0});
+}catch(e){}},2500);
 var P0=ensure(); if(P0.tracker&&P0.tracker.notifyOn)scheduleNote(P0.tracker);
 window.GTrack28={mount:mount,render:render,ensure:ensure,mirrorActivityStats:mirrorActivityStats,viewMirror:viewMirror,continueMirror:continueMirror};
 })();
