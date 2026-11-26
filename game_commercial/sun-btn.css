@@ -145,3 +145,20 @@ button.core.sun-btn:active{
 
 .pkw .sun-btn,
 .sun-btn--sm{--sun-size:64px}
+
+/* 27.11: matte gold sphere (her reference) replaces the drop everywhere */
+.sun-btn__corona,.sun-btn__core,.sun-btn__core:before,.sun-btn__core:after,.sun-btn__hot{border-radius:50%!important;animation:none!important}
+.sun-btn__plasma,.sun-btn__core:before{display:none!important}
+.sun-btn__core{
+  background:
+    radial-gradient(ellipse 34% 26% at 42% 24%,rgba(255,250,214,.95) 0,rgba(255,236,160,.55) 45%,transparent 100%),
+    radial-gradient(ellipse 70% 22% at 50% 50%,rgba(110,62,10,.55) 0,transparent 100%),
+    radial-gradient(ellipse 60% 26% at 50% 82%,rgba(255,226,140,.5) 0,transparent 100%),
+    radial-gradient(circle at 46% 40%,#e9b544 0,#cf9026 48%,#a56a14 78%,#7a4a0c 100%)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,236,170,.35),inset 0 -10px 22px rgba(90,48,4,.45)!important;
+}
+.sun-btn__core:after{box-shadow:inset 0 0 calc(var(--sun-size)*.08) rgba(70,36,2,.35)!important}
+.sun-btn__hot{left:24%;top:10%;width:38%;height:26%;opacity:.55;filter:blur(calc(var(--sun-size)*.04))}
+.sun-btn__corona{box-shadow:0 6px 22px rgba(0,0,0,.45),0 0 34px 4px rgba(255,190,80,.28)!important}
+.sun-btn__halo{opacity:.55}
+.sun-btn:active .sun-btn__core{filter:brightness(1.08)}
