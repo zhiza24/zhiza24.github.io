@@ -58,21 +58,34 @@ function rustle(){
  src.connect(filt);filt.connect(g);g.connect(c.destination);
  try{src.start()}catch(e){}
 }
+/* Низкий мягкий гул: основа 60-110 Гц, мягкая атака, затухание около 160 мс, теплые гармоники, лоупасс, тихо. */
+var lastHum=0;
 function clickSnd(){
  if(off())return;
+ var nw=Date.now();if(nw-lastHum<300)return;lastHum=nw;
  unlock();
  var c=ensureCtx();if(!c||c.state==='suspended')return;
- var now=c.currentTime;
- [[640,0.05,0.1],[980,0.028,0.08]].forEach(function(x){
-  var o=c.createOscillator();o.type='sine';o.frequency.value=x[0];
-  var g=c.createGain();
-  g.gain.setValueAtTime(0,now);
-  g.gain.linearRampToValueAtTime(x[1],now+0.008);
-  g.gain.exponentialRampToValueAtTime(0.0001,now+x[2]);
-  o.connect(g);g.connect(c.destination);
-  o.start(now);o.stop(now+x[2]+0.02);
+ var now=c.currentTime,dur=0.17;
+ var lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=380;lp.Q.value=0.5;
+ var master=c.createGain();
+ master.gain.setValueAtTime(0.0001,now);
+ master.gain.linearRampToValueAtTime(0.2,now+0.03);
+ master.gain.exponentialRampToValueAtTime(0.0001,now+dur);
+ lp.connect(master);master.connect(c.destination);
+ [[88,'sine',1],[176,'sine',0.38],[264,'triangle',0.14]].forEach(function(x){
+  var o=c.createOscillator();o.type=x[1];o.frequency.setValueAtTime(x[0]*1.04,now);o.frequency.exponentialRampToValueAtTime(x[0],now+0.06);
+  var g=c.createGain();g.gain.value=x[2];
+  o.connect(g);g.connect(lp);o.start(now);o.stop(now+dur+0.03);
  });
- try{if(navigator.vibrate)navigator.vibrate(10)}catch(e){}
+ try{if(navigator.vibrate)navigator.vibrate(18)}catch(e){}
+}
+/* Только главные кнопки: «Дальше»/«Далее», СТАРТ, солнечные кнопки, выбор ответа. */
+var MAIN_SEL='.sun-btn,.next,.go,.nxs,.pc-next,.bottom-next,.btn-primary,.samost-primary,.primary,.opt,.opts button,.samost-choices button,[class*="choice"],[class*="answer"],[class*="option"],[data-snd]';
+var MAIN_TXT=/^\s*(дальше|далее|продолжить|старт|готово|вперед|принять|сохранить|к заданиям)/i;
+function isMain(t){
+ if(t.matches&&t.matches(MAIN_SEL))return true;
+ if(t.closest&&t.closest('.opts,.samost-choices,[class*="choice"],[class*="answer"],[class*="option"]'))return true;
+ return MAIN_TXT.test((t.textContent||'').trim());
 }
 
 window.addEventListener('storage',function(e){if(e.key===KEY)sync()});
@@ -84,6 +97,7 @@ document.addEventListener('click',function(e){
  var t=e.target&&e.target.closest&&e.target.closest('button,input[type=button],input[type=submit],[role=button],.sun-btn');
  if(!t||t.disabled||t.getAttribute('aria-disabled')==='true')return;
  if(t.classList.contains('gsc-icon')||t.id==='gsc-icon'||t.classList.contains('gsnd')||t.id==='snd')return;
+ if(!isMain(t))return;
  clickSnd();
 },true);
 
