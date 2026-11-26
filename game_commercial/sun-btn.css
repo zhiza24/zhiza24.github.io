@@ -162,3 +162,9 @@ button.core.sun-btn:active{
 .sun-btn__corona{box-shadow:0 6px 22px rgba(0,0,0,.45),0 0 34px 4px rgba(255,190,80,.28)!important}
 .sun-btn__halo{opacity:.55}
 .sun-btn:active .sun-btn__core{filter:brightness(1.08)}
+/* 27.11: sphere spins — soft gold reflections circle around it */
+.sun-btn__plasma{display:block!important;inset:-25%;mix-blend-mode:soft-light;opacity:.85;
+  background:conic-gradient(from 0deg at 50% 50%,rgba(120,70,10,.7),rgba(255,240,180,.9) 12%,rgba(200,140,40,.5) 25%,rgba(255,250,220,.95) 38%,rgba(130,78,12,.7) 52%,rgba(255,226,140,.8) 68%,rgba(150,92,16,.6) 84%,rgba(120,70,10,.7));
+  animation:sun-spin 9s linear infinite!important}
+.sun-btn__core{animation:sun-ballspin 9s linear infinite!important}
+@keyframes sun-ballspin{to{background-position:0 0}}
