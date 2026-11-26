@@ -230,6 +230,7 @@ function goalToday(P,T,n,focus){
  var vals=((P.valuesCore&&P.valuesCore.top3)||(P.values&&P.values.order)||[]).slice(0,3).filter(function(v){return typeof v==='string'&&v});
  if(step&&W.t)h+='<p class="mute rx-why">Почему так: это твой шаг на неделю '+(w+1)+(vals.length?'. Тебе важно: '+esc(vals.join(', '))+'.':'.')+'</p>';
  var dpl=(T.directionPlans||{})[i]||{};if(step&&!W.small&&dpl.minimum)h+='<p class="mute">На трудный день: '+esc(dpl.minimum)+'</p>';
+ if(step&&window.GWorkshop){try{var wsE=(P.strategyWorkshop&&P.strategyWorkshop.entries||[]).slice(-1)[0];if(wsE&&wsE.experiment&&wsE.experiment!=='none'&&(wsE.cycle||1)===(T.cycle||1)&&n>=wsE.day&&n-wsE.day<7)h+='<p class="mute rx-ws">Эксперимент недели: '+esc(gx(GWorkshop.label(GWorkshop.options(wsE.strategy).experiments,wsE.experiment)).toLowerCase())+'. После шага посмотри, что изменилось.</p>'}catch(e){}}
  if(step)h+=gpIfThen(P,T,i);
  var pr=goalProgress(T,i);h+='<p class="mute">Прогресс цели: шагов недели '+pr.weeks+' из 4 · дней с шагом '+pr.days+'</p>';
  return h+'</div>';

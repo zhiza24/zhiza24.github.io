@@ -201,3 +201,23 @@ Additional reviewer output: classify each input and requested pattern as impleme
 | REL-09 | Player practices a request, negotiation, boundary, delegation, or repair | Workshop compares prediction with actual response; player may skip or stop |
 | REL-10 | Player disagrees with an interpersonal interpretation | Correction persists and later recommendations respect it |
 | REL-11 | UI or report generation attempts a Victim/Aggressor/Rescuer category | Prohibited labels are absent from player-facing output and data taxonomy |
+
+
+## M. Goal-plan and tracker personalization scenarios
+
+| ID | Scenario | Expected result |
+|---|---|---|
+| PLN-01 | Confirmed relevant over-preparation pattern for goal A | Goal A receives a bounded preparation step and an application/feedback checkpoint |
+| PLN-02 | Same player has no such evidence for goal B | Goal B remains on the neutral plan; no cross-goal assumption |
+| PLN-03 | Player rushes and skips outcome verification | Plan adds a pre-action outcome criterion and post-action verification |
+| PLN-04 | Player completes many actions but outcome is unchanged | Tracker distinguishes activity/output from outcome and offers review, not praise-as-proof |
+| PLN-05 | Player has strong effective persistence | Existing approach is preserved; no unnecessary corrective exercise |
+| PLN-06 | Player struggles to make a request relevant to goal | Optional request-preparation step appears, with player approval |
+| PLN-07 | Interpersonal context is unsafe or coercive | No confrontation prompt; prioritize safety and external support |
+| PLN-08 | Player declines a suggested adaptation | Plan remains editable and does not silently reinsert the declined step |
+| PLN-09 | Evidence is mixed or insufficient | Neutral or multi-option plan; no forced personalization |
+| PLN-10 | Goal is replaced while Reactor is running | Old plan/history remains attached to old goal ID; new goal gets a new plan; calendar unchanged |
+| PLN-11 | Player skips a daily contextual prompt | No penalty, no negative inference, no change to pattern confidence |
+| PLN-12 | Plan step completed but external result is pending | Store action completion and outcome status separately as pending |
+| PLN-13 | User edits milestone or success criterion | Player-defined criterion persists and is used at review |
+| PLN-14 | Same strategy profile changes after new evidence | Append a new version/event; preserve previous plan and review history |

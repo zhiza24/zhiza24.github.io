@@ -296,3 +296,20 @@ Existing Echo, First Settings, Inner Mechanism, self-betrayal, and values result
 The report must separate observed behavior from interpretation, possible protective function, cost, and alternative response; preserve relationship/sphere context, counterexamples, uncertainty, and player disagreement. Never infer that the player caused or deserved harmful treatment. Distinguish habits from coercion, abuse, harassment, discrimination, power imbalance, and unsafe circumstances. Do not recommend confrontation or reconciliation where safety is uncertain.
 
 This lens may connect to a selected goal only when the player confirms relevance (e.g. request, negotiation, workload, boundary, collaboration). The Reactor Workshop can rehearse a safer/more effective request, boundary, negotiation, delegation, or repair and compare the player's prediction with actual response. This remains part of the existing Strategy Workshop, not a new route gate, extra goal, or calendar.
+
+
+## 2.14 Personalization must reach the goal plan and Reactor tracker
+
+The Strategy and Feedback Map is not only a report. Its agreed, goal-relevant observations must inform the existing goal breakdown and tracker. Treat this as a personalization layer inside Goal Path and Reactor, not a separate diagnostic feature or new calendar.
+
+For each active goal, construct a goal-specific execution profile from the selected outcome, sphere, player-defined progress criteria, accepted observations, strengths to preserve, readiness, resources, time, external constraints, player corrections, and prior experiment results. Do not assume one pattern applies to all goals. Use a neutral plan when evidence is insufficient.
+
+The goal plan should share a common structure: desired observable outcome; milestones; next concrete action; smallest version; evidence of progress; feedback checkpoint; adjustment rule; and required resources/dependencies. Adapt the sequence and support to the confirmed context. Examples include time-boxing preparation, adding verification before/after action, separating output from outcome, preparing a direct request or boundary where safe, clarifying responsibility, or finding an external resource. Preserve effective strategies rather than prescribing correction for its own sake.
+
+The tracker should surface a small number of contextual prompts at relevant moments (step start, before consequential action, after action, feedback checkpoint, weekly review), not display the entire profile or repeat generic coaching every day. Track action completed, external feedback, and actual outcome separately. A skipped prompt is not evidence.
+
+Do not generate rigid templates per psychotype. P.nature may inform presentation format only where supported; plan content comes from goal-specific evidence, readiness, context, resources, and player choice. The player must see why each adaptation is suggested and may accept, edit, decline, or remove it.
+
+Persist adaptations against stable goal and step IDs, with source/reason, acceptance state, plan version, checkpoints, predictions, observed outcomes, and review history. Replacing a goal must never inherit the prior goal's steps by array position. The Reactor's 28-day calendar remains independent and unchanged.
+
+Acceptance: a relevant confirmed observation changes a concrete plan element or checkpoint, or the system explicitly explains why the standard plan is sufficient. Different goals may have different support plans for the same player.

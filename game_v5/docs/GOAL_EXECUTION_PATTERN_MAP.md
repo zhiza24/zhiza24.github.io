@@ -319,3 +319,105 @@ When relevant to a confirmed goal, the synthesis may show how an interpersonal h
 The Reactor Strategy Workshop may let the player rehearse a concrete alternative: formulate a request, boundary, question, negotiation proposal, or repair attempt; anticipate possible responses without pretending to control them; then record what actually happened. The exercise must never pressure the player to confront an unsafe person.
 
 **Product placement:** this is a sub-layer of the existing pre-Reactor Strategy and Feedback Map and its Reactor Workshop. It is not a new gate, a fourth goal, or an additional calendar. If evidence is insufficient, show that clearly and let the player skip it.
+
+
+## 11. Personalization contract: how the map changes the player's Reactor plan
+
+The purpose of the synthesis is to change the **support and structure of the chosen goal path**, not merely to produce a report. The confirmed map must feed the existing goal breakdown and Reactor tracker. This is a personalization layer within Goal Path + Reactor, not a separate diagnostic layer, a new calendar, or a new set of goals.
+
+### 11.1 What is personalized
+
+For each of the player's active goals, build a goal-specific execution profile from:
+- the player's selected goal, sphere, desired outcome, and their own definition of progress;
+- confirmed or player-accepted strategy observations relevant to this goal/context;
+- strengths the player wants to preserve;
+- readiness, skills, resources, time, access, and external constraints;
+- the player's preferred support format (including P.nature only where its actual supported fields justify a presentation preference, never as proof of a behavioral habit);
+- the player's edits, declines, counterexamples, and experience from previous experiments.
+
+Do not assume that a pattern applies equally to all three goals or all life spheres. The player can confirm a pattern for work but reject it for relationships, for example. If no relevant evidence exists, use the neutral standard plan.
+
+### 11.2 How the goal path is assembled
+
+Every active goal should be broken down using a common structure, then selectively personalized:
+
+1. **Desired outcome:** what would be observably different, and how will the player recognize it?
+2. **Milestones:** meaningful intermediate changes, not just a long to-do list.
+3. **Next step:** one concrete action appropriate to current readiness and capacity.
+4. **Smallest version:** a low-friction version for difficult days, without turning it into a guilt obligation.
+5. **Evidence of progress:** what can be observed or verified; distinguish action completed from outcome achieved.
+6. **Feedback point:** when and how to check what happened in reality.
+7. **Adjustment rule:** what to keep, change, pause, or investigate based on the feedback.
+8. **Support / dependency:** skills, resources, people, permissions, money, time, or external conditions needed.
+
+The player reviews and confirms the proposed plan. The system must explain why a step or support format is suggested and allow editing, replacing, postponing, or declining it. It must not silently rewrite the goal or the player's priorities.
+
+### 11.3 Examples of evidence-led adaptation
+
+| Confirmed, goal-relevant observation | Possible plan adaptation |
+|---|---|
+| Avoids exposure or first contact | Start with a safe, bounded first contact; define a tolerable audience and a small test |
+| Waits for a perfect version | Set a fit-for-purpose first version and a feedback threshold before polishing further |
+| Over-prepares | Time-box research; pair each preparation block with one application step |
+| Acts quickly but skips verification | Define the intended outcome and a check before action; insert a pause-and-verify point |
+| Confuses effort/output with outcome | Track both completed actions and the external result separately |
+| Expects a response but does not check it | Record the prediction, define what observable feedback would look like, and review it |
+| Ignores or dismisses contradictory feedback | Schedule a neutral evidence review and record what would change the current plan |
+| Starts too many directions | Keep one current experiment per goal; park other ideas in a visible later list |
+| Overcommits | Check actual weekly capacity and reduce scope before adding steps |
+| Has difficulty making requests | Add an optional request-preparation step: what is needed, from whom, by when, and what alternative exists |
+| Gives way despite a stated preference | Add a preference-clarification or boundary rehearsal where safe and relevant |
+| Takes on others' responsibilities | Clarify ownership, dependencies, and what is genuinely within the player's control |
+| Uses pressure or over-control | Add a pause, a clear request/negotiation option, and a check of the other person's autonomy and response |
+| Has strong persistence and feedback tolerance | Preserve the existing approach; use milestone and outcome checks without unnecessary remedial exercises |
+| Faces an external barrier | Add a resource/access/support step or revise timing/scope; do not prescribe positive thinking as a solution |
+
+These are curated examples, not deterministic rules. The map may suggest an adaptation only when the evidence is sufficiently relevant and the player accepts it.
+
+### 11.4 What the Reactor tracker does with the profile
+
+The tracker should not show the full psychological map every day. It should quietly use the agreed plan to surface **one relevant prompt or checkpoint at the moment it helps**:
+- at step start: clarify the next action and smallest version;
+- before a consequential action: check the known risk (e.g. over-preparation or rushing);
+- after action: record what was done, separately from what changed;
+- at a feedback checkpoint: compare prediction with observable response;
+- at a weekly review: keep, adjust, pause, or replace the approach;
+- when the player reports a barrier: distinguish internal uncertainty from missing skill, resource, time, access, or safety.
+
+Examples of short, non-judgmental prompts:
+- "Что будет считаться реальным результатом этого шага?"
+- "Ты уже подготовился достаточно, чтобы проверить идею на практике?"
+- "Какой отклик ты получил, а что пока только предполагаешь?"
+- "Что из сделанного было действием, а что уже изменило ситуацию?"
+- "Нужно ли сейчас продолжать, изменить способ или сначала найти ресурс?"
+- "Какую часть этой задачи действительно важно взять на себя?"
+
+Prompts are contextual and optional. Do not repeat the same prompt every day, turn it into a streak, or treat a skipped answer as evidence.
+
+### 11.5 Three levels of personalization
+
+- **Plan level:** changes the sequence, size, dependencies, and verification points of goal steps.
+- **Tracker level:** changes which brief prompts, reminders, and review questions appear and when.
+- **Workshop level:** offers a deeper investigation or rehearsal when the player chooses it.
+
+The plan level is the most important. A friendly daily message cannot compensate for a goal plan that ignores the person's actual obstacles, strengths, and circumstances.
+
+### 11.6 Separation from psychotype
+
+Do not create one rigid template per psychotype or assign every player to one strategy. A psychotype/nature result may inform the presentation format only where supported (e.g. more structured vs exploratory prompts). The content of the plan must be driven by goal-specific, context-checked strategy evidence, readiness, resources, and player choice. Several strategies may coexist; the same player may need different supports for different goals.
+
+### 11.7 Persistence and review
+
+Persist the plan version, goal ID, the evidence/reason for each adaptation, player acceptance/edit/decline, step and checkpoint IDs, predictions, observed outcomes, and review decisions. When a goal is paused or replaced, retain its plan and history under that goal's stable ID. New goals receive their own plan; never attach old goal steps to a replacement goal by array position. The 28-day calendar continues independently.
+
+### 11.8 Completion criteria for useful personalization
+
+The feature is useful only if:
+- a confirmed relevant observation changes at least one concrete plan element or tracker checkpoint (or explicitly explains why no change is needed);
+- every adaptation has a visible reason and can be changed by the player;
+- positive strategies are preserved, not automatically "corrected";
+- tracker prompts distinguish action, output, feedback, and outcome;
+- different goals can have different profiles for the same player;
+- insufficient evidence produces the neutral plan rather than invented personalization;
+- the player can see and edit what the system is using;
+- goal history and the 28-day calendar remain intact.
