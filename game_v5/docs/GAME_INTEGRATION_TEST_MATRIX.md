@@ -184,3 +184,20 @@ Use [GOAL_EXECUTION_PATTERN_MAP.md](GOAL_EXECUTION_PATTERN_MAP.md) as the featur
 | PAT-26 | Mobile Safari and desktop keyboard use | Tab, forms, prompts, save feedback, and navigation remain accessible |
 
 Additional reviewer output: classify each input and requested pattern as implemented, partial, documented-only, or missing; identify the smallest genuine evidence gap; verify that production main was not modified.
+
+
+## L. Interpersonal behavior-pattern scenarios
+
+| ID | Scenario | Expected result |
+|---|---|---|
+| REL-01 | Existing Echo or Inner Mechanism signal resembles over-accommodation | Used only as a prompt for contextual checking; no role or stable-style label |
+| REL-02 | Player describes a specific interaction where they withheld a request | Report separates observed behavior, possible reason, and actual consequence |
+| REL-03 | Player is direct and sets a boundary | Not misclassified as aggression or hostility |
+| REL-04 | Player leaves or avoids an unsafe interaction | No avoidance label or pressure to confront; safety takes precedence |
+| REL-05 | Player reports pressure, coercion, abuse, harassment, or power imbalance | Not reframed as the player's interpersonal habit or responsibility |
+| REL-06 | Player shows different interaction patterns at work and in family | Contexts remain separate; no global interpersonal type |
+| REL-07 | Player reports both over-accommodation and firm boundary-setting | Mixed evidence is retained; no forced leading pattern |
+| REL-08 | Evidence is limited to indirect test signals | Report states that no reliable interpersonal conclusion can yet be made; optional follow-up only |
+| REL-09 | Player practices a request, negotiation, boundary, delegation, or repair | Workshop compares prediction with actual response; player may skip or stop |
+| REL-10 | Player disagrees with an interpersonal interpretation | Correction persists and later recommendations respect it |
+| REL-11 | UI or report generation attempts a Victim/Aggressor/Rescuer category | Prohibited labels are absent from player-facing output and data taxonomy |

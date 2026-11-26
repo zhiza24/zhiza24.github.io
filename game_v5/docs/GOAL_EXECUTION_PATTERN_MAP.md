@@ -263,3 +263,59 @@ The second reviewer/bot must return:
 9. Confirmation that production main was not modified during this review.
 
 Do not implement or merge production code as part of this documentation review.
+
+## 10. Interpersonal behavior patterns: how a person acts with others
+
+This is an additional lens **inside the same goal-execution and response-strategy map**, not a separate personality system, role model, or standalone test. The map should examine both (a) how the player moves toward a goal and checks results, and (b) how the player tends to interact with other people when pursuing, protecting, negotiating, or revising that goal.
+
+Do not use role labels such as "victim", "aggressor/persecutor", or "rescuer" as player categories, scores, conclusions, or UI language. Do not map the player onto a drama triangle. The product describes observable behavior in a stated context, not who the person is.
+
+### Candidate patterns to observe (not a fixed taxonomy)
+
+**Ways of accommodating or yielding**
+- Over-accommodation: routinely adjusting one's preference to avoid tension or preserve acceptance.
+- Approval-seeking: checking whether others approve before allowing oneself to choose.
+- Over-responsibility: taking on other people's tasks, feelings, or consequences beyond an agreed role.
+- Difficulty asking directly: hinting, waiting, or hoping others will infer a need instead of making a clear request.
+
+**Ways of protecting control or position**
+- Over-control: trying to determine how others must act or respond before proceeding.
+- Pressure / insistence: pushing for agreement or compliance when a request, negotiation, or boundary would be more appropriate.
+- Defensive confrontation: moving quickly into argument or counterattack when disagreement appears.
+- Competition / comparison: treating collaboration as a contest or measuring one's worth through another person's result.
+
+**Ways of withdrawing or protecting oneself**
+- Conflict avoidance: withholding a concern or preference even when it matters.
+- Withdrawal after tension: going silent, disengaging, or ending contact instead of clarifying what happened (while recognizing that leaving can be the safest and wisest choice in unsafe situations).
+- Self-silencing: minimizing one's own needs or account to keep a relationship calm.
+- Distrust / reluctance to delegate: carrying everything alone because relying on another person feels uncertain.
+
+**Constructive and flexible ways of interacting**
+- Clear self-advocacy: expressing a preference, need, disagreement, or refusal without attacking the other person.
+- Boundaries: naming what is and is not acceptable, and acting consistently with that limit.
+- Negotiation and reciprocity: looking for an arrangement that takes both parties' legitimate interests into account.
+- Cooperation and shared responsibility: coordinating roles without taking over or disappearing.
+- Appropriate help-seeking and delegation: asking clearly and allowing others to carry their part.
+- Repair after disagreement: returning to clarify, acknowledge impact, and agree on a next step where safe and appropriate.
+- Context-sensitive firmness: adapting tone and level of directness to the actual stakes, power difference, and safety of the situation.
+
+These are examples for investigation, not labels to assign. A single behavior can serve different functions: silence may be thoughtful restraint, lack of safety, fatigue, or avoidance; directness may be healthy assertiveness or coercive pressure. Context and the player's account decide what can reasonably be said.
+
+### Evidence and assessment rules
+
+1. Reuse existing evidence only as a **lead for a question**, never as proof of an interpersonal pattern. Echo/adaptation signals, Inner Mechanism, First Settings, self-betrayal observations, values, and player-confirmed examples may suggest where to ask for context; none of these sources alone establishes a role or a stable interpersonal habit.
+2. The existing tests do not currently constitute a validated, comprehensive interpersonal-style assessment. Do not claim that they already determine these patterns.
+3. In the source audit, classify each candidate as implemented evidence, partial/contextual signal, documented-only, or missing. Identify exact producer fields and thresholds before any downstream use.
+4. If the current structured results do not support a useful observation, add a small optional set of situational follow-up questions to the existing synthesis—not a large new test. Ask about a recent concrete interaction: what happened, what the player wanted, what they did or did not say, what the other person actually did, what the player inferred, and what happened next. Offer "не было такой ситуации / не помню / не хочу отвечать".
+5. Preserve sphere and relationship context (work, family, friendship, partnership, service interaction, etc.) where the player chooses to provide it. Do not generalize one interaction to all relationships.
+6. Show the observed action separately from the possible interpretation, need/protective function, cost, and alternative response. Include counterexamples and the player's correction. No forced leading pattern.
+7. Never infer that a person caused, invited, or deserved another person's harmful behavior. Distinguish interpersonal habits from external coercion, abuse, harassment, discrimination, power imbalance, and unsafe conditions. Safety and practical support take precedence over communication exercises or reconciliation.
+8. Do not equate assertiveness with aggression, yielding with weakness, asking for help with dependence, or leaving a harmful interaction with avoidance.
+
+### How this lens connects to goals
+
+When relevant to a confirmed goal, the synthesis may show how an interpersonal habit affects the route: e.g. not making a request, avoiding a negotiation, taking on another person's workload, failing to communicate a boundary, or not seeking collaboration. It may also identify strengths such as negotiation, clear requests, repair, and appropriate delegation. The player decides whether the connection is relevant.
+
+The Reactor Strategy Workshop may let the player rehearse a concrete alternative: formulate a request, boundary, question, negotiation proposal, or repair attempt; anticipate possible responses without pretending to control them; then record what actually happened. The exercise must never pressure the player to confront an unsafe person.
+
+**Product placement:** this is a sub-layer of the existing pre-Reactor Strategy and Feedback Map and its Reactor Workshop. It is not a new gate, a fourth goal, or an additional calendar. If evidence is insufficient, show that clearly and let the player skip it.

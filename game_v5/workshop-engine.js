@@ -12,14 +12,21 @@ var STRATEGIES=[
  {id:'switch',g:'over',t:'Перескакивал{|а} с одного на другое'},
  {id:'steady',g:'strong',t:'{Шел|Шла} ровно и смотрел{|а} на отклик'},
  {id:'adjust',g:'strong',t:'Пробовал{|а} и менял{|а} способ по результату'},
- {id:'limit',g:'outer',t:'Мешали реальные обстоятельства'}
+ {id:'limit',g:'outer',t:'Мешали реальные обстоятельства'},
+ {id:'yield',g:'people',a:'people',t:'Уступал{|а}, хотя мне было важно другое'},
+ {id:'noask',g:'people',a:'people',t:'Не попросил{|а} прямо о помощи или о своем'},
+ {id:'press',g:'people',a:'people',t:'Настаивал{|а} или спорил{|а}, вместо того чтобы договориться'},
+ {id:'agree',g:'strong',a:'people',t:'Ясно сказал{|а}, чего хочу, и договорил{ся|ась}'},
+ {id:'unsafe',g:'outer',a:'people',t:'Рядом было давление, и я берег{|ла} себя'}
 ];
+var SAFETY='Если рядом давление или риск, сначала важна твоя безопасность и поддержка, а не идеальная фраза.';
 var EXPECT=[{id:'progress',t:'Заметного продвижения'},{id:'some',t:'Хоть немного продвинуться'},{id:'fail',t:'Что ничего не выйдет'},{id:'none',t:'Ничего особенного'}];
 var ACTUAL=[{id:'more',t:'Лучше, чем ждал{|а}'},{id:'same',t:'Примерно как ждал{|а}'},{id:'less',t:'Меньше, чем ждал{|а}'},{id:'unknown',t:'Пока непонятно, отклика нет'}];
 var THOUGHTS={
  under:[{id:'ready',t:'Сначала надо лучше подготовиться'},{id:'ideal',t:'Если не идеально, не стоит и начинать'},{id:'nouse',t:'Все равно не выйдет'},{id:'later',t:'Потом будет больше времени'}],
  over:[{id:'more',t:'Чем больше сделаю, тем лучше'},{id:'done',t:'Раз сделал{|а}, значит работает'},{id:'notime',t:'Некогда проверять, надо успеть'},{id:'stop',t:'Остановиться значит отстать'}],
  strong:[{id:'try',t:'Можно пробовать и смотреть, что выходит'},{id:'pace',t:'Лучше в своем темпе, но регулярно'}],
+ people:[{id:'refuse',t:'Если попрошу, мне откажут'},{id:'alone',t:'Проще сделать все сам{ому|ой}'},{id:'calm',t:'Лучше промолчать, чтобы не было ссоры'},{id:'win',t:'Если не настою, меня не услышат'}],
  outer:[{id:'mine',t:'Если не вышло, это моя вина'},{id:'wait',t:'Пока обстоятельства не изменятся, ничего не сделать'}]
 };
 var CHECK=[{id:'yes',t:'Подтвердилась'},{id:'part',t:'Отчасти'},{id:'no',t:'Не подтвердилась'},{id:'unk',t:'Пока не знаю'}];
@@ -32,12 +39,18 @@ var EXPERIMENTS={
  switch:[{id:'keep',t:'Неделю держать одно направление'},{id:'finish',t:'Довести один шаг до конца, прежде чем браться за новый'}],
  steady:[{id:'keep',t:'Продолжать как есть'}],
  adjust:[{id:'keep',t:'Продолжать как есть'}],
+ yield:[{id:'say',t:'Один раз сказать о своем желании там, где это безопасно'},{id:'pause',t:'Перед тем как согласиться, взять паузу на подумать'}],
+ noask:[{id:'ask',t:'Один раз попросить прямо и посмотреть на ответ'},{id:'share',t:'Передать кому-то одну маленькую часть дела'}],
+ press:[{id:'ask',t:'Сначала спросить, чего хочет другой, потом предложить свой вариант'},{id:'pause',t:'В споре делать паузу перед ответом'}],
+ agree:[{id:'keep',t:'Продолжать как есть'}],
+ unsafe:[{id:'support',t:'Найти, к кому можно обратиться за поддержкой'}],
  limit:[{id:'resource',t:'Сделать один практический шаг к ресурсу: время, помощь или деньги'},{id:'smaller',t:'Уменьшить шаг под реальные условия'}]
 };
 var REVIEW=[{id:'helped',t:'Помогло'},{id:'part',t:'Отчасти'},{id:'no',t:'Не помогло'},{id:'skip',t:'Не получилось попробовать'}];
 var GROUP={under:{t:'чаще бывало промедление перед шагом: откладывание, долгая подготовка или ожидание идеала',plus:'Такая осторожность иногда бережет силы и уберегает от ошибок.'},
  over:{t:'чаще бывало много действий без проверки результата: спешка, распыление или «больше значит лучше»',plus:'За этим стоит энергия и желание двигаться, это ресурс.'},
  strong:{t:'чаще получалось идти ровно и сверять шаги с откликом',plus:'Это сильная сторона, ее стоит сохранить.'},
+ people:{t:'чаще непросто было с людьми: уступить, не попросить прямо или надавить',plus:'Это не про характер, а про способ в конкретных ситуациях. Его можно спокойно попробовать иначе в одном небольшом разговоре.'},
  outer:{t:'больше мешали реальные обстоятельства, чем способ действовать',plus:'Здесь помогают практические шаги, а не борьба с собой.'}};
 function obj(x){return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}
 function arr(x){return Array.isArray(x)?x:[]}
@@ -66,7 +79,7 @@ function trackerSignals(T){
 function hypothesis(P,T){
  var W=state(P),E=W.entries,sig=trackerSignals(T);
  if(E.length<3)return {ready:false,need:3-E.length,signals:sig};
- var cnt={under:0,over:0,strong:0,outer:0};E.forEach(function(e){if(cnt[e.group]!=null)cnt[e.group]++});
+ var cnt={under:0,over:0,strong:0,people:0,outer:0};E.forEach(function(e){if(cnt[e.group]!=null)cnt[e.group]++});
  var keys=Object.keys(cnt).sort(function(a,b){return cnt[b]-cnt[a]}),top=keys[0],tie=cnt[keys[1]]===cnt[top];
  var why=['ты отметил{|а} это '+cnt[top]+' раз из '+E.length];
  if(top==='under'&&(sig.res.min+sig.res.fail+sig.wishNotDone))why.push('в трекере: дней с минимумом или паузой '+(sig.res.min+sig.res.fail)+', отметок «хотелось, но не сделал{|а}» '+sig.wishNotDone);
@@ -79,5 +92,5 @@ function hypothesis(P,T){
   noFeedback:ex,experiments:{done:rv.length,helped:helped},feedback:fb?fb.answer:null,counts:cnt,signals:sig};
 }
 function setFeedback(P,group,answer,at){if(['yes','part','no'].indexOf(answer)<0||!GROUP[group])return false;var W=state(P);W.feedback.push({group:group,answer:answer,at:Number(at)||Date.now()});if(W.feedback.length>100)W.feedback=W.feedback.slice(-100);return true}
-return {version:VERSION,strategies:STRATEGIES,options:options,addEntry:addEntry,openExperiment:openExperiment,reviewExperiment:reviewExperiment,trackerSignals:trackerSignals,hypothesis:hypothesis,setFeedback:setFeedback,state:state,label:function(list,id){var x=find(list,id);return x?x.t:''}};
+return {version:VERSION,safety:SAFETY,strategies:STRATEGIES,options:options,addEntry:addEntry,openExperiment:openExperiment,reviewExperiment:reviewExperiment,trackerSignals:trackerSignals,hypothesis:hypothesis,setFeedback:setFeedback,state:state,label:function(list,id){var x=find(list,id);return x?x.t:''}};
 });

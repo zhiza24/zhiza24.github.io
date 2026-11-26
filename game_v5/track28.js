@@ -540,7 +540,8 @@ function viewWorkshop(P,T){
     }
     h+='</div>';
   } else h+='<p class="mute ws-wait">'+esc('Вывод появится после трех коротких проверок. Осталось: '+hy.need+'.')+'</p>';
-  h+='<div class="row-line ws-form"><b>'+esc(gx('1. Как ты {шел|шла} к цели в последние дни?'))+'</b>'+ch('strategy',o.strategies);
+  h+='<div class="row-line ws-form"><b>'+esc(gx('1. Как ты {шел|шла} к цели в последние дни?'))+'</b>'+'<p class="mute">В деле</p>'+ch('strategy',o.strategies.filter(function(x){return x.a!=='people'}))+'<p class="mute">С людьми</p>'+ch('strategy',o.strategies.filter(function(x){return x.a==='people'}));
+  if(wsD.strategy==='unsafe')h+='<p class="mute">'+esc(W.safety)+'</p>';
   if(wsD.strategy){
     h+='<b>'+esc(gx('2. Чего ты ждал{|а}?'))+'</b>'+ch('expect',o.expect)+'<b>Что вышло на деле?</b>'+ch('actual',o.actual);
     h+='<b>3. Какая мысль была рядом?</b>'+ch('thought',o.thoughts);

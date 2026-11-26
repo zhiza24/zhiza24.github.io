@@ -36,3 +36,10 @@ test('PAT-24: экспорт/импорт и удаление включают �
  assert.equal(JSON.parse(store.alch_v5_profile).strategyWorkshop.entries[0].strategy,'rush');
  assert.ok(ctx.window.GPro.deleteAll());assert.equal(store.alch_v5_profile,undefined);
 });
+const all2=JSON.stringify([W.strategies,W.safety].concat(W.strategies.map(s=>W.options(s.id))));
+test('REL-11: нет ролевых ярлыков в текстах и данных',()=>{assert.doesNotMatch(all2+fs.readFileSync(path.join(__dirname,'../game_v5/workshop-engine.js'),'utf8'),/жертв|агрессор|преследовател|спасател|victim|aggressor|rescuer/i)});
+test('REL-02/09: трудность с просьбой — эксперимент сравнивает прогноз и ответ',()=>{const P={};const r=add(P,'noask',{expect:'fail',actual:'more',thought:'refuse',check:'no',experiment:'ask'});assert.equal(r.entry.group,'people');assert.equal(r.entry.thought,'refuse');assert.equal(r.entry.experiment,'ask')});
+test('REL-03: ясная договоренность — сильная сторона, не давление',()=>{assert.equal(W.strategies.find(s=>s.id==='agree').g,'strong');assert.equal(W.strategies.find(s=>s.id==='press').g,'people')});
+test('REL-04/05: давление рядом — безопасность, без упрека и без «попробуй иначе»',()=>{const s=W.strategies.find(s=>s.id==='unsafe');assert.equal(s.g,'outer');assert.match(W.safety,/безопасность/);assert.deepEqual(W.options('unsafe').experiments.map(x=>x.id),['support','none'])});
+test('REL-06/07: разные способы с людьми не сводятся к одному',()=>{const {h}=hyp(['yield','agree','delay']);assert.equal(h.tie,true);const h2=hyp(['yield','noask','press']).h;assert.equal(h2.group,'people');assert.match(h2.plus,/не про характер/)});
+test('REL-10: несогласие с выводом про людей сохраняется',()=>{const {P}=hyp(['yield','yield','noask']);assert.ok(W.setFeedback(P,'people','no'));assert.equal(W.hypothesis(P,{}).feedback,'no')});
