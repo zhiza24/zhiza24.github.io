@@ -4,7 +4,7 @@
 (function(){
 'use strict';
 if(window.GSound)return;
-var KEY='alch_v5_sound',media=new Set(),ctxs=new Set(),ctx=null,unlocked=false;
+var KEY='alch_commercial_sound',media=new Set(),ctxs=new Set(),ctx=null,unlocked=false;
 function off(){try{return localStorage.getItem(KEY)==='off'}catch(e){return false}}
 function apply(el){if(!el)return;if(off()){if(!el.muted){el.muted=true;el._gsMuted=true}}else if(el._gsMuted){el.muted=false;el._gsMuted=false}}
 var MP=window.HTMLMediaElement&&HTMLMediaElement.prototype;
