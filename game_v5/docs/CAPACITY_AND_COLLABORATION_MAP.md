@@ -316,3 +316,93 @@ The feature is ready for implementation only when:
 10. It preserves stable IDs, history, privacy, export/import, and the 28-day calendar.
 11. Every recommendation can be edited or declined.
 12. Production implementation is separately tested; this document alone does not mean the feature is live.
+
+
+## 13. Activation and realization conditions: reuse the earlier authorial "projector" model
+
+This layer must explicitly reuse the existing authorial realization model already developed for the game. Do not replace it with a newly invented typology and do not silently reinterpret it as Human Design.
+
+The earlier model was described as an **authorial behavioral / realization framework calculated from date of birth alone**, without birth time or place and without claiming to calculate a Human Design bodygraph. Its named realization patterns were:
+- **Projector:** recognition, a concrete invitation or request, and focused participation. A capability may become fully engaged when another person recognizes it and asks for a specific contribution.
+- **Generator:** response, sustained engagement, and development through continued involvement.
+- **Manifestor:** independent initiation and informing relevant people about the launch.
+- **Manifesting Generator (MG):** response, quick trials, changing trajectory when needed, and acceleration through iterative action.
+- **Reflector:** environment, observation, and evaluation of conditions before committing.
+
+The earlier framework also discussed an authorial "splenic" layer as quiet, immediate bodily recognition of safety / danger, to be distinguished from anxiety and impulsive urgency. Reuse only the existing approved description and calculation; do not invent a new health, safety, or intuition diagnosis.
+
+**Implementation rule:** inspect the existing birth-profile calculation and stored `P.nature` fields in current source before connecting them. Preserve its current formula, labels, versioning, and outputs. Do not recalculate or change birth-matrix / Arcana logic as part of this feature. If the stored profile cannot support a particular claim, omit that claim rather than infer it.
+
+### 13.1 The key distinction: capacity, role, and activation are different layers
+
+The functional map in Sections 2–7 asks: "Which work functions fit this goal, and what support is needed?"
+
+The realization model asks: "Under what conditions does this person tend to engage their capacity and bring it into the world?"
+
+The goal-execution map asks: "What action, feedback, and verification loop will move this particular goal forward?"
+
+These layers must be combined, not substituted for one another. A Projector-style recognition / invitation cue does not prove that the player lacks initiative, and a Manifestor-style independent-start cue does not mean the player must always work alone. Each is a possible preferred activation route to be checked against lived examples and the player's own correction.
+
+For example, the player may be highly capable of creating concepts and systems, but self-generated projects repeatedly remain private or unrealized. A concrete external request — "Would you write a book?", "Could you design this?", "Would you take on this project?" — can provide a real-world point of entry, recognition of a specific capability, an audience, a scope, and a reason to commit. The game should not translate this into "you cannot start by yourself". It should help the player test whether **a clear invitation or commissioned brief is a more effective activation condition for this goal**.
+
+Likewise, a player who tends to initiate independently may benefit from a clear permission-to-start and an informing step; a response-led player may benefit from real options to respond to rather than abstract pressure to invent a direction; an iterative player may benefit from small trials and room to adjust; an environment-sensitive player may benefit from checking the conditions and context before committing.
+
+### 13.2 Translate activation conditions into practical goal options
+
+For each active goal, the plan may offer a relevant activation route, only when supported by the existing authorial profile and/or player-confirmed examples:
+
+| Activation route | Practical support in Goal Path / Reactor |
+|---|---|
+| Recognition / invitation / request | Identify people or communities who can see the player's relevant ability; prepare a clear offer or portfolio; invite a concrete brief; seek a commission, referral, open call, collaboration, or direct request; define boundaries so recognition does not become dependence on approval |
+| Response / sustained engagement | Create real options to respond to; use a bounded trial or conversation; identify what produces genuine engagement; build a sustainable rhythm and visible progress |
+| Independent initiation | Define the first self-authorized move; decide who needs to be informed; create a small launch rather than waiting for universal approval |
+| Quick trials / iterative adjustment | Set up a short experiment, fast feedback, and explicit permission to change direction without treating every pivot as failure |
+| Environment / conditions assessment | Check people, setting, resources, timing, and constraints; use observation and a reversible test before making a larger commitment |
+
+These are prompts, not prescriptions. The player can choose another route or say the description does not fit.
+
+### 13.3 Activation is not the same as delegation
+
+An invitation can activate the player's own work without transferring authorship or responsibility to the inviter. A commission can provide a brief and a real audience; the player may still own the concept and execution. Conversely, a person may have a strong activation route but still need an administrator, producer, specialist, or executor to complete the work.
+
+Keep three questions separate:
+1. **What activates my contribution?** Invitation, response, self-initiation, experimentation, environment, or another player-confirmed condition.
+2. **What function do I contribute best?** Creation, architecture, coordination, administration, execution, research, communication, verification, etc.
+3. **What support is needed around my contribution?** A collaborator, producer, administrator, specialist, tool, service, budget, skill, or changed scope.
+
+### 13.4 Tracker prompts: make the insight actionable
+
+Do not merely show the player's realization profile as a static portrait. Carry it into the relevant goal and Reactor moments. Possible prompts:
+- "Ты сейчас ждешь, что кто-то сам заметит твою способность. Кому можно показать конкретный результат или предложить понятный формат сотрудничества?"
+- "Тебе легче раскрыться, когда появляется внешний запрос. Какой реальный запрос, заказ или приглашение могло бы открыть путь к этому желанию?"
+- "Не обязательно снова пытаться запустить весь проект в одиночку. Кто может дать ему первый внешний контекст — заказчик, партнер, редактор, сообщество?"
+- "Что именно человек должен у тебя попросить, чтобы твоя сильная сторона включилась?"
+- "Есть ли сейчас реальный отклик, или ты пытаешься заставить себя продолжать без интереса и обратной связи?"
+- "Какой небольшой самостоятельный запуск ты можешь сделать, если ждать приглашения сейчас не от кого?"
+- "Можно ли сначала проверить эту идею короткой пробой, а затем решить, стоит ли менять направление?"
+- "Подходит ли тебе среда и условия, в которых ты собираешься это делать?"
+- "Тебе нужен новый способ действовать — или сначала внешний запрос, партнер, доступ, аудитория либо конкретная задача?"
+
+Prompts must not shame the player, create passivity, or imply that a particular invitation will necessarily arrive. Where an external request is not available, offer an agency-preserving alternative: make capability visible, contact a relevant person, publish a sample, send a proposal, join a community, or design a small self-initiated experiment.
+
+### 13.5 Trigger points in the Reactor
+
+Use the activation layer selectively:
+- **Before the first goal step:** help the player choose a realistic activation route for this goal.
+- **When a goal remains in preparation:** distinguish lack of clarity/skill/resources from a missing external brief, audience, invitation, or response opportunity.
+- **When the player repeatedly starts private projects that do not reach an audience:** consider a visibility, commission, collaboration, or request experiment, but only as an option.
+- **When a real request arrives:** help define scope, boundaries, deliverable, capacity, price/terms where relevant, and a next action.
+- **At weekly review:** compare which conditions actually increased engagement and progress.
+- **When the route does not work:** revise the hypothesis; do not insist that the player must wait for an invitation or force a self-start.
+
+Do not turn every day into a personality reminder. The prompt should appear only at a useful decision point and remain dismissible.
+
+### 13.6 Evidence and boundaries
+
+- The date-based authorial realization profile is a starting lens for prompts, not proof of behavior, ability, destiny, or a guaranteed outcome.
+- Keep it distinct from the 19-state model, BG16, Echo adaptation strategies, and the goal-execution evidence map.
+- Do not derive role competence from the realization label.
+- Do not use the profile to decide which desires are legitimate or which goals the player may pursue.
+- Player-confirmed examples and current goal context take priority over a generic profile description.
+- Do not change the earlier calculation or require new birth data.
+- Preserve the ability to say "this description does not fit me" and use a neutral plan.
