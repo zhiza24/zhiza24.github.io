@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru">
-<head><script src="flow.js?v=commercial1"></script><script src="theme.js?v=9"></script><script src="sound.js?v=3"></script><script>try{if(localStorage.getItem('alch_v5_author_seen'))document.documentElement.classList.add('aseen')}catch(e){}</script><script src="opening.js?v=opening2"></script><script src="route.js?v=im2"></script><script src="profile-layer.js?v=art1"></script><script src="route-gate.js?v=im1"></script><script src="gender.js?v=2"></script>
+<head><script src="flow.js?v=commercial1"></script><script src="theme.js?v=11"></script><script src="sound.js?v=3"></script><script>try{if(localStorage.getItem('alch_v5_author_seen'))document.documentElement.classList.add('aseen')}catch(e){}</script><script src="opening.js?v=opening2"></script><script src="route.js?v=im2"></script><script src="profile-layer.js?v=art1"></script><script src="route-gate.js?v=im1"></script><script src="gender.js?v=2"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0c10">
@@ -418,7 +418,7 @@
   window.addEventListener('resize',layoutAxis);
   const start=document.getElementById('start');
   const beginning=started?'form.html?opening=1&v=opening2':'form.html';
-  start.href=started?beginning:'form.html';
+  start.href=started?beginning:'form.html';if(started){start.href=cta.href;const sc=start.querySelector('.start-cap');if(sc)sc.textContent=checkpoint.finished?'ПРОЙДЕНО':'ДАЛЬШЕ';start.setAttribute('aria-label','Продолжить игру');cta.textContent='Начать сначала';cta.href=beginning;}
   const statusNames={current:"Текущая",done:"Пройдена",available:"Посещена",locked:"Закрыта"};
   const overlay=document.getElementById("overlay");
   const title=document.getElementById("detailTitle");
