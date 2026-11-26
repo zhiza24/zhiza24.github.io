@@ -178,8 +178,8 @@ button.core.sun-btn:active{
 .sun-btn__core:after,.sun-btn__core:before{display:none!important}
 .sun-btn{transition:transform .2s}.sun-btn:active{transform:scale(.96)}
 /* 27.11: при нажатии шар плавно разгорается и вращается, пока звучит вход */
-.sun-btn.go .sun-btn__core{animation:ball-go 3.8s ease-in-out forwards!important;filter:none!important}
-@keyframes ball-go{0%{transform:scale(1) rotate(0)}35%{transform:scale(1.08) rotate(160deg)}100%{transform:scale(1.18) rotate(400deg)}}
+.sun-btn.go .sun-btn__core{animation:ball-go 3.8s linear forwards!important;filter:none!important}
+@keyframes ball-go{0%{transform:scale(1) rotate(0)}15%{transform:scale(1.08) rotate(160deg)}100%{transform:scale(1.12) rotate(1080deg)}}
 
 /* g12: вращение только transform, без filter и свечения (iOS квадрат) */
 .sun-btn.go .sun-btn__core{z-index:1}
