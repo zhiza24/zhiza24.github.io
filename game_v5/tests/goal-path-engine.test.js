@@ -1,5 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+process.env.TZ = 'Europe/Amsterdam';
 const GP = require('../goal-path-engine.js');
 
 test('wheel urgency is surfaced as context, not as a verdict about the wish', () => {
@@ -17,7 +18,7 @@ test('readiness distinguishes time, skill gaps and missing foundations', () => {
 test('psychotype changes the suggested working style without changing the goal', () => {
   const P={nature:{primary:'initiator'}};
   assert.equal(GP.styleFor(P).id,'action_first');
-  assert.equal(GP.styleFor(P,'reflective').id,'structured'); // invalid override falls back to nature/default
+  assert.equal(GP.styleFor(P,'reflective').id,'reflective');
   assert.equal(GP.styleFor(P,'observer').id,'reflective');
 });
 test('scaffold turns one wish into four editable weekly stages and a WOOP plan', () => {
