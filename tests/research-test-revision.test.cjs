@@ -28,7 +28,7 @@ assert.ok(tests.includes("status:'outdated'"),'old worldview results must be mar
 assert.ok(!tests.includes('answers:_d.answers||(built.res&&built.res.answers)||[]'),'raw answers must not be copied automatically into diary result cards');
 const strategy=fs.readFileSync(path.join(root,'strategy.js'),'utf8');
 assert.ok(strategy.includes("f==='kmTest'&&x.scoringVersion!==3"),'strategy must ignore outdated worldview scores');
-assert.ok(!strategy.includes("lvl(P,'kmTest','KM05')"),'the revised attribution scale must not trigger the old limited-agency practice');
+['KM01','KM02','KM03','KM04','KM05','KM06'].forEach(id=>assert.ok(strategy.includes("lvl(P,'kmTest','"+id+"')"),'revised worldview scale '+id+' should inform a relevant optional practice'));
 const state=fs.readFileSync(path.join(root,'state-engine.js'),'utf8');
 assert.ok(state.includes('if(kmResult&&kmResult.scoringVersion!==3)kmResult=null'),'outdated worldview results must not enter the 19-state synthesis');
 const bg=fs.readFileSync(path.join(root,'background-state-16.js'),'utf8');
