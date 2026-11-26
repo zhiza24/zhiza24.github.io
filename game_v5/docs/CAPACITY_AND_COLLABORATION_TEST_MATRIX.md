@@ -46,3 +46,25 @@ The scenarios extend the goal-specific personalization contract in `CAPACITY_AND
 - Verify the map appears before explicit Reactor Start and the exercise inside the Reactor remains optional.
 - Test desktop and mobile layouts, offline behavior, old profile migration, and a complete route walkthrough.
 - No new test battery should be added unless the source audit demonstrates a specific evidence gap.
+
+
+## Activation / realization model integration
+
+| ID | Scenario | Expected behavior | Failure to prevent |
+|---|---|---|---|
+| ACT-01 | Existing authorial profile suggests recognition / invitation as an activation route | Offer an optional concrete-request / invitation experiment for the selected goal | Tell player they cannot initiate independently |
+| ACT-02 | Player's lived examples confirm that external requests unlock strong work | Carry a goal-specific invitation / commission / collaboration prompt into the plan and Reactor | Leave the insight as a static profile card |
+| ACT-03 | Player has strong creative capacity but repeatedly keeps self-generated projects private | Offer visibility, portfolio, proposal, open call, partner, audience, or commission routes | Shame player for not self-starting |
+| ACT-04 | No external invitation is currently available | Offer an agency-preserving way to make capability visible or run a small self-initiated test | Tell player to wait passively |
+| ACT-05 | Existing profile suggests independent initiation | Offer a self-authorized first move and relevant informing step | Require external approval |
+| ACT-06 | Existing profile suggests response-led engagement | Offer real options, a bounded trial, or a meaningful response opportunity | Demand abstract action without a concrete stimulus |
+| ACT-07 | Existing profile suggests iterative / fast trial mode | Offer short experiments and explicit review / direction-change points | Treat every pivot as inconsistency |
+| ACT-08 | Existing profile suggests environment-sensitive decision-making | Include context, people, timing, and conditions review | Treat delay as avoidance without checking conditions |
+| ACT-09 | Activation route and functional role differ | Keep "what activates me", "what function I contribute", and "what support I need" as separate fields/prompts | Collapse all into one type label |
+| ACT-10 | Player rejects or corrects authorial profile description | Respect correction and use neutral goal plan | Argue with player or treat disagreement as denial |
+| ACT-11 | Invitation arrives but scope / terms are unclear | Prompt for scope, deliverable, boundaries, capacity, and agreement | Assume every invitation should be accepted |
+| ACT-12 | Invitation activates the player but delivery needs producer / administrator / specialist | Preserve player's authorship while mapping complementary support | Assume invitation removes need for team support |
+| ACT-13 | No profile data / unsupported P.nature fields | Use player-confirmed examples or neutral prompts | Invent data or recalculate birth profile |
+| ACT-14 | Existing realization profile is available | Reuse current stored values and calculation unchanged | Modify DOB, matrix, Arcana, or profile calculation |
+| ACT-15 | Reactor goal stalls during preparation | Distinguish skill, resource, capacity, external brief, audience, and activation-route gaps | Apply one generic "take action" reminder |
+| ACT-16 | Daily prompt would be repetitive or irrelevant | Show activation prompt only at a relevant milestone / blocker / review | Turn the profile into a daily nag |
