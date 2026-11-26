@@ -1,5 +1,4 @@
-/* Shared living sun button. Restyle later in this one file.
-   A bright emitting star: yellow core, orange plasma cells, yellow rim, soft orange halo. */
+/* Living alchemical sun. One shared control for the start core and sun buttons. */
 .sun-btn{
   --sun-size:132px;
   position:relative;
@@ -17,88 +16,274 @@
   flex:none;
   display:inline-block;
   line-height:0;
+  overflow:visible;
+  color:inherit;
+  text-decoration:none;
 }
 .sun-btn:focus-visible{outline:3px solid #ffe7b0;outline-offset:4px}
+
+/* Soft breathing glow behind everything */
 .sun-btn__halo{
-  position:absolute;inset:-62%;border-radius:50%;
+  position:absolute;inset:-72%;border-radius:50%;
   background:radial-gradient(circle closest-side,
-    rgba(255,210,26,.7) 0%,
-    rgba(255,140,0,.55) 28%,
-    rgba(255,140,0,.28) 46%,
-    rgba(255,140,0,.1) 75%,
-    transparent 100%);
-  animation:sun-breathe 3.2s ease-in-out infinite;
+    rgba(255,244,200,.85) 0%,
+    rgba(255,214,110,.55) 18%,
+    rgba(255,168,50,.32) 36%,
+    rgba(232,130,30,.14) 58%,
+    transparent 78%);
+  animation:sun-breathe 4.2s ease-in-out infinite;
   pointer-events:none;z-index:0;
 }
-/* No spoke / grey ring. Halo is the only glow. */
-.sun-btn__corona{position:absolute;inset:0;border-radius:50%;z-index:1;pointer-events:none;
-  box-shadow:0 0 0 2px #fff27a,0 0 12px 3px rgba(255,242,122,.95),0 0 28px 8px rgba(255,210,26,.75),0 0 52px 14px rgba(255,140,0,.5),0 0 90px 22px rgba(255,140,0,.28);}
-.sun-btn__core{
-  position:absolute;inset:0;border-radius:50%;overflow:hidden;z-index:2;
-  clip-path:circle(50% at 50% 50%);-webkit-clip-path:circle(50% at 50% 50%);
-  -webkit-mask-image:-webkit-radial-gradient(white,black);mask-image:radial-gradient(circle,#000 70%,#000 71%);transform:translateZ(0);
-  background:radial-gradient(circle at 50% 42%,#fff27a 0%,#ffd21a 34%,#ff9a1a 68%,#ff7a00 100%);
+
+/* Slow rotating long rays */
+.sun-btn__rays{
+  position:absolute;inset:-78%;
+  pointer-events:none;z-index:1;
+  animation:sun-rays 64s linear infinite;
+  -webkit-mask-image:radial-gradient(circle,transparent 18%,#000 26%,#000 44%,transparent 70%);
+  mask-image:radial-gradient(circle,transparent 18%,#000 26%,#000 44%,transparent 70%);
+  background:repeating-conic-gradient(
+    from .5deg,
+    rgba(255,236,180,0) 0deg 27deg,
+    rgba(255,248,220,.15) 28deg,
+    rgba(255,236,190,.85) 29.2deg,
+    rgba(255,210,110,.25) 30.6deg,
+    rgba(255,236,180,0) 32deg 36deg
+  );
+  opacity:.9;
+}
+/* Softer shorter rays, slower, opposite */
+.sun-btn__rays--fine{
+  inset:-64%;
+  animation:sun-rays 92s linear infinite reverse;
+  opacity:.55;
+  -webkit-mask-image:radial-gradient(circle,transparent 22%,#000 30%,#000 48%,transparent 64%);
+  mask-image:radial-gradient(circle,transparent 22%,#000 30%,#000 48%,transparent 64%);
+  background:repeating-conic-gradient(
+    from 12deg,
+    rgba(255,236,180,0) 0deg 14deg,
+    rgba(255,244,210,.7) 15deg,
+    rgba(255,220,140,.2) 16.4deg,
+    rgba(255,236,180,0) 17.5deg 24deg
+  );
+  filter:blur(.3px);
+}
+
+/* Bright rim / corona around the disc */
+.sun-btn__corona{
+  position:absolute;inset:-8%;border-radius:50%;z-index:2;pointer-events:none;
+  background:radial-gradient(circle,
+    transparent 52%,
+    rgba(255,248,220,.9) 60%,
+    rgba(255,214,100,.7) 68%,
+    rgba(255,170,50,.25) 78%,
+    transparent 88%);
   box-shadow:
-    0 0 0 2px #fff27a,
-    0 0 12px 3px rgba(255,242,122,.95),
-    0 0 28px 8px rgba(255,210,26,.75),
-    0 0 52px 14px rgba(255,140,0,.5),
-    0 0 90px 22px rgba(255,140,0,.28);
+    0 0 14px 3px rgba(255,236,180,.7),
+    0 0 36px 10px rgba(255,196,80,.45),
+    0 0 70px 18px rgba(232,140,30,.28);
+  animation:sun-corona 4.2s ease-in-out infinite;
+}
+
+/* Disc: white-gold heart to amber limb. Not a flat yellow plate. */
+.sun-btn__core{
+  position:absolute;inset:0;border-radius:50%;overflow:hidden;z-index:3;
+  clip-path:circle(50% at 50% 50%);
+  -webkit-clip-path:circle(50% at 50% 50%);
+  transform:translateZ(0);
+  background:
+    radial-gradient(circle at 36% 30%,#fffef8 0%,#fff6cc 16%,rgba(255,236,180,0) 40%),
+    radial-gradient(circle at 50% 48%,#fff8d2 0%,#ffe58a 26%,#ffc44d 52%,#f08a1e 78%,#c45e0e 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,250,230,.7),
+    inset 0 -10px 16px rgba(160,60,0,.28),
+    inset 0 8px 14px rgba(255,252,230,.35);
 }
 .sun-btn__core:after{
-  content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:4;
-  box-shadow:inset 0 0 0 2.5px #fff27a,inset 0 0 10px 2px rgba(255,242,122,.7);
+  content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:5;
+  box-shadow:inset 0 0 0 1.6px rgba(255,244,200,.85),inset 0 0 12px 2px rgba(255,232,160,.35);
 }
+
+/* Very soft living grain, never a blotchy plate */
 .sun-btn__tex{
-  position:absolute;inset:-22%;border-radius:50%;
-  background:url(img/sun_plasma.png?v=r3) center/cover no-repeat;
-  animation:sun-spin 22s linear infinite;
+  position:absolute;inset:-18%;border-radius:50%;
+  background:url(img/sun_plasma.png?v=s2) center/cover no-repeat;
+  mix-blend-mode:soft-light;
+  opacity:.28;
+  animation:sun-spin 36s linear infinite;
   will-change:transform;
   pointer-events:none;
-  opacity:.92;
 }
+
+/* Slow inner plasma shimmer */
 .sun-btn__plasma{
-  position:absolute;inset:-8%;border-radius:50%;
+  position:absolute;inset:-10%;border-radius:50%;
   background:
-    radial-gradient(circle at 50% 42%,rgba(255,242,122,.92) 0%,rgba(255,210,26,.4) 30%,transparent 58%),
-    radial-gradient(circle at 32% 28%,rgba(255,242,122,.45),transparent 36%),
-    conic-gradient(from 20deg,rgba(255,154,26,0),rgba(255,210,26,.35),rgba(255,122,0,0) 40%,rgba(255,154,26,.28),transparent 75%);
+    radial-gradient(circle at 50% 42%,rgba(255,252,230,.8) 0%,rgba(255,230,140,.25) 28%,transparent 58%),
+    radial-gradient(circle at 30% 28%,rgba(255,250,220,.55),transparent 34%),
+    conic-gradient(from 30deg,transparent,rgba(255,210,80,.28),transparent 40%,rgba(255,170,50,.18),transparent 75%);
   mix-blend-mode:screen;
-  animation:sun-plasma 7s ease-in-out infinite alternate,sun-spin 18s linear infinite reverse;
+  animation:sun-plasma 8s ease-in-out infinite alternate,sun-spin 28s linear infinite reverse;
   pointer-events:none;will-change:transform,opacity;
 }
+
+/* Specular hot spot */
+.sun-btn__hot{
+  position:absolute;left:22%;top:16%;width:38%;height:28%;
+  border-radius:50%;
+  background:radial-gradient(ellipse at 50% 50%,#fff 0%,rgba(255,250,230,.7) 28%,transparent 70%);
+  filter:blur(calc(var(--sun-size) * .02));
+  opacity:.9;
+  pointer-events:none;z-index:4;
+  animation:sun-hot 4.2s ease-in-out infinite;
+}
+
+/* Sparks around the rim */
+.sun-btn__sparks{
+  position:absolute;inset:-22%;pointer-events:none;z-index:6;
+}
+.sun-btn__sparks i{
+  position:absolute;
+  width:calc(var(--sun-size) * .038);
+  height:calc(var(--sun-size) * .038);
+  border-radius:50%;
+  background:#fffce8;
+  box-shadow:0 0 calc(var(--sun-size) * .045) calc(var(--sun-size) * .012) rgba(255,236,180,.95);
+  animation:sun-spark 2.6s ease-in-out infinite;
+}
+.sun-btn__sparks i:nth-child(1){left:50%;top:4%;margin-left:calc(var(--sun-size) * -.019);animation-delay:0s}
+.sun-btn__sparks i:nth-child(2){right:10%;top:18%;animation-delay:.35s}
+.sun-btn__sparks i:nth-child(3){right:6%;top:52%;animation-delay:.8s}
+.sun-btn__sparks i:nth-child(4){right:16%;bottom:10%;animation-delay:1.15s}
+.sun-btn__sparks i:nth-child(5){left:48%;bottom:2%;animation-delay:1.5s}
+.sun-btn__sparks i:nth-child(6){left:8%;bottom:16%;animation-delay:1.85s}
+.sun-btn__sparks i:nth-child(7){left:2%;top:42%;animation-delay:2.15s}
+.sun-btn__sparks i:nth-child(8){left:16%;top:12%;animation-delay:.55s}
+
+/* Touch flash burst */
+.sun-btn__burst{
+  position:absolute;inset:-18%;border-radius:50%;
+  pointer-events:none;z-index:5;
+  background:radial-gradient(circle,
+    rgba(255,252,240,.95) 0%,
+    rgba(255,236,170,.55) 32%,
+    rgba(255,196,80,.18) 58%,
+    transparent 72%);
+  opacity:0;
+  transform:scale(.72);
+}
+
 .sun-btn__label{
-  position:relative;z-index:5;
+  position:relative;z-index:7;
   display:flex;align-items:center;justify-content:center;
   width:100%;height:100%;
-  color:#2a1606;
+  color:#4a1c06;
   font:800 calc(var(--sun-size) * .4)/1 Manrope,sans-serif;
-  text-shadow:0 0 2px rgba(255,242,122,.9),0 1px 1px rgba(80,30,0,.4);
+  text-shadow:0 0 3px rgba(255,248,220,.95),0 1px 1px rgba(80,30,0,.35);
   pointer-events:none;
 }
-@keyframes sun-spin{to{transform:rotate(360deg)}}
-@keyframes sun-breathe{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
-@keyframes sun-plasma{0%{opacity:.7}100%{opacity:1}}
-@media (prefers-reduced-motion:reduce){
-  .sun-btn__halo,.sun-btn__tex,.sun-btn__plasma{animation:none!important}
-}
-button.core.sun-btn{
-  width:var(--sun-size)!important;height:var(--sun-size)!important;
-  background:transparent!important;box-shadow:none!important;
-  animation:none!important;border:none!important;filter:none!important;
-}
-button.core.sun-btn:before,button.core.sun-btn:after{display:none!important;content:none!important;animation:none!important}
-button.core.sun-btn>.halo,
-button.core.sun-btn>.ring,
-button.core.sun-btn>.ring.r2{display:none!important}
-.pkw .sun-btn,.sun-btn--sm{--sun-size:64px}
 
 .sun-btn__cap{
   position:absolute;left:50%;top:100%;transform:translateX(-50%);
-  margin-top:7px;z-index:6;
+  margin-top:7px;z-index:8;
   font:800 15px/1 Manrope,Arial,sans-serif;
   letter-spacing:.2em;padding-left:.2em;
   color:#fff;
   text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 8px rgba(0,0,0,.8);
   white-space:nowrap;pointer-events:none
 }
+
+@keyframes sun-spin{to{transform:rotate(360deg)}}
+@keyframes sun-rays{to{transform:rotate(360deg)}}
+@keyframes sun-breathe{
+  0%,100%{opacity:.72;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.08)}
+}
+@keyframes sun-corona{
+  0%,100%{opacity:.82;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.04)}
+}
+@keyframes sun-plasma{0%{opacity:.65}100%{opacity:1}}
+@keyframes sun-hot{
+  0%,100%{opacity:.75;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.08)}
+}
+@keyframes sun-spark{
+  0%,100%{opacity:.15;transform:scale(.6)}
+  40%{opacity:1;transform:scale(1.15)}
+  70%{opacity:.4;transform:scale(.8)}
+}
+@keyframes sun-burst{
+  0%{opacity:0;transform:scale(.7)}
+  25%{opacity:1;transform:scale(1.05)}
+  100%{opacity:0;transform:scale(1.55)}
+}
+@keyframes sun-flash-halo{
+  0%{opacity:.8;transform:scale(1)}
+  35%{opacity:1;transform:scale(1.22)}
+  100%{opacity:.7;transform:scale(1.08)}
+}
+
+.sun-btn:active .sun-btn__burst,
+.sun-btn.go .sun-btn__burst{
+  animation:sun-burst .7s ease-out forwards;
+}
+.sun-btn:active .sun-btn__halo,
+.sun-btn.go .sun-btn__halo{
+  animation:sun-flash-halo .85s ease-out forwards;
+}
+.sun-btn:active .sun-btn__core,
+.sun-btn.go .sun-btn__core{
+  filter:brightness(1.35);
+  transition:filter .18s ease;
+}
+.sun-btn.go .sun-btn__rays,
+.sun-btn.go .sun-btn__rays--fine{
+  animation-duration:8s;
+  opacity:1;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .sun-btn__halo,
+  .sun-btn__rays,
+  .sun-btn__rays--fine,
+  .sun-btn__corona,
+  .sun-btn__tex,
+  .sun-btn__plasma,
+  .sun-btn__hot,
+  .sun-btn__sparks i{animation:none!important}
+  .sun-btn__halo{opacity:.9;transform:none}
+  .sun-btn__corona{opacity:.95}
+  .sun-btn__sparks i{opacity:.7;transform:none}
+  .sun-btn:active .sun-btn__burst,
+  .sun-btn.go .sun-btn__burst{animation:none;opacity:.55;transform:scale(1.1)}
+  .sun-btn:active .sun-btn__halo,
+  .sun-btn.go .sun-btn__halo{animation:none;opacity:1}
+}
+
+/* Override the old .core disc so only the living sun shows */
+button.core.sun-btn{
+  width:var(--sun-size)!important;height:var(--sun-size)!important;
+  background:transparent!important;box-shadow:none!important;
+  animation:none!important;border:none!important;filter:none!important;
+  transform:none!important;
+}
+button.core.sun-btn:before,
+button.core.sun-btn:after{display:none!important;content:none!important;animation:none!important}
+button.core.sun-btn>.halo,
+button.core.sun-btn>.ring,
+button.core.sun-btn>.ring.r2,
+button.core.sun-btn>.wave{display:none!important}
+button.core.sun-btn.go,
+button.core.sun-btn.go:hover,
+button.core.sun-btn:hover,
+button.core.sun-btn:active{
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+  transform:none!important;
+  animation:none!important;
+}
+
+.pkw .sun-btn,
+.sun-btn--sm{--sun-size:64px}
