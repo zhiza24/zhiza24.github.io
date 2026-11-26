@@ -59,7 +59,7 @@ function priorityContext(P,w){
 }
 function styleFor(P,override){
  P=obj(P);var n=obj(P.nature),key=text(n.primary,40),s=STYLE[key]||STYLE.architect;
- if(override&&STYLE[override])s=STYLE[override];
+ if(override){var requested=STYLE[override]||Object.keys(STYLE).map(function(k){return STYLE[k]}).filter(function(x){return x.id===override})[0];if(requested)s=requested;}
  return {id:s.id,title:s.title,hint:s.hint,prompt:s.prompt,format:s.format,source:STYLE[key]?'nature.primary':'balanced_default',natureKey:STYLE[key]?key:null};
 }
 function assessReadiness(answer){
