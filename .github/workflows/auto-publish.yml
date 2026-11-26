@@ -1,0 +1,32 @@
+name: auto-publish
+# Правки (в том числе от GPT/Codex) сразу попадают в чистовик:
+# PR из этого репозитория сливается в main сам, затем версия кэша game_commercial обновляется,
+# чтобы игроки сразу получили новое без ручных подтверждений.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions:
+  contents: write
+  pull-requests: write
+concurrency: { group: auto-publish, cancel-in-progress: false }
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.base.ref == 'main' && !github.event.pull_request.draft)
+    steps:
+      - name: Merge PR into main
+        if: github.event_name == 'pull_request'
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: gh pr merge ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --squash --delete-branch
+      - uses: actions/checkout@v4
+        with: { ref: main, fetch-depth: 2 }
+      - name: Bump game_commercial cache version
+        run: |
+          git config user.name "auto-publish"; git config user.email "actions@users.noreply.github.com"
+          V="alch-commercial-shell-$(date -u +%Y-%m-%d)-$(git rev-parse --short HEAD)"
+          sed -i -E "s/^const CACHE='alch-commercial-shell-[^']*';/const CACHE='$V';/" game_commercial/sw.js
+          if git diff --quiet; then echo "nothing to bump"; exit 0; fi
+          git commit -am "game_commercial: cache $V [auto]"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push origin HEAD:main && break; sleep 3; done
