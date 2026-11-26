@@ -95,8 +95,10 @@ function evaluate(P){
   });
  }
  /* Шкалы — только слой самоотчета. Один результат шкалы считается одной областью наблюдения, а не четырьмя независимыми пунктами. */
+ var kmResult=resultOf(P,'kmTest','km');
+ if(kmResult&&kmResult.scoringVersion!==3)kmResult=null;
  var scales=[
-  {data:resultOf(P,'kmTest','km'),source:'km',prefix:'KM'},
+  {data:kmResult,source:'km',prefix:'KM'},
   {data:resultOf(P,'selfWorth','selfWorth'),source:'selfWorth',prefix:'SV'},
   {data:resultOf(P,'respTest','respTest'),source:'respTest',prefix:'RS'}
  ];

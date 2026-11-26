@@ -156,12 +156,19 @@ w.GG=(male)=>male;
 w.GBackgroundState16Test.mount(box);
 box.querySelector('#bg16Start').click();
 for(let i=0;i<16;i++){
- const choices=Array.from(box.querySelectorAll('[data-bg16-primary]'));
- assert.ok(choices.length>=4,'scene '+(i+1)+' should offer four core choices');
- const primary=choices.find(x=>x.dataset.bg16Primary==='S1')||choices.find(x=>x.dataset.bg16Primary==='S5')||choices[0];
+ const choices=Array.from(box.querySelectorAll('[data-bg16-option]'));
+ assert.equal(choices.length,4,'scene '+(i+1)+' should show one list of four core choices');
+ const primary=choices.find(x=>x.dataset.bg16Option==='S1')||choices.find(x=>x.dataset.bg16Option==='S5')||choices[0];
+ const firstChoice=choices[0],primaryKey=primary.dataset.bg16Option;
  primary.click();
- const secondary=box.querySelector('[data-bg16-secondary="S5"]');
- if(primary.dataset.bg16Primary==='S1'&&secondary)secondary.click();
+ assert.ok(box.contains(firstChoice),'primary selection should update the same visible list in place');
+ const sameList=Array.from(box.querySelectorAll('[data-bg16-option]'));
+ assert.equal(sameList.length,4,'the same choice list should remain after selecting the primary response');
+ assert.equal(box.querySelectorAll('[data-bg16-secondary]').length,0,'a second duplicate list must not be rendered');
+ if(primaryKey==='S1'){
+  const secondary=sameList.find(x=>x.dataset.bg16Option==='S5');
+  if(secondary)secondary.click();
+ }
  const next=box.querySelector('#bg16Next');
  assert.ok(next&&!next.disabled,'scene '+(i+1)+' should allow continuing after a primary answer');
  next.click();
@@ -172,6 +179,6 @@ assert.ok(finish,'the follow-up screen should offer result calculation');
 finish.click();
 assert.equal(w.GBackgroundState16PreviewResult.coverage.answered,16);
 assert.match(box.textContent,/Предварительная карта/);
-assert.match(box.textContent,/16 из 16 сцен отвечено/);
+assert.match(box.textContent,/Ты ответил\(а\) на 16 из 16 сцен/);
 dom.window.close();
 console.log('PASS: 16 scenes, eight spheres, balanced family/pair distribution, separate resource/protective leaders, secondary weighting, context answers, three-sphere threshold and profile preservation.');

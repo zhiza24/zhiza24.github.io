@@ -24,7 +24,7 @@ var SHORT={'scene.html?k=ego':'Маг','slot.html?id=fs':'Первые наст�
 function nextOf(u){var F=window.GFLOW||[],i=F.findIndex(function(x){return x.u===u}),n=i>=0?F[i+1]:null;return n?{u:n.u,t:SHORT[n.u]||n.t}:null}
 /* Заставки для будущих видео и картинок (номера продолжают 1–5 большого теста). */
 var INTRO={
- km:{img:'img/elder.jpg',z:'Заставка 6',who:'Старец',quote:'Скажи мне, {путник|путница}, ты когда-нибудь {замечал|замечала}, что мир послушно повторяет то, во что ты {сам привык|сама привыкла} верить?',title:'Идеальный Кривой Мир',text:'В детстве психика собирает свою картину мира из того, что помогает чувствовать себя в безопасности, получать любовь, сохранять близость и справляться с происходящим. Эти правила могут казаться единственно верными — почти идеальными, потому что когда-то помогали. Но человек взрослеет, обстоятельства меняются, а старые настройки продолжают влиять на решения и отношения. То, что раньше защищало, теперь иногда ограничивает или причиняет боль. Здесь мы посмотрим, через какие фильтры ты чаще воспринимаешь мир сегодня. Отвечай так, как обычно бывает сейчас.',btn:'Начать'},
+ km:{img:'img/elder.jpg',z:'Заставка 6',who:'Старец',quote:'Скажи мне, {путник|путница}, ты когда-нибудь {замечал|замечала}, что мир послушно повторяет то, во что ты {сам привык|сама привыкла} верить?',title:'Идеальный Кривой Мир',text:'Некоторые объяснения складываются из опыта и со временем становятся привычными. Они могут помогать ориентироваться, но иногда становятся слишком узкими. В предыдущем исследовании мы смотрели, какие состояния и реакции чаще возникают в разных сферах. Здесь вопрос другой: какие выводы ты делаешь о причинах событий, о себе, о других людях и о возможностях. Это не повторное измерение настроения и не поиск правильных мыслей. Отвечай о том, как обычно бывает сейчас.',btn:'Начать'},
  fs:{img:'img/scene_fog.jpg',z:'Заставка 7',who:'Эхо',zdesc:'Две тропинки рядом: детская, в мягком утреннем свете, и сегодняшняя. На обеих похожие следы.',title:'Первые настройки',text:'Сначала двенадцать вопросов о детстве, потом двенадцать о том, как ты реагируешь сейчас. Если не помнишь, так и отметь. Если такого не было, это отдельный ответ.',btn:'Начать'},
  lab_d:{img:'img/scene_road.jpg',z:'Заставка 8',who:'Хранитель желаний',zdesc:'Вход в лабиринт посреди пустыни миражей. У входа горит один фонарь.',title:'Лабиринт желаний',text:'Здесь не нужно сразу знать, чего ты хочешь. Можно отвечать «Пока не знаю» и коротко писать своими словами. Мы ничего не будем додумывать за тебя.',btn:'Войти в лабиринт'},
  pi:{img:'img/map_axis.jpg',z:'Заставка 9',who:'Зеркальная цитадель',zdesc:'Зал с четырьмя дверями. За каждой своя пара способов действовать.',title:'Как ты взаимодействуешь',text:'Тридцать две короткие ситуации, в каждой два обычных способа действовать. Выбирай тот, что чаще и естественнее. Есть варианты «Оба», «Зависит» и «Ни один не подходит».',hint:T.pi.none,btn:'Начать'},
@@ -38,7 +38,7 @@ var LVD=['Фоновая опора','Эпизодическое проявле�
 var W={
  few:'Пока ответов недостаточно, чтобы собрать цельную картину. Можно вернуться к оставшимся вопросам и продолжить с того места, где остановился.',
  clearRS:'По твоим ответам ни одна из шести областей не выделилась как выраженная трудность. Ты в целом различаешь свою часть и чужую. Это не значит, что сложных ситуаций не бывает: просто сейчас граница ответственности в основном держится.',
- clearKM:'По твоим ответам ни один фильтр не выделился как выраженный. Осторожность, сомнения и нехватка бывают у всех, но сейчас они не задают общий тон восприятия.',
+ clearKM:'По твоим ответам ни один из исследуемых фильтров не выделился как выраженный. Это не означает, что такие мысли никогда не возникают; сейчас ни один из этих способов объяснять происходящее не задает общий тон.',
  prelim:'предварительно',
  ctSit:'Карта ситуаций считается отдельно от 24 утверждений и не складывается с ними. Пропущенная ситуация не считается ошибкой и не идет в три типа карты.',
  piWeak:'Есть небольшой перевес в сторону «%P%», но он не настолько выражен, чтобы считать его устойчивым предпочтением. Смотри на конкретные ситуации.',
@@ -143,7 +143,7 @@ BUILD.rs=function(ans){var sc=T.rs.scales,res=scoreScales(sc,ans),n=answered(sc,
  var skh=['over','away'].filter(function(k){return sk[k].show}).map(function(k){return '<div class="gt-lv">'+esc(T.rs.skew[k].name)+(sk[k].status==='preliminary'?', '+W.prelim:'')+'</div>'+P_(esc(g(T.rs.skew[k].t)))}).join('');
  out.top=out.status==='insufficient'?'Недостаточно данных':(out.leadingScales||[]).length?'Заметнее всего: '+res.filter(function(r){return out.leadingScales.indexOf(r.id)>=0}).map(function(r){return r.name}).join(', '):'Граница ответственности в основном держится';
  return {res:out,html:'<span class="tag">Точка Б</span><span class="tag">Ответственность</span>'+main+(skh?'<details class="ar-det" open><summary>Дополнительный перекос</summary>'+skh+'</details>':'')+detailsScales(sc,res,LVD),log:'Ответственность: '+out.top}};
-BUILD.km=function(ans){var sc=T.km.scales,res=scoreScales(sc,ans),n=answered(sc,ans),out={v:VER,scoringVersion:2,answers:ans,scales:res,answeredCount:n,possibleCount:24,at:Date.now(),framework:'ideal_distorted_world',interpretationNote:'Исследуются текущие фильтры восприятия. Их происхождение проверяется сопоставлением с блоком «Первые настройки»; этот тест сам по себе не доказывает детскую причину.'},main;
+BUILD.km=function(ans){var sc=T.km.scales,res=scoreScales(sc,ans),n=answered(sc,ans),out={v:VER,scoringVersion:3,answers:ans,scales:res,answeredCount:n,possibleCount:24,at:Date.now(),framework:'ideal_distorted_world',interpretationNote:'Предыдущее исследование описывало повторяющиеся состояния в разных сферах. Здесь отдельно исследуются привычные объяснения неопределенности, чувств, намерений других людей, результатов и возможностей. Эти ответы не доказывают происхождение установок.'},main;
  if(n<18){out.status='insufficient';main=P_(esc(W.few))}else{var L=leaders(res,1),mx=L.length?L[0].score:0;out.status=statusOf(res);
   if(!L.length||Math.max.apply(null,L.map(function(r){return r.score}))<4){out.leadingScales=[];main='<div class="aq">Фильтры не выделились</div>'+P_(esc(W.clearKM))}
   else{L=L.filter(function(r){return r.score>=4});L.sort(function(a,b){return b.score-a.score});out.leadingScales=L.map(function(r){return r.id});out.status=L.length>1?'mixed':out.status;
@@ -151,7 +151,7 @@ BUILD.km=function(ans){var sc=T.km.scales,res=scoreScales(sc,ans),n=answered(sc,
    else if(L.length===2)main='<div class="al">Похоже, что ты чаще ориентируешься на два фильтра</div>'+P_(esc(g(T.km.two).replace('{шкала_1}','«'+L[0].name+'»').replace('{шкала_2}','«'+L[1].name+'»')))+L.map(function(r){return '<div class="gt-lv">'+esc(r.name)+' · '+esc(lvName(r,LVD))+'</div>'}).join('');
    else main='<div class="al">Похоже, что в разных ситуациях ты опираешься на несколько фильтров</div>'+P_(esc(g(T.km.many)))+'<ul class="gt-sum">'+L.map(function(r){return '<li>'+esc(r.name)+' · '+esc(lvName(r,LVD))+'</li>'}).join('')+'</ul>'}}
  out.top=out.status==='insufficient'?'Недостаточно данных':(out.leadingScales||[]).length?res.filter(function(r){return out.leadingScales.indexOf(r.id)>=0}).map(function(r){return r.name}).join(', '):'Выраженных фильтров нет';
- return {res:out,html:'<span class="tag">Точка 0</span><span class="tag">Идеальный Кривой Мир</span><div class="al">Привычные фильтры восприятия</div>'+P_(esc('Когда-то эти способы воспринимать происходящее могли помогать приспособиться к своей среде. Со временем они могли стать автоматическими правилами. Мы исследуем не то, каким мир является на самом деле, а через какие внутренние фильтры ты чаще смотришь на него сейчас.'))+main+detailsScales(sc,res,LVD),log:'Идеальный Кривой Мир: '+out.top}};
+ return {res:out,html:'<span class="tag">Точка 0</span><span class="tag">Идеальный Кривой Мир</span><div class="al">Привычные фильтры восприятия</div>'+P_(esc('Привычные объяснения помогают быстро ориентироваться, но иногда становятся слишком жесткими. Здесь мы не оцениваем, прав ли ты вообще: мы смотрим, какие версии чаще возникают и насколько они оставляют место для фактов, контекста и других объяснений.'))+main+detailsScales(sc,res,LVD),log:'Идеальный Кривой Мир: '+out.top}};
 BUILD.ct=function(ans){var sc=T.ct.scales,res=scoreScales(sc,ans),n=answered(sc,ans),out={v:VER,answers:ans,scales:res,answeredCount:n,possibleCount:24,at:Date.now()},main;
  var legacy=ctLegacy(ans),S=T.ct.sit,cnt={critical:0,reactive:0,avoidant:0};
  var st=S.map(function(s){var a=ans[s.id],ok=a&&a!=='skip',typ=ok?ctType(s,a):null;if(typ&&cnt[typ]!=null)cnt[typ]++;return {id:s.id,answer:ok?a:null,type:typ,text:ok?ctOptText(s,a):null,explanation:ok?g(s.ex&&s.ex[a]||''):null}});
@@ -279,7 +279,7 @@ var drawBase=Runner.prototype.draw;Runner.prototype.draw=function(){var it=this.
  this.items[this.i]=Object.assign({},it,{kind:'multi',o:o,max:2,other:'Свое направление'})}return drawBase.call(this)};
 
 /* ---------- сохранение, вход в Реактор, дневник ---------- */
-function reactorIn(P){var r={v:VER,at:Date.now(),tests:{}};Object.keys(STEP).forEach(function(k){var x=P[STEP[k].f];if(!x||k==='vsort'||k==='im'||k==='bg16')return;r.tests[k]={status:x.status||'tentative',top:x.top||null,leadingScales:x.leadingScales||x.leading||[]}});var bg=P.backgroundProfile&&P.backgroundProfile.backgroundState;if(bg&&bg.version===2){var fm={};(bg.families||[]).forEach(function(x){fm[x.id]=x});var rg=bg.groups&&bg.groups.resource,pg=bg.groups&&bg.groups.protective,ids=[].concat(rg&&rg.leaders||[],pg&&pg.leaders||[]);r.tests.bg16={status:'preliminary',top:ids.map(function(id){return fm[id]&&fm[id].title}).filter(Boolean).join(' / ')||null,leadingScales:ids.slice(),groups:{resource:rg&&rg.status||'no_clear_leader',protective:pg&&pg.status||'no_clear_leader'},coverage:bg.coverage||null};r.backgroundState={groups:{resource:rg||null,protective:pg||null},coverage:bg.coverage||null,special:bg.special||null,followup:bg.followup||null,families:(bg.families||[]).map(function(x){return {id:x.id,title:x.title,group:x.group,share:x.share,sphereCount:x.sphereCount}})}}if(P.valuesCore)r.values3=P.valuesCore.top3;if(P.desireLab&&P.desireLab.step)r.desireStep=P.desireLab.step;return r}
+function reactorIn(P){var r={v:VER,at:Date.now(),tests:{}};Object.keys(STEP).forEach(function(k){var x=P[STEP[k].f];if(!x||k==='vsort'||k==='im'||k==='bg16')return;if(k==='km'&&x.scoringVersion!==3){r.tests[k]={status:'outdated',top:null,leadingScales:[],scoringVersion:x.scoringVersion||null};return}r.tests[k]={status:x.status||'tentative',top:x.top||null,leadingScales:x.leadingScales||x.leading||[],scoringVersion:x.scoringVersion||null}});var bg=P.backgroundProfile&&P.backgroundProfile.backgroundState;if(bg&&bg.version===2){var fm={};(bg.families||[]).forEach(function(x){fm[x.id]=x});var rg=bg.groups&&bg.groups.resource,pg=bg.groups&&bg.groups.protective,ids=[].concat(rg&&rg.leaders||[],pg&&pg.leaders||[]);r.tests.bg16={status:'preliminary',top:ids.map(function(id){return fm[id]&&fm[id].title}).filter(Boolean).join(' / ')||null,leadingScales:ids.slice(),groups:{resource:rg&&rg.status||'no_clear_leader',protective:pg&&pg.status||'no_clear_leader'},coverage:bg.coverage||null};r.backgroundState={groups:{resource:rg||null,protective:pg||null},coverage:bg.coverage||null,special:bg.special||null,followup:bg.followup||null,families:(bg.families||[]).map(function(x){return {id:x.id,title:x.title,group:x.group,share:x.share,sphereCount:x.sphereCount}})}}if(P.valuesCore)r.values3=P.valuesCore.top3;if(P.desireLab&&P.desireLab.step)r.desireStep=P.desireLab.step;return r}
 function store(k,res,log){if(preview)return;var P=load(),S=STEP[k];if(P.testDrafts)delete P.testDrafts[S.mod];if(k==='vsort')delete P.valuesCoreDraft;if(window.GProfile){try{P=GProfile.saveResult(S.mod,res,{version:VER},{profile:P,save:false})}catch(e){P[S.f]=res}}else P[S.f]=res;
  P[S.f]=res;P.reactorIn=reactorIn(P);(P.log=P.log||[]).push({t:Date.now(),x:log});persist(P)}
 function quoteKey(k){return STEP[k].u}
@@ -293,7 +293,7 @@ function result(box,k,built,retake){var S=STEP[k],n=nextOf(S.u);box.innerHTML=bu
    strongMore:_d.strongMore||'',insight:_d.insight||'',
    insightMore:_d.insightMore||built.html||'',
    insightLabel:_d.insightLabel||'Расшифровка результата',
-   answers:_d.answers||(built.res&&built.res.answers)||[],at:_d.at||(built.res&&built.res.at),preview:preview,before:box.querySelector('#nx')
+   answers:_d.answers||[],at:_d.at||(built.res&&built.res.at),preview:preview,before:box.querySelector('#nx')
   });
  }
 try{built.bind(box)}catch(e){}
@@ -302,7 +302,18 @@ try{built.bind(box)}catch(e){}
  var re=box.querySelector('#gtRe');if(re)re.onclick=function(){retake()};scrollTo(0,0)}
 function mountTest(k,box){css();var P=load(),S=STEP[k],have=P[S.f];
  function run(){new Runner(box,ITEMS[k](),function(ans){var b=BUILD[k](ans);store(k,b.res,b.log);result(box,k,b,run)},S.mod).draw()}
- if(have&&have.v&&have.answers&&!preview){var saved=BUILD[k](have.answers);if(k==='km'&&have.scoringVersion!==2&&!preview){saved.res.scoringVersion=2;store(k,saved.res,saved.log)}result(box,k,saved,run);return}
+ if(have&&have.v&&have.answers&&!preview){
+  if(k==='km'&&have.scoringVersion!==3){
+   box.innerHTML='<span class="tag">Обновленная редакция</span><div class="aq">Мы уточнили, что именно исследует этот блок</div>'+
+    '<p>Раньше вопросы частично пересекались с исследованием фонового состояния. Теперь они точнее разделяют две вещи: повторяющиеся реакции в жизненных сферах и объяснения, которыми ты наделяешь происходящее.</p>'+
+    '<p>Сохраненный результат прежней редакции остается в профиле и не пересчитывается по новым формулировкам. Чтобы получить сопоставимый новый результат, пройди обновленный набор.</p>'+
+    '<button class="next" id="kmUpdate">Пройти обновленное исследование</button><button class="next" id="kmContinue" style="background:#20170e;color:#f4ecdf;border:1px solid #9e783a">Продолжить путь без повторения</button>';
+   box.querySelector('#kmUpdate').onclick=function(){var p=load();if(p.testDrafts)delete p.testDrafts.km;persist(p);run()};
+   box.querySelector('#kmContinue').onclick=function(){if(window.GReview||retakeMode){location.href='tasks.html';return}location.href=GRoute.advance()};
+   return;
+  }
+  var saved=BUILD[k](have.answers);result(box,k,saved,run);return;
+ }
  run()}
 
 /* ---------- три ориентира: важно / отложить / вычеркнуть, затем ровно три ---------- */

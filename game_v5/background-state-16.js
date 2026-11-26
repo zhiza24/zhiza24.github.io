@@ -11,7 +11,7 @@ function tx(s){return String(s==null?'':s).replace(/\{([^{}|]*)\|([^{}]*)\}/g,fu
 function css(){
  var s=document.getElementById('bg16-css');
  if(!s){s=document.createElement('style');s.id='bg16-css';}
- s.textContent="#m .bg16{--bg16-ink:#3a2410;--bg16-muted:#6e5028;--bg16-line:#c9a46a;box-sizing:border-box;margin:0 0 28px;padding:22px 16px 28px;border-radius:18px;background:#f4e8cf!important;color:#3a2410!important;font-family:Manrope,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;opacity:1!important}#m .bg16,#m .bg16 *{box-sizing:border-box;text-shadow:none!important;opacity:1!important}#m .bg16 p,#m .bg16 li,#m .bg16 span,#m .bg16 b,#m .bg16 strong,#m .bg16 label,#m .bg16 small{color:#3a2410!important}#m .bg16 h1,#m .bg16 h2,#m .bg16 h3{font-family:'Cormorant Garamond',Georgia,serif!important;color:#5c3a12!important;-webkit-text-fill-color:#5c3a12!important;font-weight:700!important;text-shadow:none!important}#m .bg16 h1{font-size:30px;line-height:1.15;margin:8px 0 14px;text-align:center}#m .bg16 h2{font-size:25px;line-height:1.2;margin:12px 0 14px}#m .bg16 h3{font-size:20px;line-height:1.25;margin:0 0 8px}#m .bg16 p{font-size:16px;line-height:1.6;margin:10px 0;color:#4a3018!important}#m .bg16 .tag{display:inline-block;background:#e8c16c!important;color:#26190b!important;border:1px solid #c99a45!important;border-radius:20px;padding:4px 12px;font-size:14px;font-weight:700}#m .bg16-kicker{display:block;color:#8a5212!important;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;text-align:center;margin:12px 0 7px}#m .bg16-muted,#m .bg16 .bg16-muted{color:#6e5028!important;font-size:14px;line-height:1.5;text-align:center}#m .bg16-card,#m .bg16-secondary{margin:16px 0;padding:17px;border:1px solid #d9bf8c!important;border-radius:14px;background:#fffaf0!important;color:#3a2410!important;box-shadow:none}#m .bg16-card *,#m .bg16-secondary *{color:#3a2410!important}#m .bg16-card h1,#m .bg16-card h2,#m .bg16-card h3,#m .bg16-secondary h3{color:#5c3a12!important;-webkit-text-fill-color:#5c3a12!important}#m .bg16-resource-copy{display:block;margin:12px 0;padding:13px 14px;border:1px solid #c9a46a!important;border-radius:12px;background:#f8efdc!important;color:#4a3018!important;line-height:1.6}#m .bg16 .bg16-note{color:#6e5028!important;font-size:14px;text-align:left}#m .bg16-choices{display:grid;gap:10px;margin:16px 0}#m .bg16-choice,#m .bg16-special{display:block;width:100%;min-height:54px;padding:14px 15px;border:1.5px solid #c9a46a!important;border-radius:12px;background:#fffaf0!important;color:#3a2410!important;text-align:left;font:600 16px/1.45 Manrope,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;white-space:normal;overflow-wrap:anywhere;box-shadow:none}#m .bg16-choice.selected,#m .bg16-special.selected{border:2px solid #9e783a!important;background:linear-gradient(180deg,#ffe9a8,#e0a940)!important;color:#2a1606!important;font-weight:800!important;box-shadow:0 0 0 2px rgba(201,154,69,.22)!important}#m .bg16-choice.selected:before,#m .bg16-special.selected:before{content:'✓';display:inline-block;margin-right:10px;color:#2a1606!important;font-weight:900}#m .bg16-special{margin-top:6px;background:#fff6e2!important;border-color:#b8893f!important;color:#5a3a1a!important;font-size:15px!important}#m .bg16-actions{display:flex;flex-direction:column;gap:10px;margin-top:22px;align-items:center}#m .bg16-actions button,#m .bg16-hero-btn{display:block;width:100%;max-width:340px;min-height:52px;margin:0 auto;padding:13px 18px;border:0!important;border-radius:12px;background:#edc879!important;color:#291a08!important;font:800 17px/1.35 Manrope,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;box-shadow:none!important;text-align:center}#m .bg16-actions button.gh{background:#fffaf0!important;border:1.5px solid #c9a46a!important;color:#3a2410!important;box-shadow:none!important;font-weight:700!important}#m .bg16-actions button:disabled{background:#e8dfcd!important;border-color:#d9bf8c!important;color:#8a7658!important;opacity:1!important}#m .bg16-option{display:flex;align-items:flex-start;gap:10px;margin:9px 0;padding:13px 14px;border-radius:12px;background:#fffaf0!important;border:1px solid #c9a46a!important;color:#3a2410!important;font-size:15px;line-height:1.45}#m .bg16-option input[type=radio]{flex:0 0 20px;width:20px;height:20px;margin:2px 0 0;accent-color:#9e783a}#m .bg16-result{border-left:3px solid #e0a940;padding:9px 0 9px 13px;margin:14px 0;color:#3a2410!important}#m .bg16-result p{color:#4a3018!important}#m .bg16-tag{display:inline-block;padding:5px 9px;border:1px solid #c9a46a!important;border-radius:999px;color:#7a4512!important;font-size:12px;font-weight:800;margin:3px 4px 3px 0;background:#fff6e2!important}#m .bg16 progress{display:block;width:100%;height:8px;accent-color:#e0a940;border-radius:8px;margin:8px 0 16px}#m .bg16 a{color:#7a4512!important;text-decoration:underline}#m .bg16 button:focus-visible,#m .bg16 input:focus-visible{outline:3px solid #9e783a!important;outline-offset:3px}@media(prefers-reduced-motion:no-preference){#m .bg16 button{transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease}}"
+ s.textContent="#m .bg16{--bg16-ink:#3a2410;--bg16-muted:#6e5028;--bg16-line:#c9a46a;box-sizing:border-box;margin:0 0 28px;padding:22px 16px 28px;border-radius:18px;background:#f4e8cf!important;color:#3a2410!important;font-family:Manrope,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;opacity:1!important}#m .bg16,#m .bg16 *{box-sizing:border-box;text-shadow:none!important;opacity:1!important}#m .bg16 p,#m .bg16 li,#m .bg16 span,#m .bg16 b,#m .bg16 strong,#m .bg16 label,#m .bg16 small{color:#3a2410!important}#m .bg16 h1,#m .bg16 h2,#m .bg16 h3{font-family:'Cormorant Garamond',Georgia,serif!important;color:#5c3a12!important;-webkit-text-fill-color:#5c3a12!important;font-weight:700!important;text-shadow:none!important}#m .bg16 h1{font-size:30px;line-height:1.15;margin:8px 0 14px;text-align:center}#m .bg16 h2{font-size:25px;line-height:1.2;margin:12px 0 14px}#m .bg16 h3{font-size:20px;line-height:1.25;margin:0 0 8px}#m .bg16 p{font-size:16px;line-height:1.6;margin:10px 0;color:#4a3018!important}#m .bg16 .tag{display:inline-block;background:#e8c16c!important;color:#26190b!important;border:1px solid #c99a45!important;border-radius:20px;padding:4px 12px;font-size:14px;font-weight:700}#m .bg16-kicker{display:block;color:#8a5212!important;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;text-align:center;margin:12px 0 7px}#m .bg16-muted,#m .bg16 .bg16-muted{color:#6e5028!important;font-size:14px;line-height:1.5;text-align:center}#m .bg16-card,#m .bg16-secondary{margin:16px 0;padding:17px;border:1px solid #d9bf8c!important;border-radius:14px;background:#fffaf0!important;color:#3a2410!important;box-shadow:none}#m .bg16-card *,#m .bg16-secondary *{color:#3a2410!important}#m .bg16-card h1,#m .bg16-card h2,#m .bg16-card h3,#m .bg16-secondary h3{color:#5c3a12!important;-webkit-text-fill-color:#5c3a12!important}#m .bg16-resource-copy{display:block;margin:12px 0;padding:13px 14px;border:1px solid #c9a46a!important;border-radius:12px;background:#f8efdc!important;color:#4a3018!important;line-height:1.6}#m .bg16 .bg16-note{color:#6e5028!important;font-size:14px;text-align:left}#m .bg16-choices{display:grid;gap:10px;margin:16px 0}#m .bg16-choice,#m .bg16-special{display:block;width:100%;min-height:54px;padding:14px 15px;border:1.5px solid #c9a46a!important;border-radius:12px;background:#fffaf0!important;color:#3a2410!important;text-align:left;font:600 16px/1.45 Manrope,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;white-space:normal;overflow-wrap:anywhere;box-shadow:none}#m .bg16-choice.selected,#m .bg16-special.selected{border:2px solid #9e783a!important;background:linear-gradient(180deg,#ffe9a8,#e0a940)!important;color:#2a1606!important;font-weight:800!important;box-shadow:0 0 0 2px rgba(201,154,69,.22)!important}#m .bg16-choice.selected:before,#m .bg16-special.selected:before{content:'✓';display:inline-block;margin-right:10px;color:#2a1606!important;font-weight:900}#m .bg16-choice-role{display:block;margin-top:5px;font-size:12px;letter-spacing:.04em;color:#7a4512!important;font-weight:800}#m .bg16-choice-role[hidden],#m .bg16-special[hidden],#m .bg16-link[hidden]{display:none}#m .bg16-selection{margin:12px 0;padding:12px 14px;border:1px solid #c9a46a;border-radius:12px;background:#fffaf0;color:#3a2410!important;line-height:1.5}#m .bg16-selection p{margin:8px 0;color:#6e5028!important;font-size:13px}#m .bg16-link{display:block;margin-top:8px;padding:0;border:0;background:none;color:#7a4512!important;text-decoration:underline;font:700 14px Manrope}#m .bg16-special{margin-top:6px;background:#fff6e2!important;border-color:#b8893f!important;color:#5a3a1a!important;font-size:15px!important}#m .bg16-actions{display:flex;flex-direction:column;gap:10px;margin-top:22px;align-items:center}#m .bg16-actions button,#m .bg16-hero-btn{display:block;width:100%;max-width:340px;min-height:52px;margin:0 auto;padding:13px 18px;border:0!important;border-radius:12px;background:#edc879!important;color:#291a08!important;font:800 17px/1.35 Manrope,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;box-shadow:none!important;text-align:center}#m .bg16-actions button.gh{background:#fffaf0!important;border:1.5px solid #c9a46a!important;color:#3a2410!important;box-shadow:none!important;font-weight:700!important}#m .bg16-actions button:disabled{background:#e8dfcd!important;border-color:#d9bf8c!important;color:#8a7658!important;opacity:1!important}#m .bg16-option{display:flex;align-items:flex-start;gap:10px;margin:9px 0;padding:13px 14px;border-radius:12px;background:#fffaf0!important;border:1px solid #c9a46a!important;color:#3a2410!important;font-size:15px;line-height:1.45}#m .bg16-option input[type=radio]{flex:0 0 20px;width:20px;height:20px;margin:2px 0 0;accent-color:#9e783a}#m .bg16-result{border-left:3px solid #e0a940;padding:9px 0 9px 13px;margin:14px 0;color:#3a2410!important}#m .bg16-result p{color:#4a3018!important}#m .bg16-tag{display:inline-block;padding:5px 9px;border:1px solid #c9a46a!important;border-radius:999px;color:#7a4512!important;font-size:12px;font-weight:800;margin:3px 4px 3px 0;background:#fff6e2!important}#m .bg16 progress{display:block;width:100%;height:8px;accent-color:#e0a940;border-radius:8px;margin:8px 0 16px}#m .bg16 a{color:#7a4512!important;text-decoration:underline}#m .bg16 button:focus-visible,#m .bg16 input:focus-visible{outline:3px solid #9e783a!important;outline-offset:3px}@media(prefers-reduced-motion:no-preference){#m .bg16 button{transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease}}"
  if(!s.parentNode)document.head.appendChild(s);
 }
 function rng(seed){var x=seed>>>0;return function(){x=(x+0x6D2B79F5)|0;var t=Math.imul(x^x>>>15,1|x);t^=t+Math.imul(t^t>>>7,61|t);return ((t^t>>>14)>>>0)/4294967296}}
@@ -65,24 +65,45 @@ function mount(box){
  }
  function question(){
   stage='questions';
-  var qid=draft.order[step],q=qById(qid),a=draft.answers[qid]||{},indices=draft.optionOrder[qid]||[0,1,2,3];
-  var opts=indices.map(function(i){return {text:q[3][i][0],key:q[3][i][1]}}),primary=a.primary;
-  var primaryHtml=opts.map(function(o){return '<button type="button" class="bg16-choice '+(primary===o.key?'selected':'')+'" data-bg16-primary="'+o.key+'">'+esc(tx(o.text))+'</button>'}).join('');
-  var specialHtml=D.SPECIAL.map(function(o){return '<button type="button" class="bg16-special '+(primary===o[1]?'selected':'')+'" data-bg16-primary="'+o[1]+'">'+esc(o[0])+'</button>'}).join('');
-  var secondaryHtml='';
-  if(primary&&isFamily(primary)){
-   secondaryHtml='<div class="bg16-secondary"><h3>Дополнительное наблюдение</h3><p class="bg16-note">Необязательно. А какой вариант тоже иногда бывает? Отметь его, если узнаешь в нем свою реакцию.</p>'+
-    opts.filter(function(o){return o.key!==primary}).map(function(o){return '<button type="button" class="bg16-choice '+(a.secondary===o.key?'selected':'')+'" data-bg16-secondary="'+o.key+'">'+esc(tx(o.text))+'</button>'}).join('')+
-    '<button type="button" class="bg16-special '+(!a.secondary?'selected':'')+'" data-bg16-secondary="">Не добавлять</button></div>';
-  }else if(primary==='v'||primary==='x'){
-   secondaryHtml='<p class="bg16-muted">Этот ответ останется отдельным наблюдением и не будет распределен между семействами.</p>';
-  }
+  var qid=draft.order[step],q=qById(qid),indices=draft.optionOrder[qid]||[0,1,2,3];
+  var opts=indices.map(function(i){return {text:q[3][i][0],key:q[3][i][1]}});
+  var choices=opts.map(function(o){
+   return '<button type="button" class="bg16-choice" data-bg16-option="'+o.key+'">'+esc(tx(o.text))+'<span class="bg16-choice-role" hidden></span></button>';
+  }).join('');
+  var specialHtml=D.SPECIAL.map(function(o){return '<button type="button" class="bg16-special" data-bg16-special="'+o[1]+'">'+esc(o[0])+'</button>'}).join('');
   shell('<span class="tag">Фоновое состояние · '+(step+1)+' из 16</span><div class="bg16-kicker">'+esc(D.SPHERES[q[1]])+'</div>'+
    '<progress max="16" value="'+(step+1)+'"></progress><h2>'+esc(tx(q[2]))+'</h2>'+
-   '<p>Что у тебя внутри появляется первым?</p><div class="bg16-choices">'+primaryHtml+specialHtml+'</div>'+
-   secondaryHtml+
-   '<div class="bg16-actions"><button type="button" id="bg16Next" '+(primary==null?'disabled':'')+'>'+(step===15?'К уточнениям':'Далее')+'</button><button type="button" class="gh" id="bg16Back" '+(step===0?'disabled':'')+'>Назад</button><button type="button" class="gh" id="bg16Skip">Пропустить сцену</button></div>'+
+   '<p id="bg16Prompt">Отметь реакцию, которая чаще всего возникает первой. Если другая тоже иногда бывает, ее можно отметить второй — это необязательно.</p>'+
+   '<div class="bg16-choices">'+choices+specialHtml+'</div>'+
+   '<div class="bg16-selection" id="bg16Selection" hidden><b id="bg16SelectionTitle">Основной выбор отмечен.</b><p id="bg16SelectionHelp"></p>'+
+   '<button type="button" class="bg16-link" id="bg16ClearSecondary" hidden>Убрать дополнительный выбор</button>'+
+   '<button type="button" class="bg16-link" id="bg16EditPrimary" hidden>Изменить основной выбор</button></div>'+
+   '<div class="bg16-actions"><button type="button" id="bg16Next" disabled>'+(step===15?'К уточнениям':'Далее')+'</button><button type="button" class="gh" id="bg16Back" '+(step===0?'disabled':'')+'>Назад</button><button type="button" class="gh" id="bg16Skip">Пропустить сцену</button></div>'+
    '<p class="bg16-muted">Порядок сцен и вариантов перемешан. Ответы сохраняются в этом браузере; пропуск не считается ответом.</p>');
+ }
+ function refreshChoices(){
+  var qid=draft&&draft.order[step],a=qid&&draft.answers[qid]||{},primary=a.primary,editing=!!a.editPrimary,hasSpecial=primary==='v'||primary==='x';
+  box.querySelectorAll('[data-bg16-option]').forEach(function(b){
+   var key=b.dataset.bg16Option,role=primary===key?'primary':a.secondary===key?'secondary':'',label=b.querySelector('.bg16-choice-role');
+   b.classList.toggle('selected',!!role);
+   if(label){label.textContent=role==='primary'?'Основной выбор':role==='secondary'?'Дополнительный выбор':'';label.hidden=!role}
+   b.disabled=!!primary&&!editing&&(hasSpecial||key===primary);
+  });
+  box.querySelectorAll('[data-bg16-special]').forEach(function(b){
+   b.hidden=!!primary&&!editing;b.classList.toggle('selected',primary===b.dataset.bg16Special);
+  });
+  var prompt=box.querySelector('#bg16Prompt'),selection=box.querySelector('#bg16Selection'),help=box.querySelector('#bg16SelectionHelp');
+  if(prompt)prompt.textContent=!primary?'Отметь реакцию, которая чаще всего возникает первой. Если другая тоже иногда бывает, ее можно отметить второй — это необязательно.':
+   editing?'Выбери, какая реакция обычно возникает первой.':
+   hasSpecial?'Этот ответ сохранится отдельно и не будет распределяться по группам.':
+   'Основной выбор отмечен. Если другая реакция тоже бывает, отметь ее в этом же списке; это необязательно.';
+  if(selection)selection.hidden=primary==null||editing;
+  if(help)help.textContent=hasSpecial?'Этот ответ сохранится отдельно, без дополнительного выбора.':
+   a.secondary?'Дополнительный вариант тоже отмечен. Можно убрать его или заменить другим из этого же списка.':
+   'Если еще одна реакция действительно бывает, но возникает реже, отметь ее в этом же списке.';
+  var clear=box.querySelector('#bg16ClearSecondary');if(clear)clear.hidden=!a.secondary;
+  var edit=box.querySelector('#bg16EditPrimary');if(edit)edit.hidden=primary==null||editing;
+  var next=box.querySelector('#bg16Next');if(next)next.disabled=primary==null||editing;
  }
  function preliminary(){
   return E.calculate(draft.answers,{}, {startedAt:draft.startedAt,seed:draft.seed});
@@ -117,7 +138,7 @@ function mount(box){
   var html='<section class="bg16-card"><h2>'+title+'</h2><p>'+groupLabel(group.status)+'.</p>';
   if(group.leaders.length){
    group.leaders.forEach(function(id){var f=all.filter(function(x){return x.id===id})[0];if(!f)return;
-    html+='<div class="bg16-result"><b>'+esc(f.title)+'</b><p>'+esc(f.description)+'</p><span class="bg16-tag">'+f.sphereCount+' из 8 сфер</span><span class="bg16-tag">Баллы: '+f.points+'/8</span></div>';
+    html+='<div class="bg16-result"><b>'+esc(f.title)+'</b><p>'+esc(f.description)+'</p><span class="bg16-tag">Повторилось в '+f.sphereCount+' из 8 сфер</span></div>';
    });
   }else{
    var candidates=group.families.filter(function(x){return x.points>0}).slice(0,2);
@@ -128,51 +149,69 @@ function mount(box){
  }
  function result(){
   stage='result';
-  var r=saved||preliminary(),html='<span class="tag">Фоновое состояние · результат</span><div class="bg16-kicker">Предварительная карта</div><h1>Что повторяется в разных сферах</h1>'+
-   '<div class="bg16-card"><b>'+r.coverage.answered+' из 16 сцен отвечено</b><p>'+r.coverage.spheres+' сфер охвачено ответами. Дополнительных выборов: '+r.coverage.secondary+'. «По-разному»: '+r.coverage.depends+'. «Ни один вариант»: '+r.coverage.none+'.</p></div>'+
-   groupHtml(r.groups.resource,'Ресурсные состояния',r.families)+groupHtml(r.groups.protective,'Защитные ожидания',r.families)+
-   '<h2>Другие замеченные сигналы</h2>';
-  var others=r.families.filter(function(f){return f.points>0&&r.groups.resource.leaders.indexOf(f.id)<0&&r.groups.protective.leaders.indexOf(f.id)<0}).sort(function(a,b){return b.points-a.points});
-  if(others.length)others.forEach(function(f){html+='<article class="bg16-card"><b>'+esc(f.title)+'</b><div class="bg16-bar"><i style="width:'+Math.max(0,Math.min(100,f.share*100))+'%"></i></div><p class="bg16-muted">'+esc(f.repeatLabel)+'. Баллы: '+f.points+'/8. Основных выборов: '+f.primaryCount+', дополнительных: '+f.secondaryCount+'.</p></article>'});
-  else html+='<p class="bg16-muted">Других повторяющихся сигналов пока нет.</p>';
+  var r=saved||preliminary(),resourceLeaders=r.groups.resource.leaders||[],protectiveLeaders=r.groups.protective.leaders||[];
+  function names(ids){return ids.map(function(id){var f=r.families.filter(function(x){return x.id===id})[0];return f?f.title:id})}
+  var resNames=names(resourceLeaders),proNames=names(protectiveLeaders);
+  var synthesis='';
+  if(resNames.length&&proNames.length){
+   synthesis='В этих сценах одновременно проявились ресурсная опора «'+resNames.join('» и «')+'» и защитное ожидание «'+proNames.join('» и «')+'». Эти стороны могут сосуществовать и включаться в разных обстоятельствах.';
+  }else if(resNames.length){
+   synthesis='В этой выборке устойчивее всего повторяется ресурсная опора «'+resNames.join('» и «')+'». Это то, на что ты можешь опираться в разных обстоятельствах.';
+  }else if(proNames.length){
+   synthesis='В этой выборке устойчивее всего повторяется защитное ожидание «'+proNames.join('» и «')+'». Это не характеристика тебя целиком: важно посмотреть, в каких условиях оно возникает и насколько связано с реальными обстоятельствами.';
+  }else{
+   synthesis='Пока не выделилось состояние, которое повторяется достаточно часто в разных сферах. Возможно, реакции заметно меняются в зависимости от обстоятельств. Это полноценный результат, а не отсутствие результата.';
+  }
+  var html='<span class="tag">Фоновое состояние · результат</span><div class="bg16-kicker">Предварительная карта</div><h1>Что повторяется в разных сферах</h1>'+
+   '<div class="bg16-card"><b>Ты ответил(а) на '+r.coverage.answered+' из 16 сцен</b><p>'+r.coverage.spheres+' из 8 сфер отражены в ответах. Здесь важны повторения между разными обстоятельствами, а не отдельный выбор.</p></div>'+
+   groupHtml(r.groups.resource,'Что поддерживает тебя',r.families)+groupHtml(r.groups.protective,'Что может добавлять напряжение',r.families)+
+   '<section class="bg16-card"><h2>Общий рисунок</h2><p>'+esc(synthesis)+'</p></section>';
   if(r.followup&&Object.keys(r.followup).length){
-   html+='<div class="bg16-card"><h2>Временная характеристика</h2>';
-   if(r.followup.protectiveRecovery)html+='<p><b>Возврат к обычному состоянию:</b> '+esc(r.followup.protectiveRecovery)+'</p>';
+   html+='<div class="bg16-card"><h2>Что важно учесть</h2>';
+   if(r.followup.protectiveRecovery)html+='<p><b>Как быстро возвращается равновесие:</b> '+esc(r.followup.protectiveRecovery)+'</p>';
    if(r.followup.protectiveContext)html+='<p><b>Связь с внешними обстоятельствами:</b> '+esc(r.followup.protectiveContext)+'</p>';
-   if(r.followup.resourceDuration)html+='<p><b>Сохранение ресурса:</b> '+esc(r.followup.resourceDuration)+'</p>';
+   if(r.followup.resourceDuration)html+='<p><b>Как долго сохраняется ресурс:</b> '+esc(r.followup.resourceDuration)+'</p>';
    if(r.followup.resourceTransfer)html+='<p><b>Перенос в другие сферы:</b> '+esc(r.followup.resourceTransfer)+'</p>';
    html+='</div>';
   }
-  html+='<p class="bg16-muted">Это гипотеза по ответам в 16 предложенных сценах, а не ярлык и не диагноз. Реальная нехватка ресурсов, опасность, неравное отношение и объективные ограничения не объясняются внутренним состоянием автоматически. Позже мы сопоставим эту карту с другими исследованиями и конкретными эпизодами.</p>'+
+  html+='<p class="bg16-muted">Это предварительное наблюдение по предложенным сценам, а не ярлык и не диагноз. Реальная нехватка ресурсов, опасность, неравное отношение и объективные ограничения не объясняются внутренним состоянием автоматически. Позже мы сопоставим эту карту с другими исследованиями и конкретными эпизодами.</p>'+
    '<div class="bg16-actions"><button type="button" id="bg16Continue">'+(preview||retake?'Вернуться к заданиям':'Продолжить путь')+'</button><button type="button" id="bg16Retake">Пройти заново</button></div>';
   shell(html);
   if(root.GResultCard&&!preview){
-   var resL=(r.groups.resource.leaders||[]).map(function(id){var f=r.families.filter(function(x){return x.id===id})[0];return f?f.title:id});
-   var proL=(r.groups.protective.leaders||[]).map(function(id){var f=r.families.filter(function(x){return x.id===id})[0];return f?f.title:id});
    var cardHost=box.querySelector('.bg16')||box;
    root.GResultCard.attachDiaryBar(cardHost,{
     id:'bg16',step:'slot.html?id=bg16',title:'Ведущее фоновое состояние',passed:'Точка 0',
     lead:r.coverage.answered+' из 16 сцен, охвачено сфер: '+r.coverage.spheres+'. Это рабочая карта повторений в разных сферах, а не диагноз.',
-    strong:resL.join(' · '),insight:proL.join(' · '),insightLabel:'Защитные ожидания',
-    at:r.completedAt||Date.now()
+    strong:resNames.join(' · '),insight:proNames.join(' · '),insightLabel:'Защитные ожидания',
+    insightMore:synthesis,at:r.completedAt||Date.now()
    });
   }
  }
  function bind(){
   var start=box.querySelector('#bg16Start');if(start)start.onclick=function(){if(!draft)draft=freshDraft();step=firstMissing();if(step>=16)followup();else question()};
   var show=box.querySelector('#bg16Show');if(show)show.onclick=function(){result()};
-  box.querySelectorAll('[data-bg16-primary]').forEach(function(b){b.onclick=function(){
-   var qid=draft.order[step],a=draft.answers[qid]||{};a.primary=b.dataset.bg16Primary;a.secondary=null;delete a.skipped;draft.answers[qid]=a;saveDraft();question();
+  box.querySelectorAll('[data-bg16-option]').forEach(function(b){b.onclick=function(){
+   var qid=draft.order[step],a=draft.answers[qid]||{},key=b.dataset.bg16Option;
+   if(a.primary==null||a.editPrimary){a.primary=key;a.secondary=null;delete a.editPrimary;delete a.skipped}
+   else if(key!==a.primary){a.secondary=a.secondary===key?null:key}
+   draft.answers[qid]=a;saveDraft();refreshChoices();
   }});
-  box.querySelectorAll('[data-bg16-secondary]').forEach(function(b){b.onclick=function(){
-   var qid=draft.order[step],a=draft.answers[qid]||{};a.secondary=b.dataset.bg16Secondary||null;draft.answers[qid]=a;saveDraft();question();
+  box.querySelectorAll('[data-bg16-special]').forEach(function(b){b.onclick=function(){
+   var qid=draft.order[step],a=draft.answers[qid]||{};a.primary=b.dataset.bg16Special;a.secondary=null;delete a.editPrimary;delete a.skipped;draft.answers[qid]=a;saveDraft();refreshChoices();
   }});
+  var editPrimary=box.querySelector('#bg16EditPrimary');if(editPrimary)editPrimary.onclick=function(){
+   var qid=draft.order[step],a=draft.answers[qid]||{};a.editPrimary=true;a.secondary=null;draft.answers[qid]=a;saveDraft();refreshChoices();
+  };
+  var clearSecondary=box.querySelector('#bg16ClearSecondary');if(clearSecondary)clearSecondary.onclick=function(){
+   var qid=draft.order[step],a=draft.answers[qid]||{};a.secondary=null;draft.answers[qid]=a;saveDraft();refreshChoices();
+  };
   var back=box.querySelector('#bg16Back');if(back)back.onclick=function(){if(step>0){step--;question()}};
   var skip=box.querySelector('#bg16Skip');if(skip)skip.onclick=function(){var qid=draft.order[step];draft.answers[qid]={primary:null,secondary:null,skipped:true};saveDraft();step++;if(step>=16)followup();else question()};
   var next=box.querySelector('#bg16Next');if(next)next.onclick=function(){var qid=draft.order[step],a=draft.answers[qid];if(!a||a.primary==null)return;step++;saveDraft();if(step>=16)followup();else question()};
   box.querySelectorAll('[data-bg16-follow]').forEach(function(b){b.onchange=function(){draft.followup[b.dataset.bg16Follow]=b.value;saveDraft()}});
   var backQ=box.querySelector('#bg16BackToQuestions');if(backQ)backQ.onclick=function(){step=15;question()};
   var finish=box.querySelector('#bg16Finish');if(finish)finish.onclick=function(){var r=E.calculate(draft.answers,draft.followup,{startedAt:draft.startedAt,seed:draft.seed});saveResult(r);result()};
+  refreshChoices();
   var cont=box.querySelector('#bg16Continue');if(cont)cont.onclick=function(){
    if(preview||retake){location.href='tasks.html'+(retake?'#skipped':'');return}
    if(root.GRoute&&GRoute.advance)location.href=GRoute.advance();else location.href='tasks.html';
