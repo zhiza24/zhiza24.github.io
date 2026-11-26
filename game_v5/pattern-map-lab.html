@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f8f3eb"><title>Карта закономерностей — лаборатория</title>
+<link rel="stylesheet" href="pattern-map-lab.css">
+</head>
+<body>
+<main class="pm-shell">
+<header class="pm-head"><a href="index.html" class="pm-back">← В игру</a><div class="pm-kicker">Путь Алхимика · отдельная лаборатория</div><h1>Карта закономерностей</h1><p>Исследовательский слой для сопоставления исходных исследований, Самости и Реактора. Он работает отдельно и не меняет основную игру.</p><div class="pm-status" id="pmStatus">Локальный режим · данные остаются на этом устройстве</div></header>
+<section class="pm-notice"><b>Важно</b><p>Это экспериментальная ветка. Существующие записи читаются только для сводки. Новые эпизоды и отметки сохраняются отдельно. Свободный дневник не сканируется, выводы не являются диагнозом.</p></section>
+<section class="pm-section"><div class="pm-section-head"><div><span class="pm-kicker">01 · Источники</span><h2>Что уже собрано</h2></div><button class="pm-btn pm-secondary" id="refresh">Обновить данные</button></div><div class="pm-grid" id="inventory"></div><div id="caveats" class="pm-caveats"></div></section>
+<section class="pm-section"><span class="pm-kicker">02 · Живой опыт</span><h2>Исследовать эпизод</h2><p class="pm-lead">Заполняй только тогда, когда сам замечаешь ситуацию, к которой хочется вернуться. Это не ежедневная обязанность.</p>
+<form id="episodeForm" class="pm-form">
+<label>Сфера жизни<select name="sphere"><option value="">Не выбирать</option><option value="work">Работа</option><option value="relationships">Отношения</option><option value="family">Семья</option><option value="money">Финансы</option><option value="health">Здоровье</option><option value="friends">Друзья</option><option value="growth">Личное развитие</option><option value="rest">Отдых</option></select></label>
+<label>Что произошло? <small>Факт без объяснения причин</small><textarea name="fact" rows="2" placeholder="Например: на встрече не предложил свою идею"></textarea></label>
+<label>Какая мысль или ожидание возникли? <small>Можно написать «не заметил(а)»</small><textarea name="thought" rows="2" placeholder="Например: вдруг решат, что это неудачная идея"></textarea></label>
+<div class="pm-two"><label>Что почувствовал(а)?<input name="feeling" placeholder="Напряжение, интерес, спокойствие..."></label><label>Как поступил(а)?<input name="action" placeholder="Промолчал(а), спросил(а), попробовал(а)..."></label></div>
+<label>Что было важно сохранить или получить?<input name="need" placeholder="Например: безопасность, ясность, уважение, свобода"></label>
+<label>Какое внутреннее правило здесь могло прозвучать? <small>Только если оно действительно узнается</small><input name="rule" placeholder="Например: лучше не создавать неудобств"></label>
+<label>Метка повторяющейся темы <small>Короткая одинаковая метка для похожих эпизодов. Например: «сложно высказаться»</small><input name="tag" maxlength="80" placeholder="Оставь пустым, если не видишь повторения"></label>
+<label>Что могло бы стать другим небольшим действием?<textarea name="alternative" rows="2" placeholder="Не идеальный ответ, а реалистичная альтернатива"></textarea></label>
+<label>Есть ли ситуация, которая не укладывается в эту тему?<textarea name="reflection" rows="2" placeholder="Контрпример, другой контекст или сомнение"></textarea></label>
+<div class="pm-check"><input type="checkbox" name="counterexample" id="counterexample"><label for="counterexample">Этот эпизод — контрпример: здесь привычный сценарий не повторился</label></div>
+<button class="pm-btn" type="submit">Сохранить эпизод отдельно</button><div id="formMessage" class="pm-message" aria-live="polite"></div>
+</form></section>
+<section class="pm-section"><span class="pm-kicker">03 · Сопоставление</span><h2>Что начинает повторяться</h2><p class="pm-lead">Система группирует только те эпизоды, которым ты сам присвоил одинаковую метку. Для межсферного повторения нужно не менее двух эпизодов в двух сферах. Это сигнал для проверки, не автоматический психологический вывод.</p><div id="patterns"></div></section>
+<section class="pm-section"><span class="pm-kicker">04 · Прогресс</span><h2>История исследования</h2><div id="episodes"></div></section>
+<footer class="pm-footer"><p>Экспериментальная ветка · ничего не переносится в основную игру автоматически.</p><p>Перед интеграцией: проверить структуру данных, тексты, UX на телефоне и компьютере, экспорт/импорт и резервное копирование.</p></footer>
+</main>
+<script src="state-model-data.js"></script><script src="state-engine.js"></script><script src="pattern-map-engine.js"></script><script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+var sphereNames=GPatternMap.sphereNames;
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function card(title,value,sub){return '<article class="pm-card"><span>'+esc(title)+'</span><strong>'+esc(value)+'</strong><small>'+esc(sub)+'</small></article>'}
+function render(){
+ var a=GPatternMap.analyze(),i=a.inventory,t=i.reactor;
+ $('inventory').innerHTML=[
+ card('Исследовательский профиль',i.profile.available?'Найден':'Не найден','Полей верхнего уровня: '+i.profile.topLevelFields),
+ card('Модель состояний',i.stateModel.available?i.stateModel.statesWithSignals+' / '+i.stateModel.states:'Не подключена','Состояния с сигналами; не диагноз'),
+ card('Реактор',t.eventCount+t.markCount,'Событий и быстрых отметок · '+t.daysWithRecords+' дней с записями'),
+ card('Самость',i.samost.completedTopics+' / '+i.samost.totalTopics,'Темы отмечены · ответных блоков: '+i.samost.answerFields),
+ card('Открытия',i.learning.completed,'Завершенных уроков'),
+ card('Эпизоды исследования',a.episodes.length,'Отдельное хранилище лаборатории')
+ ].join('');
+ $('caveats').innerHTML=i.caveats.map(function(x){return '<p>• '+esc(x)+'</p>'}).join('');
+ $('patterns').innerHTML=a.patterns.length?a.patterns.map(function(p){return '<article class="pm-pattern"><div class="pm-pattern-top"><b>'+esc(p.title)+'</b><span>'+p.episodes+' эпиз. · '+p.sphereCount+' сфер(ы)</span></div><p>'+esc(p.description)+'</p><div class="pm-evidence">'+p.evidence.map(function(e){return '<div><small>'+esc(sphereNames[e.sphere]||e.sphere||'Сфера не указана')+'</small><p>'+esc(e.fact||e.thought||e.action||'Без описания')+'</p></div>'}).join('')+'</div><div class="pm-status-form"><label>Насколько это тебе подходит?<select data-pattern-status="'+esc(p.id)+'"><option value="unreviewed" '+(p.status==='unreviewed'?'selected':'')+'>Пока не оценивал(а)</option><option value="recognized" '+(p.status==='recognized'?'selected':'')+'>Узнаю</option><option value="partial" '+(p.status==='partial'?'selected':'')+'>Отчасти</option><option value="uncertain" '+(p.status==='uncertain'?'selected':'')+'>Зависит от ситуации / не уверен(а)</option><option value="rejected" '+(p.status==='rejected'?'selected':'')+'>Не про меня</option></select></label><label>Мое уточнение<input data-pattern-note="'+esc(p.id)+'" value="'+esc(p.note)+'" placeholder="Контекст, исключения, что важно учесть"></label><button class="pm-btn pm-secondary" data-save-pattern="'+esc(p.id)+'">Сохранить оценку</button></div>'+(p.eligible?'<div class="pm-hint">Есть повторение с меткой в нескольких сферах. Это можно исследовать дальше.</div>':'<div class="pm-muted">Пока недостаточно повторений для межсферного наблюдения.</div>')+'</article>'}).join(''):'<div class="pm-empty">Пока нет эпизодов с повторяющимися метками. Это нормально: не нужно специально искать проблему.</div>';
+ $('episodes').innerHTML=a.episodes.length?a.episodes.slice().reverse().map(function(e){return '<article class="pm-episode"><div><b>'+esc(sphereNames[e.sphere]||e.sphere||'Без сферы')+'</b><small>'+new Date(e.createdAt).toLocaleString()+'</small></div><p>'+esc(e.fact||e.thought||e.action)+'</p>'+(e.tag?'<small>Метка: '+esc(e.tag)+'</small>':'')+'<button class="pm-delete" data-delete="'+esc(e.id)+'">Удалить эпизод</button></article>'}).join(''):'<div class="pm-empty">Здесь появятся только те эпизоды, которые ты сам решишь сохранить.</div>';
+}
+$('refresh').onclick=render;
+$('episodeForm').addEventListener('submit',function(ev){ev.preventDefault();var f=new FormData(ev.currentTarget),x={};['sphere','fact','thought','feeling','action','need','rule','tag','alternative','reflection'].forEach(function(k){x[k]=f.get(k)||''});x.counterexample=!!f.get('counterexample');var r=GPatternMap.addEpisode(x);$('formMessage').textContent=r.ok?'Эпизод сохранен отдельно от основного профиля.':'Не удалось сохранить: '+r.error;if(r.ok){ev.currentTarget.reset();render()}});
+document.addEventListener('click',function(ev){var b=ev.target.closest('[data-save-pattern],[data-delete]');if(!b)return;if(b.hasAttribute('data-delete')){if(confirm('Удалить этот эпизод из отдельной лаборатории?')){GPatternMap.deleteEpisode(b.getAttribute('data-delete'));render()}return}var id=b.getAttribute('data-save-pattern'),sel=document.querySelector('[data-pattern-status="'+id+'"]'),note=document.querySelector('[data-pattern-note="'+id+'"]');GPatternMap.updatePattern(id,sel&&sel.value,note&&note.value);render()});
+render();
+})();
+</script>
+</body></html>
