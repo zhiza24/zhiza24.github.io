@@ -101,9 +101,15 @@ function collect(P){
   if(fl.length)out.fragments.push({domain:'Адаптация',title:'Сейчас заметнее',detail:fl.join(' · '),status:fs.status,source:'firstSet'});
  }
  if(km&&km.v){
-  var scales=arr(km.scales),lead=arr(km.leadingScales),top=scales.filter(function(x){return lead.indexOf(x.id)>=0});
-  if(top.length)top.forEach(function(x){out.fragments.push({domain:'Картина мира',title:x.name,detail:'В исследовании выделился этот фильтр восприятия (уровень: '+(x.level==null?'не определен':x.level)+').',status:km.status,source:'km',score:x.score})});
-  else out.fragments.push({domain:'Картина мира',title:'Выраженный фильтр не выделился',detail:km.status==='insufficient'?'Ответов пока мало, чтобы увидеть привычный способ восприятия.':'В разных ситуациях ты смотришь на происходящее по-разному.',status:km.status,source:'km'});
+  var scales=arr(km.scales),lead=arr(km.leadingScales),top=scales.filter(function(x){return lead.indexOf(x.id)>=0}),bank=window.GTESTS&&GTESTS.km;
+  if(top.length)top.forEach(function(x){
+   var meta=bank&&arr(bank.scales).filter(function(s){return s.id===x.id})[0],description='';
+   if(km.scoringVersion===3&&meta&&x.level!=null&&meta.lv&&meta.lv[x.level])description=meta.lv[x.level];
+   else if(km.scoringVersion!==3)description='Этот результат относится к прежней редакции исследования. Новые формулировки не применяются к старым ответам.';
+   else description='По ответам проявился этот способ объяснять происходящее; подробный уровень пока не определен.';
+   out.fragments.push({domain:'Картина мира',title:x.name,detail:description,status:km.status,source:'km',score:x.score});
+  });
+  else out.fragments.push({domain:'Картина мира',title:'Выраженный фильтр не выделился',detail:km.status==='insufficient'?'Ответов пока мало, чтобы увидеть привычный способ объяснять происходящее.':'В разных ситуациях ты можешь использовать разные объяснения; одного ведущего фильтра не выделилось.',status:km.status,source:'km'});
  }
  var echoCodes=[];
  if(echo){
