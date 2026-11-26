@@ -159,8 +159,9 @@ for(let i=0;i<16;i++){
  const choices=Array.from(box.querySelectorAll('[data-bg16-option]'));
  assert.equal(choices.length,4,'scene '+(i+1)+' should show one list of four core choices');
  const primary=choices.find(x=>x.dataset.bg16Option==='S1')||choices.find(x=>x.dataset.bg16Option==='S5')||choices[0];
- const primaryKey=primary.dataset.bg16Option;
+ const firstChoice=choices[0],primaryKey=primary.dataset.bg16Option;
  primary.click();
+ assert.ok(box.contains(firstChoice),'primary selection should update the same visible list in place');
  const sameList=Array.from(box.querySelectorAll('[data-bg16-option]'));
  assert.equal(sameList.length,4,'the same choice list should remain after selecting the primary response');
  assert.equal(box.querySelectorAll('[data-bg16-secondary]').length,0,'a second duplicate list must not be rendered');
