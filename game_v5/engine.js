@@ -43,6 +43,7 @@ function validImport(P){
  if(P.diary!=null&&!objectLike(P.diary))return false;
  if(P.fractal!=null&&!objectLike(P.fractal))return false;
  if(P.lab!=null&&!objectLike(P.lab))return false;
+ if(P.learning!=null&&!objectLike(P.learning))return false;
  return true;
 }
 function snapshotAll(){

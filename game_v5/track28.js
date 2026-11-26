@@ -355,6 +355,7 @@ function stepCard(P,T,n){
   h+='<p class="alt"><small>Можно иначе</small>'+esc(st.a)+'</p>';
   h+='<p class="alt"><small>Наблюдение</small>'+esc(st.o)+'</p>';
   h+='<div class="chips res">'+RES.map(function(x){return '<button type="button" class="'+(r.v===x.id?'on':'')+'" data-act="res" data-v="'+x.id+'">'+esc(x.t)+'</button>'}).join('')+'</div>';
+  if(r.v==='fail')h+='<button type="button" class="quiet-btn lo-trig" data-act="learn-open" data-id="inner-resistance">Открытие: внутреннее сопротивление</button>';
   if(r.v){
     h+='<textarea data-act="res-saw" rows="2" placeholder="Что я '+gx('{заметил|заметила}')+' (по желанию)">'+esc(r.saw||'')+'</textarea>';
     h+='<textarea data-act="res-proof" rows="2" placeholder="Что сегодня стало подтверждением движения (по желанию)">'+esc(r.proof||'')+'</textarea>';
@@ -375,6 +376,7 @@ function practCard(P,T,n,item,reason){
     h+='<button type="button" class="add" data-act="pr-on" data-id="'+item.id+'">Включить'+(item.len>1?' на '+item.len+' дней':'')+'</button>';
     if(item.len>1&&item.id!=='signs')h+='<div class="chips rx-len"><span class="mute">или на</span>'+[7,14,21,28].filter(function(x){return x!==item.len}).map(function(x){return '<button type="button" data-act="pr-on" data-id="'+item.id+'" data-len="'+x+'">'+x+' дн.</button>'}).join('')+'</div>';
   }
+  var loMap={choose:['impulse-to-completion','Открытие: от импульса к завершению'],habit:['habit-design','Открытие: как устроены привычки'],askeza:['inner-resistance','Открытие: внутреннее сопротивление']};if(loMap[item.id])h+='<button type="button" class="quiet-btn lo-trig" data-act="learn-open" data-id="'+loMap[item.id][0]+'">'+loMap[item.id][1]+'</button>';
   return h+'</div>';
 }
 function viewPracts(P,T){
@@ -404,7 +406,7 @@ function viewPracts(P,T){
   h+='<label class="support-check"><input type="checkbox" data-act="support-five" '+(sup.fiveMinDays&&sup.fiveMinDays[n]?'checked':'')+'> <span>Сегодня я выделил(а) хотя бы пять минут для себя</span></label>';
   h+='<label>Новое впечатление или маленькая новизна на этой неделе<textarea rows="2" maxlength="300" data-act="support-week" data-w="'+week+'" placeholder="Что хотелось бы попробовать, увидеть или заметить?">'+esc((sup.weeklyExperience&&sup.weeklyExperience[week])||'')+'</textarea></label>';
   h+='<label>Что сейчас могло бы меня поддержать?<textarea rows="2" maxlength="300" data-act="support-note" placeholder="Своя фраза, напоминание или важное условие">'+esc(sup.note||'')+'</textarea></label>';
-  h+='<div class="support-phrase"><p>'+esc(phrases[(+sup.phraseIndex||0)%phrases.length])+'</p><button type="button" class="quiet-btn" data-act="support-phrase">Другая поддерживающая фраза</button></div></section>';
+  h+='<div class="support-phrase"><p>'+esc(phrases[(+sup.phraseIndex||0)%phrases.length])+'</p><button type="button" class="quiet-btn" data-act="support-phrase">Другая поддерживающая фраза</button> <button type="button" class="quiet-btn lo-trig" data-act="learn-open" data-id="inner-resistance">Открытие: сопротивление и пропуск</button></div></section>';
   return h+'</div>';
 }
 function trackClock(minute){
@@ -694,7 +696,7 @@ function dayPanel(P,T,n){
     if(!GPract.isOn(T,id,n))return;
     var it=GPract.byId(id); if(!it)return;
     html+='<div class="row-line"><b>'+esc(it.t)+'</b><p class="mute">'+esc(gx(it.daily))+'</p>';
-    html+='<textarea data-act="journal" data-id="'+id+'" rows="2" maxlength="240" placeholder="'+esc(gx(it.min))+'">'+esc((d.journal&&d.journal[id])||'')+'</textarea></div>';
+    html+='<textarea data-act="journal" data-id="'+id+'" rows="2" maxlength="240" placeholder="'+esc(gx(it.min))+'">'+esc((d.journal&&d.journal[id])||'')+'</textarea>'+(id==='habit'?'<button type="button" class="quiet-btn lo-trig" data-act="learn-open" data-id="habit-design">Открытие: как устроены привычки</button>':id==='askeza'?'<button type="button" class="quiet-btn lo-trig" data-act="learn-open" data-id="inner-resistance">Открытие: внутреннее сопротивление</button>':'')+'</div>';
   });}
   var lc=d.lightCounters||{};
   var lightBody='<p class="mute">Не медицинский дневник и не норма. Отмечай только то, что помогает тебе наблюдать за днем. Пропуски ничего не означают.</p>';
@@ -730,7 +732,7 @@ function chooseBody(d,T,n){
     }
     return line+'</div>';
   }).join('');
-  return rows+'<input type="text" data-act="ch-in" placeholder="Выбираю…" maxlength="160"><button type="button" class="add" data-act="ch-add">Добавить</button>';
+  return rows+'<input type="text" data-act="ch-in" placeholder="Выбираю…" maxlength="160"><button type="button" class="add" data-act="ch-add">Добавить</button><button type="button" class="quiet-btn lo-trig" data-act="learn-open" data-id="impulse-to-completion">Открытие: от импульса к завершению</button>';
 }
 /* 24-hour event journal. Records are stored per cycle day; endMin may exceed 1440 for overnight events. */
 function day24Fmt(v){v=Math.max(0,Math.round(v));if(v===1440)return '24:00';v=v%1440;return ('0'+Math.floor(v/60)).slice(-2)+':'+('0'+(v%60)).slice(-2)}
@@ -1056,6 +1058,7 @@ function bind(){
     var P=ensure(), T=Tget(P), n=T.openDay||todayNum(T), d=dayRec(T,n);
     tick();
     if(act.indexOf('rx-')===0&&window.GReactor&&GReactor.click(act,b,P,T,n))return;
+    if(act==='learn-open'){if(window.GLearning)GLearning.openModal(b.getAttribute('data-id'));return}
     if(act==='archive-open'){T.archiveIndex=+b.getAttribute('data-i');save(P);render();return}
     if(act==='archive-close'){delete T.archiveIndex;save(P);render();return}
     if(act==='space'){
