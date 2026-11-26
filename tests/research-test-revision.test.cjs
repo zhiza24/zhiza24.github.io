@@ -31,7 +31,8 @@ assert.ok(!bg.includes('data-bg16-secondary'),'background test must not render a
 assert.ok(bg.includes('Основной выбор отмечен'),'the role of the primary choice must be explicit');
 assert.ok(!bg.includes('Баллы:'),'player-facing result must not expose raw technical scores');
 const mirror=fs.readFileSync(path.join(root,'inner-mirror.js'),'utf8');
-assert.ok(!mirror.includes("x.evidence.join('\\\\n')"),'mirror diary must not append long raw answer lists');
+assert.ok(!mirror.includes("x.evidence.join"),'mirror diary must not append long raw answer lists');
+assert.ok(mirror.includes('km.scoringVersion===3'),'mirror must use the matching interpretation bank for revised worldview results');
 const swipe=fs.readFileSync(path.join(root,'swipe.html'),'utf8');
 assert.ok(!swipe.includes("vs.map(function(v){return '«'+v+'»'}).join('<br>')"),'swipe result must not repeat every dismissed phrase');
 assert.ok(swipe.includes('answers:[]'),'swipe diary must store the concise reflection, not duplicate the cards');
