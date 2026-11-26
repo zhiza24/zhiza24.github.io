@@ -1,6 +1,8 @@
-<!doctype html><html lang="ru"><head><script src="theme.js?v=8"></script><script src="sound.js?v=1"></script><script src="flow.js?v=im1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=im1"></script><script src="profile-layer.js?v=art1"></script><script src="route-gate.js?v=im1"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794512684"></script><meta http-equiv="Cache-Control" content="no-cache">
+<!doctype html><html lang="ru"><head><script src="theme.js?v=8"></script><script src="sound.js?v=2"></script><script src="flow.js?v=im1"></script><script src="opening.js?v=opening2"></script><script src="route.js?v=im1"></script><script src="profile-layer.js?v=art1"></script><script src="route-gate.js?v=im1"></script><script src="gender.js?v=1"></script><meta http-equiv="Cache-Control" content="no-cache"><script src="upd.js?v=1794512684"></script><meta http-equiv="Cache-Control" content="no-cache">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Старец</title>
+<link rel="preload" href="media/voice.mp3" as="audio">
+<link rel="preload" href="media/elder.mp4" as="video">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="nav.css?v=map1">
@@ -20,12 +22,15 @@ button.sun-btn.next-sun.on{opacity:1;pointer-events:auto}
 .snd{position:absolute;z-index:3;right:16px;bottom:clamp(30px,5vh,48px);width:46px;height:46px;border-radius:50%;border:2px solid #d9b46a;background:rgba(20,12,6,.65);color:#cbb68e;font-size:20px;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;transition:.3s}
 .snd.on{background:radial-gradient(#fff1c8,#d9a54e);color:#2a1606;box-shadow:0 0 16px rgba(255,205,120,.8)}
 .snd svg{width:24px;height:24px}
+.hint{position:absolute;z-index:3;left:22px;right:22px;bottom:clamp(210px,32vh,260px);text-align:center;font:600 15px/1.35 Manrope,sans-serif;color:#f4e0b8;text-shadow:0 2px 8px #000;opacity:0;pointer-events:none;transition:opacity .5s}
+.hint.on{opacity:.92}
 .ztm{position:fixed;inset:0;z-index:65;background:#000;opacity:0;pointer-events:none;transition:opacity 1.6s}.ztm.on{opacity:1}
 </style></head><body data-page="elder">
 <div class="sc">
-<video id="v" src="media/elder.mp4" poster="img/elder.jpg" autoplay muted playsinline></video>
+<video id="v" src="media/elder.mp4" poster="img/elder.jpg" muted playsinline preload="auto"></video>
 <button class="snd" id="snd" type="button" aria-label="Озвучка" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path id="sw" d="M17 9l4 6M21 9l-4 6"/></svg></button>
-<div class="tx" id="tx"><p>Вот твой&nbsp;мир.</p><p>По праву рождения,<br>которое дали тебе<br>высшие&nbsp;силы,</p><p>и все здесь для&nbsp;тебя.</p></div>
+<div class="tx" id="tx"><p>Вот ваш&nbsp;мир.</p><p>По праву рождения,<br>которое дали вам<br>высшие&nbsp;силы,</p><p>и все здесь для&nbsp;вас.</p></div>
+<div class="hint" id="hint">Коснись экрана, чтобы слушать</div>
 <button type="button" class="sun-btn next-sun" id="nx" aria-label="Далее">
   <span class="sun-btn__halo" aria-hidden="true"></span>
   <span class="sun-btn__corona" aria-hidden="true"></span>
@@ -38,11 +43,73 @@ button.sun-btn.next-sun.on{opacity:1;pointer-events:auto}
 <audio id="au" src="media/voice.mp3" preload="auto"></audio>
 <script src="engine.js?v=arch1"></script><script src="passport-data.js?v=1"></script><script src="passport.js?v=opening2"></script><script src="texts.js?v=map1"></script><script src="texts_fr.js?v=mf2"></script><script src="nav.js?v=r75"></script>
 <script>
-var ps=document.querySelectorAll('#tx p');ps.forEach(function(p,i){setTimeout(function(){p.classList.add('on')},1600+i*2000)});
-setTimeout(function(){document.getElementById('nx').classList.add('on')},1600+ps.length*2000);
-document.getElementById('nx').onclick=function(){if(window.GReview){location.href='tasks.html';return}document.getElementById('ztm').classList.add('on');setTimeout(function(){location.href=GRoute.advance()},1700)};
-if(window.GReview){ps.forEach(function(p){p.classList.add('on')});var nx=document.getElementById('nx');nx.classList.add('on');var cap=nx.querySelector('.sun-btn__cap');if(cap)cap.textContent='К ЗАДАНИЯМ';nx.setAttribute('aria-label','К заданиям');}
+var ps=document.querySelectorAll('#tx p');
 var au=document.getElementById('au');
-document.getElementById('snd').onclick=function(){var b=this,on=!b.classList.contains('on');b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);document.getElementById('sw').setAttribute('d',on?'M16 9a4 4 0 010 6M18.5 6.5a7.5 7.5 0 010 11':'M17 9l4 6M21 9l-4 6');if(on){au.currentTime=0;au.play().catch(function(){})}else au.pause()};
+var v=document.getElementById('v');
+var snd=document.getElementById('snd');
+var nx=document.getElementById('nx');
+var hint=document.getElementById('hint');
+var started=false,ticking=false,hintT;
+function soundOn(){return !window.GSound||GSound.isOn()}
+function paintSnd(on){
+ snd.classList.toggle('on',!!on);
+ snd.setAttribute('aria-pressed',on?'true':'false');
+ document.getElementById('sw').setAttribute('d',on?'M16 9a4 4 0 010 6M18.5 6.5a7.5 7.5 0 010 11':'M17 9l4 6M21 9l-4 6');
+}
+function hideHint(){clearTimeout(hintT);if(hint)hint.classList.remove('on')}
+function showHint(){if(hint&&!started)hint.classList.add('on')}
+function syncText(){
+ var t=v.currentTime||0;
+ ps.forEach(function(p,i){if(t>=1.6+i*2)p.classList.add('on');else p.classList.remove('on')});
+ if(t>=1.6+ps.length*2)nx.classList.add('on');
+ if(ticking&&!v.paused&&!v.ended)requestAnimationFrame(syncText);
+ else ticking=false;
+}
+function startTick(){if(ticking)return;ticking=true;requestAnimationFrame(syncText)}
+function begin(){
+ if(window.GReview)return true;
+ started=true;hideHint();
+ try{if(window.GSound&&GSound.unlock)GSound.unlock()}catch(e){}
+ try{v.currentTime=0}catch(e){}
+ try{au.pause();au.currentTime=0}catch(e){}
+ ps.forEach(function(p){p.classList.remove('on')});
+ nx.classList.remove('on');
+ var vp=v.play();if(vp&&vp.catch)vp.catch(function(){});
+ startTick();
+ if(!soundOn()){paintSnd(false);return true}
+ paintSnd(true);
+ var p=au.play();
+ if(p&&p.catch){
+  p.catch(function(){
+   paintSnd(false);
+   started=false;
+   try{v.pause();v.currentTime=0}catch(e){}
+   showHint();
+  });
+ }
+ return true;
+}
+document.getElementById('nx').onclick=function(){if(window.GReview){location.href='tasks.html';return}try{au.pause();v.pause()}catch(e){}document.getElementById('ztm').classList.add('on');setTimeout(function(){location.href=GRoute.advance()},1700)};
+if(window.GReview){
+ ps.forEach(function(p){p.classList.add('on')});
+ nx.classList.add('on');
+ var cap=nx.querySelector('.sun-btn__cap');if(cap)cap.textContent='К ЗАДАНИЯМ';
+ nx.setAttribute('aria-label','К заданиям');
+}else{
+ try{au.preload='auto';au.load()}catch(e){}
+ function onFirst(){if(!started)begin()}
+ document.addEventListener('pointerdown',onFirst,true);
+ document.addEventListener('touchstart',onFirst,{capture:true,passive:true});
+ document.addEventListener('keydown',onFirst,true);
+ begin();
+ hintT=setTimeout(function(){if(soundOn()&&au.paused)showHint()},400);
+}
+snd.addEventListener('click',function(e){
+ e.preventDefault();e.stopPropagation();
+ if(!soundOn()){paintSnd(false);return}
+ if(!started||au.paused){started=false;begin()}
+ else{au.pause();paintSnd(false)}
+});
+au.addEventListener('ended',function(){paintSnd(false)});
 </script>
 </body></html>

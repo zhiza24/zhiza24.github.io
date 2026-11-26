@@ -99,6 +99,7 @@
     document.body.classList.add('gsc-open');
     ov.classList.add('ready');
     state.open = true;
+    try{if(window.GSound&&GSound.rustle)GSound.rustle()}catch(e){}
     resetBodyScroll();
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {

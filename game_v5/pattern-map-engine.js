@@ -5,7 +5,7 @@
 (function(g){
 'use strict';
 var PROFILE_KEY='alch_v5_profile',SAMOST_KEY='alch_samost',OWN_KEY='alch_pattern_map_v1',VERSION=1;
-var TOPIC_NAMES={being:'Я есть',liking:'Что мне нравится',self_cancel:'Где я отменяю себя',inner_voice:'Чей голос звучит внутри',ally:'Внутренний союзник',desires:'Мои желания',past:'Мой опыт — часть моей истории',aliveness:'Качество проживаемого опыта',integration:'Моя собственная позиция'};
+var TOPIC_NAMES={being:'Я есмь',liking:'Что мне нравится',self_cancel:'Где я отменяю себя',inner_voice:'Чей голос звучит внутри',ally:'Внутренний союзник',desires:'Мои желания',past:'Мой опыт — часть моей истории',aliveness:'Качество проживаемого опыта',integration:'Моя собственная позиция'};
 var OPTIONS={
  situation:{ask:'Не попросил{|а} о том, что нужно',idea:'Не предложил{|а} свое',no:'Не смог{|ла} отказать',delay:'Отложил{|а} важное дело',conflict:'Сдержал{|а} несогласие',over:'Взял{|а} на себя лишнее'},
  reaction:{silent:'Промолчал{|а}',yield:'Уступил{|а}',postpone:'Отложил{|а}',instead:'Сделал{|а} за другого',hold:'Сдержал{|а} чувства'},
