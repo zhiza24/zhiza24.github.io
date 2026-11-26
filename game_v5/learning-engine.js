@@ -364,7 +364,7 @@
     if (p === 'slot.html?id=arch_b' && done['betray.html'] && !skipped['betray.html']) id = 'inner-rules';
     else if (p === 'swipe.html' && done['slot.html?id=im'] && !skipped['slot.html?id=im']) id = 'fact-interpretation';
     else if (p === 'slot.html?id=pi' && done['wish.html'] && !skipped['wish.html']) id = 'desire-intention';
-    else if (p === 'reactor.html') id = 'observe-without-judgment';
+    else if (p === 'reactor.html' && !document.querySelector('.tlock')) id = 'observe-without-judgment';
     else if (p === 'slot.html?id=compare') id = 'see-change';
 
     if (!id || isComplete(id) || isDismissed(id)) return;

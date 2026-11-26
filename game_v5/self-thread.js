@@ -80,8 +80,26 @@ function heroPanel(){var P=load(),S=P.self||{},W=S.wow||{},vs=Object.keys(S.voic
  var box=document.createElement('div');box.innerHTML=h+'</details>';var host=document.querySelector('main')||document.querySelector('.w')||document.body;host.appendChild(box);
  box.addEventListener('click',function(e){var b=e.target.closest('[data-sv]');if(b)voice(b.dataset.sv,{everyTime:true,delay:0})})}
 
+/* ---------- Вход в трекер: скрыт до итога Точки Б, потом вау-момент и входы в Герое и меню ---------- */
+function trackerOpen(P){P=P||load();try{var T=P.tracker||{};
+ if(T.strategySeen||T.finale||Object.keys(T.days||{}).length||+(P.reactor||{}).day>0)return true;
+ return !!(window.GRoute&&GRoute.status&&GRoute.status('slot.html?id=pb_end')==='done')}catch(e){return false}}
+function trackerEntry(){var open=trackerOpen();
+ document.querySelectorAll('.gdraw a[href^="reactor.html"]').forEach(function(a){a.style.display=open?'':'none'});
+ if(!open)return;
+ var go=document.getElementById('hGo');
+ if(go&&!document.getElementById('hTrack')){var b=document.createElement('button');b.type='button';b.id='hTrack';b.textContent='Трекер';
+  b.setAttribute('style','flex:0 0 auto;padding:0 14px;background:#2F5E50;color:#fff;border-color:#2F5E50');
+  var bk=document.getElementById('hBack');if(bk)bk.style.flex='0 0 auto',bk.style.padding='0 14px';
+  b.onclick=function(){location.href='reactor.html'};go.parentNode.insertBefore(b,go)}}
+var TRACK_WOW_PAGES={'slot.html?id=pc_intro':1,'slot.html?id=arch_d':1,'slot.html?id=builder':1,'tasks.html':1,'hero.html':1,'map.html':1,'diary.html':1};
+function trackerWow(){if(!window.GWow||GWow.done('tracker_open'))return false;
+ GWow.show({id:'tracker_open',kicker:'Точка Б пройдена',title:'Твой путь на 28 дней открыт',text:gx('Теперь у тебя есть свой трекер. В нем твое большое желание, три цели и шаги на каждый день.'),sub:'Он будет ждать тебя в Герое и в меню.',button:'Открыть трекер',onClose:function(){location.href='reactor.html'}});return true}
+
 /* ---------- Карта точек маршрута ---------- */
-function run(){if(review()||window.GSelfNoAuto){need([['GWow','wow.js?v=self1']],function(){});return}var p=page();
+var CHAIN={};
+function run(){setTimeout(trackerEntry,0);setTimeout(trackerEntry,600);if(review()||window.GSelfNoAuto){need([['GWow','wow.js?v=self1']],function(){});return}var p=page();
+ if(TRACK_WOW_PAGES[p]&&trackerOpen()&&!(load().self&&load().self.wow&&load().self.wow.tracker_open)){setTimeout(function(){need([['GWow','wow.js?v=self1']],function(){if(!trackerWow()){var c=CHAIN[p];c&&c()}})},700);return}
  var chain={
   'hero.html':function(){voice('hero');heroPanel()},
   'slot.html?id=dialog':function(){voice('iam')},
@@ -95,9 +113,9 @@ function run(){if(review()||window.GSelfNoAuto){need([['GWow','wow.js?v=self1']]
   'slot.html?id=end':function(){wow('final_letter',function(){voice('final')})},
   'betray.html':function(){var P0=load(),was=!!(P0.betray&&P0.betray.done);if(was)return;
    var t=setInterval(function(){var P=load();if(P.betray&&P.betray.done){clearInterval(t);setTimeout(function(){if(!window.GSelfNoAuto)voice('wheel')},3500)}},1500)}
- }[p];
+ };CHAIN=chain;chain=chain[p];
  need([['GWow','wow.js?v=self1']],function(){});if(chain)setTimeout(function(){need([['GWow','wow.js?v=self1']],chain)},700)}
 
-window.GSelf={voice:voice,insights:insights,dailyQuestion:dailyQuestion,load:load,wow:wow,VOICE:VOICE,page:page};
+window.GSelf={trackerOpen:trackerOpen,voice:voice,insights:insights,dailyQuestion:dailyQuestion,load:load,wow:wow,VOICE:VOICE,page:page};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();

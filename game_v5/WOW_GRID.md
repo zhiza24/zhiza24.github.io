@@ -36,3 +36,8 @@ if (window.GWow && sm.sp.length) GWow.show({
 GWow.show({id:'tracker_d21', kicker:'21 день', title:'...', text:'...', quote:'«слова игрока»'});
 ```
 `wow.js` подключается сам через `route.js` → `self-thread.js`. Если GWow нужен раньше, добавь `<script src="wow.js?v=self1"></script>`.
+
+## Вход в трекер (tracker_open)
+Трекер скрыт до итога Точки Б (`slot.html?id=pb_end`). Старые игроки с записями трекера видят его сразу.
+После итога на ближайшей странице (pc_intro, arch_d, builder, tasks, hero, map, diary) один раз: «Твой путь на 28 дней открыт», кнопка «Открыть трекер» ведет в `reactor.html`.
+Дальше вход: кнопка «Трекер» в Герое рядом с «Продолжить путь» и пункт «Трекер» в меню (до открытия пункт скрыт). Логика: `GSelf.trackerOpen()` в `self-thread.js`.
