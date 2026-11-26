@@ -101,7 +101,7 @@ function collect(P){
   if(fl.length)out.fragments.push({domain:'Адаптация',title:'Сейчас заметнее',detail:fl.join(' · '),status:fs.status,source:'firstSet'});
  }
  if(km&&km.v){
-  var scales=arr(km.scales),lead=arr(km.leadingScales),top=scales.filter(function(x){return lead.indexOf(x.id)>=0}),bank=window.GTESTS&&GTESTS.km;
+  var scales=arr(km.scales),lead=arr(km.leadingScales),top=scales.filter(function(x){return lead.indexOf(x.id)>=0}),bank=window.GTESTS&&window.GTESTS.km;
   if(top.length)top.forEach(function(x){
    var meta=bank&&arr(bank.scales).filter(function(s){return s.id===x.id})[0],description='';
    if(km.scoringVersion===3&&meta&&x.level!=null&&meta.lv&&meta.lv[x.level])description=meta.lv[x.level];
