@@ -270,8 +270,20 @@ function render0(){
   if(space==='map'){host.innerHTML=viewCycle(P,T); bind(); return}
   host.innerHTML=injectNav(viewDay(P,T),'day'); bind();
 }
+/* Короткая сводка перед стартом: что из собранного трекер будет учитывать. Только то, на что есть данные. */
+function portrait(P){
+  var L=[],vals=((P.valuesCore&&P.valuesCore.top3)||(P.values&&P.values.order)||[]).slice(0,3).filter(function(v){return typeof v==='string'&&v});
+  if(vals.length)L.push('<p><b>Тебе важно:</b> '+esc(vals.join(', '))+'. Шаги будут сверяться с этим.</p>');
+  if(window.GCapacity){var pr=GCapacity.profile(P,{},{calc:window.GNature&&GNature.calc});
+    if(pr.route){var nm='';try{nm=pr.source==='nature'&&pr.natureKey?GNature.name(pr.natureKey,window.GGender?GGender(P)==='f':false):''}catch(e){}
+      L.push('<p><b>'+esc(gx('Тебе может быть проще начинать, когда'))+'</b> '+esc(gx(GCapacity.you?GCapacity.you(pr.route):GCapacity.label(GCapacity.start,pr.route)))+'.'+(nm?' <span class="mute">Основа: механика природы, '+esc(nm)+(pr.agree?', и с ней совпадает твоя стратегия выбора':'')+'.</span>':(pr.source==='pocherk'?' <span class="mute">Основа: твоя стратегия выбора.</span>':''))+'</p>')}
+    if(pr.support)L.push('<p><b>'+esc(gx('Что можно не тянуть одн{ому|ой}:'))+'</b> '+esc(gx(GCapacity.label(GCapacity.support,pr.support)))+'.</p>')}
+  if(!L.length)return '';
+  return '<section class="sg-b t-portrait"><small>Как это будет учтено в 28 днях</small>'+L.join('')+'<p class="mute">'+esc(gx('Это предположения, а не вывод о тебе. В шаге по цели появится «Формат шага» с пояснением, и ты сможешь его поправить.'))+'</p></section>';
+}
 function viewStrategy(P,T){
   var h='<div class="t28">'+((window.GStrategy&&GStrategy.html)?GStrategy.html(T.strategy):'<h1>Твоя стратегия готова</h1>');
+  h+=portrait(P);
   h+='<button class="go" type="button" data-act="start-cycle">Начать 28 дней</button></div>';
   return h;
 }

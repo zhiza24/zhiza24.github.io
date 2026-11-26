@@ -38,3 +38,6 @@ test('CAP-28: экспорт/импорт сохраняет способ зап
  const payload=JSON.stringify({format:'put-alhimika-backup',version:2,profile:P,local:{}});let ok;ctx.window.GPro.importFile({size:payload.length,content:payload},r=>{ok=r});assert.equal(ok,true);
  const back=JSON.parse(store.alch_v5_profile);assert.equal(back.capacity.start,'request');assert.equal(back.tracker.goalPath.plans[id].capacity.support,'tech');assert.equal(back.tracker.goalPath.plans[id].outcomes[1].status,'pending');
 });
+test('Стратегия выбора: запасной источник без даты рождения',()=>{const h=H({pocherk:{lead:'cre'}},{},1);assert.equal(h.type,'show');assert.equal(h.source,'pocherk');assert.match(h.why,/стратегия выбора — Созидание/)});
+test('Стратегия выбора: совпадение с механикой отмечается, смешанный итог не учитывается',()=>{assert.match(H({nature:{primary:'initiator'},pocherk:{lead:'act'}},{},1).why,/совпадает твоя стратегия выбора \(Действие\)/);assert.equal(H({pocherk:{lead:'act',mixed:true}},{},1),null)});
+test('Опора на других: чаще подсказка передать часть',()=>{const P={nature:{primary:'initiator'},pocherk:{lead:'sup'},capacity:{support:'admin'}};assert.equal(H(P,{},2).type,'delegate')});

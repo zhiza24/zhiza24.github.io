@@ -227,11 +227,11 @@ function capBlock(P,T,n,i,w,W,step){
  if(n>3){stalled=true;for(var k=n-1;k>=n-3;k--){if(((dayOf(T,k).dirState)||[])[i]==='done'){stalled=false;break}}}
  var wsE=(P.strategyWorkshop&&P.strategyWorkshop.entries||[]).slice(-1)[0];
  var hn=step?GC.hint(P,plan,{day:n,stalled:stalled,people:!!(wsE&&wsE.group==='people'),calc:window.GNature&&GNature.calc,name:function(k){try{return GNature.name(k,window.GGender?GGender(P)==='f':P.gender==='f')}catch(e){return ''}}}):null;
- var hint=hn?'<p class="rx-cap"><b>'+esc(gx('Формат шага: '+hn.tag))+'.</b> '+esc(gx(hn.text))+'</p><p class="mute rx-why">Почему так: '+esc(gx(hn.why))+'</p>':'';
+ var hint=hn?'<p class="rx-cap"><b>'+esc(gx('Формат шага: '+hn.tag))+'.</b> '+esc(gx(hn.text))+'</p>':'';
  var pc=plan.capacity||{},gc=P.capacity||{},cs=pc.start||gc.start,su=pc.support||gc.support,ch=function(act,f,list,cur){return '<div class="chips">'+list.map(function(x){return '<button type="button" class="'+(cur===x.id?'on':'')+'" data-act="'+act+'" data-g="'+i+'"'+(f?' data-f="'+f+'"':'')+' data-w="'+w+'" data-v="'+x.id+'">'+esc(gx(x.t))+'</button>'}).join('')+'</div>'};
  var edit='<details class="rx-if rx-capd"'+(capOpen===i?' open':'')+'><summary>Как тебе легче идти к этой цели</summary><p class="mute">Мне проще начинать, когда…</p>'+ch('rx-cap','start',GC.start,cs)+'<p class="mute">'+esc(gx('Что лучше не тянуть одн{ому|ой}?'))+'</p>'+ch('rx-cap','support',GC.support,su)+'<p class="mute">Как поймешь, что цель сдвинулась?</p>'+ch('rx-crit','',GP.criteria,plan.criterion)+'</details>';
- if(W.done){var oc=((plan.outcomes||{})[w]||{}).status;edit+='<p class="mute">Шаг недели сделан. Что с результатом?'+(plan.criterion?' Ориентир: '+esc(gx(GC.label(GP.criteria,plan.criterion)).toLowerCase())+'.':'')+'</p>'+ch('rx-out','',GP.outcomes,oc)}
- return {hint:hint,edit:edit};
+ if(W.done){var oc=((plan.outcomes||{})[w]||{}).status;edit+='<p class="mute">Шаг недели сделан. Что с результатом?'+(plan.criterion?' Ориентир: '+esc(gx(GC.label(GP.criteria,plan.criterion)).toLowerCase())+'.':'')+'</p>'+ch('rx-out','',GP.outcomes,oc);if(oc==='none')edit+='<p class="mute">Так бывает. Можно спокойно посмотреть, что поменять в способе.</p><button type="button" class="quiet-btn" data-act="space" data-s="workshop">Открыть Мастерскую стратегий</button>'}
+ return {hint:hint,edit:edit,why:hn?gx(hn.why):''};
 }
 function goalToday(P,T,n,focus){
  var gs=goals(P,T);if(!gs.length)return '';
@@ -241,11 +241,11 @@ function goalToday(P,T,n,focus){
  if(step)h+='<p class="main">'+esc(step)+'</p><div class="chips"><button type="button" class="'+(doneToday?'on':'')+'" data-act="rx-gday" data-g="'+i+'">'+(doneToday?'Сегодня сделано':'Сделано сегодня')+'</button><button type="button" class="'+(W.done?'on':'')+'" data-act="rx-wdone" data-g="'+i+'" data-w="'+w+'">'+(W.done?'Шаг недели закрыт':'Закрыть шаг недели')+'</button>'+(W.small==null?'<button type="button" data-act="rx-shrink" data-g="'+i+'" data-w="'+w+'" data-go="1">Уменьшить</button>':'')+'</div>';
  else h+='<p class="mute">Для этой недели шаг еще не задан.</p><button type="button" class="quiet-btn" data-act="space" data-s="directions">Разбить цель на шаги</button>';
  var vals=((P.valuesCore&&P.valuesCore.top3)||(P.values&&P.values.order)||[]).slice(0,3).filter(function(v){return typeof v==='string'&&v});
- if(step&&W.t)h+='<p class="mute rx-why">Почему так: это твой шаг на неделю '+(w+1)+(vals.length?'. Тебе важно: '+esc(vals.join(', '))+'.':'.')+'</p>';
+ var cap={hint:'',edit:'',why:''};try{cap=capBlock(P,T,n,i,w,W,step)}catch(e){}
+ h+=cap.hint;
+ if(step&&(W.t||cap.why)){var wl=[];if(W.t)wl.push('это твой шаг на неделю '+(w+1));if(vals.length)wl.push('тебе важно: '+vals.join(', '));if(cap.why)wl.push('формат шага: '+cap.why.replace(/\.$/,''));h+='<p class="mute rx-why">Почему так: '+esc(wl.join('; '))+'.</p>'}
  var dpl=(T.directionPlans||{})[i]||{};if(step&&!W.small&&dpl.minimum)h+='<p class="mute">На трудный день: '+esc(dpl.minimum)+'</p>';
  if(step&&window.GWorkshop){try{var wsE=(P.strategyWorkshop&&P.strategyWorkshop.entries||[]).slice(-1)[0];if(wsE&&wsE.experiment&&wsE.experiment!=='none'&&(wsE.cycle||1)===(T.cycle||1)&&n>=wsE.day&&n-wsE.day<7)h+='<p class="mute rx-ws">Эксперимент недели: '+esc(gx(GWorkshop.label(GWorkshop.options(wsE.strategy).experiments,wsE.experiment)).toLowerCase())+'. После шага посмотри, что изменилось.</p>'}catch(e){}}
- var cap={hint:'',edit:''};try{cap=capBlock(P,T,n,i,w,W,step)}catch(e){}
- h+=cap.hint;
  if(step)h+=gpIfThen(P,T,i);
  h+=cap.edit;
  var pr=goalProgress(T,i);h+='<p class="mute">Прогресс цели: шагов недели '+pr.weeks+' из 4 · дней с шагом '+pr.days+'</p>';
