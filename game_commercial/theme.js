@@ -169,3 +169,13 @@ window.GTheme={get:get,set:set,button:button,themed:on};
      A second registration here is removed to avoid conflicts. */
  }catch(e){}
 })();
+
+/* 27.11: после «Дальше» новый экран открывается с начала, без прокрутки вверх-вниз */
+(function(){if(window.__gTopNext)return;window.__gTopNext=1;
+var RX=/^\s*(дальше|далее|продолжить|следующ|вперед|готово)/i;
+function sc(){var r=document.scrollingElement||document.documentElement;try{window.scrollTo({top:0,left:0,behavior:'instant'})}catch(e){window.scrollTo(0,0)}r.scrollTop=0;
+ document.querySelectorAll('main,.phone,.scr,.w,.wrap,[class*="scroll"],[class*="body"]').forEach(function(el){if(el.scrollTop>0&&!el.closest('.gsc-wrap'))el.scrollTop=0})}
+document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&e.target.closest('button,a,[role=button]');if(!b)return;
+ var txt=(b.textContent||'').trim();if(!RX.test(txt)&&!b.matches('.next,.go,.nxs,.pc-next,.bottom-next,#arGo'))return;
+ var href=location.href;setTimeout(function(){if(location.href===href&&!document.contains(b))sc()},40)},false);
+})();

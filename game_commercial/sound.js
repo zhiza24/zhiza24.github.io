@@ -65,17 +65,17 @@ function clickSnd(){
  var nw=Date.now();if(nw-lastHum<300)return;lastHum=nw;
  unlock();
  var c=ensureCtx();if(!c||c.state==='suspended')return;
- var now=c.currentTime,dur=0.17;
- var lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=380;lp.Q.value=0.5;
+ var now=c.currentTime,dur=0.55;
+ /* 27.11: мягкий хрустальный колокольчик вместо глухого гула: квинта 660/990 Гц, быстрая атака, плавное затухание */
  var master=c.createGain();
  master.gain.setValueAtTime(0.0001,now);
- master.gain.linearRampToValueAtTime(0.2,now+0.03);
+ master.gain.linearRampToValueAtTime(0.085,now+0.008);
  master.gain.exponentialRampToValueAtTime(0.0001,now+dur);
- lp.connect(master);master.connect(c.destination);
- [[88,'sine',1],[176,'sine',0.38],[264,'triangle',0.14]].forEach(function(x){
-  var o=c.createOscillator();o.type=x[1];o.frequency.setValueAtTime(x[0]*1.04,now);o.frequency.exponentialRampToValueAtTime(x[0],now+0.06);
-  var g=c.createGain();g.gain.value=x[2];
-  o.connect(g);g.connect(lp);o.start(now);o.stop(now+dur+0.03);
+ master.connect(c.destination);
+ [[660,1],[990,0.45],[1320,0.12]].forEach(function(x){
+  var o=c.createOscillator();o.type='sine';o.frequency.setValueAtTime(x[0],now);
+  var g=c.createGain();g.gain.value=x[1];
+  o.connect(g);g.connect(master);o.start(now);o.stop(now+dur+0.05);
  });
  try{if(navigator.vibrate)navigator.vibrate(18)}catch(e){}
 }
