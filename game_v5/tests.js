@@ -38,7 +38,7 @@ var LVD=['Фоновая опора','Эпизодическое проявле�
 var W={
  few:'Пока ответов недостаточно, чтобы собрать цельную картину. Можно вернуться к оставшимся вопросам и продолжить с того места, где остановился.',
  clearRS:'По твоим ответам ни одна из шести областей не выделилась как выраженная трудность. Ты в целом различаешь свою часть и чужую. Это не значит, что сложных ситуаций не бывает: просто сейчас граница ответственности в основном держится.',
- clearKM:'По твоим ответам ни один фильтр не выделился как выраженный. Осторожность, сомнения и нехватка бывают у всех, но сейчас они не задают общий тон восприятия.',
+ clearKM:'По твоим ответам ни один из исследуемых фильтров не выделился как выраженный. Это не означает, что такие мысли никогда не возникают; сейчас ни один из этих способов объяснять происходящее не задает общий тон.',
  prelim:'предварительно',
  ctSit:'Карта ситуаций считается отдельно от 24 утверждений и не складывается с ними. Пропущенная ситуация не считается ошибкой и не идет в три типа карты.',
  piWeak:'Есть небольшой перевес в сторону «%P%», но он не настолько выражен, чтобы считать его устойчивым предпочтением. Смотри на конкретные ситуации.',
@@ -151,7 +151,7 @@ BUILD.km=function(ans){var sc=T.km.scales,res=scoreScales(sc,ans),n=answered(sc,
    else if(L.length===2)main='<div class="al">Похоже, что ты чаще ориентируешься на два фильтра</div>'+P_(esc(g(T.km.two).replace('{шкала_1}','«'+L[0].name+'»').replace('{шкала_2}','«'+L[1].name+'»')))+L.map(function(r){return '<div class="gt-lv">'+esc(r.name)+' · '+esc(lvName(r,LVD))+'</div>'}).join('');
    else main='<div class="al">Похоже, что в разных ситуациях ты опираешься на несколько фильтров</div>'+P_(esc(g(T.km.many)))+'<ul class="gt-sum">'+L.map(function(r){return '<li>'+esc(r.name)+' · '+esc(lvName(r,LVD))+'</li>'}).join('')+'</ul>'}}
  out.top=out.status==='insufficient'?'Недостаточно данных':(out.leadingScales||[]).length?res.filter(function(r){return out.leadingScales.indexOf(r.id)>=0}).map(function(r){return r.name}).join(', '):'Выраженных фильтров нет';
- return {res:out,html:'<span class="tag">Точка 0</span><span class="tag">Идеальный Кривой Мир</span><div class="al">Привычные фильтры восприятия</div>'+P_(esc('Когда-то эти способы воспринимать происходящее могли помогать приспособиться к своей среде. Со временем они могли стать автоматическими правилами. Мы исследуем не то, каким мир является на самом деле, а через какие внутренние фильтры ты чаще смотришь на него сейчас.'))+main+detailsScales(sc,res,LVD),log:'Идеальный Кривой Мир: '+out.top}};
+ return {res:out,html:'<span class="tag">Точка 0</span><span class="tag">Идеальный Кривой Мир</span><div class="al">Привычные фильтры восприятия</div>'+P_(esc('Привычные объяснения помогают быстро ориентироваться, но иногда становятся слишком жесткими. Здесь мы не оцениваем, прав ли ты вообще: мы смотрим, какие версии чаще возникают и насколько они оставляют место для фактов, контекста и других объяснений.'))+main+detailsScales(sc,res,LVD),log:'Идеальный Кривой Мир: '+out.top}};
 BUILD.ct=function(ans){var sc=T.ct.scales,res=scoreScales(sc,ans),n=answered(sc,ans),out={v:VER,answers:ans,scales:res,answeredCount:n,possibleCount:24,at:Date.now()},main;
  var legacy=ctLegacy(ans),S=T.ct.sit,cnt={critical:0,reactive:0,avoidant:0};
  var st=S.map(function(s){var a=ans[s.id],ok=a&&a!=='skip',typ=ok?ctType(s,a):null;if(typ&&cnt[typ]!=null)cnt[typ]++;return {id:s.id,answer:ok?a:null,type:typ,text:ok?ctOptText(s,a):null,explanation:ok?g(s.ex&&s.ex[a]||''):null}});
