@@ -172,11 +172,15 @@ button.core.sun-btn:active{
 .sun-btn__core{clip-path:circle(50% at 50% 50%);-webkit-clip-path:circle(50% at 50% 50%);-webkit-mask-image:-webkit-radial-gradient(white,black)}.sun-btn__plasma{mix-blend-mode:normal!important;filter:none!important;opacity:.32!important;border-radius:50%}
 .sun-btn__plasma{inset:0!important;opacity:1!important;background:radial-gradient(circle at 26% 30%,rgba(255,246,200,.55) 0,rgba(255,246,200,0) 26%),radial-gradient(circle at 74% 70%,rgba(255,232,160,.4) 0,rgba(255,232,160,0) 24%),radial-gradient(circle at 70% 24%,rgba(120,66,8,.28) 0,rgba(120,66,8,0) 22%)!important}
 .sun-btn__plasma,.sun-btn__halo,.sun-btn .halo,.sun-btn .ring,.sun-btn .wave,.sun-btn__hot{display:none!important}.sun-btn,.core.sun-btn{background:transparent!important;box-shadow:none!important;filter:none!important}.sun-btn__corona{box-shadow:0 6px 18px rgba(0,0,0,.4)!important;border-radius:50%!important}
-.sun-btn{isolation:auto!important}.sun-btn__core{transform:none!important;will-change:auto!important;-webkit-mask-image:none!important;clip-path:none!important;-webkit-clip-path:none!important}.sun-btn__corona{animation:none!important;box-shadow:none!important}.core.sun-btn:before,.core.sun-btn:after{display:none!important}
+.sun-btn{isolation:auto!important}.sun-btn:not(.go) .sun-btn__core{transform:none!important}.sun-btn__core{will-change:auto!important;-webkit-mask-image:none!important;clip-path:none!important;-webkit-clip-path:none!important}.sun-btn__corona{animation:none!important;box-shadow:none!important}.core.sun-btn:before,.core.sun-btn:after{display:none!important}
 /* 27.11: шар — готовая вырезанная картинка на прозрачном фоне */
 .sun-btn__core{background:url(img/gold_ball.png) center/100% 100% no-repeat!important;background-image:-webkit-image-set(url(img/gold_ball.webp) 1x)!important;background-image:image-set(url(img/gold_ball.webp) type("image/webp"),url(img/gold_ball.png) type("image/png"))!important;box-shadow:none!important;overflow:visible!important;border-radius:0!important;animation:none!important}
 .sun-btn__core:after,.sun-btn__core:before{display:none!important}
 .sun-btn{transition:transform .2s}.sun-btn:active{transform:scale(.96)}
 /* 27.11: при нажатии шар плавно разгорается и вращается, пока звучит вход */
-.sun-btn.go .sun-btn__core{animation:ball-go 3.8s ease-in-out forwards!important}
-@keyframes ball-go{0%{transform:scale(1) rotate(0);filter:brightness(1)}35%{transform:scale(1.08) rotate(160deg);filter:brightness(1.25) drop-shadow(0 0 18px rgba(255,210,110,.75))}100%{transform:scale(1.18) rotate(400deg);filter:brightness(1.45) drop-shadow(0 0 34px rgba(255,220,130,.9))}}
+.sun-btn.go .sun-btn__core{animation:ball-go 3.8s ease-in-out forwards!important;filter:none!important}
+@keyframes ball-go{0%{transform:scale(1) rotate(0)}35%{transform:scale(1.08) rotate(160deg)}100%{transform:scale(1.18) rotate(400deg)}}
+
+/* g12: вращение только transform, без filter и свечения (iOS квадрат) */
+.sun-btn.go .sun-btn__core{z-index:1}
+.sun-btn span:not(.sun-btn__core){display:none!important;animation:none!important}

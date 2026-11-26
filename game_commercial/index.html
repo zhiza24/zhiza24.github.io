@@ -9,7 +9,7 @@
 <link rel="preload" as="image" href="img/start_bg.webp?v=s3" type="image/webp">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="t/style.css?v=f19">
-<link rel="stylesheet" href="sun-btn.css?v=g11">
+<link rel="stylesheet" href="sun-btn.css?v=g12">
 <style>
 .entry{background:url(img/start_bg.jpg?v=s3) 18% center/cover no-repeat;background-color:#0c0804;background-image:linear-gradient(180deg,rgba(38,20,8,.62),rgba(30,16,6,.45) 45%,rgba(18,9,3,.8)),image-set(url(img/start_bg.webp?v=s3) type("image/webp"),url(img/start_bg.jpg?v=s3) type("image/jpeg"))}
 .scr{animation:none}
@@ -30,7 +30,7 @@
 @keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
 section.scr.entry .edisc{position:absolute;left:16px;right:16px;bottom:calc(10px + env(safe-area-inset-bottom));margin:0;text-align:center;font:400 11px/1.4 Manrope,sans-serif;color:rgba(244,236,223,.62);letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.5);z-index:3;pointer-events:none}
 .entry .ea{order:0;margin-bottom:34px}.entry .core{order:1}.entry .es{order:2;margin-top:30px}.entry .eh{order:3;margin:58px 0 0}@media (max-height:620px){.entry .eh{margin-top:40px}.entry .es{margin-top:22px}}
-</style>
+body.leaving .phone{transition:opacity .7s ease;opacity:0}body{background:#0c0804}</style>
 </head><body>
 <div class="backdrop" aria-hidden="true"></div>
 <main class="phone" id="app"><section class="scr entry dark"><div class="ent">
@@ -40,6 +40,6 @@ section.scr.entry .edisc{position:absolute;left:16px;right:16px;bottom:calc(10px
 <p class="es">коснись</p></div><p class="edisc">18+ · Это игра для самоисследования, не терапия и не диагноз.</p></section></main>
 <script>
 const c=document.getElementById('core');let AC;
-const ES=new Audio('snd/entry.mp3?v=8');ES.preload='none';addEventListener('load',()=>setTimeout(()=>{try{ES.preload='auto';ES.load()}catch(e){}},2500),{once:true});
-c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}let gone=0;const go=()=>{if(!gone){gone=1;location.href='map.html?v=8'}};ES.currentTime=0;ES.onended=go;ES.onpause=()=>{if(ES.currentTime>0.3)go()};const pr=ES.play();if(pr&&pr.catch)pr.catch(()=>setTimeout(go,1500));c.classList.add('go');setTimeout(go,6000)};
+const ES=new Audio('snd/entry.mp3?v=8');ES.preload='auto';try{ES.load()}catch(e){}
+c.onclick=()=>{if(c.classList.contains('go'))return;try{navigator.vibrate&&navigator.vibrate([18,40,28])}catch(e){}let gone=0,fading=0;const go=()=>{if(!gone){gone=1;location.href='map.html?v=8'}};const fade=()=>{if(!fading){fading=1;document.body.classList.add('leaving')}};ES.currentTime=0;ES.ontimeupdate=()=>{const d=ES.duration||3.84;if(ES.currentTime>d-0.7)fade()};ES.onended=()=>{fade();setTimeout(go,250)};const pr=ES.play();if(pr&&pr.catch)pr.catch(()=>{setTimeout(fade,3000);setTimeout(go,3700)});c.classList.add('go');setTimeout(fade,5200);setTimeout(go,6000)};
 </script></body></html>
