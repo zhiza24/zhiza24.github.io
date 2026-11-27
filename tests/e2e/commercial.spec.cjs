@@ -46,3 +46,37 @@ test('strategy choice completes ten scenes and keeps score details internal',asy
  expect(saved.pocherk.mixed).toBe(true);
  expect(saved.handTop).toBeNull();
 });
+
+test('every commercial route screen opens in sequence without runtime errors',async({page})=>{
+ test.setTimeout(180000);
+ const pageErrors=[];
+ page.on('pageerror',error=>pageErrors.push({url:page.url(),message:error.message}));
+ await page.goto('/map.html');
+ const steps=await page.evaluate(()=>window.GFLOW.map(x=>x.u));
+ expect(steps).toHaveLength(35);
+ const fixture={
+  name:'Проверка',birth:'10.02.2000',gender:'f',points:{personality:10,intuition:2,challenge:15,key:5},
+  mapStyle:'amber',handTop:'act',pocherk:{doneAt:1,answers:[]},dialog:{answers:[]},
+  backgroundProfile:{backgroundState:{version:2,completedAt:1,families:[],groups:{resource:{leaders:[]},protective:{leaders:[]}},coverage:{answered:16}}},
+  ego:{v:2,schema:'df',mode:'ha',sc:{},md:{}},betray:{done:true},im:{v:3,sources:[],fragments:[],links:[],tensions:[],unknown:[]},
+  dq:{accepted:80},portrait:{done:true,zones:[]},wheel:[5,5,5,5,5,5,5,5],wheelTest:{completed:true,spheres:[]},
+  valuesStage:'done',values:{order:['Свобода','Смысл','Развитие']},valuesCore:{v:1,top3:['Свобода','Смысл','Развитие']},
+  fractal:{evidence:[{sphere:'money'}],lever:{id:'lever',status:'chosen'}},
+  lab:{lead:'err',queue:['deval','resp'],weak:false,cycle:1,sort:['yes','part','no','unknown','yes','part'],newRule:'Новая формулировка'},
+  desireLab:{v:1,desire:'Свое дело'},tracker:{declared:{text:'Главное желание'},directions:[{id:'a',text:'Первое'},{id:'b',text:'Второе'}],start:Date.now()-27*86400000,strategySeen:true,finale:{done:true},days:{},strategy:{v:1,wish:'Главное желание',result:'Первый результат',focus:[],days:[]}},
+  archD:{v:1,top:'Выбор состояния'},pathPlan:{done:true},retest:{wheel:[6,6,6,6,6,6,6,6],beh:[1,1,1]},
+  pathFinal:{wish:'дом'},res:[],body:'',nature:{primary:'architect'},flow:{version:2,current:'form.html',completed:{},visited:{}}
+ };
+ for(let i=0;i<steps.length;i++){
+  const u=steps[i],completed={};
+  for(let j=0;j<i;j++)completed[steps[j]]=Date.now()-((i-j)*1000);
+  const profile={...fixture,flow:{version:2,current:u,completed,visited:{}}};
+  await page.evaluate(p=>window.GRoute.save(p),profile);
+  const target='/'+u+(u.includes('?')?'&':'?')+'u=ROUTEQA';
+  await page.goto(target,{waitUntil:'domcontentloaded'});
+  await expect(page.locator('body')).toContainText(/\S/);
+  await expect(page).not.toHaveURL(/tasks\.html\?locked=1/);
+  const errors=pageErrors.splice(0);
+  expect(errors, 'runtime errors at '+u).toEqual([]);
+ }
+});
