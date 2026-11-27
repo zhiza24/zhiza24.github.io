@@ -8,7 +8,7 @@ window.GGender=function(P){
 };
 window.GHeroSrc=function(kind){
   var f=window.GGender()==='f';
-  if(kind==='portrait')return f?'img/hero_f_portrait.jpg?v=h3':'img/hero_m_portrait.jpg?v=h3';
+  if(kind==='portrait')return f?'img/hero_f_portrait.webp?v=h3':'img/hero_m_portrait.webp?v=h3';
   return f?'img/hero_f_full.jpg?v=h3':'img/hero_m_full.jpg?v=h3';
 };
 window.GHeroApply=function(){

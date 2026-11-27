@@ -160,7 +160,7 @@ window.GTheme={get:get,set:set,button:button,themed:on};
    var mf=document.createElement('link');mf.rel='manifest';mf.href='manifest.webmanifest';document.head.appendChild(mf);
   }
   if(!document.querySelector('link[rel="apple-touch-icon"]')){
-   var ai=document.createElement('link');ai.rel='apple-touch-icon';ai.href='img/hero_icon.png';document.head.appendChild(ai);
+   var ai=document.createElement('link');ai.rel='apple-touch-icon';ai.href='img/hero_icon.webp';document.head.appendChild(ai);
   }
   if(!document.querySelector('meta[name="apple-mobile-web-app-capable"]')){
    var cap=document.createElement('meta');cap.name='apple-mobile-web-app-capable';cap.content='yes';document.head.appendChild(cap);

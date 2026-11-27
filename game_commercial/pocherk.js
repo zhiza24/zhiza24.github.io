@@ -48,7 +48,7 @@ function IX(fx){return box.x+fx*box.w}
 var hero,deck,built=0;
 function buildBridge(){
  brg.innerHTML='<div class="deck" id="deck">'+[0,1,2,3].map(function(){return '<div class="sec"><div class="gh"></div><div class="bd"><i class="pk"></i><i class="pk"></i><i class="pk"></i><i class="pk"></i></div><i class="rope t"></i><i class="rope b"></i></div>'}).join('')+'</div><i class="post" id="p1"></i><i class="post" id="p2"></i><i class="post" id="p3"></i><i class="post" id="p4"></i>'+
-  '<div class="tok hero" id="hero"><img alt="" src="'+(window.GHeroSrc?GHeroSrc('portrait'):'img/hero_m_portrait.jpg')+'"></div>';
+  '<div class="tok hero" id="hero"><img alt="" src="'+(window.GHeroSrc?GHeroSrc('portrait'):'img/hero_m_portrait.webp')+'"></div>';
  deck=$('deck');hero=$('hero');
 }
 var L0=.24,L1=.77,BY=0;

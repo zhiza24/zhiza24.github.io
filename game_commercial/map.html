@@ -7,7 +7,7 @@
 <title>Путь современного Алхимика — карта путешествия</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="img/icon-180.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
   :root{
     --night:#090b10; --gold:#d9b56d; --gold2:#f3d99b; --text:#f2eadb;
@@ -234,7 +234,7 @@
 <div class="map-screen">
   <div class="pathbar" id="pathbar"><div class="pb-row"><span id="pbText">Путь</span><button class="pb-all" id="pbAll" type="button">Весь путь</button></div><div class="pb-bar"><b id="pbBar"></b></div><div class="pb-sub" id="pbSub"></div></div>
   <div class="map-stage" id="mapStage">
-    <img class="map-img" src="img/map_axis.jpg?v=ax1" alt="Карта пути" decoding="async">
+    <img class="map-img" src="img/map_axis.webp?v=ax1" alt="Карта пути" decoding="async">
     <svg class="axis-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><filter id="apg" x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="1.6"/></filter></defs><path id="apGlow" d=""/><path id="apDots" d=""/></svg>
     <div class="crown" aria-hidden="true"></div>
     <div class="hero-pin" id="heroPin" hidden><img data-hero-img="portrait" alt="" decoding="async"></div>
@@ -402,7 +402,7 @@
   const pin=document.getElementById('heroPin');
   if(window.GHeroApply)GHeroApply();
   const pinImg=pin&&pin.querySelector('img');
-  if(pinImg&&!pinImg.getAttribute('src'))pinImg.src=window.GHeroSrc?GHeroSrc('portrait'):'img/hero_m_portrait.jpg?v=h3';
+  if(pinImg&&!pinImg.getAttribute('src'))pinImg.src=window.GHeroSrc?GHeroSrc('portrait'):'img/hero_m_portrait.webp?v=h3';
   const pinAt=medalAt[currentId];
   if(pin&&pinAt){pin.style.left=pinAt[0]+'%';pin.style.top=pinAt[1]+'%';pin.hidden=false;}
   const checkpoint=GRoute.state(profile),cta=document.getElementById('resume');
