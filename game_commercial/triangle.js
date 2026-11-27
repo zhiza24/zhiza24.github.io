@@ -71,14 +71,14 @@ function css(){
   '.tri-img{position:relative;width:100%;flex:1 1 38%;min-height:180px;max-height:42vh;height:auto;background:#0d0905 center 12%/cover no-repeat;overflow:hidden}'+
   '.tri-img i{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .28s ease}'+
   /* Темная сторона — видимая тень и дым слева, той же силы, что и свет справа */
-  '.tri-img .shDark{background:radial-gradient(ellipse 70% 82% at 18% 52%,rgba(0,0,0,.94) 0%,rgba(4,2,1,.78) 38%,rgba(4,2,1,.2) 62%,transparent 78%),linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.5) 28%,transparent 60%);mix-blend-mode:multiply}'+
+  '.tri-img .shDark{background:radial-gradient(ellipse 80% 90% at 15% 50%,rgba(0,0,0,.98) 0%,rgba(0,0,0,.85) 35%,rgba(0,0,0,.4) 60%,transparent 80%),linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.6) 30%,transparent 65%);mix-blend-mode:multiply}'+
   '.tri-img .shSmoke{background:radial-gradient(ellipse 52% 68% at 20% 46%,rgba(10,6,4,.88),rgba(18,10,6,.4) 48%,transparent 74%);mix-blend-mode:multiply;transform-origin:20% 48%}'+
   '.tri-img .shHero{background:radial-gradient(ellipse 64% 52% at 50% 32%,rgba(0,0,0,.82),rgba(0,0,0,.4) 58%,transparent 76%);mix-blend-mode:multiply}'+
   /* Светлая сторона — мягкое золотое свечение справа и вокруг героя */
   '.tri-img .glLight{background:radial-gradient(ellipse 68% 62% at 74% 48%,rgba(255,226,148,.66),rgba(255,204,110,.24) 52%,transparent 76%);mix-blend-mode:screen}'+
   '.tri-img .glHero{background:radial-gradient(ellipse 60% 48% at 50% 34%,rgba(255,232,168,.55),transparent 72%);mix-blend-mode:screen}'+
   '.tri-img .dimLeft{background:linear-gradient(90deg,rgba(6,4,2,.72),transparent 54%)}'+
-  '.tri-img.fx-dark .shDark{opacity:1}.tri-img.fx-dark .shSmoke{opacity:1;animation:triSmoke .7s ease-out}.tri-img.fx-dark .shHero{opacity:1}'+
+  '.tri-img.fx-dark .shDark{opacity:1}.tri-img.fx-dark .shSmoke{opacity:1;animation:triSmoke .7s ease-out}.tri-img.fx-dark .shHero{opacity:1}.tri-img.fx-dark:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 40%,transparent 70%);pointer-events:none}'+
   '.tri-img.fx-dark-soft .shDark{opacity:.75}.tri-img.fx-dark-soft .shSmoke{opacity:.7}.tri-img.fx-dark-soft .shHero{opacity:.65}'+
   '.tri-img.fx-light .glLight{opacity:1}.tri-img.fx-light .glHero{opacity:1}.tri-img.fx-light .dimLeft{opacity:.85}'+
   '.tri-img.fx-light-soft .glLight{opacity:.7}.tri-img.fx-light-soft .glHero{opacity:.6}.tri-img.fx-light-soft .dimLeft{opacity:.5}'+
