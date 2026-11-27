@@ -105,7 +105,7 @@ function mount(box){
   }else{
    var cand=g.families.filter(function(x){return x.points>0}).slice(0,2);
    html+='<p><b>Выраженного ведущего состояния пока не выявлено.</b></p><p>Это не означает, что у тебя нет трудностей. Возможно, реакции зависят от конкретных обстоятельств или предложенные варианты не полностью описывают твой опыт.</p>';
-   if(cand.length)html+='<p class="bg16-muted">Есть отдельные сигналы: '+cand.map(function(x){return D.PROFILES[x.id].title+' ('+x.sphereCount+' сфер)').join('; ')+'. Для выделения ведущей посадки нужно повторение минимум в трех сферах.</p>';
+   if(cand.length)html+='<p class="bg16-muted">Есть отдельные сигналы: '+cand.map(function(x){return D.PROFILES[x.id].title+' ('+x.sphereCount+' сфер)'}).join('; ')+'. Для выделения ведущей посадки нужно повторение минимум в трех сферах.</p>';
   }
   return html+'</section>';
  }
