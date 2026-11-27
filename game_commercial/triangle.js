@@ -123,23 +123,14 @@ function mount(box){
   step='intro';
   box.innerHTML='<div class="tri"><div class="tri-cut"><div class="tri-cut-bg"></div><div class="tri-cut-fg"></div>'+
    '<div class="tri-cut-card">'+
-    '<div class="tri-cut-head"><span class="tri-cut-role">Старец</span>'+
-     '<button type="button" class="tri-cut-au" id="triAu" aria-label="Озвучка Старца">♪ Слушать</button>'+
-    '</div>'+
+    '<div class="tri-cut-head"><span class="tri-cut-role">Старец</span></div>'+
     '<p class="tri-cut-txt">У каждого есть привычные способы защищаться и справляться. Иногда они помогают, а иногда начинают выбирать за нас. Давай посмотрим, какие из них проявляются у тебя.</p>'+
     '<div class="tri-demo" aria-hidden="true"><span class="a1">←</span><b></b><span class="a2">→</span></div>'+
     '<p class="tri-cut-hint">Свайпай фразу влево или вправо, если она тебе откликается. Кнопки внизу тоже можно нажать.</p>'+
     '<button type="button" class="tri-cut-go" id="triGo">Начать</button>'+
    '</div></div></div>';
-  var auBtn=box.querySelector('#triAu');
-  function upBtn(pl){if(auBtn){auBtn.textContent=pl?'❚❚ Пауза':'♪ Слушать';auBtn.classList.toggle('on',!!pl)}}
-  elderAu=new Audio('media/elder_sides.mp3');
-  elderAu.onended=function(){upBtn(false)};
-  elderAu.onpause=function(){upBtn(false)};
-  elderAu.onplay=function(){upBtn(true)};
-  /* Голос Старца не стартует сам: только по кнопке «Слушать». При закрытии карточки звук останавливается. */
-  auBtn.onclick=function(){if(!elderAu)return;if(elderAu.paused)elderAu.play().catch(function(){});else elderAu.pause()};
-  box.querySelector('#triGo').onclick=function(){vib(20);stopAudio();idx=0;ans=[];showDeck()};
+  /* Голос отключён: озвучка не совпадала с текстом. Остаётся только надпись. */
+  box.querySelector('#triGo').onclick=function(){vib(20);idx=0;ans=[];showDeck()};
   scrollTo(0,0);
  }
 
