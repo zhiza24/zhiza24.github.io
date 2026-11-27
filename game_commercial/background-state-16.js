@@ -97,10 +97,10 @@ function mount(box){
   stage='followup';
   var r=preliminary(),need=E.needsFollowup(r),html='<span class="tag">Предварительная карта</span><div class="bg16-kicker">Короткая сверка</div><h1>Как долго это состояние остается с тобой?</h1><p>Уточним не только частоту выбора, но и то, как состояние проявляется во времени. Ресурс и напряженная реакция измеряются по-разному.</p>';
   if(need.protective){
-   html+='<div class="bg16-card"><b>Если включается защитная реакция</b><p>Сколько обычно проходит времени, прежде чем ты возвращаешься к обычному состоянию и снова можешь спокойно выбирать, что делать?</p>'+radios('protectiveRecovery',FOLLOW.protectiveRecovery,draft.followup.protectiveRecovery)+'<div class="bg16-secondary"><b>Контекстная сверка</b><p>Насколько это ощущение связано с реальными обстоятельствами — конкретными действиями других людей, объективной нехваткой ресурсов или настоящими ограничениями?</p>'+radios('protectiveContext',FOLLOW.protectiveContext,draft.followup.protectiveContext)+'</div></div>';
+   html+='<div class="bg16-card"><b>Когда внутри становится тяжелее</b><p>Сколько обычно проходит времени, прежде чем ты возвращаешься к обычному состоянию и снова можешь спокойно выбирать?</p>'+radios('protectiveRecovery',FOLLOW.protectiveRecovery,draft.followup.protectiveRecovery)+'<div class="bg16-secondary"><b>Насколько это про реальные обстоятельства</b><p>Это ощущение чаще из-за конкретных действий других людей, нехватки ресурсов или настоящих ограничений — или оно появляется само, даже когда внешне все спокойно?</p>'+radios('protectiveContext',FOLLOW.protectiveContext,draft.followup.protectiveContext)+'</div></div>';
   }
   if(need.resource){
-   html+='<div class="bg16-card"><b>Если доступно ресурсное состояние</b><p>Как долго оно обычно сохраняется после ситуации?</p>'+radios('resourceDuration',FOLLOW.resourceDuration,draft.followup.resourceDuration)+
+   html+='<div class="bg16-card"><b>Когда внутри легче и яснее</b><p>Как долго это состояние обычно держится после ситуации?</p>'+radios('resourceDuration',FOLLOW.resourceDuration,draft.followup.resourceDuration)+
    '<p>Насколько легко перенести его в другие сферы жизни?</p>'+radios('resourceTransfer',FOLLOW.resourceTransfer,draft.followup.resourceTransfer)+'</div>';
   }
   if(!need.any)html+='<div class="bg16-card"><p>Пока нет достаточно повторяющегося сигнала, чтобы задавать уточняющий вопрос. Это нормальный результат: возможно, реакции заметно меняются в зависимости от обстоятельств.</p></div>';
@@ -117,7 +117,7 @@ function mount(box){
   var html='<section class="bg16-card"><h2>'+title+'</h2><p>'+groupLabel(group.status)+'.</p>';
   if(group.leaders.length){
    group.leaders.forEach(function(id){var f=all.filter(function(x){return x.id===id})[0];if(!f)return;
-    html+='<div class="bg16-result"><b>'+esc(f.title)+'</b><p>'+esc(f.description)+'</p><span class="bg16-tag">'+f.sphereCount+' из 8 сфер</span><span class="bg16-tag">Баллы: '+f.points+'/8</span></div>';
+    html+='<div class="bg16-result"><b>'+esc(f.title)+'</b><p>'+esc(f.description)+'</p><span class="bg16-tag">проявилось в '+f.sphereCount+' из 8 сфер</span></div>';
    });
   }else{
    var candidates=group.families.filter(function(x){return x.points>0}).slice(0,2);
@@ -133,7 +133,7 @@ function mount(box){
    groupHtml(r.groups.resource,'Ресурсные состояния',r.families)+groupHtml(r.groups.protective,'Защитные ожидания',r.families)+
    '<h2>Другие замеченные сигналы</h2>';
   var others=r.families.filter(function(f){return f.points>0&&r.groups.resource.leaders.indexOf(f.id)<0&&r.groups.protective.leaders.indexOf(f.id)<0}).sort(function(a,b){return b.points-a.points});
-  if(others.length)others.forEach(function(f){html+='<article class="bg16-card"><b>'+esc(f.title)+'</b><div class="bg16-bar"><i style="width:'+Math.max(0,Math.min(100,f.share*100))+'%"></i></div><p class="bg16-muted">'+esc(f.repeatLabel)+'. Баллы: '+f.points+'/8. Основных выборов: '+f.primaryCount+', дополнительных: '+f.secondaryCount+'.</p></article>'});
+  if(others.length)others.forEach(function(f){html+='<article class="bg16-card"><b>'+esc(f.title)+'</b><div class="bg16-bar"><i style="width:'+Math.max(0,Math.min(100,f.share*100))+'%"></i></div><p class="bg16-muted">'+esc(f.repeatLabel)+'.</p></article>'});
   else html+='<p class="bg16-muted">Других повторяющихся сигналов пока нет.</p>';
   if(r.followup&&Object.keys(r.followup).length){
    html+='<div class="bg16-card"><h2>Временная характеристика</h2>';
