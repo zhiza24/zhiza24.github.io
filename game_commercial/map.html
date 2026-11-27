@@ -539,7 +539,7 @@ var SCROLL_HTML='<p>Приветствую вас, господа пробужд
   var o=document.getElementById('sov'),a=document.getElementById('sau'),scl=document.getElementById('scl'),au=null,hideT=null;
   document.getElementById('sbd').innerHTML='<h3>'+SCROLL_TITLE+'</h3>'+SCROLL_HTML;
   a.hidden=true;
-  var KEY='alch_v5_author_seen',seen=false,closed=false;
+  var KEY='alch_v5_author_seen_v2',seen=false,closed=false;
   try{seen=!!localStorage.getItem(KEY)}catch(e){}
   if(seen){o.remove();scl.remove();return}
   function cl(){
