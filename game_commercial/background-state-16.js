@@ -23,6 +23,8 @@ function mount(box){
  var G=root.GTests||{},preview=!!G.preview,retake=!!G.retakeMode;
  var P=root.GProfile?root.GProfile.load():(G.load?G.load():{}),bp=P.backgroundProfile&&typeof P.backgroundProfile==='object'?P.backgroundProfile:{};
  var saved=bp.backgroundState&&bp.backgroundState.version>=3?bp.backgroundState:null;
+ var legacyResult=bp.backgroundState&&bp.backgroundState.version<3?bp.backgroundState:null;
+ var legacyDraft=bp.backgroundStateDraft16&&bp.backgroundStateDraft16.version!==3?bp.backgroundStateDraft16:null;
  var draft=bp.backgroundStateDraft16&&bp.backgroundStateDraft16.version===3?bp.backgroundStateDraft16:null;
  var step=0,stage='intro';
  if(preview){try{draft=JSON.parse(sessionStorage.getItem('alch_v5_bg16_preview')||'null')||draft}catch(e){}}
@@ -32,6 +34,7 @@ function mount(box){
   if(preview){try{sessionStorage.setItem('alch_v5_bg16_preview',JSON.stringify(draft))}catch(e){}return true}
   try{
    var p=root.GProfile?GProfile.load():(G.load?G.load():{}),b=p.backgroundProfile&&typeof p.backgroundProfile==='object'?p.backgroundProfile:{};
+   if(b.backgroundStateDraft16&&b.backgroundStateDraft16.version!==3&&!b.backgroundStateDraft16Legacy)b.backgroundStateDraft16Legacy=b.backgroundStateDraft16;
    b.backgroundStateDraft16=draft;p.backgroundProfile=b;
    if(p.modules&&p.modules.backgroundProfile){p.modules.backgroundProfile.result=JSON.parse(JSON.stringify(b));p.modules.backgroundProfile.updatedAt=Date.now()}
    if(root.GProfile)GProfile.save(p);else localStorage.setItem('alch_v5_profile',JSON.stringify(p));
@@ -45,6 +48,7 @@ function mount(box){
   if(b.backgroundState){b.backgroundStateHistory=arr(b.backgroundStateHistory);b.backgroundStateHistory.push(b.backgroundState);if(b.backgroundStateHistory.length>5)b.backgroundStateHistory.shift()}
   b.backgroundState=r;b.algoVersion=3;delete b.backgroundStateDraft16;p.backgroundProfile=b;
   if(root.GProfile)GProfile.saveResult('backgroundProfile',b,null,{profile:p,save:true});else localStorage.setItem('alch_v5_profile',JSON.stringify(p));
+  if(root.GTests&&GTests.reactorIn){var current=root.GProfile?GProfile.load():JSON.parse(localStorage.getItem('alch_v5_profile')||'{}');current.reactorIn=GTests.reactorIn(current);if(root.GProfile)GProfile.save(current);else localStorage.setItem('alch_v5_profile',JSON.stringify(current));p=current;b=current.backgroundProfile||b}
   P=p;bp=b;saved=r;
  }
  function shell(html){box.innerHTML='<div class="bg16">'+html+'</div>';bind()}
@@ -57,7 +61,9 @@ function mount(box){
    '<p>В каждой ситуации выбери то, что чаще всего возникает первым. Затем, если узнаешь себя еще в одном варианте, отметь его как дополнительный. Выбирай не самый правильный ответ, а тот, который действительно похож на твою обычную реакцию.</p>'+
    '<div class="bg16-card"><b>Что мы будем различать</b><p>Четыре защитные посадки: Отвержение, Дефектность, Контроль / Опасность и Разочарование / Дистанция. Отдельно посмотрим на ресурсную опору — способность оставаться на своей стороне и выбирать, как поступить.</p><p class="bg16-muted">16 ситуаций · 8 жизненных сфер · примерно 8–10 минут</p></div>'+
    (count?'<p class="bg16-muted">Сохранено: '+count+' из 16 ситуаций. Можно продолжить с того же места.</p>':'')+
-   (saved&&!retake?'<p class="bg16-muted">Предыдущий результат сохранен. Его можно посмотреть или пройти исследование заново.</p>':'')+
+   (legacyResult?'<p class="bg16-muted">В профиле сохранен результат предыдущей версии. Он останется в истории; новая версия использует другой набор ситуаций, поэтому ее нужно пройти отдельно.</p>':'')+
+   (legacyDraft?'<p class="bg16-muted">Черновик предыдущей версии сохранен отдельно. Новые ответы будут записываться в новый формат.</p>':'')+
+   (saved&&!retake?'<p class="bg16-muted">Предыдущий результат новой версии сохранен. Его можно посмотреть или пройти исследование заново.</p>':'')+
    '<div class="bg16-actions"><button type="button" id="bg16Start">'+(count?'Продолжить исследование':saved?'Начать заново':'Начать исследование')+'</button>'+
    (saved&&!retake?'<button type="button" class="gh" id="bg16Show">Посмотреть предыдущий результат</button>':'')+'</div>');
  }
@@ -115,11 +121,12 @@ function mount(box){
    '<div class="bg16-card"><b>Что показали ответы</b><p>Учтено '+r.coverage.answered+' из 16 ситуаций; охвачено '+r.coverage.spheres+' из 8 жизненных сфер. Первая реакция учитывается с весом 2, дополнительная — с весом 1.</p><p class="bg16-muted">Это авторская карта повторяющихся ответов, а не диагноз и не окончательное объяснение причин.</p></div>'+
    groupResult(r,'protective','Ведущее защитное ожидание')+
    groupResult(r,'resource','Ресурсная опора — отдельно от защитных состояний');
-  var ranked=r.families.filter(function(f){return f.points>0}).sort(function(a,b){return b.points-a.points});
-  html+='<section class="bg16-card"><h2>Распределение по пяти состояниям</h2>';
-  if(ranked.length)ranked.forEach(function(f){html+='<p><b>'+esc(f.title)+'</b> — '+f.points+' баллов · '+f.sphereCount+' из 8 сфер</p>'});
-  else html+='<p>Пока недостаточно ответов для распределения.</p>';
-  html+='<p class="bg16-muted">Защитные состояния и ресурсная опора показаны отдельно: ресурс не перекрывает и не отменяет защитные реакции.</p></section>';
+  var ranked=r.groups.protective.families.filter(function(f){return f.points>0});
+  var resourceScore=r.groups.resource.families[0];
+  html+='<section class="bg16-card"><h2>Распределение защитных сигналов</h2>';
+  if(ranked.length)ranked.forEach(function(f){html+='<p><b>'+esc(D.PROFILES[f.id].title)+'</b> — '+f.points+' баллов · '+f.sphereCount+' из 8 сфер</p>'});
+  else html+='<p>Пока недостаточно ответов для распределения защитных сигналов.</p>';
+  html+='<h3>Ресурсная опора</h3><p><b>Своя опора</b> — '+(resourceScore?resourceScore.points:0)+' баллов · '+(resourceScore?resourceScore.sphereCount:0)+' из 8 сфер.</p><p class="bg16-muted">Ресурсная опора не вычитается из защитных сигналов и не отменяет их. Эти показатели отвечают на разные вопросы.</p></section>';
   if(r.followup&&Object.keys(r.followup).length){
    html+='<section class="bg16-card"><h2>Твои уточнения</h2>';
    var labels={recovery:'Как долго остается реакция',context:'Где проявляется сильнее',support:'Что помогает вернуться к себе',transfer:'Перенос ресурсного состояния'};
