@@ -21,7 +21,9 @@
 
   function write(P) {
     try {
-      localStorage.setItem(KEY, JSON.stringify(P));
+      if (g.GPro) g.GPro.save(P);
+      else if (g.GProfile) g.GProfile.save(P);
+      else localStorage.setItem(KEY, JSON.stringify(P));
       return true;
     } catch (e) {
       return false;
