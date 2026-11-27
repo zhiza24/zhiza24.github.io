@@ -51,7 +51,7 @@ async function clean(r){if(!r||!r.redirected)return r;const b=await r.blob();ret
 const MEDIA='alch-commercial-media';const mediaBusy={};
 async function mediaResp(req,u){
  const key=u.origin+u.pathname;const c=await caches.open(MEDIA);const hit=await c.match(key);
- if(!hit){if(!mediaBusy[key]){mediaBusy[key]=fetch(key).then(r=>{if(r.ok&&!r.redirected)return c.put(key,r)}).catch(()=>{}).finally(()=>{delete mediaBusy[key]})}return fetch(req)}
+ if(!hit){if(!mediaBusy[key]){mediaBusy[key]=new Promise(r=>setTimeout(r,25000)).then(()=>fetch(key)).then(r=>{if(r.ok&&!r.redirected)return c.put(key,r)}).catch(()=>{}).finally(()=>{delete mediaBusy[key]})}return fetch(req)}
  const blob=await hit.blob();const rg=req.headers.get('range');
  if(!rg)return new Response(blob,{status:200,headers:{'Content-Type':'video/mp4','Content-Length':String(blob.size),'Accept-Ranges':'bytes'}});
  const m=/bytes=(\d*)-(\d*)/.exec(rg)||[];let a=m[1]?parseInt(m[1]):0;let b=m[2]?parseInt(m[2]):blob.size-1;if(!m[1]&&m[2]){a=blob.size-parseInt(m[2]);b=blob.size-1}b=Math.min(b,blob.size-1);

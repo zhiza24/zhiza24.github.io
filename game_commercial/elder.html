@@ -63,6 +63,12 @@ function syncText(){
  if(ticking&&!v.paused&&!v.ended)requestAnimationFrame(syncText);
  else ticking=false;
 }
+var t0=0,lastT=-1,lastMove=0,fallback=false;
+function wd(){if(window.GReview)return;var now=Date.now(),t=v.currentTime||0;if(t!==lastT){lastT=t;lastMove=now}
+ if(!fallback&&now-lastMove>2500)fallback=true;
+ if(fallback){var e=(now-t0)/1000;ps.forEach(function(p,i){if(e>=1.6+i*2)p.classList.add('on')});if(e>=1.6+ps.length*2)nx.classList.add('on')}
+ if(!nx.classList.contains('on'))setTimeout(wd,400)}
+setTimeout(function(){nx.classList.add('on')},20000);
 function startTick(){if(ticking)return;ticking=true;requestAnimationFrame(syncText)}
 function begin(){
  if(window.GReview)return true;
@@ -74,6 +80,7 @@ function begin(){
  nx.classList.remove('on');
  var vp=v.play();if(vp&&vp.catch)vp.catch(function(){});
  startTick();
+ t0=lastMove=Date.now();lastT=-1;fallback=false;setTimeout(wd,400);
  if(!soundOn()){paintSnd(false);return true}
  paintSnd(true);
  var p=au.play();
