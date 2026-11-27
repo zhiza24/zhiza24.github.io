@@ -68,7 +68,7 @@ function css(){
   '.tri-cut-hint{margin:0 0 12px;font:600 15px/1.4 Manrope,sans-serif;color:#5c350c;text-align:center}'+
   '.tri-demo{position:relative;height:48px;margin:2px auto 10px;width:100%;max-width:260px}.tri-demo b{position:absolute;left:50%;top:6px;width:104px;margin-left:-52px;height:36px;border-radius:10px;background:linear-gradient(#fff8e4,#e0a940);box-shadow:0 4px 10px rgba(80,40,8,.28);animation:triDemo 2.6s ease-in-out infinite}.tri-demo b:after{content:"\\261D";position:absolute;left:40px;top:16px;font-size:22px}.tri-demo span{position:absolute;top:12px;font-size:22px;color:#7a4e1c;font-weight:800}.tri-demo .a1{left:0}.tri-demo .a2{right:0}@keyframes triDemo{0%,100%{transform:translateX(0)}25%{transform:translateX(-64px) rotate(-10deg)}50%{transform:translateX(0)}75%{transform:translateX(64px) rotate(10deg)}}'+
   /* Сцена треугольника */
-  '.tri-img{position:relative;width:100%;flex:1 1 45%;min-height:220px;height:auto;background:#0d0905 center 28%/cover no-repeat;overflow:hidden}'+
+  '.tri-img{position:relative;width:100%;flex:1 1 38%;min-height:180px;max-height:42vh;height:auto;background:#0d0905 center 12%/cover no-repeat;overflow:hidden}'+
   '.tri-img i{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .28s ease}'+
   /* Темная сторона — видимая тень и дым слева, той же силы, что и свет справа */
   '.tri-img .shDark{background:radial-gradient(ellipse 70% 82% at 18% 52%,rgba(0,0,0,.94) 0%,rgba(4,2,1,.78) 38%,rgba(4,2,1,.2) 62%,transparent 78%),linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.5) 28%,transparent 60%);mix-blend-mode:multiply}'+
