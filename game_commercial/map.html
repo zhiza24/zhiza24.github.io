@@ -172,7 +172,7 @@
   .pathbar .pb-bar{height:4px;border-radius:4px;background:rgba(255,255,255,.14);margin-top:6px;overflow:hidden}
   .pathbar .pb-bar b{display:block;height:100%;width:0;background:linear-gradient(90deg,#a96c2e,#f3d99b);box-shadow:0 0 8px rgba(243,217,155,.7)}
   .pathbar .pb-all{flex:none;border:0;background:none;padding:2px 0;color:#f3d99b;font:600 13px Manrope,Arial,sans-serif;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(243,217,155,.5);cursor:pointer}
-  .node .lab{position:absolute;left:calc(100% + 9px);top:50%;transform:translateY(-50%);white-space:normal;width:max-content;max-width:118px;overflow-wrap:break-word;pointer-events:none;padding:2px 9px;border-radius:9px;background:rgba(14,9,4,.72);border:1px solid rgba(240,209,140,.25);font:600 11px/1.25 Manrope,Arial,sans-serif;color:#d9c9a4}
+  .node .lab{position:absolute;left:calc(100% + 9px);top:50%;transform:translateY(-50%);white-space:normal;width:max-content;max-width:118px;overflow-wrap:break-word;pointer-events:none;padding:2px 9px;border-radius:9px;background:rgba(14,9,4,.72);border:1px solid rgba(240,209,140,.25);font:600 11px/1.25 Manrope,Arial,sans-serif;color:#d9c9a4;text-align:left}
   .node .lab.flip{left:auto;right:calc(100% + 9px);text-align:right}
   .node .lab small{display:block;font:800 10px/1.2 Manrope,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
   .node .lab em{font-style:normal;color:#9a8c6c;margin-left:5px}
@@ -495,7 +495,7 @@
 
   function fitLabs(){
     const st=document.querySelector('.map-stage').getBoundingClientRect();
-    document.querySelectorAll('.node .lab').forEach(l=>{l.classList.remove('flip');const b=l.getBoundingClientRect();if(b.right>st.right-2)l.classList.add('flip');});
+    document.querySelectorAll('.node .lab').forEach(l=>{l.classList.remove('flip');const b=l.getBoundingClientRect();});
   }
   fitLabs();addEventListener('resize',fitLabs);
   function stepLi(o){
