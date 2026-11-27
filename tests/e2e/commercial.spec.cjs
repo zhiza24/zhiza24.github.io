@@ -10,15 +10,15 @@ test('commercial edition exposes 35-step route and does not read main profile',a
 });
 
 test('strategy choice completes ten scenes and keeps score details internal',async({page})=>{
- await page.addInitScript(()=>{
-  const completed={'index.html':1,'form.html':1,'elder.html':1,'hero.html':1,'choose.html':1};
-  const profile={
-   name:'Проверка',birth:'10.02.2000',gender:'f',
-   points:{personality:10,intuition:2,challenge:15,key:5},
-   flow:{version:2,current:'bridge.html',visited:{},completed}
-  };
-  localStorage.setItem('alch_commercial_profile',JSON.stringify(profile));
- });
+ const profile={
+  name:'Проверка',birth:'10.02.2000',gender:'f',
+  points:{personality:10,intuition:2,challenge:15,key:5},
+  flow:{version:2,current:'bridge.html',visited:{},completed:{'index.html':1,'form.html':1,'elder.html':1,'hero.html':1,'choose.html':1}}
+ };
+ await page.goto('/map.html');
+ await page.evaluate(p=>window.GRoute.save(p),profile);
+ const route=await page.evaluate(()=>window.GRoute.state().url);
+ expect(route).toBe('bridge.html');
  await page.goto('/bridge.html');
  await expect(page.locator('#gsc-close')).toBeVisible();
  await page.locator('#gsc-close').click();
