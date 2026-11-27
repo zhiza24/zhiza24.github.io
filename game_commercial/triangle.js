@@ -281,7 +281,7 @@ function mount(box){
     };
    }
    if(window.GArts&&GArts.grantInto)GArts.grantInto(P2,'mirror',{source:'slot.html?id=dialog'});
-   (P2.log=P2.log||[]).push({t:Date.now(),x:'Привычные защитные реакции: '+egoRate+'%'});
+   (P2.log=P2.log||[]).push({t:Date.now(),x:'Короткие ситуации о выборе: '+(rec.topWounds&&rec.topWounds[0]&&WOUND_INFO[rec.topWounds[0]]?WOUND_INFO[rec.topWounds[0]].name:'привычные реакции')});
    save(P2);
   }
   showResult(rec);
@@ -301,11 +301,13 @@ function mount(box){
   var strongLine=egoSeen.length
    ?'Есть реакции, которые включаются сами, еще до того как ты успеваешь осознать, что произошло. Это автоматическая реакция. Начать замечать ее уже значит, что с этим можно работать и выбирать осознанно.'
    :'В этих ситуациях привычные реакции почти не '+(F?'отозвались':'отозвались')+'. Это тоже результат: возможно, они не про тебя, или проявляются в других обстоятельствах.';
-  var strongMore='';
-  if(egoSeen.length)strongMore+='<p><b>Стало понятно, что тебе знакомо:</b></p><ul>'+egoSeen.map(function(a){return '<li>'+esc(a.text)+(a.pick==='mid'?' <i>(иногда)</i>':'')+'</li>'}).join('')+'</ul>';
-  if(selfSeen.length)strongMore+='<p><b>Где ты уже выбираешь по-своему:</b></p><ul>'+selfSeen.map(function(a){return '<li>'+esc(a.text)+(a.pick==='mid'?' <i>(иногда)</i>':'')+'</li>'}).join('')+'</ul>';
-  if(!egoSeen.length&&!selfSeen.length)strongMore='<p>Ни одна формулировка не '+(F?'отозвалась':'отозвался')+' как «про меня». Это нормально: можно вернуться к этому шагу позже, когда появится больше опыта.</p>';
   var wounds=(rec.topWounds||[]).filter(function(k){return WOUND_INFO[k]});
+  var topName=wounds.length?WOUND_INFO[wounds[0]].name:'привычные реакции';
+  var strongMore='';
+  if(egoSeen.length&&selfSeen.length)strongMore='<p>В разных ситуациях у тебя включаются и привычные реакции, и живой выбор. Чаще всего знакомо: '+esc(topName)+'. Замечать это уже значит выбирать осознаннее.</p>';
+  else if(egoSeen.length)strongMore='<p>В этих ситуациях чаще включается привычная реакция. Чаще всего знакомо: '+esc(topName)+'. Это не приговор — это то, что можно замечать и выбирать иначе.</p>';
+  else if(selfSeen.length)strongMore='<p>В этих ситуациях ты чаще выбираешь по-своему. Это опора, на которую можно опираться и дальше.</p>';
+  else strongMore='<p>Ни одна формулировка не отозвалась как «про меня». Это тоже результат: можно вернуться позже.</p>';
   var insightLine=egoSeen.length
    ?'Чаще всего тебе знакомо: '+(wounds.length?wounds.map(function(k){return WOUND_INFO[k].name}).join(' и '):'несколько разных привычных способов')+'.'
    :'';
