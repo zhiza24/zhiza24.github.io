@@ -3,7 +3,7 @@
 </style></head><body data-page="task"><main class="wrap"><span class="tag" id="ph"></span><h1 id="t"></h1><p class="muted" id="d"></p><section id="card"></section></main>
 <script src="stages.js?v=4"></script><script src="result-card.js?v=fx5"></script><script>
 var P={};try{P=JSON.parse(localStorage.getItem('alch_v5_profile'))||{}}catch(e){}
-function save(){try{localStorage.setItem('alch_v5_profile',JSON.stringify(P))}catch(e){}}
+function save(){if(window.GPro)GPro.save(P);else if(window.GProfile)GProfile.save(P);else localStorage.setItem('alch_v5_profile',JSON.stringify(P))}
 var VALS=['Свобода','Безопасность','Любовь','Семья','Здоровье','Деньги','Признание','Творчество','Развитие','Дружба','Красота','Спокойствие','Честность','Помощь людям','Приключения','Духовность','Власть и влияние','Стабильность','Удовольствие','Смысл'];
 var DES=[['Хочу доказать всем, что я чего-то стою','ego'],['Хочу создавать то, что мне нравится','self'],['Хочу быть '+GG('идеальным','идеальной')+' для всех','ego'],['Хочу чувствовать себя '+GG('живым','живой'),'self'],['Хочу, чтобы меня наконец заметили','ego'],['Хочу заниматься делом, от которого горят глаза','self'],['Хочу больше денег, чтобы не было стыдно','ego'],['Хочу спокойно отдыхать без вины','self'],['Хочу быть лучше других','ego'],['Хочу близости, где можно быть собой','self']];
 var V=P.values||{picked:[],score:{},pairs:[],pi:0,order:[]},S=P.egoSelf||{i:0,ans:[]},F=P.focuses||[];

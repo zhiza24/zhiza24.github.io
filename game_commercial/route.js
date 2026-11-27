@@ -12,7 +12,7 @@ function relocate(p){p=p||{};const f=p.flow;if(!f)return p;let ch=false;if(f.cur
  const FL=window.GFLOW||[];['slot.html?id=arch_b','slot.html?id=arch_v','slot.html?id=arch_p','slot.html?id=arch_d','slot.html?id=km','slot.html?id=fs','slot.html?id=lab_d','slot.html?id=pi','slot.html?id=rs','slot.html?id=ct','slot.html?id=sv','slot.html?id=vsort','wish.html','betray.html','slot.html?id=bg16','slot.html?id=mechanism','slot.html?id=im'].forEach(u=>{const i=FL.findIndex(x=>x.u===u);if(i<0||f.completed[u])return;const currentIndex=FL.findIndex(x=>x.u===f.current),laterSeen=currentIndex>i||FL.slice(i+1).some(x=>f.completed[x.u]||f.visited&&f.visited[x.u]);if(laterSeen){f.completed[u]=Date.now();f.archSkipped=f.archSkipped||{};f.archSkipped[u]=1;ch=true}});
  if(ch){try{localStorage.setItem(K,JSON.stringify(p))}catch(e){}}return p}
 function load(){try{return relocate(JSON.parse(localStorage.getItem(K))||{})}catch(e){return {}}}
-function save(p){localStorage.setItem(K,JSON.stringify(p))}
+function save(p){if(window.GPro)GPro.save(p);else if(window.GProfile)GProfile.save(p);else localStorage.setItem(K,JSON.stringify(p))}
 function index(u){return (window.GFLOW||[]).findIndex(x=>x.u===u)}
 function currentUrl(){const i=window.gIdx?gIdx():-1;return i<0?null:GFLOW[i].u}
 function mirrorReadonly(){const q=new URLSearchParams(location.search);return q.get('id')==='mirrors'&&(q.get('preview')==='1'||q.has('review'));}

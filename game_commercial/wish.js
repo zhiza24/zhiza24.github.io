@@ -48,7 +48,7 @@ var EXTRA=[
 ];
 
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
-function save(P){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+function save(P){if(window.GPro)GPro.save(P);else if(window.GProfile)GProfile.save(P);else localStorage.setItem(KEY,JSON.stringify(P))}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function gx(s){return String(s==null?'':s).replace(/\{([^|]*)\|([^}]*)\}/g,function(_,m,f){return window.GG?GG(m,f):m})}
 function uid(){return 'w'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}

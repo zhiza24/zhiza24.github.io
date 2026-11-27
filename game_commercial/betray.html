@@ -49,7 +49,7 @@
 'use strict';
 var KEY='alch_v5_profile',AGAIN=!!window.GRetake,box=document.getElementById('bt');
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
-function save(P){try{localStorage.setItem(KEY,JSON.stringify(P));return true}catch(e){return false}}
+function save(P){if(window.GPro)GPro.save(P);else if(window.GProfile)GProfile.save(P);else localStorage.setItem(KEY,JSON.stringify(P));return true}
 function Pget(){var P=load();P.betray=P.betray||{};return P}
 function seed(P){return String(P.name||'')+'|'+String(P.birth||'')+'|betray-wheel-v2'}
 var P0=Pget(),old=AGAIN?P0.betray.draftEnd:P0.betray.draft,validDraft=!!(old&&old.version===3&&Array.isArray(old.order)&&old.order.length===GBW.QUESTIONS.length&&old.answers);

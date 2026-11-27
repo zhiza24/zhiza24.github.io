@@ -49,7 +49,7 @@ var BONUS_HINT='Эта строка — подсказка для внимани
 var WD=['пн','вт','ср','чт','пт','сб','вс'];
 
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
-function save(P){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){if(!window._t28warn){window._t28warn=1;try{alert('Не получилось сохранить: в браузере закончилось место. Сохрани копию данных в настройках трекера.')}catch(x){}}}}
+function save(P){if(window.GPro)GPro.save(P);else if(window.GProfile)GProfile.save(P);else localStorage.setItem(KEY,JSON.stringify(P))}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function gx(s){return String(s).replace(/\{([^|]*)\|([^}]*)\}/g,function(_,m,f){return window.GG?GG(m,f):m})}
 function tick(){if(window.GSound&&!GSound.isOn())return;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=660;g.gain.value=0.04;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+0.05)}catch(e){}}

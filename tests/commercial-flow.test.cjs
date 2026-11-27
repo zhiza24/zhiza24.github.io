@@ -145,6 +145,17 @@ function routeEnv(){
  assert.equal(nativeGet.call(storage,'alch_samost'),'MAIN_SAMOST','delete-all preserves main Self-thread data');
  assert.equal(nativeGet.call(storage,'alch_pattern_map_v1'),'MAIN_PATTERN','delete-all preserves main pattern map');
  assert.equal(nativeGet.call(session,'alch_v5_private'),'MAIN_SESSION','delete-all preserves main session data');
+ let quotaWarnings=0;
+ w.alert=()=>{quotaWarnings++};
+ const normalSet=storage.setItem.bind(storage);
+ storage.setItem=function(key,value){
+  if(key==='alch_v5_profile'){const err=new Error('storage full');err.name='QuotaExceededError';throw err}
+  return normalSet(key,value);
+ };
+ assert.throws(()=>w.GProfile.save({name:'Should not pretend to save'}),'quota failure must propagate to the caller');
+ assert.equal(quotaWarnings,1,'quota failure must be visible to the player');
+ delete storage.setItem;
+
  dom.window.close();
 }
 console.log('PASS: commercial route progression, reload persistence, snapshot provenance, and isolated backup/import/delete.');

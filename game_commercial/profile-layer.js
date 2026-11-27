@@ -76,8 +76,14 @@
     catch (e) { return {}; }
   }
   function persist(P) {
-    localStorage.setItem(KEY, JSON.stringify(P));
-    return P;
+    if (global.GPro && typeof global.GPro.save === 'function') { global.GPro.save(P); return P; }
+    try { localStorage.setItem(KEY, JSON.stringify(P)); return P; }
+    catch (e) {
+      if (e && (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014)) {
+        try { if (global.alert) global.alert('Не удалось сохранить данные: память браузера переполнена. Экспортируй профиль в настройках и освободи место.'); } catch (ignore) {}
+      }
+      throw e;
+    }
   }
   function readToken(ref) {
     if (ref == null) return '';

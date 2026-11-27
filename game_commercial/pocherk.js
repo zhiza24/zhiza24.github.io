@@ -10,7 +10,7 @@ var F=(window.GGender?GGender():'m')==='f';
 var $=function(id){return document.getElementById(id)};
 var bgi=$('bgi'),fogl=$('fogl'),brg=$('brg'),glow=$('glow'),veil=$('veil'),cap=$('cap'),qz=$('qz'),qt=$('qt'),opts=$('opts'),cut=$('cut'),fin=$('fin'),nx=$('nx');
 function load(){try{return JSON.parse(localStorage.getItem(K))||{}}catch(e){return {}}}
-function save(P){localStorage.setItem(K,JSON.stringify(P))}
+function save(P){if(window.GPro)GPro.save(P);else if(window.GProfile)GProfile.save(P);else localStorage.setItem(K,JSON.stringify(P))}
 function vib(n){try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}}
 var LEGACY_DIRS={1:['act','obs','obs','sup'],2:['act','obs','obs','sup'],3:['sup','obs','cre','act'],4:['act','obs','cre','sup'],5:['act','obs','cre','sup'],6:['act','obs','cre','obs'],7:['act','obs','cre','sup'],8:['sup','cre','act','obs'],9:['act','obs','cre','sup'],10:['act','obs','cre','sup']};
 function migrateAnswers(answers,fromV){return answers.map(function(a){var map=LEGACY_DIRS[+a.q],i=LET.indexOf(a.opt),dir=fromV<6&&map&&map[i]?map[i]:a.dir;return Object.assign({},a,{dir:dir,v:V})})}

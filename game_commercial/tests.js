@@ -5,7 +5,7 @@
 var T=window.GTESTS;if(!T)return;
 var KEY='alch_v5_profile',VER=1,q=new URLSearchParams(location.search),preview=q.get('preview')==='1',retakeMode=!preview&&q.get('retake')==='1';
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
-function persist(P){if(preview)return;try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+function persist(P){if(preview)return;if(window.GPro)GPro.save(P);else if(window.GProfile)GProfile.save(P);else localStorage.setItem(KEY,JSON.stringify(P))}
 function fem(){var P=load();return window.GGender?GGender(P)==='f':P.gender==='f'}
 function g(s){if(s==null)return '';var f=fem();return String(s).replace(/\{([^{}|]*)\|([^{}|]*)\}/g,function(_,m,w){return f?w:m})}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
