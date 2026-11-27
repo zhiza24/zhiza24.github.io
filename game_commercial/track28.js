@@ -68,7 +68,8 @@ function ensure(){
   if(!T.view)T.view='month';
   if(T.start&&!T.strategySeen&&!filledCount(T)&&!(T.finale&&T.finale.done))delete T.start;
   if(window.GStrategy){try{
-    if(!T.strategy){T.strategy=GStrategy.build(P)}
+    var S=T.strategy,valid=!!(S&&Array.isArray(S.days)&&S.days.length===28&&Array.isArray(S.focus)&&S.focus.length>=2&&Array.isArray(S.weeks)&&S.weeks.length>=4);
+    if(!valid){T.strategy=GStrategy.build(P);T.strategyError=null}
     else{
       var ds=((T.directions)||[]).map(function(x){return typeof x==='string'?{id:x,text:x}:{id:(x&&x.id)||'',text:(x&&(x.text||x.t||x.name))||''}}).filter(function(x){return x.text});
       if(ds.length>=1){
@@ -77,8 +78,9 @@ function ensure(){
           T.strategy.focus=T.strategy.focus.map(function(x,i){if(!ds[i])return x;return {k:x.k,t:ds[i].text,g:x.g,src:x.src||x.t,wish:ds[i].text}});
         }
       }
+      T.strategyError=null;
     }
-  }catch(e){}}
+  }catch(e){T.strategy=null;T.strategyError=String(e&&e.message||e)}}
   if(!T.act){T.act={signs:{from:1,len:28}}}
   if(!T.practHist)T.practHist=[];
   if(!T.space){
@@ -252,6 +254,7 @@ function render0(){
   rxInit();
   var P=ensure(), T=Tget(P);
   if(T.archiveIndex!=null){host.innerHTML=viewArchive(P,T);bind();return;}
+  if(T.strategyError){host.innerHTML='<div class="t28"><h1>Не удалось собрать стратегию</h1><p>Проверь, что предыдущие этапы сохранены, затем вернись к Конструктору пути.</p><a class="go" href="tasks.html">Вернуться к карте пути</a></div>';bind();return;}
   if(!T.strategySeen&&T.strategy&&window.GStrategy&&T.view!=='mirror'&&T.space!=='mirror'){
     host.innerHTML=viewStrategy(P,T); bind(); return;
   }
