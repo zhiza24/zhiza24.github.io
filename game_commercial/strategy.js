@@ -344,6 +344,11 @@ function insights(P){
   var mi=0; w.forEach(function(x,i){if(x>w[mi])mi=i});
   if(w[mi]>=6) add('Где уже есть опора', 'Сфера «'+['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'][mi]+'» у тебя наполнена. Из неё можно брать силы и примеры.');
  }
+ // Кто сейчас выбирает
+ if(P.dialog && (P.dialog.self||P.dialog.ego||P.dialog.selfCount||P.dialog.egoCount)){
+  var ds=P.dialog.self||P.dialog.selfCount||0, de=P.dialog.ego||P.dialog.egoCount||0;
+  if(ds+de>0) add('Где ты уже выбираешь сам'+(f?'а':''), 'В коротких ситуациях ты '+(f?'узнала':'узнал')+' '+de+' защитных реакций и '+ds+' моментов живого выбора. И то, и другое — материал: привычку можно замечать, а живое — опираться.');
+ }
  // Ценности
  var vals = (P.valuesCore && P.valuesCore.top3) || (P.values && P.values.order) || [];
  if(vals.length) add('Что для тебя важно', 'Среди ориентиров выделяются: '+vals.slice(0,3).join(', ')+'. Когда шаг связан с ними, движение обычно даётся легче.');

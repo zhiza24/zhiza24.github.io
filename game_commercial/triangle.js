@@ -215,12 +215,9 @@ function mount(box){
    setFx(isDark?(soft?'dark-soft':'dark'):(soft?'light-soft':'light'));
    card.classList.remove('wig');
    card.classList.add(isDark?'fl-dark':'fl-light');
-   card.innerHTML=esc(txt)+'<small>'+(isDark?'Темная сторона':'Светлая сторона')+'</small>';
+   card.innerHTML=esc(txt);
    card.style.transform=pick==='yes'?'translate(28px,0) scale(1.03)':'scale(.98)';
-   if(revEl){
-    revEl.textContent=isDark?'Темная сторона':'Светлая сторона';
-    revEl.className='tri-rev on '+(isDark?'dark':'light');
-   }
+   if(revEl){revEl.className='tri-rev';revEl.textContent=''}
    setTimeout(function(){
     card.style.opacity='0';
     card.style.transform=pick==='yes'?'translate(420px,0) rotate(18deg)':'translate(0,160px) scale(.9)';
@@ -246,9 +243,11 @@ function mount(box){
    if(a.wound)wCnt[a.wound]=(wCnt[a.wound]||0)+(a.pick==='yes'?2:1);
   });
   var topWounds=Object.keys(wCnt).sort(function(a,b){return wCnt[b]-wCnt[a]}).slice(0,2);
+  var egoYes=ans.filter(function(a){return a.side==='ego'&&a.pick==='yes'}).length,selfYes=ans.filter(function(a){return a.side==='self'&&a.pick==='yes'}).length;
   var rec={v:7,egoScore:egoScore,selfScore:selfScore,egoRate:egoRate,selfRate:selfRate,
-   egoCount:ans.filter(function(a){return a.side==='ego'&&a.pick==='yes'}).length,
-   selfCount:ans.filter(function(a){return a.side==='self'&&a.pick==='yes'}).length,
+   ego:egoYes,self:selfYes,
+   egoCount:egoYes,
+   selfCount:selfYes,
    doubtCount:ans.filter(function(a){return a.pick==='mid'}).length,
    topWounds:topWounds,answers:ans,doneAt:Date.now()};
   if(!preview){
