@@ -46,7 +46,7 @@ function show(o){o=o||{};if(!o.id||!(o.title||o.text||o.quote))return false;if(!
  el.innerHTML='<div class="gwow-bg"></div><div class="gwow-rays"></div><div class="gwow-flash"></div>'+sp+
   '<div class="gwow-card">'+(o.kicker?'<div class="gwow-k">'+esc(o.kicker)+'</div>':'')+(o.title?'<h2 class="gwow-t">'+esc(o.title)+'</h2>':'')+
   (function(){var q=o.quote?'<p class="gwow-q">'+esc(o.quote)+'</p>':'',x=String(o.text||'').split('\n').filter(Boolean).map(function(t){return '<p class="gwow-x">'+esc(t)+'</p>'}).join('');return o.quoteAfter?x+q:q+x})()+(o.sub?'<p class="gwow-s">'+esc(o.sub)+'</p>':'')+
-  '<button type="button" class="gwow-b">'+esc(o.button||'Беру с собой')+'</button></div>';
+  '<button type="button" class="gwow-b">'+esc(o.button||'Дальше')+'</button></div>';
  el.querySelectorAll('*').forEach(function(n){n.setAttribute('data-rdskip','1')});var CL={'gwow-k':'#d9b36a','gwow-t':'#ffd98a','gwow-q':'#fff1cf','gwow-x':'#f4ecdf','gwow-s':'#cdbb98'};Object.keys(CL).forEach(function(c){el.querySelectorAll('.'+c).forEach(function(n){n.style.setProperty('color',CL[c],'important');n.style.setProperty('-webkit-text-fill-color',CL[c],'important')})});document.body.appendChild(el);try{navigator.vibrate&&navigator.vibrate([30,60,30])}catch(e){}
  try{if(window.GSound&&GSound.play)GSound.play('reveal')}catch(e){}
  var b=el.querySelector('.gwow-b');setTimeout(function(){try{b.focus({preventScroll:true})}catch(e){}},1500);
