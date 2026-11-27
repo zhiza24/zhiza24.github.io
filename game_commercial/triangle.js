@@ -302,17 +302,19 @@ function mount(box){
    ?'Есть реакции, которые включаются сами, еще до того как ты успеваешь осознать, что произошло. Это автоматическая реакция. Начать замечать ее уже значит, что с этим можно работать и выбирать осознанно.'
    :'В этих ситуациях привычные реакции почти не '+(F?'отозвались':'отозвались')+'. Это тоже результат: возможно, они не про тебя, или проявляются в других обстоятельствах.';
   var wounds=(rec.topWounds||[]).filter(function(k){return WOUND_INFO[k]});
-  var topName=wounds.length?WOUND_INFO[wounds[0]].name:'привычные реакции';
   var strongMore='';
-  if(egoSeen.length&&selfSeen.length)strongMore='<p>В разных ситуациях у тебя включаются и привычные реакции, и живой выбор. Чаще всего знакомо: '+esc(topName)+'. Замечать это уже значит выбирать осознаннее.</p>';
-  else if(egoSeen.length)strongMore='<p>В этих ситуациях чаще включается привычная реакция. Чаще всего знакомо: '+esc(topName)+'. Это не приговор — это то, что можно замечать и выбирать иначе.</p>';
-  else if(selfSeen.length)strongMore='<p>В этих ситуациях ты чаще выбираешь по-своему. Это опора, на которую можно опираться и дальше.</p>';
-  else strongMore='<p>Ни одна формулировка не отозвалась как «про меня». Это тоже результат: можно вернуться позже.</p>';
-  var insightLine=egoSeen.length
-   ?'Чаще всего тебе знакомо: '+(wounds.length?wounds.map(function(k){return WOUND_INFO[k].name}).join(' и '):'несколько разных привычных способов')+'.'
-   :'';
-  var insightMore=egoSeen.length?'<p>Эти способы когда-то помогали справляться. Сейчас полезно просто замечать, когда они включаются сами, и спрашивать себя: это еще нужно, или я могу выбрать иначе?</p>':'';
-  wounds.forEach(function(k){insightMore+='<p><b>'+esc(WOUND_INFO[k].name.charAt(0).toUpperCase()+WOUND_INFO[k].name.slice(1))+':</b> '+esc(WOUND_INFO[k].note)+'</p>'});
+  if(selfSeen.length&&!egoSeen.length)strongMore='<p>В этих ситуациях ты чаще выбираешь по-своему. Это опора, на которую можно опираться и дальше.</p>';
+  else if(!egoSeen.length&&!selfSeen.length)strongMore='<p>Ни одна формулировка не отозвалась как «про меня». Это тоже результат: можно вернуться к этому шагу позже.</p>';
+  var insightLine='';
+  var insightMore='';
+  if(egoSeen.length){
+   insightLine='Чаще всего тебе знакомо: '+(wounds.length?wounds.map(function(k){return WOUND_INFO[k].name}).join(' и '):'несколько разных привычных способов')+'.';
+   insightMore='<p>Эти способы когда-то помогали справляться. Сейчас полезно просто замечать, когда они включаются сами, и спрашивать себя: это еще нужно, или я могу выбрать иначе?</p>';
+   wounds.forEach(function(k){insightMore+='<p><b>'+esc(WOUND_INFO[k].name.charAt(0).toUpperCase()+WOUND_INFO[k].name.slice(1))+':</b> '+esc(WOUND_INFO[k].note)+'</p>'});
+  }else if(selfSeen.length){
+   insightLine='В этих ситуациях ты чаще выбираешь по-своему.';
+   insightMore='<p>Это не значит, что привычных реакций нет. Просто в этих коротких ситуациях они не отозвались. Живой выбор, который ты отметила, можно использовать как опору.</p>';
+  }
   var chosenList=[];
   var nextStep=null;
   if(window.GFLOW){var ci=GFLOW.findIndex(function(x){return x.u==='slot.html?id=dialog'});if(ci>=0&&GFLOW[ci+1])nextStep=GFLOW[ci+1]}
