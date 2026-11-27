@@ -53,7 +53,7 @@ function css(){
  var s=document.createElement('style');s.id='tri-css';
  s.textContent=
   'body.tri-on,body.tri-on .wrap{background:#0d0905!important}'+
-  '.tri{margin:-8px -16px 0;position:relative;color:#f4ecdf;font-family:Manrope,sans-serif}'+'.tri.deck{display:flex;flex-direction:column;height:calc(100svh - 96px);min-height:520px;max-height:calc(100svh - 80px)}'+
+  '.tri{margin:-8px -16px 0;position:relative;color:#f4ecdf;font-family:Manrope,sans-serif}'+'.tri.deck{display:flex;flex-direction:column;height:calc(100svh - 70px - 90px);min-height:460px;margin-top:-62px}'+
   /* Заставка Старца — влезает целиком на 375x667 без скролла */
   '.tri-cut{position:relative;min-height:calc(100svh - 110px);display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;border-radius:0 0 22px 22px;background:#0c0804}'+
   '.tri-cut-bg{position:absolute;inset:0;background:url(img/scene_fire.jpg) center 20%/cover no-repeat}'+
@@ -68,7 +68,7 @@ function css(){
   '.tri-cut-hint{margin:0 0 12px;font:600 15px/1.4 Manrope,sans-serif;color:#5c350c;text-align:center}'+
   '.tri-demo{position:relative;height:48px;margin:2px auto 10px;width:100%;max-width:260px}.tri-demo b{position:absolute;left:50%;top:6px;width:104px;margin-left:-52px;height:36px;border-radius:10px;background:linear-gradient(#fff8e4,#e0a940);box-shadow:0 4px 10px rgba(80,40,8,.28);animation:triDemo 2.6s ease-in-out infinite}.tri-demo b:after{content:"\\261D";position:absolute;left:40px;top:16px;font-size:22px}.tri-demo span{position:absolute;top:12px;font-size:22px;color:#7a4e1c;font-weight:800}.tri-demo .a1{left:0}.tri-demo .a2{right:0}@keyframes triDemo{0%,100%{transform:translateX(0)}25%{transform:translateX(-64px) rotate(-10deg)}50%{transform:translateX(0)}75%{transform:translateX(64px) rotate(10deg)}}'+
   /* Сцена треугольника */
-  '.tri-img{position:relative;width:100%;flex:1 1 auto;min-height:200px;height:auto;background:#0d0905 center 18%/cover no-repeat;overflow:hidden}'+
+  '.tri-img{position:relative;width:100%;flex:1 1 45%;min-height:220px;height:auto;background:#0d0905 center 28%/cover no-repeat;overflow:hidden}'+
   '.tri-img i{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .28s ease}'+
   /* Темная сторона — видимая тень и дым слева, той же силы, что и свет справа */
   '.tri-img .shDark{background:radial-gradient(ellipse 70% 82% at 18% 52%,rgba(0,0,0,.94) 0%,rgba(4,2,1,.78) 38%,rgba(4,2,1,.2) 62%,transparent 78%),linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.5) 28%,transparent 60%);mix-blend-mode:multiply}'+
