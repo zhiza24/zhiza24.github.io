@@ -147,14 +147,14 @@ function routeEnv(){
  assert.equal(nativeGet.call(session,'alch_v5_private'),'MAIN_SESSION','delete-all preserves main session data');
  let quotaWarnings=0;
  w.alert=()=>{quotaWarnings++};
- const normalSet=storage.setItem.bind(storage);
- storage.setItem=function(key,value){
+ const normalSet=w.Storage.prototype.setItem;
+ w.Storage.prototype.setItem=function(key,value){
   if(key==='alch_v5_profile'){const err=new Error('storage full');err.name='QuotaExceededError';throw err}
-  return normalSet(key,value);
+  return normalSet.call(this,key,value);
  };
  assert.throws(()=>w.GProfile.save({name:'Should not pretend to save'}),'quota failure must propagate to the caller');
  assert.equal(quotaWarnings,1,'quota failure must be visible to the player');
- delete storage.setItem;
+ w.Storage.prototype.setItem=normalSet;
 
  dom.window.close();
 }
