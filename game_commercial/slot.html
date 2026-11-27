@@ -360,7 +360,7 @@ R.builder=function(){var P=GPro.load();if(!window.GStrategy)return '<p>Загр�
 R.builder_go=function(){if(!window.nx)return;nx.onclick=function(){var P=GPro.load(),S=window._S;if(!S)return;
  var w=val('sgW'),r=val('sgR'),f1=val('sgF');if(w&&w!==S.wish){S.wish=w;S.edited=true}if(r&&r!==S.result){S.result=r;S.edited=true}if(f1&&f1!==S.first){S.first=f1;S.days[0].m=f1;S.edited=true}
  P.tracker=P.tracker||{};var T=P.tracker;T.strategy=S;T.days=T.days||{};var filled=Object.keys(T.days).length;if(!T.start||!filled)T.start=Date.now();
- if(!T.declared)T.declared={text:S.wish};if(!T.directions||T.directions.length<3)T.directions=S.focus.map(function(x,i){return {id:'f'+i,text:x.t}});
+ if(!T.declared)T.declared={text:S.wish};if(!Array.isArray(T.directions)||!T.directions.length)T.directions=S.focus.map(function(x,i){return {id:'f'+i,text:x.t}});
  P.pathPlan={done:true,at:Date.now(),auto:true,wish:S.wish,why:S.need,sign:S.signs.join(' '),result:S.result,actions:S.focus.map(function(x){return {t:x.t+': '+x.g}}),min:S.days[0].n,obstacle:(S.obst[0]||{}).x||'',ifthen:'',start:''};
  T.view='month';T.openDay=1;save('Стратегия на 28 дней','результат: '+S.result,P);location.href=window.GReview?'tasks.html':GRoute.advance()}};
 /* Финал: личная карта пути */
