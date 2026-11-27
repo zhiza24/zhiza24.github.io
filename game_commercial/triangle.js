@@ -137,7 +137,7 @@ function mount(box){
   elderAu.onended=function(){upBtn(false)};
   elderAu.onpause=function(){upBtn(false)};
   elderAu.onplay=function(){upBtn(true)};
-  if(soundEnabled()){elderAu.play().catch(function(){upBtn(false)})}
+  /* Голос Старца не стартует сам: только по кнопке «Слушать». При закрытии карточки звук останавливается. */
   auBtn.onclick=function(){if(!elderAu)return;if(elderAu.paused)elderAu.play().catch(function(){});else elderAu.pause()};
   box.querySelector('#triGo').onclick=function(){vib(20);stopAudio();idx=0;ans=[];showDeck()};
   scrollTo(0,0);
