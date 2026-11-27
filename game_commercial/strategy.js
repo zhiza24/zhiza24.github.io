@@ -342,7 +342,7 @@ function insights(P){
  var w = P.wheel;
  if(Array.isArray(w) && w.length===8){
   var mi=0; w.forEach(function(x,i){if(x>w[mi])mi=i});
-  if(w[mi]>=6) add('Где уже есть опора', 'Сфера «'+['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'][mi]+'» у тебя наполнена. Из неё можно брать силы и примеры.');
+  if(w[mi]>=6) add('Где уже есть опора', 'Сфера «'+['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'][mi]+'» у тебя наполнена. Из нее можно брать силы и примеры.');
  }
  // Кто сейчас выбирает
  if(P.dialog && (P.dialog.self||P.dialog.ego||P.dialog.selfCount||P.dialog.egoCount)){
@@ -351,7 +351,7 @@ function insights(P){
  }
  // Ценности
  var vals = (P.valuesCore && P.valuesCore.top3) || (P.values && P.values.order) || [];
- if(vals.length) add('Что для тебя важно', 'Среди ориентиров выделяются: '+vals.slice(0,3).join(', ')+'. Когда шаг связан с ними, движение обычно даётся легче.');
+ if(vals.length) add('Что для тебя важно', 'Среди ориентиров выделяются: '+vals.slice(0,3).join(', ')+'. Когда шаг связан с ними, движение обычно дается легче.');
  // Самоценность / мягкость к себе (из лаборатории или из betray / низкого колеса)
  if(P.selfWorth && P.selfWorth.scales){
   var soft = P.selfWorth.scales.filter(function(s){return s.level>=2 && s.status!=='insufficient'}).slice(0,1);
@@ -367,7 +367,7 @@ function insights(P){
 function adapt(T,n){var S=T.strategy;if(!S)return null;var base=S.days[n-1];if(!base)return null;var o={m:base.m,n:base.n,a:base.a,o:base.o,dir:base.dir,note:''};
  var c=(T.custom||{})[n];if(c)o.m=c;
  var r=[];for(var i=n-1;i>=1&&r.length<2;i--){var d=(T.days||{})[i];if(d&&d.res)r.push(d.res.v)}
- if(r.length===2&&r.every(function(v){return v==='fail'||v==='min'})&&!c){o.note='Последние дни были трудными. Сегодня достаточно минимального шага — это уже движение, а не провал. Ты имеешь право идти в своём темпе.';o.m=base.n;o.n='Просто вспомни о своем желании и отметь день.'}
+ if(r.length===2&&r.every(function(v){return v==='fail'||v==='min'})&&!c){o.note='Последние дни были трудными. Сегодня достаточно минимального шага — это уже движение, а не провал. Ты имеешь право идти в своем темпе.';o.m=base.n;o.n='Просто вспомни о своем желании и отметь день.'}
  else if(r.length===2&&r.every(function(v){return v==='other'})&&!c){o.note='Ты дважды {выбрал|выбрала} другой шаг. Сегодня предлагаем альтернативу.';var t=o.m;o.m=base.a;o.a=t}
  o.note=gx(o.note,(function(){try{return (JSON.parse(localStorage.getItem('alch_v5_profile'))||{}).gender==='f'}catch(e){return false}})());
  return o}
