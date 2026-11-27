@@ -66,9 +66,9 @@ function ensure(){
   if(!T.hiddenMet)T.hiddenMet={};
   if(!T.openDay)T.openDay=0;
   if(!T.view)T.view='month';
-  if(T.declared&&T.directions&&T.directions.length>=1&&!T.start)T.start=Date.now();
+  if(T.start&&!T.strategySeen&&!filledCount(T)&&!(T.finale&&T.finale.done))delete T.start;
   if(window.GStrategy){try{
-    if(!T.strategy){T.strategy=GStrategy.build(P);if(!T.start)T.start=Date.now()}
+    if(!T.strategy){T.strategy=GStrategy.build(P)}
     else{
       var ds=((T.directions)||[]).map(function(x){return typeof x==='string'?{id:x,text:x}:{id:(x&&x.id)||'',text:(x&&(x.text||x.t||x.name))||''}}).filter(function(x){return x.text});
       if(ds.length>=1){

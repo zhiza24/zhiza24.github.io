@@ -44,7 +44,7 @@ const current=GFLOW[state.index],hero=el('section',undefined,'task-hero');
 hero.append(el('h2',state.finished?'Путь завершен':'Сейчас: '+title(current)));
 para(hero,state.finished?'Можно спокойно просмотреть пройденные этапы.':'Следующий шаг определяется завершенными заданиями, а не последней открытой страницей.');
 if(!state.finished)link(hero,'Продолжить',state.url,true);
-if(state.url==='reactor.html'&&!state.finished)para(hero,'Трекер: день '+(window.GTrackDay?GTrackDay(p).day:0)+' из 28.');
+if(state.url==='reactor.html'&&!state.finished){const td=window.GTrackDay?GTrackDay(p):{day:0};para(hero,td.day?'Трекер: день '+td.day+' из 28.':'28-дневный цикл еще не начат.');}
 host.append(hero);
 const SKF={'slot.html?id=arch_b':'archB','slot.html?id=arch_v':'archV','slot.html?id=arch_p':'archP','slot.html?id=arch_d':'archD','slot.html?id=km':'kmTest','slot.html?id=fs':'firstSet','slot.html?id=lab_d':'desireLab','slot.html?id=pi':'interact','slot.html?id=rs':'respTest','slot.html?id=ct':'ctTest','slot.html?id=sv':'selfWorth','slot.html?id=vsort':'valuesCore'};
 const SK=GFLOW.map(x=>x.u).filter(u=>((p.flow||{}).archSkipped||{})[u]&&SKF[u]&&!(p[SKF[u]]&&p[SKF[u]].v));

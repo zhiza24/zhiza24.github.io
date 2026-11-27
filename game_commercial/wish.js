@@ -141,7 +141,6 @@ function writeDirections(P){
   P.tracker=P.tracker||{};
   P.tracker.directions=list;
   P.tracker.directionsAt=now();
-  if(!P.tracker.start)P.tracker.start=now();
   P.log=P.log||[];
   P.log.push({t:now(),x:'Звезды ближайшего пути: '+list.map(function(x){return x.text}).join('; ')});
   save(P);
