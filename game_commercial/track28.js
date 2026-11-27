@@ -226,7 +226,8 @@ function chrome(){
   if(root&&!root.querySelector('.tapp-top')){
     var top=document.createElement('div');
     top.className='tapp-top';
-    top.innerHTML='<a class="tapp-back" href="hero.html?v=h5">‹ Вернуться в игру</a><span class="tapp-day">день '+n+' из 28</span>';
+    var dayLabel=(T.start||T.strategySeen)?'день '+n+' из 28':'цикл еще не начат';
+    top.innerHTML='<a class="tapp-back" href="hero.html?v=h5">‹ Вернуться в игру</a><span class="tapp-day">'+dayLabel+'</span>';
     root.insertBefore(top,root.firstChild);
   }
   var nav=document.createElement('nav');
