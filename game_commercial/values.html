@@ -9,6 +9,7 @@ var DES=[['Хочу доказать всем, что я чего-то стою'
 var V=P.values||{picked:[],score:{},pairs:[],pi:0,order:[]},S=P.egoSelf||{i:0,ans:[]},F=P.focuses||[];
 var stage=P.valuesStage||'pick';var card=document.getElementById('card');
 function el(t,x,c){var e=document.createElement(t);if(x!==undefined)e.textContent=x;if(c)e.className=c;return e}
+function esc(s){return String(s==null?'':s).replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c]})}
 function head(ph,t,d){document.getElementById('ph').textContent=ph;document.getElementById('t').textContent=t;document.getElementById('d').textContent=d}
 function go(s){stage=s;P.valuesStage=s;P.values=V;P.egoSelf=S;P.focuses=F;save();render();scrollTo(0,0)}
 function render(){card.replaceChildren();
