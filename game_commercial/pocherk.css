@@ -58,15 +58,15 @@ body.st-fire.flare .glow b{animation-duration:.45s}
 .qz.swap .qt,.qz.swap .opts{opacity:0;transition:opacity .12s}
 .qt{font:700 24px/1.22 'Cormorant Garamond',serif;color:#ffe9a8;text-align:center;margin:0 4px 8px;text-shadow:0 1px 6px #000;transition:opacity .18s}
 .opts{display:flex;flex-direction:column;gap:6px;transition:opacity .18s}
-.op{display:block;width:100%;margin:0;padding:9px 12px;border:1.5px solid #c9a46a;border-radius:13px;background:linear-gradient(rgba(46,28,14,.94),rgba(30,18,8,.94));color:#f4ecdf;font:600 17px/1.32 Manrope,sans-serif;text-align:left;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.45);transition:background .16s,border-color .16s,transform .12s,opacity .18s}
+.op{display:block;width:100%;margin:0;padding:11px 14px;border:1.5px solid #c9a46a;border-radius:13px;background:linear-gradient(rgba(46,28,14,.96),rgba(30,18,8,.96));color:#f8f0e4;font:600 18px/1.38 Manrope,sans-serif;text-align:left;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.45);transition:background .16s,border-color .16s,transform .12s,opacity .18s}
 .op:active{transform:scale(.985)}
-.op.sel{background:linear-gradient(#ffe9a8,#e0a940 60%,#b97a32);color:#2a1606;border-color:#ffe9a8;box-shadow:0 0 16px rgba(255,207,90,.7)}
+.op.sel{background:linear-gradient(#ffe9a8,#e0a940 60%,#b97a32);color:#1a0e04;border-color:#ffe9a8;box-shadow:0 0 16px rgba(255,207,90,.7);font-weight:700}
 .qz.lock .op:not(.sel){opacity:.45}
 .qz.lock{pointer-events:none}
 @media (max-height:700px){.qt{font-size:21px;margin-bottom:6px}.op{padding:7px 11px;font-size:16.5px;line-height:1.26}.opts{gap:5px}.qz{padding-top:6px}}
 /* scroll subtitle */
-.gsc-html .pc-sub{margin:-4px 0 12px;text-align:center;font:700 16px/1.35 Manrope;letter-spacing:.04em;color:#7a4a1a}
-.gsc-html p{margin:0 0 10px}
+.gsc-html .pc-sub{margin:-4px 0 14px;text-align:center;font:700 18px/1.35 Manrope;letter-spacing:.02em;color:#5c3410}
+.gsc-html p{margin:0 0 12px;font:500 19px/1.48 Manrope,sans-serif;color:#2c1808}
 @media (max-height:700px){.gsc-body{font-size:17px;line-height:1.42}.gsc-html p{margin:0 0 7px}}
 
 /* Заставка Старца (Экран А после 10-го вопроса) */
