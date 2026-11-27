@@ -47,8 +47,19 @@ async function swr(req,cacheName,ignoreSearch){
 }
 /* 27.11: Safari не принимает от SW ответ с перенаправлением — пересобираем его в чистый ответ */
 async function clean(r){if(!r||!r.redirected)return r;const b=await r.blob();return new Response(b,{status:r.status,statusText:r.statusText,headers:r.headers})}
+/* 27.11: видео заставок хранятся в игре после первого просмотра (кэш media, с поддержкой перемотки) */
+const MEDIA='alch-commercial-media';const mediaBusy={};
+async function mediaResp(req,u){
+ const key=u.origin+u.pathname;const c=await caches.open(MEDIA);const hit=await c.match(key);
+ if(!hit){if(!mediaBusy[key]){mediaBusy[key]=fetch(key).then(r=>{if(r.ok&&!r.redirected)return c.put(key,r)}).catch(()=>{}).finally(()=>{delete mediaBusy[key]})}return fetch(req)}
+ const blob=await hit.blob();const rg=req.headers.get('range');
+ if(!rg)return new Response(blob,{status:200,headers:{'Content-Type':'video/mp4','Content-Length':String(blob.size),'Accept-Ranges':'bytes'}});
+ const m=/bytes=(\d*)-(\d*)/.exec(rg)||[];let a=m[1]?parseInt(m[1]):0;let b=m[2]?parseInt(m[2]):blob.size-1;if(!m[1]&&m[2]){a=blob.size-parseInt(m[2]);b=blob.size-1}b=Math.min(b,blob.size-1);
+ return new Response(blob.slice(a,b+1),{status:206,headers:{'Content-Type':'video/mp4','Content-Length':String(b-a+1),'Content-Range':'bytes '+a+'-'+b+'/'+blob.size,'Accept-Ranges':'bytes'}});
+}
 self.addEventListener('fetch',event=>{
  const req=event.request;
+ if(req.method==='GET'){const mu=new URL(req.url);if(mu.origin===self.location.origin&&/\/media\/[^/]+\.mp4$/i.test(mu.pathname)){event.respondWith(mediaResp(req,mu));return}}
  if(req.method!=='GET'||req.headers.has('range'))return;
  const url=new URL(req.url);
  if(url.origin!==self.location.origin||/\.(mp4|webm)$/i.test(url.pathname))return;
