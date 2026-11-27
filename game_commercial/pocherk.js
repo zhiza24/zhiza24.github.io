@@ -12,7 +12,9 @@ var bgi=$('bgi'),fogl=$('fogl'),brg=$('brg'),glow=$('glow'),veil=$('veil'),cap=$
 function load(){try{return JSON.parse(localStorage.getItem(K))||{}}catch(e){return {}}}
 function save(P){localStorage.setItem(K,JSON.stringify(P))}
 function vib(n){try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}}
-function draft(P){var d=P.pocherkDraft;if(!d||d.v!==V||!Array.isArray(d.answers))d={v:V,answers:[],startedAt:Date.now()};return d}
+var LEGACY_DIRS={1:['act','obs','obs','sup'],2:['act','obs','obs','sup'],3:['sup','obs','cre','act'],4:['act','obs','cre','sup'],5:['act','obs','cre','sup'],6:['act','obs','cre','obs'],7:['act','obs','cre','sup'],8:['sup','cre','act','obs'],9:['act','obs','cre','sup'],10:['act','obs','cre','sup']};
+function migrateAnswers(answers,fromV){return answers.map(function(a){var map=LEGACY_DIRS[+a.q],i=LET.indexOf(a.opt),dir=fromV<6&&map&&map[i]?map[i]:a.dir;return Object.assign({},a,{dir:dir,v:V})})}
+function draft(P){var d=P.pocherkDraft;if(!d||!Array.isArray(d.answers)||(!d.answers.length&&P.pocherk&&P.pocherk.v!==V&&Array.isArray(P.pocherk.answers)&&P.pocherk.answers.length)){if(P.pocherk&&Array.isArray(P.pocherk.answers)&&P.pocherk.answers.length)d={v:P.pocherk.v||5,answers:P.pocherk.answers.slice(),startedAt:P.pocherk.doneAt||Date.now()};else d={v:V,answers:[],startedAt:Date.now()}}if((+d.v||5)!==V){d.answers=migrateAnswers(d.answers,+d.v||5);d.v=V;P.pocherkDraft=d;save(P)}return d}
 function esc(v){return window.GEsc?GEsc(v):String(v==null?'':v).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 
 /* Предзагрузка картинок этапов и свитка, чтобы переходы шли без задержек и скачков */
@@ -180,13 +182,13 @@ function finish(fresh){
   R={v:V,answers:D.answers,score:r.score,lead:r.lead,leads:r.leads,second:r.second,mixed:r.mixed,
      doneAt:(P.pocherk&&P.pocherk.doneAt&&P.pocherk.v===V&&JSON.stringify(P.pocherk.answers)===JSON.stringify(D.answers))?P.pocherk.doneAt:Date.now()};
   var first=!(P.pocherk&&P.pocherk.doneAt);
-  P.pocherk=R;var h={};ORDER.forEach(function(k){h[OLD[k]]=r.score[k]});P.hand=h;P.handTop=OLD[r.leads[0]];
+  P.pocherk=R;var h={};ORDER.forEach(function(k){h[OLD[k]]=r.score[k]});P.hand=h;P.handTop=r.mixed?null:OLD[r.lead];
   if(window.GProfile){GProfile.writeResult(P,'pocherk',R,{answers:D.answers});GProfile.writeResult(P,'hand',{hand:h,handTop:P.handTop})}
   if(window.GArts)GArts.grant('crystal_1',{profile:P,source:'bridge.html'});else{P.arts=P.arts||[];if(P.arts.indexOf('crystal_1')<0)P.arts.push('crystal_1')}
   save(P);
   if(first&&window.GP){
    var p=GP();
-   var txt=r.mixed?'смешанная стратегия: '+names(r.leads,', '):'ведущая стратегия: '+DIRS[r.lead]+(r.second.length?', дополнительная: '+names(r.second,', '):'');
+   var txt=r.mixed?'сочетание способов: '+names(r.leads,', '):'ведущий способ: '+DIRS[r.lead]+(r.second.length?', дополнительный: '+names(r.second,', '):'');
    p.log.push({s:3,t:'Твоя стратегия выбора',r:txt+'. Артефакт: Кристалл опоры',d:new Date().toLocaleDateString('ru')});
    SP(p);
   }
@@ -234,37 +236,33 @@ function showElderCutscene(R){
 
 /* Экран Б: единый чистый экран расшифровки стратегии выбора (эталон sum.html) */
 function stripPrefix(s,re){return String(s||'').replace(re,'').trim()}
+function evidenceFor(R,keys,stageRu){var rows=(R.answers||[]).filter(function(a){return keys.indexOf(a.dir)>=0});if(!rows.length)return '';return '<p>Это видно по твоим решениям:</p><ul>'+rows.map(function(a){return '<li><b>'+esc(stageRu[a.stage]||'Сцена')+':</b> '+esc(a.text||DIRS[a.dir]||'')+'</li>'}).join('')+'</ul>'}
 function showBreakdown(R,fresh){
  var leadKey=R.mixed?R.leads[0]:R.lead;
  var mainArr=(TX[leadKey]||{})[F?'F':'M']||[];
  var strongLine=stripPrefix(mainArr[1]||'',/^Твоя сила\s*[—–-]\s*/i);
  var attnLine=stripPrefix(mainArr[2]||'',/^На что стоит обратить внимание:\s*/i);
 
- var total=(R.answers||[]).length;
- var tally=ORDER.map(function(k){return DIRS[k]+' — '+(R.score[k]||0)}).join('; ');
  var leadTitle=R.mixed
-  ? 'В ответах несколько способов набрали одинаковое число выборов: '+names(R.leads,' и ')+'.'
-  : 'В этих игровых ситуациях чаще встречался ход «'+DIRS[R.lead]+'».';
- leadTitle+=' Учтено ответов: '+total+' из '+Q.length+'. Распределение: '+tally+'. Это описание выбора в игровых сценах, а не постоянная характеристика личности.';
+  ? 'В разных сценах у тебя проявились несколько способов решения: '+names(R.leads,' и ')+'.'
+  : 'В этих игровых ситуациях чаще всего проявлялся способ «'+DIRS[R.lead]+'».';
 
  var strongMore='';
  if(R.mixed){
-  var mx=(TX.mixed||{})[F?'F':'M']||[];
-  strongMore+=mx.map(function(p){return '<p>'+esc(p)+'</p>'}).join('');
   R.leads.forEach(function(k){
    var arr=(TX[k]||{})[F?'F':'M']||[];
-   strongMore+='<p><b>'+esc(DIRS[k])+':</b> '+esc(arr[0]||'')+'</p>'+(arr[1]?'<p>'+esc(arr[1])+'</p>':'');
+   strongMore+='<p><b>'+esc(DIRS[k])+'.</b> '+esc(arr[1]||arr[0]||'')+'</p>'+evidenceFor(R,[k],{fog:'Туман',bridge:'Мост',fire:'Костер'});
   });
  }else{
   if(mainArr[0])strongMore+='<p>'+esc(mainArr[0])+'</p>';
-  if(mainArr[1])strongMore+='<p>'+esc(mainArr[1])+'</p>';
+  strongMore+=evidenceFor(R,[R.lead],{fog:'Туман',bridge:'Мост',fire:'Костер'});
   (R.second||[]).forEach(function(k){
    var arr=(TX[k]||{})[F?'F':'M']||[];
-   strongMore+='<p><b>Дополнительная стратегия — '+esc(DIRS[k])+':</b> '+esc(arr[0]||'')+'</p>';
+   strongMore+='<p><b>Еще один проявившийся способ — '+esc(DIRS[k])+'.</b> '+esc(arr[0]||'')+'</p>'+evidenceFor(R,[k],{fog:'Туман',bridge:'Мост',fire:'Костер'});
   });
  }
 
- var insightMore='<p>'+esc(attnLine)+'</p>';
+ var insightMore=R.mixed?evidenceFor(R,ORDER,{fog:'Туман',bridge:'Мост',fire:'Костер'}):'<p>'+esc(attnLine)+'</p>';
  if(!R.mixed&&R.second&&R.second.length){
   R.second.forEach(function(k){
    var arr=(TX[k]||{})[F?'F':'M']||[];
@@ -291,11 +289,13 @@ function showBreakdown(R,fresh){
   title:'Твоя стратегия выбора',
   lead:leadTitle,
   strong:R.mixed
-   ? 'В этом прохождении несколько способов получили одинаковый результат. Возможно, выбор зависит от контекста; сами по себе равные баллы еще не доказывают устойчивую гибкость.'
+   ? 'В твоих решениях проявились разные способы справляться с ситуациями: '+names(R.leads,' и ')+'.'
    : (strongLine.charAt(0).toUpperCase()+strongLine.slice(1)),
   strongMore:strongMore,
-  insight:attnLine.split('. ')[0]+'.',
+  insight:R.mixed?'Этот результат описывает твои выборы в игровой истории, а не постоянные черты личности.':attnLine.split('. ')[0]+'.',
   insightMore:insightMore,
+  insightLabel:R.mixed?'Как читать результат':'На что обратить внимание',
+  insightDetLabel:R.mixed?'Посмотреть решения в игре':'Развернуть объяснение',
   answers:ansList,
   artifact:{name:'Кристалл опоры',note:'Хранится у твоего героя',icon:CRYSTAL},
   preview:new URLSearchParams(location.search).get('preview')==='1',
