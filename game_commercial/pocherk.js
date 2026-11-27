@@ -243,40 +243,22 @@ function showBreakdown(R,fresh){
  var strongLine=stripPrefix(mainArr[1]||'',/^Твоя сила\s*[—–-]\s*/i);
  var attnLine=stripPrefix(mainArr[2]||'',/^На что стоит обратить внимание:\s*/i);
 
- var leadTitle=R.mixed
-  ? 'В разных сценах у тебя проявились несколько способов решения: '+names(R.leads,' и ')+'.'
-  : 'В этих игровых ситуациях чаще всего проявлялся способ «'+DIRS[R.lead]+'».';
-
- var strongMore='';
+ var strongParts=[];
  if(R.mixed){
   R.leads.forEach(function(k){
    var arr=(TX[k]||{})[F?'F':'M']||[];
-   strongMore+='<p><b>'+esc(DIRS[k])+'.</b> '+esc(arr[1]||arr[0]||'')+'</p>'+evidenceFor(R,[k],{fog:'Туман',bridge:'Мост',fire:'Костер'});
+   var line=stripPrefix(arr[1]||arr[0]||'',/^Твоя сила\s*[—–-]\s*/i);
+   if(line)strongParts.push(line.charAt(0).toUpperCase()+line.slice(1));
   });
  }else{
-  if(mainArr[0])strongMore+='<p>'+esc(mainArr[0])+'</p>';
-  strongMore+=evidenceFor(R,[R.lead],{fog:'Туман',bridge:'Мост',fire:'Костер'});
+  if(strongLine)strongParts.push(strongLine.charAt(0).toUpperCase()+strongLine.slice(1));
   (R.second||[]).forEach(function(k){
    var arr=(TX[k]||{})[F?'F':'M']||[];
-   strongMore+='<p><b>Еще один проявившийся способ — '+esc(DIRS[k])+'.</b> '+esc(arr[0]||'')+'</p>'+evidenceFor(R,[k],{fog:'Туман',bridge:'Мост',fire:'Костер'});
+   var line=stripPrefix(arr[1]||arr[0]||'',/^Твоя сила\s*[—–-]\s*/i);
+   if(line)strongParts.push(line.charAt(0).toUpperCase()+line.slice(1));
   });
  }
-
- var insightMore=R.mixed?evidenceFor(R,ORDER,{fog:'Туман',bridge:'Мост',fire:'Костер'}):'<p>'+esc(attnLine)+'</p>';
- if(!R.mixed&&R.second&&R.second.length){
-  R.second.forEach(function(k){
-   var arr=(TX[k]||{})[F?'F':'M']||[];
-   if(arr[2])insightMore+='<p><b>'+esc(DIRS[k])+':</b> '+esc(stripPrefix(arr[2],/^На что стоит обратить внимание:\s*/i))+'</p>';
-  });
- }
- if(window.POCHERK_CARD&&POCHERK_CARD.note)insightMore+='<p>'+esc(POCHERK_CARD.note)+'</p>';
-
- var stageRu={fog:'Туман',bridge:'Мост',fire:'Костер'};
- var ansList=(R.answers||[]).map(function(a){
-  var txt=a.text;
-  if(!txt){var qObj=Q.filter(function(x){return x.id===a.q})[0];var kIdx=LET.indexOf(a.opt);if(qObj&&kIdx>=0)txt=qObj.a[kIdx]}
-  return (stageRu[a.stage]||'')+': '+(txt||DIRS[a.dir]||a.opt);
- });
+ var strongText=strongParts.length?strongParts.join(' '):'Ты умеешь выбирать способ действия под ситуацию.';
 
  fin.innerHTML='<div class="fin-wrap" id="finCard"></div>';
  qz.classList.remove('on');cap.classList.remove('on');fin.hidden=false;document.body.classList.add('fin-on');
@@ -287,17 +269,13 @@ function showBreakdown(R,fresh){
   stepKey:'bridge.html',
   passed:(F?'Ты прошла':'Ты прошел')+' туман, мост и костер',
   title:'Твоя стратегия выбора',
-  lead:leadTitle,
-  strong:R.mixed
-   ? 'В твоих решениях проявились разные способы справляться с ситуациями: '+names(R.leads,' и ')+'.'
-   : (strongLine.charAt(0).toUpperCase()+strongLine.slice(1)),
-  strongMore:strongMore,
-  insight:R.mixed?'Этот результат описывает твои выборы в игровой истории, а не постоянные черты личности.':attnLine.split('. ')[0]+'.',
-  insightMore:insightMore,
-  insightLabel:R.mixed?'Как читать результат':'На что обратить внимание',
-  insightDetLabel:R.mixed?'Посмотреть решения в игре':'Развернуть объяснение',
-  answers:ansList,
-  artifact:{name:'Кристалл опоры',note:'Хранится у твоего героя',icon:CRYSTAL},
+  lead:'',
+  strong:strongText,
+  strongMore:'',
+  insight:attnLine?attnLine.split('. ')[0]+'.':'',
+  insightMore:'',
+  insightLabel:'На что обратить внимание',
+  artifact:{name:'Кристалл опоры',note:'Ты получил(а) кристалл. Он хранится у твоего героя.',icon:CRYSTAL},
   preview:new URLSearchParams(location.search).get('preview')==='1',
   nextLabel:'Дальше',
   onNext:function(){vib(20);stopAudio();location.href=window.GReview?'tasks.html':GRoute.advance()}
