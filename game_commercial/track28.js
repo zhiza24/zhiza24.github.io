@@ -964,7 +964,7 @@ function practLabel(T){
   return n?('записей: '+n):'';
 }
 function practBody(T){
-  var names=[{id:'breath',t:'Вдох-выдох'},{id:'iam',t:'Я есмь'},{id:'look',t:'Тихое внимание'}];
+  var names=[{id:'breath',t:'Вдох-выдох'},{id:'iam',t:'Остановиться на мгновение'},{id:'look',t:'Тихое внимание'}];
   var p=T.practices||{};
   return names.map(function(x){
     var c=p[x.id]||{count:0,streak:0,until:0};
