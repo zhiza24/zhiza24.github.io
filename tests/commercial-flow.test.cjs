@@ -66,7 +66,7 @@ function routeEnv(){
 }
 {
  const {dom,w}=routeEnv(),source=read('route.js');
- const keys=source.match(/const keys=\{([\s\S]*?)\n \};/);
+ const keys=source.match(/const keys=\{([\s\S]*?)\};/);
  assert.ok(keys,'route snapshot field map exists');
  const names=[...keys[1].matchAll(/'([^']+)'\s*:/g)].map(m=>m[1]);
  assert.equal(new Set(names).size,names.length,'snapshot map must not declare duplicate route keys');
