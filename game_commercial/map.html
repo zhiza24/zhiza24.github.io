@@ -418,7 +418,7 @@
   window.addEventListener('resize',layoutAxis);
   const start=document.getElementById('start');
   const beginning=started?'form.html?opening=1&v=opening2':'form.html';
-  start.href=started?beginning:'form.html';if(started){start.href=cta.href;const sc=start.querySelector('.start-cap');if(sc)sc.textContent=checkpoint.finished?'ПРОЙДЕНО':'ДАЛЬШЕ';start.setAttribute('aria-label','Продолжить игру');cta.textContent='Начать сначала';cta.href=beginning;}
+  start.href=started?beginning:'form.html';if(started){start.href=cta.href;start.setAttribute('aria-label','Продолжить игру');cta.textContent='Начать сначала';cta.href=beginning;}
   const statusNames={current:"Текущая",done:"Пройдена",available:"Посещена",locked:"Закрыта"};
   const overlay=document.getElementById("overlay");
   const title=document.getElementById("detailTitle");
