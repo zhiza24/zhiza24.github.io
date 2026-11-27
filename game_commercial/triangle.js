@@ -80,7 +80,7 @@ function css(){
   '.tri-img .dimLeft{background:linear-gradient(90deg,rgba(6,4,2,.72),transparent 54%)}'+
   '.tri-img.fx-dark .shDark{opacity:1}.tri-img.fx-dark .shSmoke{opacity:1;animation:triSmoke .7s ease-out}.tri-img.fx-dark .shHero{opacity:1}.tri-img.fx-dark:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 40%,transparent 70%);pointer-events:none}'+
   '.tri-img.fx-dark-soft .shDark{opacity:.75}.tri-img.fx-dark-soft .shSmoke{opacity:.7}.tri-img.fx-dark-soft .shHero{opacity:.65}'+
-  '.tri-img.fx-light .glLight{opacity:1}.tri-img.fx-light .glHero{opacity:1}.tri-img.fx-light .dimLeft{opacity:.85}'+
+  '.tri-img.fx-light .glLight{opacity:1}.tri-img.fx-light .glHero{opacity:1}.tri-img.fx-light .dimLeft{opacity:.9}.tri-img.fx-light:after{content:"";position:absolute;inset:0;background:linear-gradient(270deg,rgba(255,220,140,.45) 0%,rgba(255,200,100,.15) 40%,transparent 70%);pointer-events:none;mix-blend-mode:screen}'+
   '.tri-img.fx-light-soft .glLight{opacity:.7}.tri-img.fx-light-soft .glHero{opacity:.6}.tri-img.fx-light-soft .dimLeft{opacity:.5}'+
   '.tri-img.drag i{transition:none}'+
   '@keyframes triSmoke{from{filter:blur(16px);transform:scale(.82)}to{filter:blur(0);transform:scale(1)}}'+
@@ -187,7 +187,6 @@ function mount(box){
    dx=e.clientX-sx;dy=e.clientY-sy;
    card.style.transform='translate('+dx+'px,'+Math.max(-12,dy*.4)+'px) rotate('+(dx/18)+'deg)';
    if(dx>28)setFx(item.side==='ego'?'dark-soft':'light-soft');
-   else if(dx<-28)setFx('dark-soft');
    else setFx('');
   };
   function endDrag(){
@@ -225,15 +224,12 @@ function mount(box){
     setTimeout(function(){idx++;drawCard()},280);
    },isDark?520:420);
   }else{
-   /* Свайп влево / «Не про меня»: всё равно показываем тень на тёмной стороне, затем уводим карточку. */
-   setFx('dark');
+   /* «Не про меня»: карточка уходит влево без эффекта. Эффект только когда выбираешь «про меня». */
+   setFx('');
    card.classList.remove('wig');
-   card.classList.add('fl-dark');
-   setTimeout(function(){
-    card.style.transform='translate(-420px,0) rotate(-18deg)';
-    card.style.opacity='0';
-    setTimeout(function(){idx++;drawCard()},360);
-   },420);
+   card.style.transform='translate(-420px,0) rotate(-18deg)';
+   card.style.opacity='0';
+   setTimeout(function(){idx++;drawCard()},320);
   }
  }
 
