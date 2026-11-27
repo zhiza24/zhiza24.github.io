@@ -281,7 +281,7 @@ function mount(box){
     };
    }
    if(window.GArts&&GArts.grantInto)GArts.grantInto(P2,'mirror',{source:'slot.html?id=dialog'});
-   (P2.log=P2.log||[]).push({t:Date.now(),x:'Короткие ситуации о выборе: '+(rec.topWounds&&rec.topWounds[0]&&WOUND_INFO[rec.topWounds[0]]?WOUND_INFO[rec.topWounds[0]].name:'привычные реакции')});
+   (P2.log=P2.log||[]).push({t:Date.now(),x:'Привычные защитные реакции: '+egoRate+'%'});
    save(P2);
   }
   showResult(rec);
@@ -301,20 +301,14 @@ function mount(box){
   var strongLine=egoSeen.length
    ?'Есть реакции, которые включаются сами, еще до того как ты успеваешь осознать, что произошло. Это автоматическая реакция. Начать замечать ее уже значит, что с этим можно работать и выбирать осознанно.'
    :'В этих ситуациях привычные реакции почти не '+(F?'отозвались':'отозвались')+'. Это тоже результат: возможно, они не про тебя, или проявляются в других обстоятельствах.';
-  var wounds=(rec.topWounds||[]).filter(function(k){return WOUND_INFO[k]});
   var strongMore='';
-  if(selfSeen.length&&!egoSeen.length)strongMore='<p>В этих ситуациях ты чаще выбираешь по-своему. Это опора, на которую можно опираться и дальше.</p>';
-  else if(!egoSeen.length&&!selfSeen.length)strongMore='<p>Ни одна формулировка не отозвалась как «про меня». Это тоже результат: можно вернуться к этому шагу позже.</p>';
-  var insightLine='';
-  var insightMore='';
-  if(egoSeen.length){
-   insightLine='Чаще всего тебе знакомо: '+(wounds.length?wounds.map(function(k){return WOUND_INFO[k].name}).join(' и '):'несколько разных привычных способов')+'.';
-   insightMore='<p>Эти способы когда-то помогали справляться. Сейчас полезно просто замечать, когда они включаются сами, и спрашивать себя: это еще нужно, или я могу выбрать иначе?</p>';
-   wounds.forEach(function(k){insightMore+='<p><b>'+esc(WOUND_INFO[k].name.charAt(0).toUpperCase()+WOUND_INFO[k].name.slice(1))+':</b> '+esc(WOUND_INFO[k].note)+'</p>'});
-  }else if(selfSeen.length){
-   insightLine='В этих ситуациях ты чаще выбираешь по-своему.';
-   insightMore='<p>Это не значит, что привычных реакций нет. Просто в этих коротких ситуациях они не отозвались. Живой выбор, который ты отметила, можно использовать как опору.</p>';
-  }
+  if(!egoSeen.length&&!selfSeen.length)strongMore='<p>Ни одна формулировка не отозвалась как «про меня». Это тоже результат: можно вернуться к этому шагу позже.</p>';
+  var wounds=(rec.topWounds||[]).filter(function(k){return WOUND_INFO[k]});
+  var insightLine=egoSeen.length
+   ?'Чаще всего тебе знакомо: '+(wounds.length?wounds.map(function(k){return WOUND_INFO[k].name}).join(' и '):'несколько разных привычных способов')+'.'
+   :'';
+  var insightMore=egoSeen.length?'<p>Эти способы когда-то помогали справляться. Сейчас полезно просто замечать, когда они включаются сами, и спрашивать себя: это еще нужно, или я могу выбрать иначе?</p>':'';
+  wounds.forEach(function(k){insightMore+='<p><b>'+esc(WOUND_INFO[k].name.charAt(0).toUpperCase()+WOUND_INFO[k].name.slice(1))+':</b> '+esc(WOUND_INFO[k].note)+'</p>'});
   var chosenList=[];
   var nextStep=null;
   if(window.GFLOW){var ci=GFLOW.findIndex(function(x){return x.u==='slot.html?id=dialog'});if(ci>=0&&GFLOW[ci+1])nextStep=GFLOW[ci+1]}
