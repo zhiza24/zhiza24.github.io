@@ -134,5 +134,5 @@ function diary(P,r,arc){if(!P||!r)return;var f=P.gender==='f';P.diary=P.diary||{
  E.push({id:'nature:facets',d:t,at:'Мой способ действовать',source:{type:'nature',key:'facets'},x:FAC.map(function(x){return x[1]+': '+nm(r.facets[x[0]],f)}).join('\n')+'\nПринятие решений: '+d.name});
  E.reverse().forEach(function(e){var i=P.diary.ins.findIndex(function(o){return o.id===e.id});if(i<0)P.diary.ins.unshift(e);else{e.d=P.diary.ins[i].d;P.diary.ins[i]=e}});
 }
-window.GNature={calc:calc,html:html,diary:diary,name:nm,A:A,DT:DT};
+window.GNature={calc:calc,html:html,fullHtml:html,diary:diary,name:nm,A:A,DT:DT};
 })();
