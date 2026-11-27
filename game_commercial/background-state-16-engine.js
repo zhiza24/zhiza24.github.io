@@ -52,7 +52,7 @@ function calculate(answers,followup,meta){
    leaders=[eligible[0]];status='leading';
    if(eligible.length>1){
     gap=round(eligible[0].points-eligible[1].points);
-    if(gap<=Math.max(2,eligible[0].points*.10)){leaders=[eligible[0],eligible[1]];status='two_close'}
+    if(gap<=eligible[0].points*.10){leaders=[eligible[0],eligible[1]];status='two_close'}
    }
   }
   return {status:status,leaders:leaders.map(function(f){return f.id}),scoreGap:gap,families:list.map(function(f){return {id:f.id,points:f.points,share:f.share,sphereCount:f.sphereCount,primaryCount:f.primaryCount,secondaryCount:f.secondaryCount}})};
