@@ -191,7 +191,7 @@ details[open]{animation:rise .3s var(--ease)}
 .core:active{transform:scale(.94)}
 .core.go{animation:none;transform:scale(.9);box-shadow:0 0 90px rgba(255,170,110,.9),0 0 200px rgba(201,107,58,.6)}
 .core.go .ring{animation:burst .9s ease-out forwards}.core.go .r2{animation-delay:.12s}
-.entry.dark:has(.go) .eh,.entry .core.go~p{opacity:0;transition:opacity .6s}
+/* Исчезновение надписей управляется общим классом start-fade из index.html */
 @keyframes glow{50%{box-shadow:0 0 70px rgba(240,140,80,.7),0 0 150px rgba(201,107,58,.45),inset 0 2px 0 rgba(255,230,200,.55),inset 0 -8px 18px rgba(40,12,5,.55)}}
 @keyframes pulse{from{transform:scale(.85);opacity:.9}to{transform:scale(1.5);opacity:0}}
 @keyframes burst{from{transform:scale(1);opacity:1;border-width:2px}to{transform:scale(6);opacity:0}}
