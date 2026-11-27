@@ -24,7 +24,7 @@
 .bt .mute{color:#c9a46a;font-size:14px;text-align:center}
 .bt .go{display:block;width:100%;box-sizing:border-box;margin:16px 0 0;padding:15px 18px;border:0;border-radius:999px;background:linear-gradient(#ffe9a8,#e0a940 55%,#a8692a);color:#2a1606;font:800 17px Manrope,sans-serif}
 .bt .quiet{display:block;margin:14px auto 0;background:none;border:0;color:#c9a46a;text-decoration:underline;text-underline-offset:3px;font:600 14px Manrope,sans-serif;text-align:center;width:100%}
-.bw-card{touch-action:pan-y}.bw-choice{cursor:pointer}.bw-choice:active{border-color:#f0c870;background:rgba(240,200,112,.12)}
+.bw-card{touch-action:pan-y;transition:transform .22s ease,opacity .22s ease,border-color .22s ease,box-shadow .22s ease;will-change:transform,opacity}.bw-card.bw-swipe-left{transform:translateX(-42px) rotate(-2deg);opacity:.28;border-color:#b97870;box-shadow:0 0 24px rgba(185,120,112,.24)}.bw-card.bw-swipe-right{transform:translateX(42px) rotate(2deg);opacity:.28;border-color:#d9c58f;box-shadow:0 0 24px rgba(217,197,143,.28)}.bw-choice{cursor:pointer}.bw-choice:active{border-color:#f0c870;background:rgba(240,200,112,.12)}
 .bw-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
 .bw-actions button{border:1px solid #9e783a;background:#21170e;color:#f4ecdf;border-radius:13px;padding:12px;font:600 15px/1.45 Manrope,sans-serif;min-height:58px}
 .bw-actions button:first-child{border-color:#8a7a72}.bw-actions button:last-child{border-color:#d9a441}
@@ -55,6 +55,7 @@ function seed(P){return String(P.name||'')+'|'+String(P.birth||'')+'|betray-whee
 var P0=Pget(),old=AGAIN?P0.betray.draftEnd:P0.betray.draft,validDraft=!!(old&&old.version===3&&Array.isArray(old.order)&&old.order.length===GBW.QUESTIONS.length&&old.answers);
 var order=validDraft?old.order:GBW.ordered(seed(P0)).map(function(q){return q.id});
 var answers=validDraft?old.answers:{},index=validDraft&&Number.isInteger(old.i)?old.i:0;
+var choosing=false;
 function current(){return GBW.QUESTIONS.filter(function(q){return q.id===order[index]})[0]}
 function persist(){var P=Pget();P.betray[AGAIN?'draftEnd':'draft']={version:3,i:index,order:order,answers:answers,at:Date.now()};return save(P)}
 function tick(){if(window.GSound&&!GSound.isOn())return;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=660;g.gain.value=.035;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.045)}catch(e){}}
@@ -66,8 +67,9 @@ function intro(){
  document.getElementById('go').onclick=function(){tick();persist();draw()};
  var sk=document.getElementById('skip');if(sk)sk.onclick=function(){finish(true)};
 }
-function choose(value){var q=current();if(!q)return;answers[q.id]=value;index++;persist();tick();draw();window.scrollTo(0,0)}
+function choose(value){var q=current();if(!q||choosing)return;var directional=value==='left'||value==='right';if(directional){choosing=true;var card=document.getElementById('swipeCard');if(card)card.classList.add(value==='left'?'bw-swipe-left':'bw-swipe-right');if(window.GSound&&GSound.rustle)GSound.rustle();else tick();setTimeout(function(){answers[q.id]=value;index++;persist();draw();window.scrollTo(0,0)},220);return}answers[q.id]=value;index++;persist();tick();draw();window.scrollTo(0,0)}
 function step(){
+ choosing=false;
  var q=current(),n=progress(),html='<p class="mute">Ситуация '+(index+1)+' из '+order.length+'</p><div class="bw-progress"><i style="width:'+(n/order.length*100)+'%"></i></div>'+wheel(false,230,false)+'<p class="mute">Названия секторов пока скрыты — они откроются, когда ответишь на все ситуации.</p>';
  html+='<section class="bw-card" id="swipeCard"><p style="color:#c9a46a;font-size:14px;text-align:center">Вспомни, как обычно бывает в реальной жизни</p><h1 style="font-size:24px">'+GBW.gf(q.text)+'</h1><div class="bw-actions"><button type="button" data-v="left"><small>Свайп влево</small><br>'+GBW.gf(q.left)+'</button><button type="button" data-v="right"><small>Свайп вправо</small><br>'+GBW.gf(q.right)+'</button></div><button type="button" class="bw-mid" data-v="both">Оба варианта бывают</button><button type="button" class="bw-mid" data-v="skip">Ни один не подходит</button></section>';
  if(index>0)html+='<button type="button" class="quiet" id="back">Назад</button>';
