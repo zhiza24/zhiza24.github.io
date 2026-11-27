@@ -95,7 +95,7 @@ $('chX').onclick=function(){dlg.close()};dlg.addEventListener('click',function(e
  var ea=$('hArts');if(ea){if(arts.length)ea.innerHTML='<div class="hh" id="arts"><b>ТВОИ АРТЕФАКТЫ</b><small>'+arts.length+'</small></div><div class="artgrid">'+arts.map(function(a){return '<button type="button" class="art" data-art="'+esc(a)+'"><span>'+artHtml(a)+'</span><small>'+esc(artName(a))+'</small></button>'}).join('')+'</div>';else ea.remove()}
  if(ea)ea.addEventListener('click',function(e){var b=e.target.closest('[data-art]');if(!b)return;var t=$('chB');var tmp=document.createElement('div');tmp.innerHTML='<button data-art="'+b.getAttribute('data-art')+'"></button>';if(!dlg.open){open('',artName(b.getAttribute('data-art')))}t.appendChild(tmp.firstChild);t.lastChild.click()});
  if(location.hash==='#arts'&&ea){setTimeout(function(){try{ea.scrollIntoView({block:'start'})}catch(e){}},300)}
- if(!P.heroSeen){var gt=document.createElement('div');gt.id='heroGate';gt.innerHTML='<h1>'+'Персонаж создан'+'</h1><button type="button" class="go" id="seeHero">Увидеть себя</button>';document.body.appendChild(gt);
+ if(!P.heroSeen){var gt=document.createElement('div');gt.id='heroGate';gt.innerHTML='<h1>'+'Персонаж создан'+'</h1><button type="button" class="go" id="seeHero">Познакомиться с героем</button>';document.body.appendChild(gt);
   $('seeHero').onclick=function(){try{var S=JSON.parse(localStorage.getItem('alch_v5_profile'))||{};S.heroSeen=Date.now();localStorage.setItem('alch_v5_profile',JSON.stringify(S))}catch(e){}P.heroSeen=1;gt.remove()}}
 })();
 /* 5. кнопки */
