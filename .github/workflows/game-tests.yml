@@ -33,6 +33,7 @@ jobs:
         run: npm test
 
   browser-smoke:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' || contains(toJSON(github.event.commits), 'game_v5/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

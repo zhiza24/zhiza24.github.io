@@ -17,18 +17,20 @@ test('strategy choice completes ten scenes and keeps score details internal',asy
    points:{personality:10,intuition:2,challenge:15,key:5},
    flow:{version:2,current:'bridge.html',visited:{},completed}
   };
-  localStorage.setItem('alch_v5_profile',JSON.stringify(profile));
+  localStorage.setItem('alch_commercial_profile',JSON.stringify(profile));
  });
  await page.goto('/bridge.html');
  await expect(page.locator('#gsc-close')).toBeVisible();
  await page.locator('#gsc-close').click();
  for(let i=0;i<10;i++){
   await expect(page.locator('.op')).toHaveCount(4);
+  const previousQuestion=await page.locator('#qt').textContent();
   await page.locator('.op[data-k="'+(i<5?'0':'1')+'"]').click();
   if(i===2||i===6){
    await expect(page.locator('#gsc-close')).toBeVisible({timeout:15000});
    await page.locator('#gsc-close').click();
   }
+  if(i<9)await expect(page.locator('#qt')).not.toHaveText(previousQuestion,{timeout:15000});
  }
  await expect(page.locator('#cutGo')).toBeVisible({timeout:15000});
  await page.locator('#cutGo').click();

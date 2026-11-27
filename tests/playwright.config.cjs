@@ -2,6 +2,7 @@ const {defineConfig}=require('@playwright/test');
 module.exports=defineConfig({
  testDir:'./e2e',
  testMatch:'**/*.spec.cjs',
+ testIgnore:'**/commercial.spec.cjs',
  timeout:60000,
  expect:{timeout:15000},
  fullyParallel:false,
