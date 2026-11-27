@@ -188,7 +188,19 @@ function calc(P){P=P||load();var K=['resp','err','appr','deval','others','avoid'
  return {lead:ord[0],queue:ord.slice(1),score:s,sources:n,why:why,weak:weak,tie:tie,ver:2}}
 function inKey(P){var k=[P.ego&&P.ego.sc,P.ego&&P.ego.md,P.dq&&P.dq.accepted,P.egoSelf&&P.egoSelf.match,P.wheel];if(P.ego&&P.ego.v===2||P.archB)k.push(P.ego&&P.ego.scores,P.archB&&P.archB.scores);return JSON.stringify(k)}
 window.GCalc=calc;
-window.GLead=function(){var P=load(),k=inKey(P);if(!P.lab||!P.lab.lead||(P.lab.agree==null&&(P.lab.cycle||1)<=1&&P.lab.key!==k)){var c=calc(P),L=P.lab||{};P.lab={lead:c.lead,queue:c.queue,score:c.score,sources:c.sources,weak:c.weak,tie:c.tie,key:k,cycle:L.cycle||1,agree:null,done:L.done};save(P)}return P.lab};
+window.GLead=function(){
+ var P=load(),k=inKey(P);
+ if(!P.lab||!P.lab.lead||(P.lab.agree==null&&(P.lab.cycle||1)<=1&&P.lab.key!==k)){
+  var c=calc(P);
+  if(!P.lab||typeof P.lab!=='object'||Array.isArray(P.lab))P.lab={};
+  /* The same namespace also stores the player's own work in Point B.
+     Refresh only the calculated lead fields; never replace sort/newRule/notes. */
+  P.lab.lead=c.lead;P.lab.queue=c.queue;P.lab.score=c.score;P.lab.sources=c.sources;
+  P.lab.weak=c.weak;P.lab.tie=c.tie;P.lab.key=k;P.lab.cycle=P.lab.cycle||1;P.lab.agree=null;
+  save(P);
+ }
+ return P.lab;
+};
 
 // Противоречие одной фразой
 var WN=['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'];
