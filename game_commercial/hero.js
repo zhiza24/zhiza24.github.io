@@ -49,11 +49,11 @@ function $(id){return document.getElementById(id)}
 /* 1. портрет */
 var n=H.layers&&H.layers.positions&&H.layers.positions.A,nat=H.nature;
 $('hName').textContent=P.name||g('Герой','Героиня');
-$('hRole').textContent=n?H.title(n):'Нужна дата рождения';
-$('hArc').textContent=n?H.title(n):'—';
-if(n){$('hArcL').textContent='Твой аркан';try{var ar=GPassportData.arcana[n-1],rf=String(ar.resource||'');rf=window.GPassport&&GPassport.say?GPassport.say(rf,P.gender):rf;$('hArcT').textContent=rf.split(/(?<=\.)\s/)[0]}catch(e){}}
+$('hRole').textContent=nat&&window.GNature?GNature.name(nat.primary,female):n?'Профиль героя':'Нужна дата рождения';
+$('hArc').textContent=n?'Основной ресурс':'—';
+if(n){$('hArcL').textContent='Твой основной ресурс';try{var ar=GPassportData.arcana[n-1],rf=String(ar.resource||'');rf=window.GPassport&&GPassport.say?GPassport.say(rf,P.gender):rf;$('hArcT').textContent=rf.split(/(?<=\.)\s/)[0]}catch(e){}}
 if(nat&&window.GNature){var am=GNature.A[nat.primary];$('hMech').textContent=GNature.name(nat.primary,female);$('hMechT').textContent=am.mech+'. '+am.lead.replace('Твоя естественная механика — ','Тебе естественно ').replace(/\.$/,'')+'.'}else $('hMech').textContent='—';
-$('cArc').onclick=function(){if(window.openPassport)openPassport('arcana')};
+$('cArc').onclick=function(){if(window.openPassport)openPassport('nature')};
 $('cMech').onclick=function(){if(window.openPassport)openPassport('nature')};
 $('hNat').onclick=function(){if(window.openPassport)openPassport('nature')};
 /* 3. главы */
