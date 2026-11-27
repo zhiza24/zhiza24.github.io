@@ -185,3 +185,5 @@ document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&
 
 /* 27.11: шаг назад не показывает устаревшую страницу из памяти браузера */
 window.addEventListener("pageshow",function(e){if(e.persisted)location.reload()});
+/* 27.11: когда подключилась новая версия игры, один раз обновить открытую страницу */
+(function(){try{var sw=navigator.serviceWorker;if(!sw||!sw.controller)return;var done=false;sw.addEventListener("controllerchange",function(){if(done)return;done=true;location.reload()})}catch(e){}})();
