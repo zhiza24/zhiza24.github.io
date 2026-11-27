@@ -1,86 +1,78 @@
-/* Расчет 16-сценного исследования фонового состояния.
-   Баллы описывают выборы в предложенных ситуациях, а не диагноз и не тип личности. */
+/* Подсчет ведущих фоновых состояний.
+   Первая реакция = 2 балла, дополнительная = 1.
+   Четыре защитные посадки считаются отдельно от ресурсной опоры. */
 (function(root){
 'use strict';
 var D=root.GBGS16;
-function round(n){return Math.round(n*1000)/1000}
-function isFamily(id){return !!(D&&D.FAM&&D.FAM[id])}
+function round(n){return Math.round(n*100)/100}
 function calculate(answers,followup,meta){
  if(!D)throw new Error('GBGS16 is not loaded');
  answers=answers&&typeof answers==='object'?answers:{};
  followup=followup&&typeof followup==='object'?followup:{};
  meta=meta&&typeof meta==='object'?meta:{};
- var families={},special={depends:0,none:0},answered=0,secondaryCount=0,codedPrimary=0,sphereSeen={},evidence=[];
- Object.keys(D.FAM).forEach(function(id){
-  var m=D.FAM[id];
-  families[id]={id:id,group:m.group,title:m.title,landing:m.landing||'',description:m.description,points:0,primaryCount:0,secondaryCount:0,situations:[],spheres:[],evidence:[]};
+ var families={},answered=0,skipped=0,evidence=[],sphereCoverage={};
+ Object.keys(D.PROFILES).forEach(function(id){
+  var p=D.PROFILES[id];
+  families[id]={id:id,group:p.group,title:p.title,formula:p.formula,summary:p.summary,mechanism:p.mechanism,manifestations:p.manifestations,cost:p.cost,direction:p.direction,question:p.question,points:0,primaryCount:0,secondaryCount:0,situations:[],spheres:[],evidence:[]};
  });
  D.Q.forEach(function(q){
   var a=answers[q[0]];
   if(!a||typeof a!=='object')return;
-  var primary=a.primary,secondary=a.secondary||null;
-  if(primary==null)return;
+  if(a.skipped){skipped++;return}
+  if(a.primary==null)return;
   answered++;
   var sphere=D.SPHERES[q[1]];
-  sphereSeen[sphere]=1;
-  if(primary==='v'){special.depends++;return}
-  if(primary==='x'){special.none++;return}
-  if(isFamily(primary)){
-   codedPrimary++;
-   var option=q[3].filter(function(o){return o[1]===primary})[0];
-   var item={qid:q[0],sphere:sphere,prompt:q[2],optionText:option?option[0]:'',role:'primary'};
-   families[primary].points+=1;
-   families[primary].primaryCount++;
-   if(families[primary].situations.indexOf(q[0])<0)families[primary].situations.push(q[0]);
-   if(families[primary].spheres.indexOf(sphere)<0)families[primary].spheres.push(sphere);
-   families[primary].evidence.push(item);evidence.push(Object.assign({family:primary},item));
+  sphereCoverage[sphere]=(sphereCoverage[sphere]||0)+1;
+  function add(id,role){
+   if(!families[id])return;
+   var f=families[id],pts=role==='primary'?2:1;
+   f.points+=pts;
+   if(role==='primary')f.primaryCount++;else f.secondaryCount++;
+   if(f.situations.indexOf(q[0])<0)f.situations.push(q[0]);
+   if(f.spheres.indexOf(sphere)<0)f.spheres.push(sphere);
+   var opt=q[3].filter(function(x){return x[1]===id})[0];
+   var ev={qid:q[0],sphere:sphere,prompt:q[2],optionText:opt?opt[0]:'',role:role,points:pts};
+   f.evidence.push(ev);evidence.push(Object.assign({family:id},ev));
   }
-  if(isFamily(secondary)&&secondary!==primary){
-   secondaryCount++;
-   var option2=q[3].filter(function(o){return o[1]===secondary})[0];
-   var item2={qid:q[0],sphere:sphere,prompt:q[2],optionText:option2?option2[0]:'',role:'secondary'};
-   families[secondary].points+=0.5;
-   families[secondary].secondaryCount++;
-   if(families[secondary].situations.indexOf(q[0])<0)families[secondary].situations.push(q[0]);
-   if(families[secondary].spheres.indexOf(sphere)<0)families[secondary].spheres.push(sphere);
-   families[secondary].evidence.push(item2);evidence.push(Object.assign({family:secondary},item2));
-  }
- });
- var voice=meta.voice||{};
- Object.keys(voice).forEach(function(k){
-  var id=voice[k];
-  if(isFamily(id)&&families[id]){families[id].points+=0.5;families[id].evidence.push({qid:'voice'+k,role:'voice',optionText:'внутренний голос'});}
+  add(a.primary,'primary');
+  if(a.secondary&&a.secondary!==a.primary)add(a.secondary,'secondary');
  });
  var familyList=Object.keys(families).map(function(id){
-  var f=families[id];f.points=round(f.points);f.share=round(f.points/Math.max(1,D.Q.length/2));f.situationCount=f.situations.length;f.sphereCount=f.spheres.length;
-  f.repeatLabel=f.sphereCount?('Сигнал отмечен в '+f.sphereCount+' из 8 сфер'):'Пока не проявился в выбранных ответах';
+  var f=families[id];
+  f.points=round(f.points);f.sphereCount=f.spheres.length;f.situationCount=f.situations.length;
+  f.share=round(f.points/48);
+  f.repeatLabel=f.sphereCount?('Проявилось в '+f.sphereCount+' из 8 сфер'):'В выбранных ответах пока не проявилось';
   return f;
  });
  function group(ids){
   var list=familyList.filter(function(f){return ids.indexOf(f.id)>=0}).sort(function(a,b){return b.points-a.points||b.sphereCount-a.sphereCount||a.id.localeCompare(b.id)});
-  var eligible=list.filter(function(f){return f.sphereCount>=3&&f.points>0}),leaders=[],status='no_clear_leader',gap=null;
+  var eligible=list.filter(function(f){return f.sphereCount>=3&&f.points>0});
+  var leaders=[],status='no_clear_leader',gap=null;
   if(eligible.length){
    leaders=[eligible[0]];status='leading';
-   if(eligible.length>1){gap=round(eligible[0].share-eligible[1].share);if(gap<=0.125+1e-9){leaders=[eligible[0],eligible[1]];status='two_close'}}
+   if(eligible.length>1){
+    gap=round(eligible[0].points-eligible[1].points);
+    if(gap<=Math.max(2,eligible[0].points*.10)){leaders=[eligible[0],eligible[1]];status='two_close'}
+   }
   }
   return {status:status,leaders:leaders.map(function(f){return f.id}),scoreGap:gap,families:list.map(function(f){return {id:f.id,points:f.points,share:f.share,sphereCount:f.sphereCount,primaryCount:f.primaryCount,secondaryCount:f.secondaryCount}})};
  }
- var groups={resource:group(['S1','S2','S3','S4']),protective:group(['S5','S6','S7','S8'])};
- return {
-  version:2,algoVersion:1,type:'background-state',status:'preliminary',at:Date.now(),
-  startedAt:meta.startedAt||null,seed:meta.seed||null,
+ var protective=group(['O','D','K','R']),resource=group(['S']);
+ var r={
+  version:3,algoVersion:3,type:'background-state',status:answered>=12?'reviewable':'preliminary',
+  at:Date.now(),completedAt:Date.now(),startedAt:meta.startedAt||null,seed:meta.seed||null,
   answers:Object.assign({},answers),followup:Object.assign({},followup),
-  coverage:{answered:answered,total:D.Q.length,codedPrimary:codedPrimary,secondary:secondaryCount,depends:special.depends,none:special.none,spheres:Object.keys(sphereSeen).length},
-  special:special,groups:groups,families:familyList,evidence:evidence,
-  followupNeeded:{resource:groups.resource.leaders.length>0,protective:groups.protective.leaders.length>0},
-  methodology:{primary:1,secondary:0.5,normalizer:8,minSpheresForLead:3,closeGap:0.125,resourceFamilies:['S1','S2','S3','S4'],protectiveFamilies:['S5','S6','S7','S8'],note:'Рабочие правила интерпретации. Не являются валидированными психометрическими порогами.'},
-  note:'Это предварительная карта повторяющихся выборов в предложенных ситуациях. Она не объясняет причины, не учитывает автоматически объективные ограничения и не является диагнозом.'
+  coverage:{answered:answered,total:D.Q.length,skipped:skipped,spheres:Object.keys(sphereCoverage).length,sphereAnswers:sphereCoverage},
+  groups:{protective:protective,resource:resource},families:familyList,evidence:evidence,
+  followupNeeded:{protective:protective.leaders.length>0,resource:resource.leaders.length>0},
+  methodology:{primary:2,secondary:1,maxPerFamily:48,minSpheresForLead:3,closeGap:'10% от баллов лидера',note:'Рабочие правила авторского инструмента самонаблюдения; не являются валидированными психометрическими нормативами.'},
+  note:'Карта показывает повторяющиеся ответы в предложенных ситуациях. Она не является диагнозом и не объясняет причины автоматически. Реальные ограничения, опасность и неравное отношение требуют отдельной оценки.'
  };
+ return r;
 }
 function needsFollowup(result){
- result=result||{};
- var n=result.followupNeeded||{};
- return {resource:!!n.resource,protective:!!n.protective,any:!!(n.resource||n.protective)};
+ var n=result&&result.followupNeeded||{};
+ return {protective:!!n.protective,resource:!!n.resource,any:!!(n.protective||n.resource)};
 }
 root.GBackgroundState16={calculate:calculate,needsFollowup:needsFollowup};
 })(window);
