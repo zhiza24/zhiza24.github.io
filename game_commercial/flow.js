@@ -57,6 +57,7 @@ window.GFLOW=[
 {u:'breath.html?at=p0&v=breath1',pt:'0',t:'Дыхание'},
 {u:'cutscene.html',pt:'0',t:'Заставка: Я есмь'},
 {u:'slot.html?id=dialog',pt:'0',t:'Кто сейчас выбирает'},
+{u:'breath.html?at=after-dialog&v=breath2',pt:'0',t:'Пауза: вдох-выдох'},
 {u:'slot.html?id=bg16',pt:'0',t:'Ведущее фоновое состояние'},
 {u:'ego.html',pt:'0',t:'Маг: повторяющийся эмоциональный итог'},
 {u:'betray.html',pt:'0',t:'Колесо самопредательства'},
