@@ -297,29 +297,28 @@ function mount(box){
   var egoRate=Math.round(egoScore/16*100),selfRate=Math.round(selfScore/16*100);
   var egoSeen=all.filter(function(a){return a.side==='ego'&&(a.pick==='yes'||a.pick==='mid')});
   var selfSeen=all.filter(function(a){return a.side==='self'&&(a.pick==='yes'||a.pick==='mid')});
-  var leadText='В этих утверждениях ты '+(F?'узнала':'узнал')+' '+egoSeen.length+' защитных реакций и '+selfSeen.length+' моментов живого выбора. Это не оценка личности, а карта того, где привычка выбирает за тебя, а где ты уже выбираешь сам'+(F?'а':'')+'.';
+  var leadText='';
   var strongLine=egoSeen.length
-   ?'Защитные реакции, которые ты '+(F?'отметила':'отметил')+' как знакомые, могут включаться автоматически. Рядом с ними есть и то, где ты уже выбираешь по-живому.'
-   :'В этом прохождении защитные реакции почти не '+(F?'отозвались':'отозвались')+'. Это тоже результат: возможно, они нехарактерны или проявляются в других обстоятельствах.';
-  var strongMore='<p>Ответ «Про меня» не означает, что так происходит всегда. Он показывает, что ты узнаешь эту реакцию в своем опыте. Несколько похожих ответов в одной области могут подсказать, что именно стоит исследовать глубже.</p>';
-  if(egoSeen.length)strongMore+='<p><b>Что ты '+(F?'отметила':'отметил')+' как знакомое:</b></p><ul>'+egoSeen.map(function(a){return '<li>'+esc(a.text)+(a.pick==='mid'?' <i>(иногда)</i>':'')+'</li>'}).join('')+'</ul>';
-  if(selfSeen.length)strongMore+='<p><b>Где уже есть живой выбор:</b></p><ul>'+selfSeen.map(function(a){return '<li>'+esc(a.text)+(a.pick==='mid'?' <i>(иногда)</i>':'')+'</li>'}).join('')+'</ul>';
+   ?'Есть реакции, которые включаются сами, ещё до того как ты успеваешь выбрать. Это не плохо и не навсегда — просто привычный способ справляться. Заметить их уже значит начать выбирать иначе.'
+   :'В этих ситуациях привычные реакции почти не '+(F?'отозвались':'отозвались')+'. Это тоже результат: возможно, они не про тебя, или проявляются в других обстоятельствах.';
+  var strongMore='';
+  if(egoSeen.length)strongMore+='<p><b>Что тебе знакомо:</b></p><ul>'+egoSeen.map(function(a){return '<li>'+esc(a.text)+(a.pick==='mid'?' <i>(иногда)</i>':'')+'</li>'}).join('')+'</ul>';
+  if(selfSeen.length)strongMore+='<p><b>Где ты уже выбираешь по-своему:</b></p><ul>'+selfSeen.map(function(a){return '<li>'+esc(a.text)+(a.pick==='mid'?' <i>(иногда)</i>':'')+'</li>'}).join('')+'</ul>';
+  if(!egoSeen.length&&!selfSeen.length)strongMore='<p>Ни одна формулировка не '+(F?'отозвалась':'отозвался')+' как «про меня». Это нормально: можно вернуться к этому шагу позже, когда появится больше опыта.</p>';
   var wounds=(rec.topWounds||[]).filter(function(k){return WOUND_INFO[k]});
   var insightLine=egoSeen.length
-   ?'В ответах заметнее всего проявились: '+(wounds.length?wounds.map(function(k){return WOUND_INFO[k].name}).join(' и '):'несколько разных привычных реакций')+'.'
-   :'В этом наборе ситуаций защитные реакции почти не получили отклика. Это не означает, что их нет: они могут проявляться в других обстоятельствах.';
-  var insightMore='<p>Защитные настройки — не плохая часть личности. Когда-то они могли помогать адаптироваться, сохранять отношения, справляться с неопределенностью и чувствовать безопасность. Важно заметить, когда они включаются автоматически и ограничивают возможность выбора.</p>';
+   ?'Чаще всего тебе знакомо: '+(wounds.length?wounds.map(function(k){return WOUND_INFO[k].name}).join(' и '):'несколько разных привычных способов')+'.'
+   :'';
+  var insightMore=egoSeen.length?'<p>Эти способы когда-то помогали справляться. Сейчас полезно просто замечать, когда они включаются сами, и спрашивать себя: это ещё нужно, или я могу выбрать иначе?</p>':'';
   wounds.forEach(function(k){insightMore+='<p><b>'+esc(WOUND_INFO[k].name.charAt(0).toUpperCase()+WOUND_INFO[k].name.slice(1))+':</b> '+esc(WOUND_INFO[k].note)+'</p>'});
-  var chosenList=all.filter(function(a){return a.pick==='yes'||a.pick==='mid'}).map(function(a){
-   return (a.side==='ego'?'Эго — защитная настройка':'Самость — контакт с собой')+(a.pick==='mid'?' (иногда)':'')+': «'+a.text+'»';
-  });
+  var chosenList=[];
   var nextStep=null;
   if(window.GFLOW){var ci=GFLOW.findIndex(function(x){return x.u==='slot.html?id=dialog'});if(ci>=0&&GFLOW[ci+1])nextStep=GFLOW[ci+1]}
   box.innerHTML='<div class="tri"><div class="tri-res-wrap" id="triRes"></div></div>';
   GResultCard.render(box.querySelector('#triRes'),{
    id:'dialog',stepKey:'slot.html?id=dialog',
-   passed:(F?'Ты прошла':'Ты прошел')+' шаг «Кто сейчас выбирает»',
-   title:'Привычные реакции',
+   passed:(F?'Ты прошла':'Ты прошел')+' короткие ситуации о выборе',
+   title:'Что тебе знакомо',
    lead:leadText,strong:strongLine,strongMore:strongMore,
    insight:insightLine,insightMore:insightMore,answers:chosenList,preview:preview,
    nextLabel:'Продолжить путь',
