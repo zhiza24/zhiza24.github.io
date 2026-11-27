@@ -16,7 +16,7 @@ const perSphere = {};
 for (const q of D.Q) {
   perSphere[q[1]] = (perSphere[q[1]] || 0) + 1;
   assert.equal(q[3].length, 5, q[0] + ' must have five response options');
-  assert.deepEqual(q[3].map(x => x[1]).sort(), ['D','K','O','R','S'], q[0] + ' must distinguish all five states');
+  assert.deepEqual(Array.from(q[3], x => x[1]).sort(), ['D','K','O','R','S'], q[0] + ' must distinguish all five states');
 }
 assert.equal(Object.keys(perSphere).length, 8);
 assert.ok(Object.values(perSphere).every(n => n === 2), 'each sphere must contain exactly two situations');
