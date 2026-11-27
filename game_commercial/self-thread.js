@@ -36,7 +36,7 @@ function voice(id,opts){opts=opts||{};var v=VOICE[id];if(!v)return;
 function insights(P){P=P||load();var out=[],D=P.diary||{};
  (D.blocks||[]).forEach(function(b){if(!b||String(b.id).indexOf('wow_')===0)return;var t=b.insight||b.lead||b.strong;if(t)out.push({src:b.step||b.id,title:b.title||'',text:short(t),at:b.at||null,kind:'result'})});
  (D.ins||[]).forEach(function(e){if(e&&e.x)out.push({src:e.blockId||'diary',title:e.at||'Дневник',text:short(e.x,220),at:e.d||null,kind:'own'})});
- if(P.dialog&&(P.dialog.self+P.dialog.ego)>0)out.push({src:'slot.html?id=dialog',title:'Кто сейчас выбирает',text:'Самость: '+P.dialog.self+', Защитник: '+P.dialog.ego,kind:'fact'});
+ if(P.dialog&&((P.dialog.self||0)+(P.dialog.ego||0))>0)out.push({src:'slot.html?id=dialog',title:'Кто сейчас выбирает',text:'Есть и привычные реакции, и моменты живого выбора.',kind:'fact'});
  if(P.dq&&P.dq.accepted!=null)out.push({src:'swipe.html',title:'Твое хорошее',text:'Принято '+P.dq.accepted+'%',kind:'fact'});
  var ld=P.desireLab;if(ld&&ld.desire)out.push({src:'slot.html?id=lab_d',title:'Лабиринт желаний',text:short(ld.desire),kind:'own'});
  var dc=P.tracker&&P.tracker.declared;if(dc&&dc.text)out.push({src:'wish.html',title:'Главное желание',text:short(dc.text),kind:'own'});
@@ -48,7 +48,7 @@ function dailyQuestion(P){return gx('Где ты сегодня был{|а} на
 /* ---------- Вау-моменты маршрута: текст только из реальных ответов ---------- */
 function M(P){var name=String(P.name||'').trim(),f=fem(P);return {
  dialog_support:function(cb){var d=P.dialog;if(!d||!(d.self>0))return cb(null);var n=d.self+d.ego;
-  cb({kicker:'Первая опора',title:'Самость уже говорит',text:gx('В диалоге '+d.self+' из '+n+' выборов сделал{|а} ты сам{|а}, из Самости, а не из защиты.',P),sub:'Опору не нужно создавать с нуля. Ее можно замечать.'})},
+  cb({kicker:'Первая опора',title:'Ты уже выбираешь',text:gx('В этих ситуациях ты уже выбирал{|а} по-своему, а не только по привычке.',P),sub:'Опору не нужно создавать с нуля. Ее можно замечать.'})},
  good_taken:function(cb){var q=P.dq;if(!q||q.accepted==null||!Array.isArray(q.answers)||!q.answers.length)return cb(null);var ok=q.answers.filter(Boolean).length,v=(q.voices||[])[0];if(!ok)return cb(null);
   cb({kicker:'Сначала опора',title:ok+' из '+q.answers.length,text:gx('Столько своего хорошего ты уже готов{|а} взять себе.',P),quote:v?'«'+v+'»':'',quoteAfter:true,sub:v?'Так звучал голос, который отнимал остальное. Это привычное объяснение, а не факт о тебе.':'Ты не отдал{|а} ни одного своего хорошего события. Это редкая опора.'})},
  portrait_link:function(cb){heroSum(P,function(s){if(!s||!s.good.length)return cb(null);

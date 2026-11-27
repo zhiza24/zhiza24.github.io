@@ -347,7 +347,7 @@ function insights(P){
  // Кто сейчас выбирает
  if(P.dialog && (P.dialog.self||P.dialog.ego||P.dialog.selfCount||P.dialog.egoCount)){
   var ds=P.dialog.self||P.dialog.selfCount||0, de=P.dialog.ego||P.dialog.egoCount||0;
-  if(ds+de>0) add('Где ты уже выбираешь сам'+(f?'а':''), 'В коротких ситуациях ты '+(f?'узнала':'узнал')+' '+de+' защитных реакций и '+ds+' моментов живого выбора. И то, и другое — материал: привычку можно замечать, а живое — опираться.');
+  if(ds+de>0) add('Где ты уже выбираешь сам'+(f?'а':''), 'В коротких ситуациях ты '+(f?'заметила':'заметил')+' и привычные реакции, и моменты, где выбираешь по-своему. Привычку можно замечать, а живое — опираться на него.');
  }
  // Ценности
  var vals = (P.valuesCore && P.valuesCore.top3) || (P.values && P.values.order) || [];
