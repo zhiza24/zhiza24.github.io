@@ -60,7 +60,7 @@ test('every commercial route screen opens in sequence without runtime errors',as
   backgroundProfile:{backgroundState:{version:2,completedAt:1,families:[],groups:{resource:{leaders:[],families:[],status:'no_clear_leader'},protective:{leaders:[],families:[],status:'no_clear_leader'}},coverage:{answered:16}}},
   ego:{v:2,schema:'df',mode:'ha',sc:{},md:{}},betray:{done:true},im:{v:3,sources:[],fragments:[],links:[],tensions:[],unknown:[]},
   dq:{accepted:80},portrait:{done:true,zones:[]},wheel:[5,5,5,5,5,5,5,5],wheelTest:{completed:true,spheres:[]},
-  valuesStage:'done',values:{order:['Свобода','Смысл','Развитие']},valuesCore:{v:1,top3:['Свобода','Смысл','Развитие']},
+  valuesStage:'done',values:{picked:['Свобода','Безопасность','Смысл','Развитие','Любовь'],score:{'Свобода':5,'Безопасность':4,'Смысл':3,'Развитие':2,'Любовь':1},pairs:[],pi:10,order:['Свобода','Смысл','Развитие','Безопасность','Любовь']},egoSelf:{i:10,ans:Array(10).fill('mixed')},focuses:['Здоровье','Финансы','Смысл'],valuesCore:{v:1,top3:['Свобода','Смысл','Развитие']},
   fractal:{evidence:[{sphere:'money'}],lever:{id:'lever',status:'chosen'}},
   lab:{lead:'err',queue:['deval','resp'],weak:false,cycle:1,sort:['yes','part','no','unknown','yes','part'],newRule:'Новая формулировка'},
   desireLab:{v:1,desire:'Свое дело'},tracker:{declared:{text:'Главное желание'},directions:[{id:'a',text:'Первое'},{id:'b',text:'Второе'}],start:Date.now()-27*86400000,strategySeen:true,finale:{done:true},days:{},strategy:{v:1,wish:'Главное желание',result:'Первый результат',focus:[],days:[]}},
