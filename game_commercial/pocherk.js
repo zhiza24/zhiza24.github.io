@@ -275,7 +275,7 @@ function showBreakdown(R,fresh){
   insight:attnLine?attnLine.split('. ')[0]+'.':'',
   insightMore:'',
   insightLabel:'На что обратить внимание',
-  artifact:{name:'Кристалл опоры',note:'Ты получил(а) кристалл. Он хранится у твоего героя.',icon:CRYSTAL},
+  artifact:{name:'Кристалл опоры',note:'Ты '+(F?'получила':'получил')+' кристалл. Он хранится у твоего героя.',icon:CRYSTAL},
   preview:new URLSearchParams(location.search).get('preview')==='1',
   nextLabel:'Дальше',
   onNext:function(){vib(20);stopAudio();location.href=window.GReview?'tasks.html':GRoute.advance()}
