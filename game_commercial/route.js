@@ -126,7 +126,7 @@ function snapshot(u,p){
  const data={};(keys[u]||['arts']).forEach(k=>{if(p[k]!==undefined)data[k]=p[k]});
  const logs=(p.log||[]).slice(-3);return JSON.parse(JSON.stringify({data,logs}));
 }
-function reading(u){if(isVisualReview())return false;return u==='elder.html'||u==='hero.html'||u==='sum.html'||u==='fin.html'||u.startsWith('scene.html')||['pa_end','pb_intro','pc_intro','compare'].some(k=>u==='slot.html?id='+k)}
+function reading(u){if(isVisualReview())return false;return u==='elder.html'||u==='hero.html'||u==='sum.html'||u.startsWith('scene.html')||['pa_end','pb_intro','pc_intro','compare'].some(k=>u==='slot.html?id='+k)}
 /* день трекера: по дате начала, завершенный финал считается как 28 */
 function trackDay(p){p=p||load();const T=p.tracker||{};let day=0,filled=0;
  if(T.finale&&T.finale.done)day=28;else if(T.start){day=Math.floor((Date.now()-T.start)/86400000)+1;day=Math.max(1,Math.min(28,day));}

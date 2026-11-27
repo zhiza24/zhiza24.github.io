@@ -1223,7 +1223,7 @@ function bind(){
       GPro.restoreBackup(function(ok){if(ok){alert('Резервная копия восстановлена. Игра перезагрузится.');location.reload()}else alert('Не удалось восстановить резервную копию.')});
       return;
     }
-    if(act==='start-cycle'){T.strategySeen=true;T.space='day';T.view='day';if(!T.start||!filledCount(T))T.start=Date.now();if(!P.cycleBaseline){P.cycleBaseline={wheel:(Array.isArray(P.wheel)?P.wheel:[]).slice(),research:mirrorInitialResearch(P),cycle:T.cycle||1,capturedAt:Date.now(),source:'initial'};}T.openDay=todayNum(T);save(P);render();try{window.scrollTo(0,0)}catch(e){}return}
+    if(act==='start-cycle'){T.strategySeen=true;T.space='day';T.view='day';if(!T.start||!filledCount(T))T.start=Date.now();if(window.GGoalPath){GGoalPath.activateCycle(T,T.start);GGoalPath.syncDirections(T,T.start);GGoalPath.snapshotDay(T,todayNum(T),T.start)}if(!P.cycleBaseline){P.cycleBaseline={wheel:(Array.isArray(P.wheel)?P.wheel:[]).slice(),research:mirrorInitialResearch(P),cycle:T.cycle||1,capturedAt:Date.now(),source:'initial'};}T.openDay=todayNum(T);save(P);render();try{window.scrollTo(0,0)}catch(e){}return}
     if(act==='open'){
       var nn=+b.getAttribute('data-n');
       T.space='day'; T.view='day'; T.openDay=nn;
@@ -1544,7 +1544,7 @@ if(!root){
 }
 /* движок целей: перенос данных слотов к id целей и снимок дня, до первой отрисовки */
 (function gpBoot(){if(!window.GGoalPath)return;try{var P=load(),T=P.tracker;if(!T||!T.directions||!T.directions.length)return;var before=JSON.stringify(T.goalPath||null)+JSON.stringify(T.goalSteps||null)+JSON.stringify(T.directionPlans||null);
-  GGoalPath.syncDirections(T);if(T.start)GGoalPath.snapshotDay(T);
+  GGoalPath.syncDirections(T);if(T.start&&T.strategySeen)GGoalPath.snapshotDay(T);
   if(before!==JSON.stringify(T.goalPath||null)+JSON.stringify(T.goalSteps||null)+JSON.stringify(T.directionPlans||null))save(P)}catch(e){}})();
 mount(root);
 /* голос Самости: один раз в день при входе в трекер, если поверх ничего не открыто */
