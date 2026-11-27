@@ -210,6 +210,8 @@
 <style>
   .start.sun-btn{position:absolute;--sun-size:68px;width:var(--sun-size)!important;height:var(--sun-size)!important;background:transparent!important;box-shadow:none!important;animation:none!important;border:0;overflow:visible;display:block;line-height:0;text-decoration:none}
   .start.sun-btn:before{display:none!important;content:none!important}
+  /* Keep the map start sphere anchored while iOS applies :active on touch. */
+  .start.sun-btn:active{transform:translate(-50%,-50%) scale(.96)!important}
   .start.sun-btn .start-lbl{font:800 11px/1 Manrope,Arial,sans-serif;letter-spacing:.1em;padding-left:.1em;color:#4a1c06;text-shadow:0 1px 1px rgba(255,245,205,.55);filter:drop-shadow(0 0 4px rgba(255,248,200,.35))}
   .start.sun-btn .sun-btn__halo{inset:-48%}
 </style>
