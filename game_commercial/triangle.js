@@ -78,10 +78,10 @@ function css(){
   '.tri-img .glLight{background:radial-gradient(ellipse 68% 62% at 74% 48%,rgba(255,226,148,.66),rgba(255,204,110,.24) 52%,transparent 76%);mix-blend-mode:screen}'+
   '.tri-img .glHero{background:radial-gradient(ellipse 60% 48% at 50% 34%,rgba(255,232,168,.55),transparent 72%);mix-blend-mode:screen}'+
   '.tri-img .dimLeft{background:linear-gradient(90deg,rgba(6,4,2,.72),transparent 54%)}'+
-  '.tri-img.fx-dark .shDark{opacity:1}.tri-img.fx-dark .shSmoke{opacity:.96;animation:triSmoke .7s ease-out}.tri-img.fx-dark .shHero{opacity:.9}'+
-  '.tri-img.fx-dark-soft .shDark{opacity:.62}.tri-img.fx-dark-soft .shSmoke{opacity:.55}.tri-img.fx-dark-soft .shHero{opacity:.55}'+
-  '.tri-img.fx-light .glLight{opacity:.95}.tri-img.fx-light .glHero{opacity:.85}.tri-img.fx-light .dimLeft{opacity:.7}'+
-  '.tri-img.fx-light-soft .glLight{opacity:.55}.tri-img.fx-light-soft .glHero{opacity:.45}.tri-img.fx-light-soft .dimLeft{opacity:.4}'+
+  '.tri-img.fx-dark .shDark{opacity:1}.tri-img.fx-dark .shSmoke{opacity:1;animation:triSmoke .7s ease-out}.tri-img.fx-dark .shHero{opacity:1}'+
+  '.tri-img.fx-dark-soft .shDark{opacity:.75}.tri-img.fx-dark-soft .shSmoke{opacity:.7}.tri-img.fx-dark-soft .shHero{opacity:.65}'+
+  '.tri-img.fx-light .glLight{opacity:1}.tri-img.fx-light .glHero{opacity:1}.tri-img.fx-light .dimLeft{opacity:.85}'+
+  '.tri-img.fx-light-soft .glLight{opacity:.7}.tri-img.fx-light-soft .glHero{opacity:.6}.tri-img.fx-light-soft .dimLeft{opacity:.5}'+
   '.tri-img.drag i{transition:none}'+
   '@keyframes triSmoke{from{filter:blur(16px);transform:scale(.82)}to{filter:blur(0);transform:scale(1)}}'+
   '@keyframes triWig{0%,100%{transform:translateX(0)}20%{transform:translateX(-16px) rotate(-2deg)}50%{transform:translateX(16px) rotate(2deg)}75%{transform:translateX(-6px)}}.tri-card.wig{animation:triWig 1.1s ease}'+
@@ -186,7 +186,7 @@ function mount(box){
    if(!drag||locked)return;
    dx=e.clientX-sx;dy=e.clientY-sy;
    card.style.transform='translate('+dx+'px,'+Math.max(-12,dy*.4)+'px) rotate('+(dx/18)+'deg)';
-   if(dx>28||dy>48)setFx(item.side==='ego'?'dark-soft':'light-soft');
+   if(dx>28)setFx(item.side==='ego'?'dark-soft':'light-soft');
    else setFx('');
   };
   function endDrag(){
