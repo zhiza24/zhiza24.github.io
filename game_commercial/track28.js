@@ -282,6 +282,9 @@ function portrait(P){
   return '<section class="sg-b t-portrait"><small>Как это будет учтено в 28 днях</small>'+L.join('')+'<p class="mute">'+esc(gx('Это предположения, а не вывод о тебе. В шаге по цели появится «Формат шага» с пояснением, и ты сможешь его поправить.'))+'</p></section>';
 }
 function viewStrategy(P,T){
+  if(!(P.pathPlan&&P.pathPlan.done)&&!T.strategySeen){
+    return '<div class="t28"><h1>Сначала заверши Конструктор пути</h1><p>После него здесь появится стратегия, собранная по всем твоим ответам и выбранным направлениям. Тогда можно будет запустить 28 дней.</p><a class="go" href="tasks.html">Вернуться к карте пути</a></div>';
+  }
   var h='<div class="t28">'+((window.GStrategy&&GStrategy.html)?GStrategy.html(T.strategy):'<h1>Твоя стратегия готова</h1>');
   h+=portrait(P);
   h+='<button class="go" type="button" data-act="start-cycle">Начать 28 дней</button></div>';
