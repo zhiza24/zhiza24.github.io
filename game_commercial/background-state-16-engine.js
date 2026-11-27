@@ -46,6 +46,11 @@ function calculate(answers,followup,meta){
    families[secondary].evidence.push(item2);evidence.push(Object.assign({family:secondary},item2));
   }
  });
+ var voice=meta.voice||{};
+ Object.keys(voice).forEach(function(k){
+  var id=voice[k];
+  if(isFamily(id)&&families[id]){families[id].points+=0.5;families[id].evidence.push({qid:'voice'+k,role:'voice',optionText:'внутренний голос'});}
+ });
  var familyList=Object.keys(families).map(function(id){
   var f=families[id];f.points=round(f.points);f.share=round(f.points/8);f.situationCount=f.situations.length;f.sphereCount=f.spheres.length;
   f.repeatLabel=f.sphereCount?('Сигнал отмечен в '+f.sphereCount+' из 8 сфер'):'Пока не проявился в выбранных ответах';

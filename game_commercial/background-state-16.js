@@ -63,6 +63,14 @@ function mount(box){
    '<div class="bg16-actions"><button type="button" class="bg16-hero-btn" id="bg16Start">'+(count?'Продолжить':saved?'Начать заново':'Начать исследование')+'</button>'+
    (saved&&!retake?'<button type="button" id="bg16Show">Посмотреть результат</button>':'')+'</div>');
  }
+ var voiceStep=null;
+ function voice(){
+  stage='voice';
+  var set=D.VOICE[voiceStep];
+  if(!set){voiceStep=null;if(step>=16)followup();else question();return}
+  var opts=set[1].map(function(o,i){return '<button type="button" class="bg16-choice" data-bg16-voice="'+o[1]+'">'+esc(o[0])+'</button>'}).join('');
+  shell('<span class="tag">Коротко</span><div class="bg16-kicker">Внутренний голос</div><h2>'+esc(set[0])+'</h2><div class="bg16-choices">'+opts+'</div><p class="bg16-muted">Выбери фразу, которая ближе к тому, что обычно звучит внутри. Это не оценка.</p>');
+ }
  function question(){
   stage='questions';
   var qid=draft.order[step],q=qById(qid),a=draft.answers[qid]||{},indices=draft.optionOrder[qid]||[0,1,2,3];
@@ -173,10 +181,11 @@ function mount(box){
   }});
   var back=box.querySelector('#bg16Back');if(back)back.onclick=function(){if(step>0){step--;question()}};
   var skip=box.querySelector('#bg16Skip');if(skip)skip.onclick=function(){var qid=draft.order[step];draft.answers[qid]={primary:null,secondary:null,skipped:true};saveDraft();step++;if(step>=16)followup();else question()};
-  var next=box.querySelector('#bg16Next');if(next)next.onclick=function(){var qid=draft.order[step],a=draft.answers[qid];if(!a||a.primary==null)return;step++;saveDraft();if(step>=16)followup();else question()};
+  var next=box.querySelector('#bg16Next');if(next)next.onclick=function(){var qid=draft.order[step],a=draft.answers[qid];if(!a||a.primary==null)return;step++;saveDraft();if(step===4||step===8||step===12||step===16){voiceStep=(step/4)-1;voice();return}if(step>=16)followup();else question()};
   box.querySelectorAll('[data-bg16-follow]').forEach(function(b){b.onchange=function(){draft.followup[b.dataset.bg16Follow]=b.value;saveDraft()}});
   var backQ=box.querySelector('#bg16BackToQuestions');if(backQ)backQ.onclick=function(){step=15;question()};
-  var finish=box.querySelector('#bg16Finish');if(finish)finish.onclick=function(){var r=E.calculate(draft.answers,draft.followup,{startedAt:draft.startedAt,seed:draft.seed});saveResult(r);result()};
+  box.querySelectorAll('[data-bg16-voice]').forEach(function(b){b.onclick=function(){draft.voice=draft.voice||{};draft.voice[voiceStep]=b.dataset.bg16Voice;saveDraft();voiceStep=null;if(step>=16)followup();else question()}});
+  var finish=box.querySelector('#bg16Finish');if(finish)finish.onclick=function(){var r=E.calculate(draft.answers,draft.followup,{startedAt:draft.startedAt,seed:draft.seed,voice:draft.voice||{}});saveResult(r);result()};
   var cont=box.querySelector('#bg16Continue');if(cont)cont.onclick=function(){
    if(preview||retake){location.href='tasks.html'+(retake?'#skipped':'');return}
    if(root.GRoute&&GRoute.advance)location.href=GRoute.advance();else location.href='tasks.html';
