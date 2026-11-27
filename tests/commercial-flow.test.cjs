@@ -145,17 +145,21 @@ function routeEnv(){
  assert.equal(nativeGet.call(storage,'alch_samost'),'MAIN_SAMOST','delete-all preserves main Self-thread data');
  assert.equal(nativeGet.call(storage,'alch_pattern_map_v1'),'MAIN_PATTERN','delete-all preserves main pattern map');
  assert.equal(nativeGet.call(session,'alch_v5_private'),'MAIN_SESSION','delete-all preserves main session data');
- let quotaWarnings=0;
- w.alert=()=>{quotaWarnings++};
- const normalSet=w.Storage.prototype.setItem;
- w.Storage.prototype.setItem=function(key,value){
-  if(key==='alch_v5_profile'){const err=new Error('storage full');err.name='QuotaExceededError';throw err}
-  return normalSet.call(this,key,value);
+ const quotaDom=new JSDOM('<!doctype html><html><head></head><body></body></html>',{url:'https://quota.test/game_commercial/map.html',runScripts:'outside-only'});
+ const qw=quotaDom.window;
+ const rawSet=qw.Storage.prototype.setItem;
+ qw.Storage.prototype.setItem=function(key,value){
+  if(key==='alch_commercial_profile'){const err=new Error('storage full');err.name='QuotaExceededError';throw err}
+  return rawSet.call(this,key,value);
  };
- assert.throws(()=>w.GProfile.save({name:'Should not pretend to save'}),'quota failure must propagate to the caller');
+ qw.eval(read('flow.js'));
+ qw.eval(read('profile-layer.js'));
+ qw.alert=()=>{quotaWarnings++};
+ qw.eval(read('engine.js'));
+ let quotaWarnings=0;
+ assert.throws(()=>qw.GProfile.save({name:'Should not pretend to save'}),'quota failure must propagate to the caller');
  assert.equal(quotaWarnings,1,'quota failure must be visible to the player');
- w.Storage.prototype.setItem=normalSet;
-
+ quotaDom.window.close();
  dom.window.close();
 }
 console.log('PASS: commercial route progression, reload persistence, snapshot provenance, and isolated backup/import/delete.');
