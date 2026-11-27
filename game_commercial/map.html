@@ -570,7 +570,9 @@ var SCROLL_HTML='<p>Приветствую вас, господа пробужд
     requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add('on')})});
   }
   // first visit: unroll by itself after a short pause
-  var autoT=seen?0:setTimeout(op,900);
+  var ss=false;try{ss=!!sessionStorage.getItem('alch_scroll_ss')}catch(e){}
+  try{sessionStorage.setItem('alch_scroll_ss','1')}catch(e){}
+  var autoT=ss?0:setTimeout(op,900);
   scl.onclick=function(){clearTimeout(autoT);op()};
   document.getElementById('sx').onclick=cl;
   document.getElementById('sclose').onclick=cl;
