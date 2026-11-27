@@ -53,7 +53,7 @@ function css(){
  var s=document.createElement('style');s.id='tri-css';
  s.textContent=
   'body.tri-on,body.tri-on .wrap{background:#0d0905!important}'+
-  '.tri{margin:-8px -16px 0;position:relative;color:#f4ecdf;font-family:Manrope,sans-serif}'+
+  '.tri{margin:-8px -16px 0;position:relative;color:#f4ecdf;font-family:Manrope,sans-serif}'+'.tri.deck{display:flex;flex-direction:column;height:calc(100svh - 96px);min-height:520px;max-height:calc(100svh - 80px)}'+
   /* Заставка Старца — влезает целиком на 375x667 без скролла */
   '.tri-cut{position:relative;min-height:calc(100svh - 110px);display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;border-radius:0 0 22px 22px;background:#0c0804}'+
   '.tri-cut-bg{position:absolute;inset:0;background:url(img/scene_fire.jpg) center 20%/cover no-repeat}'+
@@ -68,7 +68,7 @@ function css(){
   '.tri-cut-hint{margin:0 0 12px;font:600 15px/1.4 Manrope,sans-serif;color:#5c350c;text-align:center}'+
   '.tri-demo{position:relative;height:48px;margin:2px auto 10px;width:100%;max-width:260px}.tri-demo b{position:absolute;left:50%;top:6px;width:104px;margin-left:-52px;height:36px;border-radius:10px;background:linear-gradient(#fff8e4,#e0a940);box-shadow:0 4px 10px rgba(80,40,8,.28);animation:triDemo 2.6s ease-in-out infinite}.tri-demo b:after{content:"\\261D";position:absolute;left:40px;top:16px;font-size:22px}.tri-demo span{position:absolute;top:12px;font-size:22px;color:#7a4e1c;font-weight:800}.tri-demo .a1{left:0}.tri-demo .a2{right:0}@keyframes triDemo{0%,100%{transform:translateX(0)}25%{transform:translateX(-64px) rotate(-10deg)}50%{transform:translateX(0)}75%{transform:translateX(64px) rotate(10deg)}}'+
   /* Сцена треугольника */
-  '.tri-img{position:relative;width:100%;height:clamp(250px,calc(100svh - 330px),520px);background:#0d0905 center 14%/cover no-repeat;overflow:hidden}'+
+  '.tri-img{position:relative;width:100%;flex:1 1 auto;min-height:200px;height:auto;background:#0d0905 center 18%/cover no-repeat;overflow:hidden}'+
   '.tri-img i{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .28s ease}'+
   /* Темная сторона — видимая тень и дым слева, той же силы, что и свет справа */
   '.tri-img .shDark{background:radial-gradient(ellipse 70% 82% at 18% 52%,rgba(0,0,0,.94) 0%,rgba(4,2,1,.78) 38%,rgba(4,2,1,.2) 62%,transparent 78%),linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.5) 28%,transparent 60%);mix-blend-mode:multiply}'+
@@ -91,7 +91,7 @@ function css(){
   '.tri-rev.dark{background:rgba(16,10,8,.92);color:#d7c6b2;border:1px solid rgba(170,145,120,.55);box-shadow:0 6px 20px rgba(0,0,0,.75)}'+
   '.tri-rev.light{background:linear-gradient(180deg,#fff2c2,#e5b755);color:#2c1808;border:1px solid #fff5d4;box-shadow:0 0 22px rgba(255,212,110,.75)}'+
   /* Нижняя панель карточек */
-  '.tri-p{position:relative;margin-top:-18%;padding:18px 16px 20px;background:linear-gradient(rgba(13,9,5,0),rgba(13,9,5,.86) 18%,#0d0905 40%)}'+
+  '.tri-p{position:relative;flex:0 0 auto;margin-top:0;padding:12px 16px 16px;background:#0d0905}'+
   '.tri-meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px;font:700 12.5px Manrope,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#d6b272}'+
   '.tri-card{position:relative;margin:4px 0 12px;padding:20px 16px;border-radius:18px;background:linear-gradient(#f6e6bf,#e2c78e);color:#2c1808;font:700 19.5px/1.38 Manrope,sans-serif;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .34s ease,opacity .3s ease,background .24s ease,color .24s ease,box-shadow .24s ease;box-shadow:0 8px 24px rgba(0,0,0,.55);min-height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center}'+
   '.tri-card.fl-dark{background:linear-gradient(#261c17,#140e0b);color:#e6d8c6;box-shadow:0 10px 30px rgba(0,0,0,.85),inset 0 0 0 1px rgba(170,140,110,.35)}'+
@@ -138,7 +138,7 @@ function mount(box){
  var imgEl,panEl,revEl;
  function showDeck(){
   step='deck';
-  box.innerHTML='<div class="tri">'+
+  box.innerHTML='<div class="tri deck">'+
    '<div class="tri-img" id="triImg" style="background-image:url('+pic+')">'+
     '<i class="shDark"></i><i class="shSmoke"></i><i class="shHero"></i><i class="glLight"></i><i class="glHero"></i><i class="dimLeft"></i>'+
     '<div class="tri-rev" id="triRev"></div>'+
