@@ -187,6 +187,7 @@ function mount(box){
    dx=e.clientX-sx;dy=e.clientY-sy;
    card.style.transform='translate('+dx+'px,'+Math.max(-12,dy*.4)+'px) rotate('+(dx/18)+'deg)';
    if(dx>28)setFx(item.side==='ego'?'dark-soft':'light-soft');
+   else if(dx<-28)setFx('dark-soft');
    else setFx('');
   };
   function endDrag(){
@@ -224,10 +225,15 @@ function mount(box){
     setTimeout(function(){idx++;drawCard()},280);
    },isDark?520:420);
   }else{
+   /* Свайп влево / «Не про меня»: всё равно показываем тень на тёмной стороне, затем уводим карточку. */
+   setFx('dark');
    card.classList.remove('wig');
-   card.style.transform='translate(-420px,0) rotate(-18deg)';
-   card.style.opacity='0';
-   setTimeout(function(){idx++;drawCard()},280);
+   card.classList.add('fl-dark');
+   setTimeout(function(){
+    card.style.transform='translate(-420px,0) rotate(-18deg)';
+    card.style.opacity='0';
+    setTimeout(function(){idx++;drawCard()},360);
+   },420);
   }
  }
 
