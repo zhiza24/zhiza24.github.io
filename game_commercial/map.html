@@ -100,7 +100,7 @@
   @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 
   /* first-visit author scroll: gone for good after closing */
-  html.aseen .scl,html.aseen .sov{display:none!important}
+  html.aseen .sov:not(.ready){visibility:hidden}
   .sov{transition:opacity .5s ease}
   .sov.gone{opacity:0;pointer-events:none}
   .sov.closing .sbd,.sov.closing .sx,.sov.closing .sau,.sov.closing .sclose{visibility:hidden;opacity:0!important;transition:none!important}
@@ -205,6 +205,14 @@
   .pgroup.lk summary{opacity:.6}
   .tsteps{margin-top:14px}
   .pathsum{font:14px/1.5 Arial,sans-serif;color:#c9b88f;margin:0 0 6px}
+
+  /* 27.11: без полосы шагов; «Весь путь» слева, свиток автора справа */
+  :root{--stage-w:min(100vw,calc((100dvh - var(--top-h) - var(--nav-h)) * 784 / 1168))}
+  .pathbar{left:calc(50% - var(--stage-w)/2 + 10px)!important;transform:none!important;width:auto!important;padding:0!important;background:none!important;border:0!important;box-shadow:none!important;top:10px!important}
+  .pathbar #pbText,.pathbar .pb-bar,.pathbar .pb-sub{display:none!important}
+  .pathbar .pb-all{padding:7px 14px;border-radius:999px;background:rgba(14,9,4,.78);border:1px solid rgba(240,209,140,.5);box-shadow:0 4px 14px rgba(0,0,0,.45);text-decoration:none}
+  .scl{left:auto!important;right:calc(50% - var(--stage-w)/2 + 10px)!important;transform:none!important;width:92px!important;top:calc(var(--top-h) + 6px)!important}
+  .scl.op{opacity:0!important;pointer-events:none}
 </style>
 <link rel="stylesheet" href="sun-btn.css?v=g17">
 <style>
@@ -541,7 +549,6 @@ var SCROLL_HTML='<p>Приветствую вас, господа пробужд
   a.hidden=true;
   var KEY='alch_v5_author_seen_v2',seen=false,closed=false;
   try{seen=!!localStorage.getItem(KEY)}catch(e){}
-  if(seen){o.remove();scl.remove();return}
   function cl(){
     if(closed||!o.classList.contains('ready'))return;closed=true;
     try{localStorage.setItem(KEY,String(Date.now()))}catch(e){}
@@ -550,20 +557,20 @@ var SCROLL_HTML='<p>Приветствую вас, господа пробужд
     o.classList.add('closing');
     o.classList.remove('on');                       // roll up: transform-only (.6s)
     hideT=setTimeout(function(){
-      o.classList.add('gone');                      // then fade away (.5s)
-      setTimeout(function(){o.remove();scl.remove();document.body.classList.remove('scrolling');document.documentElement.classList.add('aseen')},560);
+      o.classList.add('gone');
+      setTimeout(function(){o.classList.remove('ready','closing','gone');scl.classList.remove('op');document.body.classList.remove('scrolling');closed=false},560);
     },620);
   }
   function op(){
     if(closed||o.classList.contains('ready'))return;
-    clearTimeout(hideT);
+    clearTimeout(hideT);o.classList.remove('gone','closing');
     document.body.classList.add('scrolling');
     o.classList.add('ready');
     scl.classList.add('op');
     requestAnimationFrame(function(){requestAnimationFrame(function(){o.classList.add('on')})});
   }
   // first visit: unroll by itself after a short pause
-  var autoT=setTimeout(op,900);
+  var autoT=seen?0:setTimeout(op,900);
   scl.onclick=function(){clearTimeout(autoT);op()};
   document.getElementById('sx').onclick=cl;
   document.getElementById('sclose').onclick=cl;
