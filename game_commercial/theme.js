@@ -182,3 +182,6 @@ document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&
  var href=location.href,q0=qtext();
  [60,350].forEach(function(ms){setTimeout(function(){if(location.href!==href)return;var gone=!document.contains(b);if((nx&&gone)||(qtext()!==q0&&(gone||nx)))sc()},ms)})},false);
 })();
+
+/* 27.11: шаг назад не показывает устаревшую страницу из памяти браузера */
+window.addEventListener("pageshow",function(e){if(e.persisted)location.reload()});
