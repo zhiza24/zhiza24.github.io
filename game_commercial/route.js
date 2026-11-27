@@ -115,10 +115,10 @@ function snapshot(u,p){
   'ego.html':['ego'], 'betray.html':['betray'], 'swipe.html':['dq'], 'res.html':['res','body'], 'wheel8.html':['wheel'],
   'wheel-test.html':['wheelTest'], 'values.html':['values','egoSelf','focuses'],
   'slot.html?id=mirrors':['mirror_exercise'], 'slot.html?id=dialog':['dialog'],
-  'slot.html?id=evidence':['fractal'], 'slot.html?id=sort':['lab'], 'slot.html?id=found':['lab'],
+  'slot.html?id=evidence':['fractal'], 'slot.html?id=sort':['lab'], 'slot.html?id=eraser':['lab','arts'], 'slot.html?id=pb_end':['lab','fractal','desireLab','valuesCore'], 'slot.html?id=builder':['pathPlan','tracker'], 'slot.html?id=found':['lab'],
   'slot.html?id=pb_end':['lab'], 'slot.html?id=fractal':['fractal'], 'slot.html?id=leverage':['fractal'],
   'slot.html?id=guard':['guard'], 'reactor.html':['reactor','tracker'], 'slot.html?id=retest':['retest'],
-  'slot.html?id=compare':['wheel','retest'], 'slot.html?id=end':['reactor','retest','arts'],
+  'slot.html?id=compare':['wheel','retest'], 'slot.html?id=end':['pathFinal','reactor','retest','arts'],
   'slot.html?id=km':['kmTest'], 'slot.html?id=fs':['firstSet'], 'slot.html?id=bg16':['backgroundProfile'], 'slot.html?id=mechanism':['innerMechanism'], 'slot.html?id=im':['im'], 'slot.html?id=lab_d':['desireLab'], 'wish.html':['tracker','wishMod'], 'slot.html?id=pi':['interact'],
   'slot.html?id=rs':['respTest'], 'slot.html?id=ct':['ctTest'], 'slot.html?id=sv':['selfWorth'], 'slot.html?id=vsort':['valuesCore','reactorIn']};
  const arch={'ego.html':'ego','slot.html?id=arch_b':'archB','slot.html?id=arch_v':'archV','slot.html?id=arch_p':'archP','slot.html?id=arch_d':'archD'}[u],ar=arch&&p[arch];
