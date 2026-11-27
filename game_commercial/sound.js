@@ -58,26 +58,24 @@ function rustle(){
  src.connect(filt);filt.connect(g);g.connect(c.destination);
  try{src.start()}catch(e){}
 }
-/* Низкий мягкий гул: основа 60-110 Гц, мягкая атака, затухание около 160 мс, теплые гармоники, лоупасс, тихо. */
+/* Короткий теплый звук нажатия: мягкий музыкальный аккорд без резкого звона и вибрации. */
 var lastHum=0;
 function clickSnd(){
  if(off())return;
- var nw=Date.now();if(nw-lastHum<300)return;lastHum=nw;
+ var nw=Date.now();if(nw-lastHum<180)return;lastHum=nw;
  unlock();
  var c=ensureCtx();if(!c||c.state==='suspended')return;
- var now=c.currentTime,dur=0.55;
- /* 27.11: мягкий хрустальный колокольчик вместо глухого гула: квинта 660/990 Гц, быстрая атака, плавное затухание */
+ var now=c.currentTime,dur=0.24;
  var master=c.createGain();
  master.gain.setValueAtTime(0.0001,now);
- master.gain.linearRampToValueAtTime(0.085,now+0.008);
+ master.gain.linearRampToValueAtTime(0.038,now+0.012);
  master.gain.exponentialRampToValueAtTime(0.0001,now+dur);
  master.connect(c.destination);
- [[660,1],[990,0.45],[1320,0.12]].forEach(function(x){
+ [[392,0.72],[523.25,0.55],[659.25,0.22]].forEach(function(x){
   var o=c.createOscillator();o.type='sine';o.frequency.setValueAtTime(x[0],now);
   var g=c.createGain();g.gain.value=x[1];
-  o.connect(g);g.connect(master);o.start(now);o.stop(now+dur+0.05);
+  o.connect(g);g.connect(master);o.start(now);o.stop(now+dur+0.02);
  });
- try{if(navigator.vibrate)navigator.vibrate(18)}catch(e){}
 }
 /* Только главные кнопки: «Дальше»/«Далее», СТАРТ, солнечные кнопки, выбор ответа. */
 var MAIN_SEL='.sun-btn,.next,.go,.nxs,.pc-next,.bottom-next,.btn-primary,.samost-primary,.primary,.opt,.opts button,.samost-choices button,[class*="choice"],[class*="answer"],[class*="option"],[data-snd]';
