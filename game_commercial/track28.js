@@ -418,11 +418,21 @@ function stepCard(P,T,n){
   if(md)h+='<p class="mode-mini">Режим: '+esc(md.t)+'</p>';
   h+='<span class="ftag">'+esc(F.t)+'</span>';
   var LB=P.lab||{};if(F.src&&F.k&&LB.lead&&LB.weak===false&&(F.k===LB.lead||(LB.queue||[]).indexOf(F.k)>=0))h+='<p class="mute rx-why">Почему так: тема «'+esc(F.src)+'» чаще других звучала в твоих ответах.</p>';
+  // Накопительные выводы (самоценность и опоры)
+  if(window.GStrategy && GStrategy.insights){
+    var ins = GStrategy.insights(P);
+    if(ins && ins.length){
+      var one = ins[Math.floor((n-1)/7) % ins.length];
+      h+='<p class="soft-tip insight"><b>'+esc(one.t)+'</b><br>'+esc(one.x)+'</p>';
+    }
+  }
+
   if(st.note)h+='<p class="soft-tip">'+esc(st.note)+'</p>';
   h+='<p class="main">'+esc(st.m)+'</p>';
   h+='<details class="own alts"><summary>Если сегодня трудно</summary><p class="alt"><small>Минимум</small>'+esc(st.n)+'</p><p class="alt"><small>Можно иначе</small>'+esc(st.a)+'</p><p class="alt"><small>Наблюдение</small>'+esc(st.o)+'</p></details>';
   h+='<div class="chips res">'+RES.map(function(x){return '<button type="button" class="'+(r.v===x.id?'on':'')+'" data-act="res" data-v="'+x.id+'">'+esc(x.t)+'</button>'}).join('')+'</div>';
   if(r.v==='fail')h+='<button type="button" class="quiet-btn lo-trig" data-act="learn-open" data-id="inner-resistance">Открытие: внутреннее сопротивление</button>';
+  if(r.v==='fail'||r.v==='min')h+='<p class="soft-tip">Сегодня достаточно того, что получилось. Минимальный шаг — тоже движение. Ты имеешь право идти в своём темпе.</p>';
   if(r.v){
     h+='<textarea data-act="res-saw" rows="2" placeholder="Что я '+gx('{заметил|заметила}')+' (по желанию)">'+esc(r.saw||'')+'</textarea>';
     h+='<textarea data-act="res-proof" rows="2" placeholder="Что сегодня стало подтверждением движения (по желанию)">'+esc(r.proof||'')+'</textarea>';

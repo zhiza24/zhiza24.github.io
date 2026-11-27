@@ -219,7 +219,7 @@ function build(P){
   else if(wk===2){var a2=acts[ai++%acts.length];x=(i===3)?mk(pr2[(i+2)%pr2.length]||a2.m,fa(k2).min,fa(k2).alt,fa(k2).obs,1):mk(a2.m,a2.n,fa(k1).alt,'Заметь, как на это реагирует жизнь вокруг: люди, события, возможности.',i%2?2:0)}
   else{x=(i===6)?mk('Сравни, что было в начале цикла и что сейчас: что ты сделал(а), что изменилось, что понял(а) о себе.','Запиши одно отличие.','Перечитай свои отметки за 28 дней.','Заметь, что из нового стало естественным.',2):(i%2?mk(pr1[(i+5)%pr1.length]||acts[3].m,fa(k1).min,fa(k1).alt,'Заметь, что уже получается без усилия.',0):(function(){var a=acts[ai++%acts.length];return mk(a.m,a.n,fa(k2).alt,'Заметь, что из этого ты хочешь оставить.',2)})())}
   x.w=wk;days.push(x)}
- return {v:1,at:Date.now(),wish:wish,cat:ck,need:need,focus:focus,stars:stars,obst:obst,res:res,result:C.result,signs:C.signs.slice(),first:gx(C.first,f),weeks:WEEKS,days:days,lead:k1,second:k2,low:low,weak:L.weak!==false,practRec:precs,modelActions:modelActions,positive:!!(P.backgroundProfile&&P.backgroundProfile.positive)}}
+ return {v:1,at:Date.now(),wish:wish,cat:ck,need:need,focus:focus,stars:stars,obst:obst,res:res,result:C.result,signs:C.signs.slice(),first:gx(C.first,f),weeks:WEEKS,days:days,lead:k1,second:k2,low:low,weak:L.weak!==false,practRec:precs,modelActions:modelActions,positive:!!(P.backgroundProfile&&P.backgroundProfile.positive),insights:insights(P)}}
 
 /* Персонализация по результатам всех исследований: опоры, трудности и практики (не больше двух).
    Положительный фон: только опорные практики, без исправления ради исправления. */
@@ -319,10 +319,50 @@ function testsLayer(P,f){
  return {res:res.slice(0,5),obst:obst.slice(0,5),actions:actions.slice(0,1)}}
 
 /* Адаптация шага по отметкам прошлых дней */
+
+/* Короткие понятные выводы из накопленных данных. Для игрока, не для диагноза. */
+function insights(P){
+ var out=[], f=P.gender==='f';
+ function add(t,x){ if(out.length<5) out.push({t:t,x:gx(x,f)}); }
+ // Стратегия выбора
+ if(P.pocherk && (P.pocherk.doneAt || P.pocherk.lead)){
+  var lead = P.pocherk.lead || (P.pocherk.dirs && P.pocherk.dirs[0]);
+  var names = {act:'прямой шаг', obs:'сначала разобраться', cre:'свой способ', sup:'опора на других'};
+  var name = names[lead] || lead || 'свой подход';
+  add('Как тебе легче выбирать', 'В игровых ситуациях чаще проявлялся подход «'+name+'». Когда нужно сделать шаг, можно опираться на то, что уже получается естественнее.');
+ }
+ // BG16 ресурсы
+ var bp = P.backgroundProfile, bg = bp && bp.backgroundState;
+ if(bg && bg.groups && bg.groups.resource && bg.groups.resource.leaders && bg.groups.resource.leaders[0]){
+  var famId = bg.groups.resource.leaders[0];
+  var fam = (bg.families||[]).filter(function(x){return x.id===famId})[0];
+  if(fam) add('Что у тебя уже есть', 'В разных сферах чаще звучал ресурс «'+fam.title+'». На него можно опираться, даже в дни, когда что-то не получается.');
+ }
+ // Колесо — высокая сфера
+ var w = P.wheel;
+ if(Array.isArray(w) && w.length===8){
+  var mi=0; w.forEach(function(x,i){if(x>w[mi])mi=i});
+  if(w[mi]>=6) add('Где уже есть опора', 'Сфера «'+['Здоровье','Финансы','Карьера','Отношения','Семья','Друзья','Рост','Отдых'][mi]+'» у тебя наполнена. Из неё можно брать силы и примеры.');
+ }
+ // Ценности
+ var vals = (P.valuesCore && P.valuesCore.top3) || (P.values && P.values.order) || [];
+ if(vals.length) add('Что для тебя важно', 'Среди ориентиров выделяются: '+vals.slice(0,3).join(', ')+'. Когда шаг связан с ними, движение обычно даётся легче.');
+ // Самоценность / мягкость к себе (из лаборатории или из betray / низкого колеса)
+ if(P.selfWorth && P.selfWorth.scales){
+  var soft = P.selfWorth.scales.filter(function(s){return s.level>=2 && s.status!=='insufficient'}).slice(0,1);
+  if(soft.length) add('Где можно быть мягче к себе', 'В теме «'+soft[0].name+'» ответы показывают, что ты часто себя ограничиваешь. Это не приговор — это место, где можно тренировать право быть и выбирать.');
+ } else if(P.betray && (P.betray.picked||[]).length){
+  add('Где можно быть на своей стороне', 'Ты уже отмечал(а) места, где отодвигаешь собственные интересы. В трекере можно мягко замечать это и возвращать себе внимание.');
+ } else if(Array.isArray(w) && w.some(function(x){return x<=3})){
+  add('Право на небольшой шаг', 'Есть сферы, где сейчас мало ресурса. Минимальный шаг в такие дни — это уже движение, а не провал.');
+ }
+ return out;
+}
+
 function adapt(T,n){var S=T.strategy;if(!S)return null;var base=S.days[n-1];if(!base)return null;var o={m:base.m,n:base.n,a:base.a,o:base.o,dir:base.dir,note:''};
  var c=(T.custom||{})[n];if(c)o.m=c;
  var r=[];for(var i=n-1;i>=1&&r.length<2;i--){var d=(T.days||{})[i];if(d&&d.res)r.push(d.res.v)}
- if(r.length===2&&r.every(function(v){return v==='fail'||v==='min'})&&!c){o.note='Последние дни были трудными. Сегодня начни с минимальной версии, этого достаточно.';o.m=base.n;o.n='Просто вспомни о своем желании и отметь день.'}
+ if(r.length===2&&r.every(function(v){return v==='fail'||v==='min'})&&!c){o.note='Последние дни были трудными. Сегодня достаточно минимального шага — это уже движение, а не провал. Ты имеешь право идти в своём темпе.';o.m=base.n;o.n='Просто вспомни о своем желании и отметь день.'}
  else if(r.length===2&&r.every(function(v){return v==='other'})&&!c){o.note='Ты дважды {выбрал|выбрала} другой шаг. Сегодня предлагаем альтернативу.';var t=o.m;o.m=base.a;o.a=t}
  o.note=gx(o.note,(function(){try{return (JSON.parse(localStorage.getItem('alch_v5_profile'))||{}).gender==='f'}catch(e){return false}})());
  return o}
@@ -337,6 +377,7 @@ function html(S){
  h+='<section class="sg-b"><small>'+(S.weak?'Возможные ориентиры':'Что сейчас требует внимания')+'</small>'+(S.weak?'<p class="mute">Пока недостаточно ответов, чтобы выделить ведущую привычную реакцию. Эти направления — ориентиры по желанию и доступным данным, а не вывод о причинах поведения.</p>':'')+S.focus.map(function(x,i){return '<p><b>'+(i+1)+'. '+esc(x.t)+'</b><br>'+esc(x.g)+'</p>'}).join('')+'</section>';
  if(S.obst.length)h+='<details class="sg-b"><summary><small>Что мешает движению</small></summary>'+S.obst.map(function(x){return '<p><b>'+esc(x.t)+'.</b> '+esc(x.x)+'</p>'}).join('')+'</details>';
  if(S.res.length)h+='<details class="sg-b"><summary><small>На что ты можешь опереться</small></summary>'+S.res.map(function(x){return '<p><b>'+esc(x.t)+'.</b> '+esc(x.x)+'</p>'}).join('')+'</details>';
+if(S.insights&&S.insights.length)h+='<section class="sg-b"><small>Что о тебе уже известно</small>'+S.insights.map(function(x){return '<p><b>'+esc(x.t)+'</b><br>'+esc(x.x)+'</p>'}).join('')+'</section>';
  if(S.practRec&&S.practRec.length&&window.GPract)h+='<section class="sg-b"><small>Практики, подобранные под тебя</small>'+S.practRec.map(function(r){var it=GPract.byId(r.id);return it?'<p><b>'+esc(it.t)+'.</b> '+esc(r.why)+'</p>':''}).join('')+'<p class="mute">Включаются в Лаборатории практик. Одновременно не больше двух.</p></section>';
  if(S.modelActions&&S.modelActions.length)h+='<section class="sg-b"><small>Возможный эксперимент из каталога состояний</small>'+S.modelActions.map(function(x){return '<p><b>'+esc(x.state)+' · '+esc(x.lever)+'</b></p><p>'+esc(x.action)+'</p><p class="mute">'+esc(x.goal)+' · '+esc(x.time)+' · нагрузка: '+esc(x.stake)+(x.caution?' · '+esc(x.caution):'')+'</p>'}).join('')+'<p class="mute">Это необязательный вариант для проверки, а не предписание. Можно не выбирать его.</p></section>';
  h+='<section class="sg-b"><small>Что предлагается получить за 28 дней</small><p data-ed="result">'+esc(S.result)+'</p></section>';
@@ -345,5 +386,5 @@ function html(S){
  h+='<details class="sg-b"><summary><small>Четыре недели</small></summary>'+S.weeks.map(function(x,i){return '<p><b>Неделя '+(i+1)+'. '+esc(x.t)+'.</b> '+esc(x.d)+'</p>'}).join('')+'</details>';
  return h}
 
-window.GStrategy={build:build,adapt:adapt,html:html,WEEKS:WEEKS,FOC:FOC,practRec:practRec,testsLayer:testsLayer};
+window.GStrategy={build:build,adapt:adapt,html:html,WEEKS:WEEKS,FOC:FOC,practRec:practRec,testsLayer:testsLayer,insights:insights};
 })();
