@@ -134,7 +134,7 @@ function trackDay(p){p=p||load();const T=p.tracker||{};let day=0,filled=0;
  const D=T.days||{};for(const k in D){const d=D[k]||{};if(Object.keys(d).length)filled++;}
  return {day,filled:Math.min(28,filled),done:!!(T.finale&&T.finale.done)||day>=28};}
 window.GTrackDay=trackDay;
-window.GRoute={load,resume,complete,advance,markAdvance,justAdvanced,init,recordVisit,currentUrl,ready,reading,state,status,reviewUrl,snapshot,visualReview,isVisualReview};
+window.GRoute={load,save, resume,complete,advance,markAdvance,justAdvanced,init,recordVisit,currentUrl,ready,reading,state,status,reviewUrl,snapshot,visualReview,isVisualReview};
 })();
 /* Нить Самости и вау-моменты: подключаются на всех страницах маршрута. */
 (function(){if(typeof document==='undefined'||window.GSelf||document.querySelector('script[src*="self-thread.js"]'))return;var s=document.currentScript||document.querySelector('script[src*="route.js"]'),b=s&&s.src?s.src.replace(/[^/]+(?:\?.*)?$/,''):'';var x=document.createElement('script');x.src=b+'self-thread.js?v=self1';x.defer=true;(document.head||document.documentElement).appendChild(x)})();
