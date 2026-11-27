@@ -67,11 +67,14 @@ self.addEventListener('fetch',event=>{
   event.respondWith((async()=>{
    const cache=await caches.open(CACHE);
    const cached=await cache.match(req,{ignoreSearch:true});
-   const netP=fetch(req).then(async n=>{const net=await clean(n);if(net&&net.ok)await cache.put(req,net.clone());return net}).catch(()=>null);
-   if(cached){netP.catch(()=>{});return clean(cached)}
-   const net=await netP;
-   if(net&&net.ok)return net;
-   return (await cache.match(new URL('./offline.html',self.registration.scope).href))||net||fetch(req);
+   const netP=fetch(req.url,{cache:'no-cache',credentials:'same-origin'}).then(async n=>{const net=await clean(n);if(net&&net.ok)await cache.put(req,net.clone());return net}).catch(()=>null);
+   /* 27.11: сначала свежая страница из сети (до 3 с), сохраненная только без интернета */
+   const net=await Promise.race([netP,new Promise(r=>setTimeout(()=>r('slow'),3000))]);
+   if(net&&net!=='slow'&&net.ok)return net;
+   if(cached){if(net==='slow')netP.catch(()=>{});return clean(cached)}
+   const net2=net==='slow'?await netP:net;
+   if(net2&&net2.ok)return net2;
+   return (await cache.match(new URL('./offline.html',self.registration.scope).href))||net2||fetch(req);
   })());
   return;
  }
