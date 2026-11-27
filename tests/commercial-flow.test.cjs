@@ -61,6 +61,14 @@ function routeEnv(){
  }
  p=w.GRoute.load();
  assert.equal(w.GRoute.state(p).finished,true,'last route step closes the route');
+ const emptyDay={sliders:{},signs:[],choose:[],grat:[],hours:{},dirSteps:['step text only','',''],dirState:['','',''],dirMarks:['','',''],wishMark:'',hintSeen:false,note:'',ifFire:['','',''],journal:{}};
+ const activity={note:'сделал заметку'};
+ const completion={dirState:['done','','']};
+ const slider={sliders:{energy:6}};
+ const counted=w.GTrackDay({tracker:{start:Date.now(),days:{1:emptyDay,2:activity,3:completion,4:slider}}});
+ assert.equal(counted.filled,3,'opening a day without a record must not count as a completed journal day');
+ assert.equal(counted.day,1,'cycle day count begins from the stored start timestamp');
+
  assert.equal(Object.keys(p.flow.completed).length,34,'all 34 playable steps persist completion');
  dom.window.close();
 }

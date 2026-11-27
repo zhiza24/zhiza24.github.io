@@ -57,7 +57,7 @@ test('every commercial route screen opens in sequence without runtime errors',as
  const fixture={
   name:'Проверка',birth:'10.02.2000',gender:'f',points:{personality:10,intuition:2,challenge:15,key:5},
   mapStyle:'amber',handTop:'act',pocherk:{doneAt:1,answers:[]},dialog:{answers:[]},
-  backgroundProfile:{backgroundState:{version:2,completedAt:1,families:[],groups:{resource:{leaders:[]},protective:{leaders:[]}},coverage:{answered:16}}},
+  backgroundProfile:{backgroundState:{version:2,completedAt:1,families:[],groups:{resource:{leaders:[],families:[],status:'no_clear_leader'},protective:{leaders:[],families:[],status:'no_clear_leader'}},coverage:{answered:16}}},
   ego:{v:2,schema:'df',mode:'ha',sc:{},md:{}},betray:{done:true},im:{v:3,sources:[],fragments:[],links:[],tensions:[],unknown:[]},
   dq:{accepted:80},portrait:{done:true,zones:[]},wheel:[5,5,5,5,5,5,5,5],wheelTest:{completed:true,spheres:[]},
   valuesStage:'done',values:{order:['Свобода','Смысл','Развитие']},valuesCore:{v:1,top3:['Свобода','Смысл','Развитие']},

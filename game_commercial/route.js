@@ -131,10 +131,20 @@ function snapshot(u,p){
 }
 function reading(u){if(isVisualReview())return false;return u==='elder.html'||u==='hero.html'||u==='sum.html'||u.startsWith('scene.html')||['pa_end','pb_intro','pc_intro','compare'].some(k=>u==='slot.html?id='+k)}
 /* день трекера: по дате начала, завершенный финал считается как 28 */
+function dayHasRecord(d){
+ if(!d)return false;
+ if(d.hintSeen||d.wishMark||d.note||d.res)return true;
+ if((d.signs||[]).length||(d.grat||[]).length||(d.choose||[]).length||(d.brakeWords||[]).length||(d.betrayMarks||[]).length)return true;
+ if((d.dirState||[]).some(s=>s==='done'||s==='do'))return true;
+ if((d.dirMarks||[]).some(s=>!!s))return true;
+ const sliders=d.sliders||{};for(const k in sliders)if(sliders[k]!=null&&sliders[k]!=='')return true;
+ const hours=d.hours||{};for(const k in hours)if(hours[k]&&hours[k].text)return true;
+ return false;
+}
 function trackDay(p){p=p||load();const T=p.tracker||{};let day=0,filled=0;
  if(T.finale&&T.finale.done)day=28;else if(T.start){day=Math.floor((Date.now()-T.start)/86400000)+1;day=Math.max(1,Math.min(28,day));}
  else day=Math.min(28,+(p.reactor||{}).day||0);
- const D=T.days||{};for(const k in D){const d=D[k]||{};if(Object.keys(d).length)filled++;}
+ const D=T.days||{};for(const k in D)if(dayHasRecord(D[k]))filled++;
  return {day,filled:Math.min(28,filled),done:!!(T.finale&&T.finale.done)||day>=28};}
 window.GTrackDay=trackDay;
 window.GRoute={load,save, resume,complete,advance,markAdvance,justAdvanced,init,recordVisit,currentUrl,ready,reading,state,status,reviewUrl,snapshot,visualReview,isVisualReview};
