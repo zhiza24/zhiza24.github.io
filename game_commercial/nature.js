@@ -62,7 +62,7 @@ function g(s,f){return String(s).replace(/\{([^|}]*)\|([^}]*)\}/g,function(_,m,w
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function nm(k,f){return f?A[k].nameF:A[k].name}
 /* короткое описание механики для дополнительных особенностей */
-function facetText(k,f){return g(A[k].lead.replace('Твоя естественная механика — ','')+' '+A[k].text[0],f)}
+function facetText(k,f){return g(A[k].text[0],f)}
 function html(r,f){if(!r)return '';var a=A[r.primary],d=DT[r.facets.decision];
  var h='<p class="pmuted">Твой исходный профиль</p><h3 style="font:700 30px Georgia,serif;margin:4px 0">'+esc(nm(r.primary,f))+'</h3><p><b>'+esc(a.lead)+'</b></p>'+a.text.map(function(t){return '<p>'+esc(g(t,f))+'</p>'}).join('')+
  '<p><b>Твой сильный инструмент:</b> '+esc(g(a.tool,f))+'</p><h3>Как это проявляется</h3><ul>'+a.shows.map(function(t){return '<li>'+esc(g(t,f))+'</li>'}).join('')+'</ul>'+
