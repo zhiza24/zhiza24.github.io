@@ -418,20 +418,33 @@
   const pinAt=medalAt[currentId];
   if(pin&&pinAt){pin.style.left=pinAt[0]+'%';pin.style.top=pinAt[1]+'%';pin.hidden=false;}
   const checkpoint=GRoute.state(profile),cta=document.getElementById('resume');
+  const formReady=!!(profile.name&&window.GPassport&&GPassport.parse(profile.birth)&&['m','f'].includes(profile.gender)&&profile.points);
   const started=position>1||Object.keys(saved.completed||{}).length>0||
     ['name','birth','points','mapStyle','ego','wheel','wheelTest','mirrors','passport'].some(key=>profile[key]&&(!(Array.isArray(profile[key]))||profile[key].length))||
     Number(profile.reactor?.day)>0||Object.keys(profile.reactor?.days||{}).length>0;
   cta.hidden=false;
-  cta.textContent=checkpoint.finished?'Посмотреть пройденное':'Продолжить игру';
-  cta.href=!started?'form.html':checkpoint.finished?'tasks.html':checkpoint.url;
+  // Если инициация не завершена — всегда ведём на форму, даже если в профиле есть другие следы.
+  const nextUrl=!formReady?'form.html':checkpoint.finished?'tasks.html':checkpoint.url;
+  cta.textContent=!formReady?'Ввести имя и дату':checkpoint.finished?'Посмотреть пройденное':'Продолжить игру';
+  cta.href=nextUrl;
   if(!cta.hidden){
     const ms=document.querySelector('.map-screen');ms.appendChild(cta);
   }
   layoutAxis();
   window.addEventListener('resize',layoutAxis);
   const start=document.getElementById('start');
-  const beginning=started?'form.html?opening=1&v=opening2':'form.html';
-  start.href=started?beginning:'form.html';if(started){start.href=cta.href;start.setAttribute('aria-label','Продолжить игру');cta.textContent='Начать сначала';cta.href=beginning;}
+  const beginning='form.html';
+  if(!formReady){
+    start.href='form.html';
+    start.setAttribute('aria-label','Ввести имя и дату');
+  }else if(started){
+    start.href=cta.href;
+    start.setAttribute('aria-label','Продолжить игру');
+    cta.textContent='Начать сначала';
+    cta.href=beginning;
+  }else{
+    start.href='form.html';
+  }
   const statusNames={current:"Текущая",done:"Пройдена",available:"Посещена",locked:"Закрыта"};
   const overlay=document.getElementById("overlay");
   const title=document.getElementById("detailTitle");
