@@ -55,10 +55,10 @@ function mount(box){
  function intro(){
   var count=Object.keys(draft&&draft.answers||{}).filter(function(k){var a=draft.answers[k];return a&&(a.primary!=null||a.skipped)}).length;
   shell('<span class="tag">Точка 0 · Начало исследования</span><div class="bg16-kicker">Ведущее фоновое состояние</div><h1>Что обычно остается внутри?</h1>'+
-   '<p>16 жизненных сцен охватывают восемь сфер: здоровье, финансы, карьеру, отношения, семью, друзей, рост и отдых. Мы посмотрим, какие внутренние реакции повторяются в разных обстоятельствах.</p>'+
+   '<p>22 жизненные сцены охватывают разные сферы: здоровье, финансы, карьеру, отношения, семью, друзей, рост и отдых. Мы посмотрим, какие внутренние реакции повторяются в разных обстоятельствах.</p>'+
    '<p>В каждой сцене выбери то, что чаще появляется первым. Если бывает и другой вариант, его можно отметить дополнительно. Здесь нет правильных ответов: важнее обычная реакция, а не образ себя, каким хотелось бы быть.</p>'+
    '<div class="bg16-card"><b>Две стороны картины</b><p class="bg16-resource-copy">Мы отдельно рассмотрим ресурсные состояния — то, что помогает жить, выбирать и чувствовать полноту опыта, — и защитные ожидания, которые могут добавлять напряжение.</p><p class="bg16-muted">«По-разному» и «ни один вариант» не будут насильно распределяться по категориям.</p></div>'+
-   (count?'<p class="bg16-muted">Сохранено: '+count+' из 16 сцен. Можно продолжить с того же места.</p>':'')+
+   (count?'<p class="bg16-muted">Сохранено: '+count+' из 22 сцен. Можно продолжить с того же места.</p>':'')+
    (saved&&!retake?'<p class="bg16-muted">Исследование уже пройдено. Предыдущий результат сохранен.</p>':'')+
    '<div class="bg16-actions"><button type="button" class="bg16-hero-btn" id="bg16Start">'+(count?'Продолжить':saved?'Начать заново':'Начать исследование')+'</button>'+
    (saved&&!retake?'<button type="button" id="bg16Show">Посмотреть результат</button>':'')+'</div>');
@@ -67,7 +67,7 @@ function mount(box){
  function voice(){
   stage='voice';
   var set=D.VOICE[voiceStep];
-  if(!set){voiceStep=null;if(step>=16)followup();else question();return}
+  if(!set){voiceStep=null;if(step>=22)followup();else question();return}
   var opts=set[1].map(function(o,i){return '<button type="button" class="bg16-choice" data-bg16-voice="'+o[1]+'">'+esc(o[0])+'</button>'}).join('');
   shell('<span class="tag">Коротко</span><div class="bg16-kicker">Внутренний голос</div><h2>'+esc(set[0])+'</h2><div class="bg16-choices">'+opts+'</div><p class="bg16-muted">Выбери фразу, которая ближе к тому, что обычно звучит внутри. Это не оценка.</p>');
  }
@@ -85,8 +85,8 @@ function mount(box){
   }else if(primary==='v'||primary==='x'){
    secondaryHtml='<p class="bg16-muted">Этот ответ останется отдельным наблюдением и не будет распределен между семействами.</p>';
   }
-  shell('<span class="tag">Фоновое состояние · '+(step+1)+' из 16</span><div class="bg16-kicker">'+esc(D.SPHERES[q[1]])+'</div>'+
-   '<progress max="16" value="'+(step+1)+'"></progress><h2>'+esc(tx(q[2]))+'</h2>'+
+  shell('<span class="tag">Фоновое состояние · '+(step+1)+' из 22</span><div class="bg16-kicker">'+esc(D.SPHERES[q[1]])+'</div>'+
+   '<progress max="22" value="'+(step+1)+'"></progress><h2>'+esc(tx(q[2]))+'</h2>'+
    '<p>Что у тебя внутри появляется первым?</p><div class="bg16-choices">'+primaryHtml+specialHtml+'</div>'+
    secondaryHtml+
    '<div class="bg16-actions"><button type="button" id="bg16Next" '+(primary==null?'disabled':'')+'>'+(step===15?'К уточнениям':'Далее')+'</button><button type="button" class="gh" id="bg16Back" '+(step===0?'disabled':'')+'>Назад</button><button type="button" class="gh" id="bg16Skip">Пропустить сцену</button></div>'+
@@ -164,14 +164,14 @@ function mount(box){
    var cardHost=box.querySelector('.bg16')||box;
    root.GResultCard.attachDiaryBar(cardHost,{
     id:'bg16',step:'slot.html?id=bg16',title:'Ведущее фоновое состояние',passed:'Точка 0',
-    lead:r.coverage.answered+' из 16 сцен, охвачено сфер: '+r.coverage.spheres+'. Это рабочая карта повторений в разных сферах, а не диагноз.',
+    lead:r.coverage.answered+' из 22 сцен, охвачено сфер: '+r.coverage.spheres+'. Это рабочая карта повторений в разных сферах, а не диагноз.',
     strong:resL.join(' · '),insight:proL.join(' · '),insightLabel:'Защитные ожидания',
     at:r.completedAt||Date.now()
    });
   }
  }
  function bind(){
-  var start=box.querySelector('#bg16Start');if(start)start.onclick=function(){if(!draft)draft=freshDraft();step=firstMissing();if(step>=16)followup();else question()};
+  var start=box.querySelector('#bg16Start');if(start)start.onclick=function(){if(!draft)draft=freshDraft();step=firstMissing();if(step>=22)followup();else question()};
   var show=box.querySelector('#bg16Show');if(show)show.onclick=function(){result()};
   box.querySelectorAll('[data-bg16-primary]').forEach(function(b){b.onclick=function(){
    var qid=draft.order[step],a=draft.answers[qid]||{};a.primary=b.dataset.bg16Primary;a.secondary=null;delete a.skipped;draft.answers[qid]=a;saveDraft();question();
@@ -180,11 +180,11 @@ function mount(box){
    var qid=draft.order[step],a=draft.answers[qid]||{};a.secondary=b.dataset.bg16Secondary||null;draft.answers[qid]=a;saveDraft();question();
   }});
   var back=box.querySelector('#bg16Back');if(back)back.onclick=function(){if(step>0){step--;question()}};
-  var skip=box.querySelector('#bg16Skip');if(skip)skip.onclick=function(){var qid=draft.order[step];draft.answers[qid]={primary:null,secondary:null,skipped:true};saveDraft();step++;if(step>=16)followup();else question()};
-  var next=box.querySelector('#bg16Next');if(next)next.onclick=function(){var qid=draft.order[step],a=draft.answers[qid];if(!a||a.primary==null)return;step++;saveDraft();if(step===4||step===8||step===12||step===16){voiceStep=(step/4)-1;voice();return}if(step>=16)followup();else question()};
+  var skip=box.querySelector('#bg16Skip');if(skip)skip.onclick=function(){var qid=draft.order[step];draft.answers[qid]={primary:null,secondary:null,skipped:true};saveDraft();step++;if(step>=22)followup();else question()};
+  var next=box.querySelector('#bg16Next');if(next)next.onclick=function(){var qid=draft.order[step],a=draft.answers[qid];if(!a||a.primary==null)return;step++;saveDraft();if(step===4||step===8||step===12||step===16||step===20){voiceStep=(step/4)-1;voice();return}if(step>=22)followup();else question()};
   box.querySelectorAll('[data-bg16-follow]').forEach(function(b){b.onchange=function(){draft.followup[b.dataset.bg16Follow]=b.value;saveDraft()}});
   var backQ=box.querySelector('#bg16BackToQuestions');if(backQ)backQ.onclick=function(){step=15;question()};
-  box.querySelectorAll('[data-bg16-voice]').forEach(function(b){b.onclick=function(){draft.voice=draft.voice||{};draft.voice[voiceStep]=b.dataset.bg16Voice;saveDraft();voiceStep=null;if(step>=16)followup();else question()}});
+  box.querySelectorAll('[data-bg16-voice]').forEach(function(b){b.onclick=function(){draft.voice=draft.voice||{};draft.voice[voiceStep]=b.dataset.bg16Voice;saveDraft();voiceStep=null;if(step>=22)followup();else question()}});
   var finish=box.querySelector('#bg16Finish');if(finish)finish.onclick=function(){var r=E.calculate(draft.answers,draft.followup,{startedAt:draft.startedAt,seed:draft.seed,voice:draft.voice||{}});saveResult(r);result()};
   var cont=box.querySelector('#bg16Continue');if(cont)cont.onclick=function(){
    if(preview||retake){location.href='tasks.html'+(retake?'#skipped':'');return}
