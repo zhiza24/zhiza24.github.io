@@ -32,11 +32,10 @@ h2{font:700 26px/1.2 'Cormorant Garamond',serif;color:#ffe9a8;margin:8px 0 8px}
 <div class="stage"><div class="c" id="c" role="button" aria-label="Зажми сферу, чтобы подышать"></div></div>
 <h2>Часть пути пройдена.<br>Переведи дыхание</h2>
 <div class="s" id="s">Зажми сферу и дыши в своем ритме</div>
-<button class="go" id="go" type="button">Идти дальше</button>
 <button class="bottom-next" id="bottomNext" type="button">Далее</button>
 <script>
-/* Зажал сферу — сфера плавно дышит (вдох 3с / выдох 4с) пока держишь. Отпустил — появляется кнопка «Идти дальше». */
-var c=document.getElementById('c'),t=document.getElementById('t'),s=document.getElementById('s'),go=document.getElementById('go');
+/* Зажал сферу — сфера плавно дышит (вдох 3с / выдох 4с) пока держишь. Кнопка «Далее» всегда доступна. */
+var c=document.getElementById('c'),t=document.getElementById('t'),s=document.getElementById('s');
 var holding=false,touched=false,timer=null,phase=0;
 var PH=[['Вдох',3000,1.68],['Выдох',4000,1.0]];
 function vib(n){try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}}
@@ -61,7 +60,6 @@ function onDown(e){
   clearTimeout(timer);
   c.classList.add('hold');
   s.textContent='Отпусти, когда будешь '+(window.GG?GG('готов','готова'):'готов');
-  go.classList.remove('show');
   try{if(e&&e.pointerId!=null&&e.pointerType!=='mouse'&&c.setPointerCapture)c.setPointerCapture(e.pointerId)}catch(err){}
   step();
 }
@@ -75,7 +73,6 @@ function onUp(){
   c.style.transform='scale(1)';
   t.textContent='Я есмь';
   s.textContent='';
-  go.classList.add('show');
   vib(35);
 }
 /* Сенсорные устройства используют Pointer Events, мышь — отдельную пару mouse events. */
@@ -86,16 +83,12 @@ c.addEventListener('lostpointercapture',function(e){if(e.pointerType!=='mouse')o
 c.addEventListener('mousedown',function(e){onDown(e)});
 document.addEventListener('mouseup',function(){onUp()});
 /* Резерв для браузеров ноутбука, где отпускание мыши теряется: обычный клик по сфере завершает вдох. */
-c.addEventListener('click',function(){if(!go.classList.contains('show')){if(holding)onUp();else{onDown();onUp()}}});
+c.addEventListener('click',function(){if(holding)onUp();else{onDown();onUp()}});
 /* Потеря фокуса завершает упражнение, чтобы сфера не зависала в состоянии удержания. */
 document.addEventListener('pointercancel',onUp,true);
 window.addEventListener('pointerup',function(e){if(e.pointerType!=='mouse')onUp()},true);
 window.addEventListener('blur',onUp);
 document.addEventListener('visibilitychange',function(){if(document.hidden)onUp()});
-go.addEventListener('click',function(){
-  vib(20);
-  location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance();
-});
 document.getElementById('bottomNext').addEventListener('click',function(){
   vib(20);
   location.href=(window.GReview||new URLSearchParams(location.search).get('preview')==='1')?'tasks.html':GRoute.advance();
