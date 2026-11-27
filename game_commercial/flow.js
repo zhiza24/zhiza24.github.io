@@ -6,8 +6,19 @@
   var get=p.getItem,set=p.setItem,remove=p.removeItem,key=p.key,clear=p.clear;
   var length=Object.getOwnPropertyDescriptor(p,'length');
   var OLD='alch_v5_',NEW='alch_commercial_';
-  function mapped(k){k=String(k);return k.indexOf(OLD)===0?NEW+k.slice(OLD.length):k}
-  function viewed(k){return k&&k.indexOf(NEW)===0?OLD+k.slice(NEW.length):k}
+  var SPECIAL={'alch_samost':'samost','alch_pattern_map_v1':'pattern_map_v1'};
+  function mapped(k){
+    k=String(k);
+    if(k.indexOf(OLD)===0)return NEW+k.slice(OLD.length);
+    return SPECIAL[k]?NEW+SPECIAL[k]:k;
+  }
+  function viewed(k){
+    if(!k||k.indexOf(NEW)!==0)return k;
+    var suffix=k.slice(NEW.length);
+    if(suffix==='samost')return 'alch_samost';
+    if(suffix==='pattern_map_v1')return 'alch_pattern_map_v1';
+    return OLD+suffix;
+  }
   Object.defineProperty(p,'__alchCommercialNamespace',{value:true});
   p.getItem=function(k){return get.call(this,mapped(k))};
   p.setItem=function(k,v){return set.call(this,mapped(k),v)};
