@@ -52,3 +52,6 @@ body.gsc-fast .gsc-ov.on .gsc-body,
 body.gsc-fast .gsc-ov.on .gsc-x,
 body.gsc-fast .gsc-ov.on .gsc-au,
 body.gsc-fast .gsc-ov.on .gsc-close{transition:opacity .18s ease .16s}
+/* 27.11: полоса прокрутки у правого края свитка, текст шире (как на карте) */
+body:not(.tapp) .gsc-body{left:11%;right:5%;padding-right:6px;scrollbar-width:auto;scrollbar-color:#8a5420 rgba(106,62,16,.18)}
+body:not(.tapp) .gsc-body::-webkit-scrollbar{width:9px}body:not(.tapp) .gsc-body::-webkit-scrollbar-thumb{background:#8a5420;border-radius:6px;border:1px solid #5a3410}body:not(.tapp) .gsc-body::-webkit-scrollbar-track{background:rgba(106,62,16,.18);border-radius:6px}

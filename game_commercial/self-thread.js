@@ -27,7 +27,7 @@ function review(){try{return !!(window.GRoute&&GRoute.isVisualReview&&GRoute.isV
 function voiceHtml(id,P){var v=VOICE[id];if(!v)return '';var h=v.p.map(function(p){return '<p>'+esc(gx(p,P))+'</p>'}).join('');
  if(id==='portrait'||id==='final')h+='<p><a href="samost.html" style="color:#e8c27a">Открыть лабораторию «Знакомство с собой»</a></p>';return h}
 function voice(id,opts){opts=opts||{};var v=VOICE[id];if(!v)return;
- need([['Scroll','scroll.js?v=self1']],function(){addCss('scroll.css?v=self1');if(!window.Scroll)return;
+ need([['Scroll','scroll.js?v=self1']],function(){addCss('scroll.css?v=sb1');if(!window.Scroll)return;
   var P=load();Scroll.show({id:'self_'+id,title:v.title,html:voiceHtml(id,P),closeLabel:'Беру с собой',everyTime:!!opts.everyTime,delay:opts.delay,
    onClose:function(){patch(function(P){P.self=P.self||{};P.self.voice=P.self.voice||{};if(!P.self.voice[id])P.self.voice[id]=Date.now()});if(opts.onClose)opts.onClose()}});
   if(Scroll.seen('self_'+id)&&!opts.everyTime&&opts.onClose)opts.onClose()})}
