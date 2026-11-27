@@ -54,7 +54,7 @@ window.GFLOW=[
 {u:'hero.html',pt:'0',t:'Герой'},
 {u:'choose.html',pt:'0',t:'Выбор карты'},
 {u:'bridge.html',pt:'0',t:'Твоя стратегия выбора'},
-{u:'breath.html?at=p0',pt:'0',t:'Дыхание'},
+{u:'breath.html?at=p0&v=breath1',pt:'0',t:'Дыхание'},
 {u:'cutscene.html',pt:'0',t:'Заставка: Я есмь'},
 {u:'slot.html?id=dialog',pt:'0',t:'Кто сейчас выбирает'},
 {u:'slot.html?id=bg16',pt:'0',t:'Ведущее фоновое состояние'},
