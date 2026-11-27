@@ -65,7 +65,7 @@ body.st-fire.flare .glow b{animation-duration:.45s}
 .qz.lock{pointer-events:none}
 @media (max-height:700px){.qt{font-size:21px;margin-bottom:6px}.op{padding:7px 11px;font-size:16.5px;line-height:1.26}.opts{gap:5px}.qz{padding-top:6px}}
 /* scroll subtitle */
-.gsc-html .pc-sub{margin:-4px 0 14px;text-align:center;font:700 18px/1.35 Manrope;letter-spacing:.02em;color:#5c3410}
+.gsc-html .pc-sub{margin:-4px 0 14px;text-align:center;font:700 18px/1.4 Manrope;letter-spacing:.02em;color:#5c3410;white-space:normal}
 .gsc-html p{margin:0 0 12px;font:500 19px/1.48 Manrope,sans-serif;color:#2c1808}
 @media (max-height:700px){.gsc-body{font-size:17px;line-height:1.42}.gsc-html p{margin:0 0 7px}}
 
