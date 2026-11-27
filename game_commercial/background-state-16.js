@@ -128,8 +128,12 @@ function mount(box){
  }
  function result(){
   stage='result';
-  var r=saved||preliminary(),html='<span class="tag">Фоновое состояние · результат</span><div class="bg16-kicker">Предварительная карта</div><h1>Что повторяется в разных сферах</h1>'+
-   '<div class="bg16-card"><b>'+r.coverage.answered+' из 16 сцен отвечено</b><p>'+r.coverage.spheres+' сфер охвачено ответами. Дополнительных выборов: '+r.coverage.secondary+'. «По-разному»: '+r.coverage.depends+'. «Ни один вариант»: '+r.coverage.none+'.</p></div>'+
+  var r=saved||preliminary();
+  var lead=null;
+  if(r.groups.protective.leaders&&r.groups.protective.leaders[0])lead=r.families.filter(function(f){return f.id===r.groups.protective.leaders[0]})[0];
+  else if(r.groups.resource.leaders&&r.groups.resource.leaders[0])lead=r.families.filter(function(f){return f.id===r.groups.resource.leaders[0]})[0];
+  var leadHtml=lead?'<div class="bg16-card"><b>К чему ты обычно приходишь</b><p>'+esc(lead.landing||lead.title)+'.</p><p class="bg16-muted">Это не оценка и не приговор. Это то, что повторилось в разных сферах: '+lead.sphereCount+' из 8. Заметить это уже значит начать выбирать иначе.</p></div>':'';
+  var html='<span class="tag">Фоновое состояние · результат</span><div class="bg16-kicker">Что повторяется</div><h1>К чему ты обычно приходишь</h1>'+leadHtml+
    groupHtml(r.groups.resource,'Ресурсные состояния',r.families)+groupHtml(r.groups.protective,'Защитные ожидания',r.families)+
    '<h2>Другие замеченные сигналы</h2>';
   var others=r.families.filter(function(f){return f.points>0&&r.groups.resource.leaders.indexOf(f.id)<0&&r.groups.protective.leaders.indexOf(f.id)<0}).sort(function(a,b){return b.points-a.points});

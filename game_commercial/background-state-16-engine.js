@@ -13,7 +13,7 @@ function calculate(answers,followup,meta){
  var families={},special={depends:0,none:0},answered=0,secondaryCount=0,codedPrimary=0,sphereSeen={},evidence=[];
  Object.keys(D.FAM).forEach(function(id){
   var m=D.FAM[id];
-  families[id]={id:id,group:m.group,title:m.title,description:m.description,points:0,primaryCount:0,secondaryCount:0,situations:[],spheres:[],evidence:[]};
+  families[id]={id:id,group:m.group,title:m.title,landing:m.landing||'',description:m.description,points:0,primaryCount:0,secondaryCount:0,situations:[],spheres:[],evidence:[]};
  });
  D.Q.forEach(function(q){
   var a=answers[q[0]];
