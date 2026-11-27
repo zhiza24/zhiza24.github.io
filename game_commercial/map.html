@@ -213,6 +213,10 @@
   .pathbar .pb-all{padding:7px 14px;border-radius:999px;background:rgba(14,9,4,.78);border:1px solid rgba(240,209,140,.5);box-shadow:0 4px 14px rgba(0,0,0,.45);text-decoration:none}
   .scl{left:auto!important;right:calc(50% - var(--stage-w)/2 + 10px)!important;transform:none!important;width:92px!important;top:calc(var(--top-h) + 6px)!important}
   .scl.op{opacity:0!important;pointer-events:none}
+
+  /* 27.11: полоса прокрутки у края свитка, текст шире */
+  .sbd{left:11%!important;right:5%!important;padding-right:6px;scrollbar-width:thin;scrollbar-color:rgba(106,62,16,.55) transparent}
+  .sbd::-webkit-scrollbar{width:5px}.sbd::-webkit-scrollbar-thumb{background:rgba(106,62,16,.55);border-radius:4px}.sbd::-webkit-scrollbar-track{background:transparent}
 </style>
 <link rel="stylesheet" href="sun-btn.css?v=g17">
 <style>
