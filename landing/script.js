@@ -1,0 +1,14 @@
+(function(){
+const cfg=window.ALCHEMIST_LANDING||{};const $=s=>document.querySelector(s);
+const buy=$("#buy-button"),price=$("#offer-price"),note=$("#purchase-note");
+if(cfg.purchaseUrl){buy.href=cfg.purchaseUrl;buy.target="_blank";buy.rel="noopener";if(note)note.textContent=cfg.purchaseNote||"После перехода Вы попадете на страницу оформления покупки.";}
+else{buy.href="#purchase";buy.addEventListener("click",e=>{e.preventDefault();if(note){note.textContent="Страница покупки пока настраивается. Ссылка появится перед запуском.";note.classList.add("note-highlight");}});}
+if(cfg.priceLabel)price.textContent=cfg.priceLabel;
+if(cfg.authorUrl){const a=$("#author-link");if(a)a.href=cfg.authorUrl;}
+const books=$("#books-grid");
+if(Array.isArray(cfg.books)&&cfg.books.length){books.innerHTML="";cfg.books.forEach(book=>{const card=document.createElement("article");card.className="book-card";const cover=document.createElement("div");cover.className="book-cover";if(book.cover){const img=document.createElement("img");img.src=book.cover;img.alt="Обложка: "+(book.title||"книга");img.style.cssText="width:100%;height:100%;object-fit:cover";cover.appendChild(img);}else cover.textContent="✳";const title=document.createElement("h3");title.textContent=book.title||"Книга";const desc=document.createElement("p");desc.textContent=book.description||"Авторский материал Майи Явь.";card.append(cover,title,desc);if(book.url){const link=document.createElement("a");link.href=book.url;link.target="_blank";link.rel="noopener";link.textContent="Подробнее ↗";card.appendChild(link);}books.appendChild(card);});}
+const ads=$("#ad-grid");
+if(Array.isArray(cfg.ads)&&cfg.ads.length){ads.innerHTML="";cfg.ads.forEach(ad=>{const card=document.createElement("article");card.className="ad-card";if(ad.image){const img=document.createElement("img");img.src=ad.image;img.alt="";card.appendChild(img);}const body=document.createElement("div");const title=document.createElement("h3");title.textContent=ad.title||"Материал";const desc=document.createElement("p");desc.textContent=ad.description||"";body.append(title,desc);if(ad.url){const link=document.createElement("a");link.href=ad.url;link.target="_blank";link.rel="noopener";link.textContent="Открыть ↗";body.appendChild(link);}card.appendChild(body);ads.appendChild(card);});}
+$("#year").textContent=new Date().getFullYear();
+const toggle=$(".menu-toggle"),nav=$("#main-nav");if(toggle&&nav){toggle.addEventListener("click",()=>{const open=nav.classList.toggle("is-open");toggle.setAttribute("aria-expanded",String(open));toggle.querySelector("span").textContent=open?"−":"＋";});nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{nav.classList.remove("is-open");toggle.setAttribute("aria-expanded","false");toggle.querySelector("span").textContent="＋";}));}
+})();
